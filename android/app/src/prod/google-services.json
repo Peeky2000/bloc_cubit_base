@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1055081475338",
+    "project_id": "delivery-go-3b1e5",
+    "storage_bucket": "delivery-go-3b1e5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1055081475338:android:d5bde3160eb947d20a1ef3",
+        "android_client_info": {
+          "package_name": "com.giaohang247"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1055081475338-dgvfa1j5o4g7rq2hsisp4lj7r0pnsff4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaZLZAwfq9h4UnL0a6ll56i1rFTqp91O4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1055081475338-dgvfa1j5o4g7rq2hsisp4lj7r0pnsff4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

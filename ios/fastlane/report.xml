@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fastlane.lanes">
+    
+    
+    
+      
+      <testcase classname="fastlane.lanes" name="00: default_platform" time="0.00016">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="01: increment_version_number_in_xcodeproj" time="0.039435">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="02: increment_build_number_in_xcodeproj" time="0.01277">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="03: update_code_signing_settings" time="0.014658">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="04: update_project_provisioning" time="0.019687">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="05: fvm flutter clean" time="3.204103">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="06: ./pub_get.sh" time="50.203893">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="07: cocoapods" time="3.108107">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="08: fvm flutter build ios --release --target=lib/main_prod.dart --flavor=prod --build-name=2023.04.05 --build-number 190448" time="38.217255">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="09: rm -rf Payload" time="0.006073">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="10: rm -rf Giaohang247-prod-release.ipa" time="0.004437">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="11: mkdir Payload" time="0.004422">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="12: mv Runner.app Payload" time="0.004811">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="13: zip -r Payload Payload" time="0.603056">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="14: mv Payload.zip Giaohang247-prod-release.ipa" time="0.005146">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="15: firebase_app_distribution" time="12.404621">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="16: git_tag_exists" time="0.032209">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="17: add_git_tag" time="0.02383">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="18: push_git_tags" time="0.964258">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="19: increment_version_number_in_xcodeproj" time="0.023346">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="20: increment_build_number_in_xcodeproj" time="0.019328">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="21: update_code_signing_settings" time="0.016409">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="22: update_project_provisioning" time="0.016529">
+        
+      </testcase>
+    
+  </testsuite>
+</testsuites>

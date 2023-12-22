@@ -1,0 +1,311 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+fastlane_require 'dotenv'
+
+before_all do
+  Dotenv.overload '.env.secret.ios'
+  ENV["VERSION"] = Time.now.strftime "%Y.%m.%d"
+  ENV["BUILD_NUMBER"] = Time.now.strftime "%H%M%S"
+  ENV["CHANGELOG"] = File.read("../../CHANGELOG.md")
+end
+
+default_platform(:ios)
+
+platform :ios do
+
+  def setupToBuild
+    increment_version_number_in_xcodeproj(
+      version_number: ENV["VERSION"],
+      xcodeproj: ENV["PROJECT"]
+    )
+    increment_build_number_in_xcodeproj(
+      build_number: ENV["BUILD_NUMBER"],
+      xcodeproj: ENV["PROJECT"]
+    )
+
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path: ENV["PROJECT"],
+      profile_name: ENV["PROFILE_NAME"],
+      code_sign_identity: ENV["IDENTITY"]
+    )
+
+    update_project_provisioning(
+      profile: ENV["PROFILE"],
+      xcodeproj: ENV["PROJECT"]
+    )
+  end
+
+  def resetToDev
+    increment_version_number_in_xcodeproj(
+      version_number: ENV["VERSION"],
+      xcodeproj: ENV["PROJECT"]
+    )
+    increment_build_number_in_xcodeproj(
+      build_number: ENV["BUILD_NUMBER"],
+      xcodeproj: ENV["PROJECT"]
+    )
+
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path: ENV["PROJECT"],
+      profile_name: ENV["PROFILE_DEV_NAME"],
+      code_sign_identity: ENV["IDENTITY_DEV"]
+    )
+
+    update_project_provisioning(
+      profile: ENV["PROFILE_DEV"],
+      xcodeproj: ENV["PROJECT"]
+    )
+  end
+
+  desc "Build environment=dev and flavor=debug"
+  lane :build_dev_debug do
+    setupToBuild
+
+    Dir.chdir("../..") do
+      sh "fvm flutter clean"
+      sh "./pub_get.sh"
+    end
+
+    cocoapods(
+      clean_install: true,
+      repo_update: true,
+      podfile: "./Podfile"
+    )
+
+    Dir.chdir("../..") do
+      sh "fvm flutter build ios --release --target=lib/main_dev.dart --flavor=dev --build-name=#{ENV["VERSION"]} --build-number #{ENV["BUILD_NUMBER"]}"
+    end
+    Dir.chdir("../../build/ios/iphoneos") do
+      sh "rm -rf Payload"
+      sh "rm -rf Giaohang247-dev-debug.ipa"
+      sh "mkdir Payload"
+      sh "mv Runner.app Payload"
+      sh "zip -r Payload Payload"
+      sh "mv Payload.zip Giaohang247-dev-debug.ipa"
+    end
+    build_tag = "v" + ENV["VERSION"] + "." + ENV["BUILD_NUMBER"] + "-dev-debug-IOS"
+    firebase_app_distribution(
+            app: ENV["FIREBASE_APP_ID"],
+            release_notes: "#{ENV["VERSION"]} #{ENV["BUILD_NUMBER"]}\nEnvironment: Development\nFlavor: debug\nChange: #{ENV["CHANGELOG"]}",
+            ipa_path: "../build/ios/iphoneos/Giaohang247-dev-debug.ipa",
+            firebase_cli_token: ENV["FIREBASE_TOKEN"],
+            groups: ENV["TESTER_GROUPS"]
+        )
+    # slack(
+    #   slack_url: ENV["SLACK_URL"],
+    #   message: "A new `IOS` app version is available on `Firebase`. :fire:  <https://appdistribution.firebase.google.com/testerapps/#{ENV["FIREBASE_APP_ID"]}|Download here>  :fire:\nVersion: `#{ENV["VERSION"]} #{ENV["BUILD_NUMBER"]}`\nEnvironment: `Development`"
+    # )
+    tag_existed = git_tag_exists(tag: build_tag)
+    if tag_existed == false
+      add_git_tag(
+        tag: build_tag,
+      )
+      push_git_tags(
+        tag: build_tag
+      )
+    end
+    resetToDev
+  end
+
+  desc "Build environment=staging and flavor=staging"
+  lane :build_staging_staging do
+    setupToBuild
+
+    Dir.chdir("../..") do
+      sh "fvm flutter clean"
+      sh "./pub_get.sh"
+    end
+
+    cocoapods(
+      clean_install: true,
+      repo_update: true,
+      podfile: "./Podfile"
+    )
+
+    Dir.chdir("../..") do
+      sh "fvm flutter build ios --release --target=lib/main_staging.dart --flavor=staging --build-name=#{ENV["VERSION"]} --build-number #{ENV["BUILD_NUMBER"]}"
+    end
+    Dir.chdir("../../build/ios/iphoneos") do
+      sh "rm -rf Payload"
+      sh "rm -rf Giaohang247-staging-staging.ipa"
+      sh "mkdir Payload"
+      sh "mv Runner.app Payload"
+      sh "zip -r Payload Payload"
+      sh "mv Payload.zip Giaohang247-staging-staging.ipa"
+    end
+    build_tag = "v" + ENV["VERSION"] + "." + ENV["BUILD_NUMBER"] + "-dev-debug-IOS"
+    firebase_app_distribution(
+            app: ENV["FIREBASE_APP_ID"],
+            release_notes: "#{ENV["VERSION"]} #{ENV["BUILD_NUMBER"]}\nEnvironment: Staging\nFlavor: staging\nChange: #{ENV["CHANGELOG"]}",
+            ipa_path: "../build/ios/iphoneos/Giaohang247-staging-staging.ipa",
+            firebase_cli_token: ENV["FIREBASE_TOKEN"],
+            groups: ENV["TESTER_GROUPS"]
+        )
+    # slack(
+    #   slack_url: ENV["SLACK_URL"],
+    #   message: "A new `IOS` app version is available on `Firebase`. :fire:  <https://appdistribution.firebase.google.com/testerapps/#{ENV["FIREBASE_APP_ID"]}|Download here>  :fire:\nVersion: `#{ENV["VERSION"]} #{ENV["BUILD_NUMBER"]}`\nEnvironment: `Development`"
+    # )
+    tag_existed = git_tag_exists(tag: build_tag)
+    if tag_existed == false
+      add_git_tag(
+        tag: build_tag,
+      )
+      push_git_tags(
+        tag: build_tag
+      )
+    end
+    resetToDev
+  end
+
+  desc "Build environment=prod and flavor=release"
+  lane :build_prod_release do
+    setupToBuild
+
+    Dir.chdir("../..") do
+      sh "fvm flutter clean"
+      sh "./pub_get.sh"
+    end
+
+    cocoapods(
+      clean_install: true,
+      repo_update: true,
+      podfile: "./Podfile"
+    )
+
+    Dir.chdir("../..") do
+      sh "fvm flutter build ios --release --target=lib/main_prod.dart --flavor=prod --build-name=#{ENV["VERSION"]} --build-number #{ENV["BUILD_NUMBER"]}"
+    end
+    Dir.chdir("../../build/ios/iphoneos") do
+      sh "rm -rf Payload"
+      sh "rm -rf Giaohang247-prod-release.ipa"
+      sh "mkdir Payload"
+      sh "mv Runner.app Payload"
+      sh "zip -r Payload Payload"
+      sh "mv Payload.zip Giaohang247-prod-release.ipa"
+    end
+    build_tag = "v" + ENV["VERSION"] + "." + ENV["BUILD_NUMBER"] + "-prod-release-IOS"
+    firebase_app_distribution(
+            app: ENV["FIREBASE_APP_ID"],
+            release_notes: "#{ENV["VERSION"]} #{ENV["BUILD_NUMBER"]}\nEnvironment: Production\nFlavor: release\nChange: #{ENV["CHANGELOG"]}",
+            ipa_path: "../build/ios/iphoneos/Giaohang247-prod-release.ipa",
+            firebase_cli_token: ENV["FIREBASE_TOKEN"],
+            groups: ENV["TESTER_GROUPS"]
+        )
+    # slack(
+    #   slack_url: ENV["SLACK_URL"],
+    #   message: "A new `IOS` app version is available on `Firebase`. :fire:  <https://appdistribution.firebase.google.com/testerapps/#{ENV["FIREBASE_APP_ID"]}|Download here>  :fire:\nVersion: `#{ENV["VERSION"]} #{ENV["BUILD_NUMBER"]}`\nEnvironment: `Production`"
+    # )
+    tag_existed = git_tag_exists(tag: build_tag)
+    if tag_existed == false
+      add_git_tag(
+        tag: build_tag,
+      )
+      push_git_tags(
+        tag: build_tag
+      )
+    end
+    resetToDev
+  end
+
+  desc "Build and upload store IOS"
+    lane :reset do
+    resetToDev
+   end
+
+  desc "Build and upload store IOS"
+  lane :build_store do
+    version_name = flutter_version()["version_name"]
+    version_code = flutter_version()["version_code"]
+    Dir.chdir("../..") do
+      sh "fvm flutter clean"
+      sh "./pub_get.sh"
+    end
+
+    cocoapods(
+      clean_install: true,
+      repo_update: true,
+      podfile: "./Podfile"
+    )
+
+    Dir.chdir("../..") do
+      sh "fvm flutter build ios --release --target=lib/main_prod.dart --flavor=prod"
+    end
+    increment_version_number_in_xcodeproj(
+      version_number: version_name,
+      xcodeproj: ENV["PROJECT"]
+    )
+    increment_build_number_in_xcodeproj(
+      build_number: version_code,
+      xcodeproj: ENV["PROJECT"]
+    )
+
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path: ENV["PROJECT"],
+      profile_name: ENV["PROFILE_STORE_NAME"],
+      code_sign_identity: ENV["IDENTITY"]
+    )
+
+    update_project_provisioning(
+      profile: ENV["PROFILE_STORE"],
+      xcodeproj: ENV["PROJECT"]
+    )
+
+    build_app(scheme: ENV["SCHEME_PROD"],
+      workspace: ENV["WORKSPACE"],
+      include_bitcode: false,
+      export_method: "app-store",
+      analyze_build_time: true,
+      clean: true,
+      export_options: {
+        uploadBitcode: false,
+        uploadSymbols: true,
+        compileBitcode: false,
+      })
+
+    upload_to_testflight(
+        api_key_path: "./fastlane/Giaohang247-deploy-key-ios.json",
+        team_id: ENV["TEAM_ID"],
+        skip_waiting_for_build_processing: true,
+        apple_id: ENV["APPLE_ID"],
+        changelog: ENV["CHANGELOG"]
+      )
+    clean_build_artifacts
+    resetToDev
+    # slack(
+    #   slack_url: ENV["SLACK_URL"],
+    #   message: "A new `IOS` app version is available on `TestFlight`. :fire:  Version: `#{version_code}`"
+    # )
+    build_tag = "Release-" + version_name + "(" + version_code + ")"
+    tag_existed = git_tag_exists(tag: build_tag)
+    if tag_existed == false
+      add_git_tag(
+        tag: build_tag,
+      )
+      push_git_tags(
+        tag: build_tag
+      )
+      Dir.chdir("../..") do
+        sh "./update_version.sh #{version_name} #{version_code}"
+        sh "git add ."
+        sh "git commit -m \"update version\""
+        sh "git push -u origin release"
+      end
+    end
+  end
+end

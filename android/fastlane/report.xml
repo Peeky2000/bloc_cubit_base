@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fastlane.lanes">
+    
+    
+    
+      
+      <testcase classname="fastlane.lanes" name="0: default_platform" time="0.000204">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="1: fvm flutter clean" time="3.151033">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="2: ./pub_get.sh" time="36.129604">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="3: fvm flutter build apk --release --target=lib/main_prod.dart --flavor=prod --build-name=2023.04.05 --build-number 190244" time="56.058387">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="4: rm -rf Giaohang247-prod-release.ipa" time="0.008158">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="5: mv app-prod-release.apk Giaohang247-prod-release.apk" time="0.005745">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="6: firebase_app_distribution" time="12.445086">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="7: git_tag_exists" time="0.030657">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="8: add_git_tag" time="0.021715">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="9: push_git_tags" time="13.388092">
+        
+      </testcase>
+    
+  </testsuite>
+</testsuites>

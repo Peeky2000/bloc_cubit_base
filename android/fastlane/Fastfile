@@ -1,0 +1,181 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+fastlane_require 'dotenv'
+
+before_all do
+  Dotenv.overload '.env.secret.android'
+  ENV["VERSION"] = Time.now.strftime "%Y.%m.%d"
+  ENV["BUILD_NUMBER"] = Time.now.strftime "%H%M%S"
+  ENV["CHANGELOG"] = File.read("../../CHANGELOG.md")
+end
+
+default_platform(:android)
+
+platform :android do
+  desc "Build environment=dev and flavor=debug"
+  lane :build_dev_debug do
+    build_tag = "v" + ENV["VERSION"] + "." + ENV["BUILD_NUMBER"] + "-dev-debug-Android"
+    Dir.chdir("../..") do
+      sh "fvm flutter clean"
+      sh "./pub_get.sh"
+      sh "fvm flutter build apk --release --target=lib/main_dev.dart --flavor=dev --build-name=#{ENV["VERSION"]} --build-number #{ENV["BUILD_NUMBER"]}"
+    end
+    #rename file
+    Dir.chdir("../../build/app/outputs/apk/dev/release") do
+      sh "rm -rf Giaohang247-dev-debug.apk"
+      sh "mv app-dev-release.apk Giaohang247-dev-debug.apk"
+    end
+    firebase_app_distribution(
+            app: ENV["FIREBASE_APP_ID"],
+            release_notes: "#{ENV["VERSION"]} #{ENV["BUILD_NUMBER"]}\nEnvironment: Development\nFlavor: debug\nChange: #{ENV["CHANGELOG"]}",
+            apk_path: "../build/app/outputs/apk/dev/release/Giaohang247-dev-debug.apk",
+            firebase_cli_token: ENV["FIREBASE_TOKEN"],
+            groups: ENV["TESTER_GROUPS"]
+        )
+    # slack(
+    #   slack_url: ENV["SLACK_URL"],
+    #   message: "A new `Android` app version is available on `Firebase`. :fire:  <https://appdistribution.firebase.google.com/testerapps/#{ENV["FIREBASE_APP_ID"]}|Download here>  :fire:\nVersion: `#{ENV["VERSION"]} #{ENV["BUILD_NUMBER"]}`\nEnvironment: `Development`"
+    # )
+    tag_existed = git_tag_exists(tag: build_tag)
+    if tag_existed == false
+      add_git_tag(
+        tag: build_tag,
+      )
+      push_git_tags(
+        tag: build_tag
+      )
+    end
+  end
+
+  desc "Build environment=staging and flavor=staging"
+  lane :build_staging_staging do
+    build_tag = "v" + ENV["VERSION"] + "." + ENV["BUILD_NUMBER"] + "-staging-staging-Android"
+    Dir.chdir("../..") do
+      sh "fvm flutter clean"
+      sh "./pub_get.sh"
+      sh "fvm flutter build apk --release --target=lib/main_staging.dart --flavor=staging --build-name=#{ENV["VERSION"]} --build-number #{ENV["BUILD_NUMBER"]}"
+    end
+    #rename file
+    Dir.chdir("../../build/app/outputs/apk/staging/release") do
+      sh "rm -rf Giaohang247-staging-staging.apk"
+      sh "mv app-staging-release.apk Giaohang247-staging-staging.apk"
+    end
+    firebase_app_distribution(
+            app: ENV["FIREBASE_APP_ID"],
+            release_notes: "#{ENV["VERSION"]} #{ENV["BUILD_NUMBER"]}\nEnvironment: Staging\nFlavor: staging\nChange: #{ENV["CHANGELOG"]}",
+            apk_path: "../build/app/outputs/apk/staging/release/Giaohang247-staging-staging.apk",
+            firebase_cli_token: ENV["FIREBASE_TOKEN"],
+            groups: ENV["TESTER_GROUPS"]
+        )
+    # slack(
+    #   slack_url: ENV["SLACK_URL"],
+    #   message: "A new `Android` app version is available on `Firebase`. :fire:  <https://appdistribution.firebase.google.com/testerapps/#{ENV["FIREBASE_APP_ID"]}|Download here>  :fire:\nVersion: `#{ENV["VERSION"]} #{ENV["BUILD_NUMBER"]}`\nEnvironment: `Development`"
+    # )
+    tag_existed = git_tag_exists(tag: build_tag)
+    if tag_existed == false
+      add_git_tag(
+        tag: build_tag,
+      )
+      push_git_tags(
+        tag: build_tag
+      )
+    end
+  end
+    
+  desc "Build environment=prod and flavor=release"
+  lane :build_prod_release do
+    build_tag = "v" + ENV["VERSION"] + "." + ENV["BUILD_NUMBER"] + "-prod-release-Android"
+    Dir.chdir("../..") do
+      sh "fvm flutter clean"
+      sh "./pub_get.sh"
+      sh "fvm flutter build apk --release --target=lib/main_prod.dart --flavor=prod --build-name=#{ENV["VERSION"]} --build-number #{ENV["BUILD_NUMBER"]}"
+    end
+    # reanem file
+    Dir.chdir("../../build/app/outputs/apk/prod/release") do
+      sh "rm -rf Giaohang247-prod-release.ipa"
+      sh "mv app-prod-release.apk Giaohang247-prod-release.apk"
+    end
+    firebase_app_distribution(
+            app: ENV["FIREBASE_APP_ID"],
+            release_notes: "#{ENV["VERSION"]} #{ENV["BUILD_NUMBER"]}\nEnvironment: Production\nFlavor: release\nChange: #{ENV["CHANGELOG"]}",
+            apk_path: "../build/app/outputs/apk/prod/release/Giaohang247-prod-release.apk",
+            firebase_cli_token: ENV["FIREBASE_TOKEN"],
+            groups: ENV["TESTER_GROUPS"]
+        )
+    # slack(
+    #   slack_url: ENV["SLACK_URL"],
+    #   message: "A new `Android` app version is available on `Firebase`. :fire:  <https://appdistribution.firebase.google.com/testerapps/#{ENV["FIREBASE_APP_ID"]}|Download here>  :fire:\nVersion: `#{ENV["VERSION"]} #{ENV["BUILD_NUMBER"]}`\nEnvironment: `Production`"
+    # )
+    tag_existed = git_tag_exists(tag: build_tag)
+    if tag_existed == false
+      add_git_tag(
+        tag: build_tag,
+      )
+      push_git_tags(
+        tag: build_tag
+      )
+    end
+  end
+
+  desc "Build and upload store Android"
+  lane :build_store do
+    version_name = flutter_version()["version_name"]
+    version_code = flutter_version()["version_code"]
+    build_tag = "Release-" + version_name + "(" + version_code + ")"
+    Dir.chdir("../..") do
+      sh "fvm flutter clean"
+      sh "./pub_get.sh"
+      sh "fvm flutter build appbundle --target=lib/main_prod.dart --flavor=prod"
+    end
+    Dir.chdir("../../build/app/outputs/bundle/prodRelease") do
+      sh "rm -rf Giaohang247.aab"
+      sh "mv app-prod-release.aab Giaohang247.aab"
+    end
+    upload_to_play_store(
+      json_key: "./fastlane/Giaohang247-deploy-key-android.json",
+      skip_upload_apk: true,
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+      skip_upload_changelogs: true,
+      version_name: version_name,
+      version_code: version_code,
+      release_status: 'draft',
+      track: 'production',
+      aab: "../build/app/outputs/bundle/prodRelease/Giaohang247.aab"
+    )
+    # slack(
+    #   slack_url: ENV["SLACK_URL"],
+    #   message: "A new `Android` app version is available on `Google Play`. :fire:  Version: `#{version_code}`"
+    # )
+    tag_existed = git_tag_exists(tag: build_tag)
+    if tag_existed == false
+      add_git_tag(
+        tag: build_tag,
+      )
+      push_git_tags(
+        tag: build_tag
+      )
+      Dir.chdir("../..") do
+        sh "./update_version.sh #{version_name} #{version_code}"
+        sh "git add ."
+        sh "git commit -m \"update version\""
+        sh "git push -u origin release"
+      end
+    end
+  end
+end
+

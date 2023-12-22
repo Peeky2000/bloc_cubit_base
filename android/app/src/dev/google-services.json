@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "394679907970",
+    "project_id": "delivery-go-dev",
+    "storage_bucket": "delivery-go-dev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:394679907970:android:bff028f6c5892eed91a69b",
+        "android_client_info": {
+          "package_name": "com.giaohang247"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "394679907970-gsmaehf294qu2ul36gc1qr19l670ofsl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkVVx1WGnBmKhp3ZWHj4RCWLO3tn7l0oI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "394679907970-gsmaehf294qu2ul36gc1qr19l670ofsl.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "394679907970-8gla7ovi637vqogughfni2m6l0e4m727.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.giaohang247"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,23 @@
+[
+  {
+    "type": "widget",
+    "name": "DialogUtil",
+    "description": "Error and confirm dialogs",
+    "location": "lib/core/widget/dialog_util.dart",
+    "keywords": ["dialog", "error", "modal"]
+  },
+  {
+    "type": "widget",
+    "name": "BottomButton",
+    "description": "Primary bottom action button",
+    "location": "lib/core/widget/bottom_button.dart",
+    "keywords": ["button", "bottom", "cta"]
+  },
+  {
+    "type": "widget",
+    "name": "CommonDropDown",
+    "description": "Dropdown field widget",
+    "location": "lib/core/widget/common_drop_down.dart",
+    "keywords": ["dropdown", "select", "form"]
+  }
+]

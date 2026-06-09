@@ -1,0 +1,23 @@
+[
+  {
+    "type": "feature",
+    "name": "sign_in",
+    "description": "Sign in screen and cubit",
+    "location": "lib/presentation/sign_in/",
+    "keywords": ["sign in", "login", "auth"]
+  },
+  {
+    "type": "feature",
+    "name": "sign_up",
+    "description": "Registration screen and cubit",
+    "location": "lib/presentation/sign_up/",
+    "keywords": ["sign up", "register"]
+  },
+  {
+    "type": "feature",
+    "name": "splash",
+    "description": "Splash / bootstrap",
+    "location": "lib/presentation/splash/",
+    "keywords": ["splash", "startup"]
+  }
+]

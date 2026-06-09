@@ -1,9 +1,9 @@
-import 'package:delivery_go/domain/entities/profile/account.dart';
-import 'package:delivery_go/domain/entities/profile/user_profile.dart';
-import 'package:delivery_go/domain/entities/role/role_employee.dart';
-import 'package:delivery_go/domain/entities/role/role_owner.dart';
-import 'package:delivery_go/domain/entities/shop/shop.dart';
-import 'package:delivery_go/domain/entities/shop/shop_employee.dart';
+import 'package:mOrder/domain/entities/profile/account.dart';
+import 'package:mOrder/domain/entities/profile/user_profile.dart';
+import 'package:mOrder/domain/entities/role/role_employee.dart';
+import 'package:mOrder/domain/entities/role/role_owner.dart';
+import 'package:mOrder/domain/entities/shop/shop.dart';
+import 'package:mOrder/domain/entities/shop/shop_employee.dart';
 
 abstract class SignUp {
   Account? get account;

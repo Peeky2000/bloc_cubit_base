@@ -1,12 +1,12 @@
-import 'package:delivery_go/core/common/route.dart';
-import 'package:delivery_go/core/routing/routing.dart';
-import 'package:delivery_go/domain/entities/profile/account.dart';
-import 'package:sli_common/extension/extensions.dart';
-import 'package:sli_common/sli_common.dart';
+import 'package:mOrder/core/common/route.dart';
+import 'package:mOrder/core/routing/routing.dart';
+import 'package:mOrder/domain/entities/profile/account.dart';
+import 'package:mOrder/core/extension/string_extension.dart';
+import 'package:mOrder/core/helper/log.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:delivery_go/di/injection.dart';
-import 'package:delivery_go/domain/use_case/auth_use_case.dart';
+import 'package:mOrder/di/injection.dart';
+import 'package:mOrder/domain/use_case/auth_use_case.dart';
 
 part 'splash_state.dart';
 

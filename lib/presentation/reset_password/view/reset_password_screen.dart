@@ -1,20 +1,22 @@
-import 'package:delivery_go/core/app/app.dart';
-import 'package:delivery_go/core/common/enum.dart';
-import 'package:delivery_go/core/routing/routing.dart';
-import 'package:delivery_go/generated/assets.gen.dart';
-import 'package:delivery_go/l10n/l10n.dart';
-import 'package:delivery_go/widget/loading_screen.dart';
+import 'package:mOrder/core/app/app.dart';
+import 'package:mOrder/core/common/enum.dart';
+import 'package:mOrder/core/routing/routing.dart';
+import 'package:mOrder/generated/assets.gen.dart';
+import 'package:mOrder/l10n/l10n.dart';
+import 'package:mOrder/widget/delivery_go_button.dart';
+import 'package:mOrder/widget/loading_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:sli_common/extension/extensions.dart';
-import 'package:delivery_go/widget/delivery_go_button.dart';
+import 'package:mOrder/core/extension/string_extension.dart';
+import 'package:mOrder/core/extension/int_extension.dart';
+import 'package:mOrder/core/widget/common_text_field.dart';
+import 'package:mOrder/core/widget/dialog_util.dart';
 import 'package:flutter/gestures.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:sli_common/sli_common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:delivery_go/core/mixin/after_layout.dart';
-import 'package:delivery_go/di/injection.dart';
-import 'package:delivery_go/presentation/reset_password/cubit/reset_password_cubit.dart';
+import 'package:mOrder/core/mixin/after_layout.dart';
+import 'package:mOrder/di/injection.dart';
+import 'package:mOrder/presentation/reset_password/cubit/reset_password_cubit.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 Widget resetPasswordScreenBuilder() => BlocProvider<ResetPasswordCubit>(

@@ -1,6 +1,6 @@
-import 'package:delivery_go/core/app/app_color.dart';
-import 'package:delivery_go/core/app/app_style.dart';
-import 'package:delivery_go/core/app/app_theme.dart';
+import 'package:mOrder/core/app/app_color.dart';
+import 'package:mOrder/core/app/app_style.dart';
+import 'package:mOrder/core/app/app_theme.dart';
 
 class App {
   static AppStyle? _appStyle;

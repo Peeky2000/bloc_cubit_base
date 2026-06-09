@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sli_common/sli_common.dart';
-import 'package:delivery_go/core/app/app.dart';
-import 'package:delivery_go/core/common/constant.dart';
+import 'package:mOrder/core/app/app.dart';
+import 'package:mOrder/core/common/constant.dart';
+import 'package:mOrder/core/widget/bottom_2_button.dart';
+
 
 class DeliveryGoBottom2Button extends StatelessWidget {
   final String? title1;
@@ -33,7 +34,7 @@ class DeliveryGoBottom2Button extends StatelessWidget {
       title2: title2,
       onTapButton1: onTapButton1,
       onTapButton2: onTapButton2,
-      height: height ?? 48.h,
+      height: (height ?? 48.h).toDouble(),
       isDisableButton1: isDisableButton1,
       isDisableButton2: isDisableButton2,
       textColorButton1: Colors.white,

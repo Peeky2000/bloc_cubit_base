@@ -1,17 +1,17 @@
 import 'dart:io';
 
-import 'package:delivery_go/core/app/app_controller.dart';
-import 'package:delivery_go/data/datasource/remote/interceptor/curl_interceptor.dart';
-import 'package:delivery_go/di/injection.dart';
+import 'package:mOrder/core/app/app_controller.dart';
+import 'package:mOrder/data/datasource/remote/interceptor/curl_interceptor.dart';
+import 'package:mOrder/di/injection.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:delivery_go/core/error/exception.dart';
-import 'package:delivery_go/data/datasource/local/token_provider.dart';
-import 'package:delivery_go/data/datasource/remote/interceptor/auth_interceotor.dart';
-import 'package:delivery_go/data/datasource/remote/interceptor/network_interceptor.dart';
-import 'package:delivery_go/data/datasource/remote/interceptor/session_interceptor.dart';
-import 'package:delivery_go/data/model/response/base_list_response_model.dart';
-import 'package:delivery_go/data/model/response/base_response_model.dart';
+import 'package:mOrder/core/error/exception.dart';
+import 'package:mOrder/data/datasource/local/token_provider.dart';
+import 'package:mOrder/data/datasource/remote/interceptor/auth_interceotor.dart';
+import 'package:mOrder/data/datasource/remote/interceptor/network_interceptor.dart';
+import 'package:mOrder/data/datasource/remote/interceptor/session_interceptor.dart';
+import 'package:mOrder/data/model/response/base_list_response_model.dart';
+import 'package:mOrder/data/model/response/base_response_model.dart';
 
 typedef ApiResponseToModelParser<T> = T Function(Map<String, dynamic> json);
 

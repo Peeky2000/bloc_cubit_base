@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
-import 'package:delivery_go/core/common/enum.dart';
-import 'package:delivery_go/di/injection.dart';
+import 'package:mOrder/core/common/enum.dart';
+import 'package:mOrder/di/injection.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:delivery_go/core/common/enum.dart';
+import 'package:mOrder/core/common/enum.dart';
 
 const String _localeKey = 'localeKey';
 

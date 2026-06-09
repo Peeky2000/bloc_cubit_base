@@ -1,0 +1,16 @@
+[
+  {
+    "type": "entity",
+    "name": "Login",
+    "description": "Login result with account and token",
+    "location": "lib/domain/entities/auth/login.dart",
+    "keywords": ["login", "auth", "entity"]
+  },
+  {
+    "type": "entity",
+    "name": "Account",
+    "description": "User account profile contract",
+    "location": "lib/domain/entities/profile/account.dart",
+    "keywords": ["account", "profile", "entity"]
+  }
+]

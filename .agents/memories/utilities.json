@@ -1,0 +1,23 @@
+[
+  {
+    "type": "utility",
+    "name": "Injector",
+    "description": "get_it service locator setup",
+    "location": "lib/di/injection.dart",
+    "keywords": ["di", "get_it", "injection"]
+  },
+  {
+    "type": "utility",
+    "name": "handleErrorResponse",
+    "description": "Global API error dialog handler",
+    "location": "lib/presentation/global_handler.dart",
+    "keywords": ["error", "handler", "dialog"]
+  },
+  {
+    "type": "utility",
+    "name": "ErrorMapper",
+    "description": "Maps exceptions to display strings",
+    "location": "lib/core/error/error_to_string_mapper.dart",
+    "keywords": ["error", "mapper", "message"]
+  }
+]

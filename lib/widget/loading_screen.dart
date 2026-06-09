@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:delivery_go/core/base_component/base_app_state.dart';
-import 'package:delivery_go/core/common/enum.dart';
+import 'package:mOrder/core/base_component/base_app_state.dart';
+import 'package:mOrder/core/common/enum.dart';
 
 class LoadingScreen<B extends StateStreamable<S>, S extends BaseAppState>
     extends StatelessWidget {

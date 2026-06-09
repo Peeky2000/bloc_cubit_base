@@ -1,0 +1,18 @@
+[
+  {
+    "type": "model",
+    "name": "LoginResponseModel",
+    "description": "Login API response, implements Login entity",
+    "location": "lib/data/model/response/auth/login_response_model.dart",
+    "keywords": ["login", "auth", "response", "json"],
+    "model_type": "class"
+  },
+  {
+    "type": "model",
+    "name": "BaseResponseModel",
+    "description": "Standard API wrapper with data field",
+    "location": "lib/data/model/response/base_response_model.dart",
+    "keywords": ["base", "response", "api"],
+    "model_type": "class"
+  }
+]

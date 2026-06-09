@@ -1,11 +1,11 @@
-import 'package:delivery_go/data/datasource/remote/interceptor/curl_interceptor.dart';
+import 'package:mOrder/data/datasource/remote/interceptor/curl_interceptor.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:delivery_go/data/datasource/local/token_provider.dart';
-import 'package:delivery_go/data/datasource/remote/url_end_point.dart';
-import 'package:delivery_go/data/model/response/base_response_model.dart';
-import 'package:delivery_go/data/model/response/token_response_model.dart';
-import 'package:sli_common/extension/extensions.dart';
+import 'package:mOrder/data/datasource/local/token_provider.dart';
+import 'package:mOrder/data/datasource/remote/url_end_point.dart';
+import 'package:mOrder/data/model/response/base_response_model.dart';
+import 'package:mOrder/data/model/response/token_response_model.dart';
+import 'package:mOrder/core/extension/string_extension.dart';
 
 final List<String> _arrSkipAuthPath = [
   UrlEndPoint.auth.login,

@@ -1,0 +1,9 @@
+[
+  {
+    "type": "validator",
+    "name": "Constant regex",
+    "description": "phoneRegexp, emailRegexp, passwordRegexp for form validation",
+    "location": "lib/core/common/constant.dart",
+    "keywords": ["regex", "validation", "phone", "email", "password"]
+  }
+]

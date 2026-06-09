@@ -1,5 +1,5 @@
-import 'package:delivery_go/core/app/app.dart';
-import 'package:delivery_go/generated/fonts.gen.dart';
+import 'package:mOrder/core/app/app.dart';
+import 'package:mOrder/generated/fonts.gen.dart';
 import 'package:flutter/material.dart';
 
 class AppTheme {

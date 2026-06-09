@@ -1,9 +1,9 @@
-import 'package:delivery_go/di/injection.dart';
-import 'package:delivery_go/domain/use_case/auth_use_case.dart';
-import 'package:delivery_go/l10n/l10n.dart';
+import 'package:mOrder/di/injection.dart';
+import 'package:mOrder/domain/use_case/auth_use_case.dart';
+import 'package:mOrder/l10n/l10n.dart';
 import 'package:flutter/material.dart';
-import 'package:delivery_go/core/routing/routing.dart';
-import 'package:sli_common/sli_common.dart';
+import 'package:mOrder/core/routing/routing.dart';
+import 'package:mOrder/core/widget/dialog_util.dart';
 
 class AppController {
   BuildContext? get context => SLIRouting.key.currentContext;

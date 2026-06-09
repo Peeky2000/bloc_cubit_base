@@ -1,8 +1,8 @@
-import 'package:delivery_go/data/model/request/sign_up_request_model.dart';
-import 'package:delivery_go/domain/entities/auth/login.dart';
-import 'package:delivery_go/domain/entities/auth/sign_up.dart';
-import 'package:delivery_go/domain/entities/auth/token_wrapper.dart';
-import 'package:delivery_go/domain/entities/profile/update_account.dart';
+import 'package:mOrder/data/model/request/sign_up_request_model.dart';
+import 'package:mOrder/domain/entities/auth/login.dart';
+import 'package:mOrder/domain/entities/auth/sign_up.dart';
+import 'package:mOrder/domain/entities/auth/token_wrapper.dart';
+import 'package:mOrder/domain/entities/profile/update_account.dart';
 
 abstract class AuthRepo {
   bool isAppLogin();

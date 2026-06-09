@@ -1,0 +1,23 @@
+[
+  {
+    "type": "api",
+    "name": "ApiClient",
+    "description": "Dio-based ApiHandler implementation",
+    "location": "lib/data/datasource/remote/api_client.dart",
+    "keywords": ["dio", "api", "http", "client"]
+  },
+  {
+    "type": "api",
+    "name": "AuthRemoteDataSource",
+    "description": "Auth REST endpoints via ApiHandler",
+    "location": "lib/data/datasource/remote/auth_remote_data_source.dart",
+    "keywords": ["auth", "remote", "datasource", "login"]
+  },
+  {
+    "type": "api",
+    "name": "UrlEndPoint",
+    "description": "API path constants",
+    "location": "lib/data/datasource/remote/url_end_point.dart",
+    "keywords": ["endpoint", "url", "path"]
+  }
+]

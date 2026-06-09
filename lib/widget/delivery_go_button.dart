@@ -1,8 +1,8 @@
-import 'package:sli_common/sli_common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:delivery_go/core/app/app.dart';
-import 'package:delivery_go/core/common/constant.dart';
+import 'package:mOrder/core/app/app.dart';
+import 'package:mOrder/core/common/constant.dart';
+import 'package:mOrder/core/widget/ink_well_button.dart';
 
 class DeliveryGoButton extends StatelessWidget {
   final String? title;

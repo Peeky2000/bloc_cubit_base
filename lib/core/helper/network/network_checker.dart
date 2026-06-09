@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:delivery_go/core/helper/lib/data_connection_checker.dart';
+import 'package:mOrder/core/helper/lib/data_connection_checker.dart';
 
 class NetworkChecker {
   NetworkChecker();
@@ -50,23 +50,13 @@ class NetworkChecker {
       ),
     ];
     _checker.checkInterval = const Duration(seconds: 15);
-    // ConnectivityResult connectivityResult = await Connectivity().checkConnectivity();
-    // if (connectivityResult == ConnectivityResult.none) {
-    //   if (isConnected && !_isCheckFirst) {
-    //     connectController.sink.add(false);
-    //   }
-    // } else {
-    //   if (!_isCheckFirst) {
-    //     connectController.sink.add(await _checker.hasConnection);
-    //   }
-    // }
-    _subscription = Connectivity()
-        .onConnectivityChanged
-        .listen((ConnectivityResult result) {
-      if (result != ConnectivityResult.none) {
-        _subscriptionDataChecker = _checker.onStatusChange.listen((status) {
+    _subscription = Connectivity().onConnectivityChanged.listen((List<ConnectivityResult> result) {
+      if (!result.contains(ConnectivityResult.none)) {
+        _checker.onStatusChange.listen((status) {
           bool isConnectedData = status == DataConnectionStatus.connected;
-          if (isConnected != null && isConnected != isConnectedData) {
+          if (isConnected != null &&
+              isConnected != isConnectedData &&
+              !result.contains(ConnectivityResult.none)) {
             connectController.sink.add(isConnectedData);
           } else {
             isConnected ??= isConnectedData;
@@ -74,7 +64,7 @@ class NetworkChecker {
         });
       } else {
         connectController.sink.add(false);
-        _subscriptionDataChecker?.cancel();
+        // _subscriptionDataChecker?.cancel();
       }
     });
   }

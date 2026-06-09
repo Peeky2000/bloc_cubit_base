@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:delivery_go/data/model/response/token_response_model.dart';
-import 'package:sli_common/extension/extensions.dart';
+import 'package:mOrder/data/model/response/token_response_model.dart';
+import 'package:mOrder/core/extension/string_extension.dart';
 
 const String _tokenKey = 'token';
 

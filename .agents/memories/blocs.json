@@ -1,0 +1,30 @@
+[
+  {
+    "type": "bloc",
+    "name": "SignInCubit",
+    "description": "Sign-in form validation and login via AuthUseCase",
+    "location": "lib/presentation/sign_in/cubit/sign_in_cubit.dart",
+    "keywords": ["sign in", "login", "auth", "cubit"]
+  },
+  {
+    "type": "bloc",
+    "name": "SignUpCubit",
+    "description": "User registration flow",
+    "location": "lib/presentation/sign_up/cubit/sign_up_cubit.dart",
+    "keywords": ["sign up", "register", "cubit"]
+  },
+  {
+    "type": "bloc",
+    "name": "SplashCubit",
+    "description": "App startup and initial routing",
+    "location": "lib/presentation/splash/cubit/splash_cubit.dart",
+    "keywords": ["splash", "startup", "cubit"]
+  },
+  {
+    "type": "bloc",
+    "name": "AppCubit",
+    "description": "App-wide state",
+    "location": "lib/core/app/app_cubit/app_cubit.dart",
+    "keywords": ["app", "global", "cubit"]
+  }
+]

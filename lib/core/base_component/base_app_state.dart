@@ -1,4 +1,4 @@
-import 'package:delivery_go/core/common/enum.dart';
+import 'package:mOrder/core/common/enum.dart';
 
 class BaseAppState {
   LoadingStatus loading;

@@ -1,7 +1,7 @@
-import 'package:delivery_go/data/datasource/local/user_local_data_source.dart';
-import 'package:delivery_go/data/model/response/profile/account_response_model.dart';
-import 'package:delivery_go/domain/entities/profile/account.dart';
-import 'package:delivery_go/domain/repositories/user_repo.dart';
+import 'package:mOrder/data/datasource/local/user_local_data_source.dart';
+import 'package:mOrder/data/model/response/profile/account_response_model.dart';
+import 'package:mOrder/domain/entities/profile/account.dart';
+import 'package:mOrder/domain/repositories/user_repo.dart';
 
 class UserRepoImpl implements UserRepo {
   final UserLocalDataSource _userLocalDataSource;

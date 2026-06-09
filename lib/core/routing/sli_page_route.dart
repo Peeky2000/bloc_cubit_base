@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:delivery_go/core/routing/default_transitions.dart';
-import 'package:delivery_go/core/routing/sli_transaction_mixin.dart';
+import 'package:mOrder/core/routing/default_transitions.dart';
+import 'package:mOrder/core/routing/sli_transaction_mixin.dart';
 
 class SLIPageRoute<T> extends PageRoute<T> with SLIPageRouteTransitionMixin<T> {
   @override

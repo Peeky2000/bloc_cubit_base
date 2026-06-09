@@ -6,9 +6,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:delivery_go/core/routing/default_transitions.dart';
-import 'package:delivery_go/core/routing/routing.dart';
-import 'package:delivery_go/core/routing/sli_page_route.dart';
+import 'package:mOrder/core/routing/default_transitions.dart';
+import 'package:mOrder/core/routing/routing.dart';
+import 'package:mOrder/core/routing/sli_page_route.dart';
 
 const double _kBackGestureWidth = 20.0;
 const int _kMaxDroppedSwipePageForwardAnimationTime = 800;

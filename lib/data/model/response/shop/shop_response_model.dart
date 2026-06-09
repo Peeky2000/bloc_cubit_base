@@ -1,5 +1,5 @@
-import 'package:delivery_go/core/adapter/time_iso8601_converter.dart';
-import 'package:delivery_go/domain/entities/shop/shop.dart';
+import 'package:mOrder/core/adapter/time_iso8601_converter.dart';
+import 'package:mOrder/domain/entities/shop/shop.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'shop_response_model.g.dart';

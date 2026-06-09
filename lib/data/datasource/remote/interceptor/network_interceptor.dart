@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
-import 'package:delivery_go/core/app/app_controller.dart';
-import 'package:delivery_go/core/extension/build_context_extension.dart';
-import 'package:delivery_go/core/helper/network/network_checker.dart';
-import 'package:delivery_go/core/routing/sli_page_route.dart';
-import 'package:delivery_go/di/injection.dart';
-import 'package:delivery_go/widget/no_internet_screen.dart';
+import 'package:mOrder/core/app/app_controller.dart';
+import 'package:mOrder/core/extension/build_context_extension.dart';
+import 'package:mOrder/core/helper/network/network_checker.dart';
+import 'package:mOrder/core/routing/sli_page_route.dart';
+import 'package:mOrder/di/injection.dart';
+import 'package:mOrder/widget/no_internet_screen.dart';
 
 class NetworkInterceptor extends QueuedInterceptor {
   NetworkInterceptor();

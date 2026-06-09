@@ -1,3 +1,3 @@
 [submodule "sli_common"]
 	path = lib/modules/sli_common
-	url = https://gitlab.com/DatUET/sli_common
+	url = https://github.com/Peeky2000/sli_common

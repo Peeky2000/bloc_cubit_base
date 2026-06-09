@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:delivery_go/core/routing/circular_reveal_clipper.dart';
+import 'package:mOrder/core/routing/circular_reveal_clipper.dart';
 
 enum Transition {
   fade,

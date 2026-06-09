@@ -1,8 +1,8 @@
-import 'package:delivery_go/core/app/app_controller.dart';
-import 'package:delivery_go/core/error/error_to_string_mapper.dart';
-import 'package:delivery_go/di/injection.dart';
-import 'package:delivery_go/l10n/l10n.dart';
-import 'package:sli_common/sli_common.dart';
+import 'package:mOrder/core/app/app_controller.dart';
+import 'package:mOrder/core/error/error_to_string_mapper.dart';
+import 'package:mOrder/core/widget/dialog_util.dart';
+import 'package:mOrder/di/injection.dart';
+import 'package:mOrder/l10n/l10n.dart';
 
 void handleErrorResponse(dynamic error, {Function()? onRetry}) {
   if (!DialogUtil.isShowingDialog) {

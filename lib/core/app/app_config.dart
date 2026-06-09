@@ -1,5 +1,5 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:delivery_go/core/common/enum.dart';
+import 'package:mOrder/core/common/enum.dart';
 
 class AppConfig {
   final Environment _environment;

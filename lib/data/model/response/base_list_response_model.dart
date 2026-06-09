@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:delivery_go/domain/entities/response/base_list_response.dart';
+import 'package:mOrder/domain/entities/response/base_list_response.dart';
 
 part 'base_list_response_model.g.dart';
 

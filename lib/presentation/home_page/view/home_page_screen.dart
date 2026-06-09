@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:delivery_go/core/mixin/after_layout.dart';
-import 'package:delivery_go/di/injection.dart';
-import 'package:delivery_go/presentation/home_page/cubit/home_page_cubit.dart';
+import 'package:mOrder/core/mixin/after_layout.dart';
+import 'package:mOrder/di/injection.dart';
+import 'package:mOrder/presentation/home_page/cubit/home_page_cubit.dart';
 
 Widget homePageScreenBuilder() => BlocProvider<HomePageCubit>(
       create: (_) => Injector.getIt.get<HomePageCubit>(),

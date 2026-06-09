@@ -1,4 +1,4 @@
-import 'package:delivery_go/core/common/enum.dart';
+import 'package:mOrder/core/common/enum.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'sign_up_request_model.g.dart';

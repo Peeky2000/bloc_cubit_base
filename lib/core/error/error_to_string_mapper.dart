@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart' as dio;
-import 'package:delivery_go/core/app/app_controller.dart';
-import 'package:delivery_go/core/error/exception.dart';
-import 'package:delivery_go/data/model/response/base_response_model.dart';
-import 'package:delivery_go/di/injection.dart';
-import 'package:delivery_go/l10n/l10n.dart';
+import 'package:mOrder/core/app/app_controller.dart';
+import 'package:mOrder/core/error/exception.dart';
+import 'package:mOrder/data/model/response/base_response_model.dart';
+import 'package:mOrder/di/injection.dart';
+import 'package:mOrder/l10n/l10n.dart';
 
 part 'error_mapper_item.dart';
 

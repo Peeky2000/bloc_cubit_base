@@ -1,5 +1,16 @@
-# delivery_go
+# Flutter Bloc/Cubit Base
 
+Clean Architecture Flutter template with **AI workflow** (agents + skills under `.agents/`).
+
+- [ai-process.md](ai-process.md) — quy trình brainstorm → spec → plan → code → review
+- [AGENTS.md](AGENTS.md) — cách gọi PM / coder / reviewer
+- [docs/prerequisites.md](docs/prerequisites.md) — stack & paths cho AI
+
+Package name: see `pubspec.yaml` (`name:`). Đổi tên khi fork base.
+
+---
+
+## Legacy setup notes
 
 #Note
 1. Set up project if server use message code

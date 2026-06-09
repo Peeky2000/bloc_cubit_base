@@ -1,0 +1,16 @@
+[
+  {
+    "type": "extension",
+    "name": "AppLocalizationsX",
+    "description": "context.l10n shortcut",
+    "location": "lib/l10n/l10n.dart",
+    "keywords": ["l10n", "localization", "context"]
+  },
+  {
+    "type": "extension",
+    "name": "BuildContextExtension",
+    "description": "Navigator helper on BuildContext",
+    "location": "lib/core/extension/build_context_extension.dart",
+    "keywords": ["context", "navigator", "extension"]
+  }
+]

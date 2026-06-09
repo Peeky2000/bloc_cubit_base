@@ -1,21 +1,21 @@
 import 'dart:async';
 
-import 'package:delivery_go/core/app/app_controller.dart';
-import 'package:delivery_go/core/common/constant.dart';
-import 'package:delivery_go/core/common/route.dart';
-import 'package:delivery_go/core/error/exception.dart';
-import 'package:delivery_go/core/routing/routing.dart';
-import 'package:delivery_go/di/injection.dart';
-import 'package:delivery_go/domain/use_case/auth_use_case.dart';
-import 'package:delivery_go/l10n/l10n.dart';
-import 'package:delivery_go/presentation/global_handler.dart';
-import 'package:delivery_go/presentation/success/success_screen.dart';
+import 'package:mOrder/core/app/app_controller.dart';
+import 'package:mOrder/core/common/constant.dart';
+import 'package:mOrder/core/common/route.dart';
+import 'package:mOrder/core/error/exception.dart';
+import 'package:mOrder/core/routing/routing.dart';
+import 'package:mOrder/di/injection.dart';
+import 'package:mOrder/domain/use_case/auth_use_case.dart';
+import 'package:mOrder/l10n/l10n.dart';
+import 'package:mOrder/presentation/global_handler.dart';
+import 'package:mOrder/presentation/success/success_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:equatable/equatable.dart';
-import 'package:delivery_go/core/base_component/base_app_state.dart';
-import 'package:delivery_go/core/base_component/base_cubit.dart';
-import 'package:delivery_go/core/common/enum.dart';
+import 'package:mOrder/core/base_component/base_app_state.dart';
+import 'package:mOrder/core/base_component/base_cubit.dart';
+import 'package:mOrder/core/common/enum.dart';
 
 part 'confirm_information_state.dart';
 

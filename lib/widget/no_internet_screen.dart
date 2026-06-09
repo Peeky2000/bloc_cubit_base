@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:delivery_go/core/app/app.dart';
-import 'package:delivery_go/core/helper/network/network_checker.dart';
-import 'package:delivery_go/di/injection.dart';
-import 'package:delivery_go/generated/assets.gen.dart';
-import 'package:delivery_go/l10n/l10n.dart';
-import 'package:sli_common/sli_common.dart';
+import 'package:mOrder/core/app/app.dart';
+import 'package:mOrder/core/helper/network/network_checker.dart';
+import 'package:mOrder/di/injection.dart';
+import 'package:mOrder/generated/assets.gen.dart';
+import 'package:mOrder/l10n/l10n.dart';
+import 'package:mOrder/core/widget/ink_well_button.dart';
 
 class NoInternetScreen extends StatelessWidget {
   final VoidCallback onRetry;

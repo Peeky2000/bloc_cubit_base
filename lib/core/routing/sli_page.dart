@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:delivery_go/core/routing/default_transitions.dart';
-import 'package:delivery_go/core/routing/sli_page_route.dart';
+import 'package:mOrder/core/routing/default_transitions.dart';
+import 'package:mOrder/core/routing/sli_page_route.dart';
 
 class SLIPage<T> extends Page<T> {
   final Widget page;

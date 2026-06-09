@@ -1,9 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:delivery_go/core/common/enum.dart';
-import 'package:delivery_go/di/injection.dart';
-import 'package:delivery_go/domain/use_case/app_use_case.dart';
+import 'package:mOrder/core/common/enum.dart';
+import 'package:mOrder/di/injection.dart';
+import 'package:mOrder/domain/use_case/app_use_case.dart';
 
 part 'app_state.dart';
 

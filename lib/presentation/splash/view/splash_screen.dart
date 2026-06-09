@@ -1,14 +1,14 @@
-import 'package:delivery_go/core/app/app.dart';
-import 'package:delivery_go/core/common/route.dart';
-import 'package:delivery_go/core/routing/routing.dart';
+import 'package:mOrder/core/app/app.dart';
+import 'package:mOrder/core/common/route.dart';
+import 'package:mOrder/core/routing/routing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:delivery_go/core/mixin/after_layout.dart';
-import 'package:delivery_go/di/injection.dart';
-import 'package:delivery_go/generated/assets.gen.dart';
-import 'package:delivery_go/presentation/splash/cubit/splash_cubit.dart';
+import 'package:mOrder/core/mixin/after_layout.dart';
+import 'package:mOrder/di/injection.dart';
+import 'package:mOrder/generated/assets.gen.dart';
+import 'package:mOrder/presentation/splash/cubit/splash_cubit.dart';
 
 Widget splashScreenBuilder() => BlocProvider<SplashCubit>(
       create: (_) => Injector.getIt.get<SplashCubit>(),

@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:delivery_go/core/routing/default_transitions.dart';
-import 'package:delivery_go/core/routing/route_observer.dart';
-import 'package:delivery_go/core/routing/sli_bottomsheet.dart';
-import 'package:delivery_go/core/routing/sli_page_route.dart';
+import 'package:mOrder/core/routing/default_transitions.dart';
+import 'package:mOrder/core/routing/route_observer.dart';
+import 'package:mOrder/core/routing/sli_bottomsheet.dart';
+import 'package:mOrder/core/routing/sli_page_route.dart';
 
 class SLIRouting {
   static Transition? defaultTransition;

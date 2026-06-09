@@ -1,22 +1,26 @@
-import 'package:delivery_go/core/common/constant.dart';
+import 'package:mOrder/core/common/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:delivery_go/core/app/app.dart';
-import 'package:delivery_go/core/app/app_controller.dart';
-import 'package:delivery_go/core/app/app_cubit/app_cubit.dart';
-import 'package:delivery_go/core/common/route.dart';
-import 'package:delivery_go/core/helper/network/network_checker.dart';
-import 'package:delivery_go/core/routing/route_observer.dart';
-import 'package:delivery_go/core/routing/routing.dart';
-import 'package:delivery_go/core/routing/sli_page.dart';
-import 'package:delivery_go/core/routing/sli_page_route.dart';
-import 'package:delivery_go/di/injection.dart';
-import 'package:delivery_go/l10n/l10n.dart';
-import 'package:sli_common/l10n/arb/app_localizations.dart'
-    as sliCommonLocalization;
-import 'package:sli_common/sli_common.dart';
+import 'package:mOrder/core/app/app.dart';
+import 'package:mOrder/core/app/app_controller.dart';
+import 'package:mOrder/core/app/app_cubit/app_cubit.dart';
+import 'package:mOrder/core/common/route.dart';
+import 'package:mOrder/core/helper/network/network_checker.dart';
+import 'package:mOrder/core/routing/route_observer.dart';
+import 'package:mOrder/core/routing/routing.dart';
+import 'package:mOrder/core/routing/sli_page.dart';
+import 'package:mOrder/core/routing/sli_page_route.dart';
+import 'package:mOrder/di/injection.dart';
+import 'package:mOrder/l10n/l10n.dart';
+import 'package:mOrder/core/extension/string_extension.dart';
+import 'package:mOrder/core/widget/dialog_util.dart';
+import 'package:mOrder/core/widget/title_widget.dart';
+import 'package:mOrder/core/widget/money_widget.dart';
+import 'package:mOrder/core/widget/common_text_field.dart';
+import 'package:mOrder/core/widget/common_drop_down.dart';
+import 'package:mOrder/core/widget/base_field.dart';
 
 class MainApp extends StatelessWidget {
   const MainApp({Key? key}) : super(key: key);
@@ -193,8 +197,7 @@ class MainApp extends StatelessWidget {
                   navigatorObservers: [
                     SLIRouteObserver(SLIRouting.routing),
                   ],
-                  localizationsDelegates: const [
-                    sliCommonLocalization.AppLocalizations.delegate,
+                  localizationsDelegates: [
                     AppLocalizations.delegate,
                     // ServerMessageLocalization.delegate,
                     GlobalMaterialLocalizations.delegate,

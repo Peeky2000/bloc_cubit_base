@@ -1,0 +1,16 @@
+[
+  {
+    "type": "route",
+    "name": "AppPage",
+    "description": "Named routes and SLIPage list for SLIRouting",
+    "location": "lib/core/common/route.dart",
+    "keywords": ["route", "navigation", "SLIRouting", "AppPage"]
+  },
+  {
+    "type": "route",
+    "name": "SLIRouting",
+    "description": "Navigation helpers toNamed, offAllNamed, back",
+    "location": "lib/core/routing/routing.dart",
+    "keywords": ["routing", "navigator", "SLI"]
+  }
+]

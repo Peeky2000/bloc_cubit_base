@@ -1,10 +1,10 @@
-import 'package:delivery_go/data/model/response/profile/account_response_model.dart';
-import 'package:delivery_go/data/model/response/profile/user_profile_response_model.dart';
-import 'package:delivery_go/data/model/response/role/role_employee_response_model.dart';
-import 'package:delivery_go/data/model/response/role/role_owner_response_model.dart';
-import 'package:delivery_go/data/model/response/shop/shop_employee_response_model.dart';
-import 'package:delivery_go/data/model/response/shop/shop_response_model.dart';
-import 'package:delivery_go/domain/entities/auth/sign_up.dart';
+import 'package:mOrder/data/model/response/profile/account_response_model.dart';
+import 'package:mOrder/data/model/response/profile/user_profile_response_model.dart';
+import 'package:mOrder/data/model/response/role/role_employee_response_model.dart';
+import 'package:mOrder/data/model/response/role/role_owner_response_model.dart';
+import 'package:mOrder/data/model/response/shop/shop_employee_response_model.dart';
+import 'package:mOrder/data/model/response/shop/shop_response_model.dart';
+import 'package:mOrder/domain/entities/auth/sign_up.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'sign_up_response_model.g.dart';

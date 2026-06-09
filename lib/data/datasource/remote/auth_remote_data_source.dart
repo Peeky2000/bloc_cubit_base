@@ -1,10 +1,10 @@
-import 'package:delivery_go/data/datasource/remote/api_client.dart';
-import 'package:delivery_go/data/datasource/remote/url_end_point.dart';
-import 'package:delivery_go/data/model/request/sign_up_request_model.dart';
-import 'package:delivery_go/data/model/response/auth/login_response_model.dart';
-import 'package:delivery_go/data/model/response/auth/sign_up_response_model.dart';
-import 'package:delivery_go/data/model/response/base_response_model.dart';
-import 'package:delivery_go/data/model/response/profile/update_account_response_model.dart';
+import 'package:mOrder/data/datasource/remote/api_client.dart';
+import 'package:mOrder/data/datasource/remote/url_end_point.dart';
+import 'package:mOrder/data/model/request/sign_up_request_model.dart';
+import 'package:mOrder/data/model/response/auth/login_response_model.dart';
+import 'package:mOrder/data/model/response/auth/sign_up_response_model.dart';
+import 'package:mOrder/data/model/response/base_response_model.dart';
+import 'package:mOrder/data/model/response/profile/update_account_response_model.dart';
 
 abstract class AuthRemoteDataSource {
   Future<LoginResponseModel?> appLogin(

@@ -1,5 +1,5 @@
-import 'package:delivery_go/core/app/app.dart';
-import 'package:delivery_go/generated/assets.gen.dart';
+import 'package:mOrder/core/app/app.dart';
+import 'package:mOrder/generated/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

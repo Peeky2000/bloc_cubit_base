@@ -5,10 +5,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:delivery_go/core/base_component/base_app_list_state.dart';
-import 'package:delivery_go/core/common/enum.dart';
-import 'package:delivery_go/core/extension/list_extension.dart';
-import 'package:delivery_go/l10n/l10n.dart';
+import 'package:mOrder/core/base_component/base_app_list_state.dart';
+import 'package:mOrder/core/common/enum.dart';
+import 'package:mOrder/core/extension/list_extension.dart';
+import 'package:mOrder/l10n/l10n.dart';
 
 enum LoadingListStyle { IOS, ANDROID }
 

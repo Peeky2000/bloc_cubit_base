@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sli_common/sli_common.dart';
-import 'package:delivery_go/core/app/app.dart';
-import 'package:delivery_go/core/common/constant.dart';
+import 'package:mOrder/core/app/app.dart';
+import 'package:mOrder/core/common/constant.dart';
+import 'package:mOrder/core/widget/bottom_button.dart';
 
 class DeliveryGoBottomButton extends StatelessWidget {
   final String title;

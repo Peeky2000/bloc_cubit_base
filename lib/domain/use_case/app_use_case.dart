@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:delivery_go/core/common/enum.dart';
-import 'package:delivery_go/domain/repositories/app_repo.dart';
+import 'package:mOrder/core/common/enum.dart';
+import 'package:mOrder/domain/repositories/app_repo.dart';
 
 class AppUseCase {
   final AppRepo _appRepo;

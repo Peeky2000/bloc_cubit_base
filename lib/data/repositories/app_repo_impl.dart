@@ -1,8 +1,8 @@
 import 'dart:ui';
 
-import 'package:delivery_go/core/common/enum.dart';
-import 'package:delivery_go/data/datasource/local/app_local_data_source.dart';
-import 'package:delivery_go/domain/repositories/app_repo.dart';
+import 'package:mOrder/core/common/enum.dart';
+import 'package:mOrder/data/datasource/local/app_local_data_source.dart';
+import 'package:mOrder/domain/repositories/app_repo.dart';
 
 class AppRepoImpl implements AppRepo {
   final AppLocalDataSource _appLocalDataSource;

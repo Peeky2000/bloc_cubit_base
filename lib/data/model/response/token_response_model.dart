@@ -1,6 +1,6 @@
-import 'package:delivery_go/data/model/response/auth/token_wrapper_response_model.dart';
+import 'package:mOrder/data/model/response/auth/token_wrapper_response_model.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:delivery_go/domain/entities/response/token_response.dart';
+import 'package:mOrder/domain/entities/response/token_response.dart';
 
 part 'token_response_model.g.dart';
 

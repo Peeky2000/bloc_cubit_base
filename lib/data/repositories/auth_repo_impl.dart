@@ -1,14 +1,14 @@
-import 'package:delivery_go/data/datasource/local/token_provider.dart';
-import 'package:delivery_go/data/datasource/remote/auth_remote_data_source.dart';
-import 'package:delivery_go/data/model/request/sign_up_request_model.dart';
-import 'package:delivery_go/data/model/response/auth/sign_up_response_model.dart';
-import 'package:delivery_go/data/model/response/auth/token_wrapper_response_model.dart';
-import 'package:delivery_go/data/model/response/profile/update_account_response_model.dart';
-import 'package:delivery_go/data/model/response/token_response_model.dart';
-import 'package:delivery_go/domain/entities/auth/login.dart';
-import 'package:delivery_go/domain/entities/auth/token_wrapper.dart';
-import 'package:delivery_go/domain/repositories/auth_repo.dart';
-import 'package:sli_common/extension/extensions.dart';
+import 'package:mOrder/data/datasource/local/token_provider.dart';
+import 'package:mOrder/data/datasource/remote/auth_remote_data_source.dart';
+import 'package:mOrder/data/model/request/sign_up_request_model.dart';
+import 'package:mOrder/data/model/response/auth/sign_up_response_model.dart';
+import 'package:mOrder/data/model/response/auth/token_wrapper_response_model.dart';
+import 'package:mOrder/data/model/response/profile/update_account_response_model.dart';
+import 'package:mOrder/data/model/response/token_response_model.dart';
+import 'package:mOrder/domain/entities/auth/login.dart';
+import 'package:mOrder/domain/entities/auth/token_wrapper.dart';
+import 'package:mOrder/domain/repositories/auth_repo.dart';
+import 'package:mOrder/core/extension/string_extension.dart';
 
 class AuthRepoImpl implements AuthRepo {
   final AuthRemoteDataSource _authRemoteDataSource;

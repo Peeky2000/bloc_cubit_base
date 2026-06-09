@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:delivery_go/core/routing/sli_bottomsheet.dart';
-import 'package:delivery_go/core/routing/sli_page_route.dart';
+import 'package:mOrder/core/routing/sli_bottomsheet.dart';
+import 'package:mOrder/core/routing/sli_page_route.dart';
 
 String? _extractRouteName(Route? route) {
   if (route?.settings.name != null) {

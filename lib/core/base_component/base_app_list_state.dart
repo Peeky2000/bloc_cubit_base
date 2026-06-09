@@ -1,4 +1,4 @@
-import 'package:delivery_go/widget/loading_list_screen.dart';
+import 'package:mOrder/widget/loading_list_screen.dart';
 
 class BaseAppListState<T> {
   LoadingListModel<T> loadingListModel = LoadingListModel<T>();

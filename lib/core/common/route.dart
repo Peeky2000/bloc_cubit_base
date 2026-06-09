@@ -1,10 +1,10 @@
-import 'package:delivery_go/core/routing/sli_page.dart';
-import 'package:delivery_go/presentation/confirm_information/view/confirm_information_screen.dart';
-import 'package:delivery_go/presentation/home_page/view/home_page_screen.dart';
-import 'package:delivery_go/presentation/reset_password/view/reset_password_screen.dart';
-import 'package:delivery_go/presentation/sign_in/view/sign_in_screen.dart';
-import 'package:delivery_go/presentation/sign_up/view/sign_up_screen.dart';
-import 'package:delivery_go/presentation/splash/view/splash_screen.dart';
+import 'package:mOrder/core/routing/sli_page.dart';
+import 'package:mOrder/presentation/confirm_information/view/confirm_information_screen.dart';
+import 'package:mOrder/presentation/home_page/view/home_page_screen.dart';
+import 'package:mOrder/presentation/reset_password/view/reset_password_screen.dart';
+import 'package:mOrder/presentation/sign_in/view/sign_in_screen.dart';
+import 'package:mOrder/presentation/sign_up/view/sign_up_screen.dart';
+import 'package:mOrder/presentation/splash/view/splash_screen.dart';
 
 class AppPage {
   static const String SPLASH = '/';

@@ -1,4 +1,4 @@
-import 'package:delivery_go/domain/entities/profile/account.dart';
+import 'package:mOrder/domain/entities/profile/account.dart';
 
 abstract class UserRepo {
   Account get account;

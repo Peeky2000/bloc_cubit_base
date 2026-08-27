@@ -1,11 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mOrder/core/base_component/base_app_list_state.dart';
+import 'package:bloc_cubit_base/core/base_component/base_app_list_state.dart';
 
 class BaseListCubit<State extends BaseAppListState> extends Cubit<State> {
   bool isHasNexData = false;
   int page = 1;
 
-  BaseListCubit(initialState) : super(initialState);
+  BaseListCubit(super.initialState);
 
   Future<void> load() async {}
 

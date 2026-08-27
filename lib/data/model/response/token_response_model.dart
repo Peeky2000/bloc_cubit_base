@@ -1,6 +1,6 @@
-import 'package:mOrder/data/model/response/auth/token_wrapper_response_model.dart';
+import 'package:bloc_cubit_base/data/model/response/auth/token_wrapper_response_model.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:mOrder/domain/entities/response/token_response.dart';
+import 'package:bloc_cubit_base/domain/entities/response/token_response.dart';
 
 part 'token_response_model.g.dart';
 
@@ -17,7 +17,8 @@ class TokenResponseModel implements TokenResponse {
   TokenResponseModel({this.accessToken, this.refreshToken});
 
   factory TokenResponseModel.fromTokenWrapperResponse(
-      TokenWrapperResponseModel? tokenWrapper) {
+    TokenWrapperResponseModel? tokenWrapper,
+  ) {
     return TokenResponseModel(
       accessToken: tokenWrapper?.access?.token,
       refreshToken: tokenWrapper?.refresh?.token,

@@ -1,16 +1,17 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:mOrder/core/routing/default_transitions.dart';
-import 'package:mOrder/core/routing/route_observer.dart';
-import 'package:mOrder/core/routing/sli_bottomsheet.dart';
-import 'package:mOrder/core/routing/sli_page_route.dart';
+import 'package:bloc_cubit_base/core/routing/default_transitions.dart';
+import 'package:bloc_cubit_base/core/routing/route_observer.dart';
+import 'package:bloc_cubit_base/core/routing/sli_bottomsheet.dart';
+import 'package:bloc_cubit_base/core/routing/sli_page_route.dart';
 
 class SLIRouting {
   static Transition? defaultTransition;
   static Duration defaultTransitionDuration = const Duration(milliseconds: 300);
-  static final _key =
-      GlobalKey<NavigatorState>(debugLabel: 'Key Created by default');
+  static final _key = GlobalKey<NavigatorState>(
+    debugLabel: 'Key Created by default',
+  );
 
   static GlobalKey<NavigatorState> get key => _key;
   static RoutingCache routing = RoutingCache();
@@ -53,31 +54,33 @@ class SLIRouting {
     Duration? enterBottomSheetDuration,
     Duration? exitBottomSheetDuration,
   }) {
-    return Navigator.of(overlayContext!, rootNavigator: useRootNavigator)
-        .push(SLIModalBottomSheetRoute<T>(
-      builder: (_) => bottomsheet,
-      isPersistent: persistent,
-      // theme: Theme.of(key.currentContext, shadowThemeOnly: true),
-      theme: Theme.of(key.currentContext!),
-      isScrollControlled: isScrollControlled,
+    return Navigator.of(overlayContext!, rootNavigator: useRootNavigator).push(
+      SLIModalBottomSheetRoute<T>(
+        builder: (_) => bottomsheet,
+        isPersistent: persistent,
+        // theme: Theme.of(key.currentContext, shadowThemeOnly: true),
+        theme: Theme.of(key.currentContext!),
+        isScrollControlled: isScrollControlled,
 
-      barrierLabel: MaterialLocalizations.of(key.currentContext!)
-          .modalBarrierDismissLabel,
+        barrierLabel: MaterialLocalizations.of(
+          key.currentContext!,
+        ).modalBarrierDismissLabel,
 
-      backgroundColor: backgroundColor ?? Colors.transparent,
-      elevation: elevation,
-      shape: shape,
-      removeTop: ignoreSafeArea ?? true,
-      clipBehavior: clipBehavior,
-      isDismissible: isDismissible,
-      modalBarrierColor: barrierColor,
-      settings: settings,
-      enableDrag: enableDrag,
-      enterBottomSheetDuration:
-          enterBottomSheetDuration ?? const Duration(milliseconds: 250),
-      exitBottomSheetDuration:
-          exitBottomSheetDuration ?? const Duration(milliseconds: 200),
-    ));
+        backgroundColor: backgroundColor ?? Colors.transparent,
+        elevation: elevation,
+        shape: shape,
+        removeTop: ignoreSafeArea ?? true,
+        clipBehavior: clipBehavior,
+        isDismissible: isDismissible,
+        modalBarrierColor: barrierColor,
+        settings: settings,
+        enableDrag: enableDrag,
+        enterBottomSheetDuration:
+            enterBottomSheetDuration ?? const Duration(milliseconds: 250),
+        exitBottomSheetDuration:
+            exitBottomSheetDuration ?? const Duration(milliseconds: 200),
+      ),
+    );
   }
 
   static Future<T?>? to<T>(
@@ -105,10 +108,7 @@ class SLIRouting {
         page: page,
         routeName: routeName,
         gestureWidth: gestureWidth,
-        settings: RouteSettings(
-          name: routeName,
-          arguments: arguments,
-        ),
+        settings: RouteSettings(name: routeName, arguments: arguments),
         popGesture: popGesture ?? Platform.isIOS,
         transition: transition ?? defaultTransition,
         curve: curve ?? Curves.easeOutQuad,
@@ -133,10 +133,7 @@ class SLIRouting {
       page = uri.toString();
     }
 
-    return key.currentState?.pushNamed<T>(
-      page,
-      arguments: arguments,
-    );
+    return key.currentState?.pushNamed<T>(page, arguments: arguments);
   }
 
   static Future<T?>? offNamed<T>(
@@ -153,10 +150,7 @@ class SLIRouting {
       final uri = Uri(path: page, queryParameters: parameters);
       page = uri.toString();
     }
-    return key.currentState?.pushReplacementNamed(
-      page,
-      arguments: arguments,
-    );
+    return key.currentState?.pushReplacementNamed(page, arguments: arguments);
   }
 
   static void until(RoutePredicate predicate) {
@@ -273,20 +267,20 @@ class SLIRouting {
     if (preventDuplicates && routeName == currentRoute) {
       return null;
     }
-    return key.currentState?.pushReplacement(SLIPageRoute(
+    return key.currentState?.pushReplacement(
+      SLIPageRoute(
         opaque: opaque,
         gestureWidth: gestureWidth,
         page: page,
-        settings: RouteSettings(
-          arguments: arguments,
-          name: routeName,
-        ),
+        settings: RouteSettings(arguments: arguments, name: routeName),
         routeName: routeName,
         fullscreenDialog: fullscreenDialog,
         popGesture: popGesture ?? Platform.isIOS,
         transition: transition ?? defaultTransition,
         curve: curve ?? Curves.easeOutQuad,
-        transitionDuration: duration ?? defaultTransitionDuration));
+        transitionDuration: duration ?? defaultTransitionDuration,
+      ),
+    );
   }
 
   static Future<T?>? offAll<T>(
@@ -305,21 +299,19 @@ class SLIRouting {
     routeName ??= "/${page.runtimeType.toString()}";
     routeName = _cleanRouteName(routeName);
     return key.currentState?.pushAndRemoveUntil<T>(
-        SLIPageRoute<T>(
-          opaque: opaque,
-          popGesture: popGesture ?? Platform.isIOS,
-          page: page,
-          gestureWidth: gestureWidth,
-          settings: RouteSettings(
-            name: routeName,
-            arguments: arguments,
-          ),
-          fullscreenDialog: fullscreenDialog,
-          routeName: routeName,
-          transition: transition ?? defaultTransition,
-          curve: curve ?? Curves.easeOutQuad,
-          transitionDuration: duration ?? defaultTransitionDuration,
-        ),
-        predicate ?? (route) => false);
+      SLIPageRoute<T>(
+        opaque: opaque,
+        popGesture: popGesture ?? Platform.isIOS,
+        page: page,
+        gestureWidth: gestureWidth,
+        settings: RouteSettings(name: routeName, arguments: arguments),
+        fullscreenDialog: fullscreenDialog,
+        routeName: routeName,
+        transition: transition ?? defaultTransition,
+        curve: curve ?? Curves.easeOutQuad,
+        transitionDuration: duration ?? defaultTransitionDuration,
+      ),
+      predicate ?? (route) => false,
+    );
   }
 }

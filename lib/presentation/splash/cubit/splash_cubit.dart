@@ -1,35 +1,33 @@
-import 'package:mOrder/core/common/route.dart';
-import 'package:mOrder/core/routing/routing.dart';
-import 'package:mOrder/domain/entities/profile/account.dart';
-import 'package:mOrder/core/extension/string_extension.dart';
-import 'package:mOrder/core/helper/log.dart';
+import 'package:bloc_cubit_base/core/common/route.dart';
+import 'package:bloc_cubit_base/core/routing/routing.dart';
+import 'package:bloc_cubit_base/domain/entities/profile/account.dart';
+import 'package:bloc_cubit_base/core/extension/string_extension.dart';
+import 'package:bloc_cubit_base/core/helper/log.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mOrder/di/injection.dart';
-import 'package:mOrder/domain/use_case/auth_use_case.dart';
+import 'package:bloc_cubit_base/domain/use_case/auth_use_case.dart';
+import 'package:injectable/injectable.dart';
 
 part 'splash_state.dart';
 
+@injectable
 class SplashCubit extends Cubit<SplashState> {
-  final AuthUseCase _authUseCase = Injector.getIt.get<AuthUseCase>();
+  final AuthUseCase _authUseCase;
 
-  SplashCubit() : super(SplashState.initial());
+  SplashCubit(this._authUseCase) : super(SplashState.initial());
 
   Future<void> load() async {
     bool isAppLogin = _authUseCase.isAppLogin();
     Account account = _authUseCase.accountLocal;
-    Future.delayed(
-      const Duration(milliseconds: 1400),
-      () {
-        emit(
-          state.copyWith(
-            isLogin: isAppLogin,
-            isPhoneVerified: account.isPhoneVerified,
-            phone: account.phone,
-          ),
-        );
-      },
-    );
+    Future.delayed(const Duration(milliseconds: 1400), () {
+      emit(
+        state.copyWith(
+          isLogin: isAppLogin,
+          isPhoneVerified: account.isPhoneVerified,
+          phone: account.phone,
+        ),
+      );
+    });
   }
 
   Future<void> sendCodeVerify() async {
@@ -38,11 +36,8 @@ class SplashCubit extends Cubit<SplashState> {
         phone: state.phone!,
         onComplete: () {
           SLIRouting.offAllNamed(
-            AppPage.CONFIRM_INFO,
-            arguments: {
-              'phone': state.phone!,
-              'page_success': AppPage.HOME,
-            },
+            AppPage.confirmInfo,
+            arguments: {'phone': state.phone!, 'page_success': AppPage.home},
           );
         },
         onError: (e) {

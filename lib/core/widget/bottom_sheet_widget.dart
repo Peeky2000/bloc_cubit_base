@@ -8,12 +8,12 @@ class BottomSheetWidget extends StatelessWidget {
   final double? height;
 
   const BottomSheetWidget({
-    Key? key,
+    super.key,
     this.title,
     this.child,
     this.isIntrinsicHeight = true,
     this.height,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,10 +28,7 @@ class BottomSheetWidget extends StatelessWidget {
             padding: EdgeInsets.all(16.w),
             child: Text(
               title!,
-              style: TextStyle(
-                fontSize: 18.sp,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
             ),
           ),
           content,
@@ -41,8 +38,9 @@ class BottomSheetWidget extends StatelessWidget {
 
     return Container(
       height: isIntrinsicHeight ? null : (height ?? 400.h),
-      constraints:
-          isIntrinsicHeight ? BoxConstraints(maxHeight: height ?? 400.h) : null,
+      constraints: isIntrinsicHeight
+          ? BoxConstraints(maxHeight: height ?? 400.h)
+          : null,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(

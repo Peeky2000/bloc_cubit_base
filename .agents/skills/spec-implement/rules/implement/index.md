@@ -6,7 +6,9 @@ Follow `docs/prerequisites.md` and `project-convention`:
 
 - Paths: `lib/domain/`, `lib/data/`, `lib/presentation/`, `lib/di/injection.dart`
 - Cubit → UseCase → Repository → DataSource
-- No `injectable`, no `@freezed` for state, no `go_router`
+- Injectable constructor DI; no service locator in feature logic
+- No `@freezed` requirement for state; use BaseAppState + Equatable + copyWith
+- Use `SLIRouting` / `AppPage`
 
 ## Per checklist type
 
@@ -25,9 +27,8 @@ Follow `docs/prerequisites.md` and `project-convention`:
 ## Quality
 
 ```bash
-dart format lib/
-flutter analyze
-dart run build_runner build --delete-conflicting-outputs  # if models changed
+derry gen  # if models or DI annotations changed
+derry quality
 ```
 
 ## Memory

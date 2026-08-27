@@ -1,5 +1,5 @@
-import 'package:mOrder/core/app/app.dart';
-import 'package:mOrder/generated/assets.gen.dart';
+import 'package:bloc_cubit_base/core/app/app.dart';
+import 'package:bloc_cubit_base/generated/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -8,12 +8,7 @@ class SuccessScreen extends StatelessWidget {
   final String? title;
   final String? subtitle;
 
-  const SuccessScreen({
-    Key? key,
-    this.icon,
-    this.title,
-    this.subtitle,
-  }) : super(key: key);
+  const SuccessScreen({super.key, this.icon, this.title, this.subtitle});
 
   @override
   Widget build(BuildContext context) {
@@ -22,22 +17,16 @@ class SuccessScreen extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const SizedBox(
-            width: double.infinity,
-          ),
+          const SizedBox(width: double.infinity),
           icon ?? Assets.images.imgLogoSmall.image(width: 196.w),
-          SizedBox(
-            height: 32.h,
-          ),
+          SizedBox(height: 32.h),
           Text(
             title ?? '',
             style: App.appStyle?.bold20?.copyWith(
               color: App.appColor?.textColorButton,
             ),
           ),
-          SizedBox(
-            height: 16.h,
-          ),
+          SizedBox(height: 16.h),
           Text(
             subtitle ?? '',
             style: App.appStyle?.medium14?.copyWith(

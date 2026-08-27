@@ -32,7 +32,7 @@ If unclear, ask: "Bạn muốn generate spec mới, fix fe.md từ review file, 
 | 1    | Validate input — require at least one: screenshot, Figma, description, doc link, Stitch ID              |
 | 2    | Read docs/prerequisites.md; for each input type run the matching analysis flow (see Resources)          |
 | 3    | Create spec folder early (naming script → create-spec-folder.py); save design references                |
-| 4    | Load skills: design-to-code, ui-ux-pro-max, app-memory, flutter-model-entity, flutter-repository, flutter-datasource, flutter-bloc-cubit, flutter-router; deep analysis; fill §2 + §4 Questions |
+| 4    | Load app-memory, project-convention, and relevant Flutter layer skills; analyze behavior/reuse; fill §2 + §4 questions |
 | 5    | Fill §6.1–§6.10 (Entity→Model→Repo+UseCase→DataSource→Validation→Widget→Cubit→Screen→Route); paths per `project-convention/references/canonical-paths.md`; mem_search for reuse |
 | 6    | Finalize §3/§5/§7/§8/§9; report path to fe.md                                                          |
 

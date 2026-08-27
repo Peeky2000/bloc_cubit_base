@@ -179,7 +179,7 @@ PageWidget
 - **Represents:** *(what real-world concept this entity describes, e.g. "a single user account")*
 - **Used for:** *(which BLoC / Cubit / Widget consumes it)*
 - **Name:** *(PascalCase, no suffix — e.g. `User`, `OrderItem`)*
-- **Location:** *(e.g. `lib/features/auth/domain/entities/user.dart` or `lib/shared/domain/entities/user.dart`)*
+- **Location:** *(e.g. `lib/domain/entities/auth/user.dart`)*
 - **Fields:**
 
 | Field | Dart type | Note |
@@ -212,7 +212,7 @@ PageWidget
 
 - **Maps to entity:** *(entity name from §6.1)*
 - **Name:** *(PascalCase with `Model` suffix — e.g. `UserModel`, `OrderItemModel`)*
-- **Location:** *(e.g. `lib/features/auth/data/models/user_model.dart` or `lib/shared/data/models/user_model.dart`)*
+- **Location:** *(e.g. `lib/data/model/response/auth/user_response_model.dart`)*
 - **Fields:**
 
 | Field | Dart type | JSON key | Note |
@@ -243,8 +243,8 @@ PageWidget
 #### 6.3.1 *(RepositoryName)*
 
 - **Name:** *(PascalCase with `Repository` suffix — e.g. `AuthRepository`)*
-- **Interface location:** *(e.g. `lib/features/auth/domain/repositories/auth_repository.dart`)*
-- **Impl location:** *(e.g. `lib/features/auth/data/repositories/auth_repository_impl.dart`)*
+- **Interface location:** *(e.g. `lib/domain/repositories/auth_repo.dart`)*
+- **Impl location:** *(e.g. `lib/data/repositories/auth_repo_impl.dart`)*
 - **Methods:**
 
 | Method signature | Returns | Description |
@@ -255,7 +255,7 @@ PageWidget
 
 ### 6.4 API
 
-*(Retrofit endpoints. Only list APIs this screen actually calls.)*
+*(ApiHandler/Dio endpoints. Only list APIs this screen actually calls.)*
 
 - **State management:** *(e.g. list data → Cubit; form state → local Cubit; auth token → SecureStorage)*
 
@@ -319,9 +319,9 @@ PageWidget
 |---|---|---|---|---|---|---|
 |  |  |  |  |  |  |  |
 
-**Status** — `Reuse` | `Create new`  
-**i18n key** — easy_localization key, e.g. `auth.validation.email_invalid`  
-**Location** — `lib/shared/validators/{name}_validator.dart` (shared) or `lib/features/{f}/validators/{name}_validator.dart` (feature-specific)
+**Status** — `Reuse` | `Create new`
+**i18n key** — gen-l10n ARB key, e.g. `emailIsInvalid`
+**Location** — typed validation in the feature Cubit/domain helper; translation stays in the widget
 
 ---
 
@@ -333,28 +333,28 @@ PageWidget
 |---|---|---|---|---|---|---|
 |  |  |  |  |  |  |  |
 
-**Status** — `Reuse` | `Create new`  
-**Location** — `lib/features/{f}/utils/{name}.dart` (feature-specific) or `lib/shared/utils/{name}.dart` (shared) or `lib/core/utils/{name}.dart` (infrastructure)
+**Status** — `Reuse` | `Create new`
+**Location** — `lib/presentation/{feature}/` for feature-only helpers or an existing `lib/core/` area for app-wide infrastructure
 
 ---
 
 ### 6.7 Widget
 
-*(Flutter widgets following Atomic Design. Run app-memory search before each entry. Keep the summary table, then add one subsection per widget.)*
+*(Flutter widgets grouped by ownership/reuse. Search app-memory and `sli_common` before each entry.)*
 
 | Widget | Type | Status | Design ref (→ 2) | Note | Location |
 |---|---|---|---|---|---|
 |  |  |  |  |  |  |
 
-**Type** — `atom` | `molecule` | `organism`  
-**Status** — `Reuse` | `Create new`  
-**Location** — `lib/shared/presentation/design_system/{layer}/{widget_name}/{widget_name}.dart` (shared) or `lib/features/{f}/presentation/widgets/{widget_name}.dart` (feature-specific)
+**Type** — `shared-toolkit` | `app-reusable` | `feature-specific`
+**Status** — `Reuse` | `Create new`
+**Location** — `sli_common`, `lib/core/widget/`, or `lib/presentation/{feature}/view/`
 
 ---
 
 #### 6.7.1 *(WidgetName)*
 
-- **Type:** `atom` | `molecule` | `organism`
+- **Type:** `shared-toolkit` | `app-reusable` | `feature-specific`
 - **Status:** `Create new` | `Reuse`
 - **Location:** `lib/.../{widget_name}.dart`
 - **Description:** *(What this widget does and how it renders. Include key behavior, variants, and any interaction.)*
@@ -398,8 +398,8 @@ lib/.../{widget_name}/
 
 - **Type:** `Cubit` | `BLoC`
 - **Name:** *(PascalCase — e.g. `UserListCubit`, `AuthBloc`)*
-- **State class:** *(e.g. `UserListState` — sealed `@freezed` class)*
-- **Location:** *(e.g. `lib/features/auth/presentation/bloc/auth_bloc.dart`)*
+- **State class:** *(e.g. immutable `UserListState extends BaseAppState`)*
+- **Location:** *(e.g. `lib/presentation/auth/cubit/auth_cubit.dart`)*
 
 **States:**
 
@@ -419,7 +419,7 @@ lib/.../{widget_name}/
 
 ### 6.9 Page
 
-- **Location:** *(e.g. `lib/features/{feature}/presentation/pages/{name}_page.dart`)*
+- **Location:** *(e.g. `lib/presentation/{feature}/view/{name}_screen.dart`)*
 - **Main sections:**
   -
   -
@@ -438,11 +438,11 @@ lib/.../{widget_name}/
 
 - **Type:** `New screen` | `New section` | *(describe if fix/refactor)*
 - **Pattern:** `List/Table` | `Form` | `Wizard` | `Tabbed Form` | `Detail` | `Dashboard`
-- **Parent route / shell:** *(e.g. `MainShell`, `AuthShell`, `BottomNavShell`, top-level)*
+- **Parent flow:** *(e.g. app root, authentication flow, bottom navigation flow)*
 - **Path:** *(e.g. `/users`, `/users/:id/edit`)*
-- **Route key:** *(camelCase constant name — e.g. `userList`, `createOrder`)*
-- **Params:** *(Dart type — `void` if none, or `({String id})` for named params)*
-- **GoRoute location:** *(file path — e.g. `lib/core/router/app_router.dart` or `lib/features/{f}/router.dart`)*
+- **AppPage constant:** *(lowerCamelCase, e.g. `userList`)*
+- **Arguments:** *(none or documented `Map<String, Object?>` keys/types)*
+- **Registration:** `lib/core/common/route.dart` using `SLIPage`
 
 ---
 

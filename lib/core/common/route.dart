@@ -1,25 +1,25 @@
-import 'package:mOrder/core/routing/sli_page.dart';
-import 'package:mOrder/presentation/confirm_information/view/confirm_information_screen.dart';
-import 'package:mOrder/presentation/home_page/view/home_page_screen.dart';
-import 'package:mOrder/presentation/reset_password/view/reset_password_screen.dart';
-import 'package:mOrder/presentation/sign_in/view/sign_in_screen.dart';
-import 'package:mOrder/presentation/sign_up/view/sign_up_screen.dart';
-import 'package:mOrder/presentation/splash/view/splash_screen.dart';
+import 'package:bloc_cubit_base/core/routing/sli_page.dart';
+import 'package:bloc_cubit_base/presentation/confirm_information/view/confirm_information_screen.dart';
+import 'package:bloc_cubit_base/presentation/home_page/view/home_page_screen.dart';
+import 'package:bloc_cubit_base/presentation/reset_password/view/reset_password_screen.dart';
+import 'package:bloc_cubit_base/presentation/sign_in/view/sign_in_screen.dart';
+import 'package:bloc_cubit_base/presentation/sign_up/view/sign_up_screen.dart';
+import 'package:bloc_cubit_base/presentation/splash/view/splash_screen.dart';
 
 class AppPage {
-  static const String SPLASH = '/';
-  static const String SIGN_UP = '/sign_up';
-  static const String SIGN_IN = '/sign_in';
-  static const String RESET_PASSWORD = '/reset_password';
-  static const String CONFIRM_INFO = '/confirm_info';
-  static const String HOME = '/home';
+  static const String splash = '/';
+  static const String signUp = '/sign_up';
+  static const String signIn = '/sign_in';
+  static const String resetPassword = '/reset_password';
+  static const String confirmInfo = '/confirm_info';
+  static const String home = '/home';
 
   static final List<SLIPage> pages = [
-    SLIPage(name: SPLASH, page: splashScreenBuilder()),
-    SLIPage(name: SIGN_UP, page: signUpScreenBuilder()),
-    SLIPage(name: SIGN_IN, page: signInScreenBuilder()),
-    SLIPage(name: RESET_PASSWORD, page: resetPasswordScreenBuilder()),
-    SLIPage(name: CONFIRM_INFO, page: confirmInformationScreenBuilder()),
-    SLIPage(name: HOME, page: homePageScreenBuilder()),
+    SLIPage(name: splash, page: splashScreenBuilder()),
+    SLIPage(name: signUp, page: signUpScreenBuilder()),
+    SLIPage(name: signIn, page: signInScreenBuilder()),
+    SLIPage(name: resetPassword, page: resetPasswordScreenBuilder()),
+    SLIPage(name: confirmInfo, page: confirmInformationScreenBuilder()),
+    SLIPage(name: home, page: homePageScreenBuilder()),
   ];
 }

@@ -1,8 +1,8 @@
-import 'package:mOrder/widget/loading_list_screen.dart';
+import 'package:bloc_cubit_base/widget/loading_list_screen.dart';
 
 class BaseAppListState<T> {
-  LoadingListModel<T> loadingListModel = LoadingListModel<T>();
-  dynamic error;
+  const BaseAppListState({required this.loadingListModel, this.error});
 
-  BaseAppListState({required this.loadingListModel, this.error});
+  final LoadingListModel<T> loadingListModel;
+  final Object? error;
 }

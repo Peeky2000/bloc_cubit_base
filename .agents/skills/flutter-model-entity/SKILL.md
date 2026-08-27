@@ -38,7 +38,7 @@ class LoginResponseModel implements Login {
 ## Codegen
 
 ```bash
-dart run build_runner build --delete-conflicting-outputs
+derry gen
 ```
 
 ## Rules
@@ -48,7 +48,5 @@ dart run build_runner build --delete-conflicting-outputs
 - Use `@JsonKey(name: 'snake_case')` for API field names
 - Cubit/UI depend on **entities** or state primitives — not raw `*_model.dart` in presentation
 
-## References
-
-- `references/entity.md`, `references/model.md` — read with base paths above
-- `rules/model-no-drift-import.md` — still valid (no DB in models)
+- Models contain transport serialization only; database/platform mapping belongs
+  in a dedicated data-layer adapter, never in domain or presentation.

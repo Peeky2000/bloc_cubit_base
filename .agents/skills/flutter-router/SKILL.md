@@ -20,16 +20,16 @@ description: >
 ## Add a new screen
 
 1. Create `presentation/<feature>/view/<feature>_screen.dart` with builder function.
-2. Add `static const String MY_PAGE = '/my_page';` to `AppPage`.
-3. Append `SLIPage(name: MY_PAGE, page: myPageScreenBuilder())` to `AppPage.pages`.
-4. Navigate: `SLIRouting.toNamed(AppPage.MY_PAGE)` or `offAllNamed` with `arguments: {...}`.
+2. Add `static const String myPage = '/my_page';` to `AppPage`.
+3. Append `SLIPage(name: myPage, page: myPageScreenBuilder())` to `AppPage.pages`.
+4. Navigate with `SLIRouting.toNamed(AppPage.myPage)` or `offAllNamed`.
 
 ## Arguments
 
 ```dart
 SLIRouting.toNamed(
-  AppPage.CONFIRM_INFO,
-  arguments: {'phone': phone, 'page_success': AppPage.HOME},
+  AppPage.confirmInfo,
+  arguments: {'phone': phone, 'page_success': AppPage.home},
 );
 ```
 
@@ -38,10 +38,11 @@ Read arguments in the target screen from route settings (follow existing screens
 ## Rules
 
 - Do **not** add `go_router` or `GoRoute`
-- Path constants: `SCREAMING_SNAKE` on `AppPage`, value `'/snake_case'`
+- Path constants: `lowerCamelCase` on `AppPage`, value `'/snake_case'`
 - Auth redirects: handle in splash / app cubit flow (see `SplashCubit`), not inside random widgets
 
-## References
+## State owner composition
 
-- `references/setup.md` — update mentally: SLI stack only
-- Ignore go_router-specific rules in `rules/go-vs-push.md` — use `SLIRouting.toNamed` / `offAllNamed` instead
+Resolve a screen-scoped Cubit/BLoC once in the screen builder and provide it with
+`BlocProvider`. Navigation is a UI effect handled by a listener; reusable state
+logic does not retain BuildContext or call `SLIRouting` directly.

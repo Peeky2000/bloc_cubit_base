@@ -1,12 +1,17 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:mOrder/domain/entities/response/base_list_response.dart';
+import 'package:bloc_cubit_base/domain/entities/response/base_list_response.dart';
 
 part 'base_list_response_model.g.dart';
 
 @JsonSerializable(genericArgumentFactories: true)
 class BaseListResponseModel<T> implements BaseListResponse<T> {
-  BaseListResponseModel(
-      {this.message, this.page, this.perPage, this.totalResults, this.data});
+  BaseListResponseModel({
+    this.message,
+    this.page,
+    this.perPage,
+    this.totalResults,
+    this.data,
+  });
 
   @override
   @JsonKey(name: 'message')
@@ -29,8 +34,9 @@ class BaseListResponseModel<T> implements BaseListResponse<T> {
   final List<T>? data;
 
   factory BaseListResponseModel.fromJson(
-          Map<String, dynamic> json, T Function(Object? json) fromJsonT) =>
-      _$BaseListResponseModelFromJson(json, fromJsonT);
+    Map<String, dynamic> json,
+    T Function(Object? json) fromJsonT,
+  ) => _$BaseListResponseModelFromJson(json, fromJsonT);
 
   Map<String, dynamic> toJson(Object? Function(T value) toJsonT) =>
       _$BaseListResponseModelToJson(this, toJsonT);

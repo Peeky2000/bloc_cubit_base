@@ -1,19 +1,19 @@
 part of 'reset_password_cubit.dart';
 
-class ResetPasswordState extends BaseAppState with EquatableMixin {
-  ChangePageViewStatus? changePageStatus;
-  String? errorPhone;
-  String? errorNewPass;
-  String? errorConfirmPass;
-  int counter;
-  bool showNewPass;
-  bool showConfirmPass;
-  bool isVerifying;
-  String phone;
+class ResetPasswordState extends BaseAppState {
+  final ChangePageViewStatus? changePageStatus;
+  final String? errorPhone;
+  final String? errorNewPass;
+  final String? errorConfirmPass;
+  final int counter;
+  final bool showNewPass;
+  final bool showConfirmPass;
+  final bool isVerifying;
+  final String phone;
 
-  ResetPasswordState({
-    required LoadingStatus loading,
-    dynamic error,
+  const ResetPasswordState({
+    required super.loading,
+    super.error,
     this.changePageStatus,
     this.errorPhone,
     this.errorNewPass,
@@ -23,18 +23,15 @@ class ResetPasswordState extends BaseAppState with EquatableMixin {
     this.showConfirmPass = false,
     this.isVerifying = false,
     this.phone = '',
-  }) : super(loading: loading, error: error);
+  });
 
   factory ResetPasswordState.initial() {
-    return ResetPasswordState(
-      loading: LoadingStatus.initial,
-      error: null,
-    );
+    return ResetPasswordState(loading: LoadingStatus.initial, error: null);
   }
 
   ResetPasswordState copyWith({
     LoadingStatus? loading,
-    dynamic error,
+    Object? error,
     ChangePageViewStatus? changePageStatus,
     String? errorPhone,
     String? errorNewPass,
@@ -62,16 +59,16 @@ class ResetPasswordState extends BaseAppState with EquatableMixin {
 
   @override
   List<Object?> get props => [
-        loading,
-        error,
-        changePageStatus,
-        errorPhone,
-        errorNewPass,
-        errorConfirmPass,
-        counter,
-        showNewPass,
-        showConfirmPass,
-        isVerifying,
-        phone,
-      ];
+    loading,
+    error,
+    changePageStatus,
+    errorPhone,
+    errorNewPass,
+    errorConfirmPass,
+    counter,
+    showNewPass,
+    showConfirmPass,
+    isVerifying,
+    phone,
+  ];
 }

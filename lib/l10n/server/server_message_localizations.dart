@@ -10,7 +10,9 @@ class ServerMessageLocalization {
 
   static ServerMessageLocalization? of(BuildContext context) {
     return Localizations.of<ServerMessageLocalization>(
-        context, ServerMessageLocalization);
+      context,
+      ServerMessageLocalization,
+    );
   }
 
   static const LocalizationsDelegate<ServerMessageLocalization> delegate =
@@ -21,8 +23,9 @@ class ServerMessageLocalization {
   Future<bool> load() async {
     // Load the language JSON file from the "assets/server" folder
 
-    final jsonString = await rootBundle
-        .loadString('assets/server_localization/message_$locale.json');
+    final jsonString = await rootBundle.loadString(
+      'assets/server_localization/message_$locale.json',
+    );
 
     final Map jsonMap = json.decode(jsonString);
 

@@ -1,6 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:mOrder/core/extension/num_extension.dart';
+import 'package:bloc_cubit_base/core/extension/num_extension.dart';
 
 class MoneyWidget extends StatelessWidget {
   static String unitDefault = 'đ';
@@ -16,7 +16,7 @@ class MoneyWidget extends StatelessWidget {
   final Color? color;
   final bool? hasSign;
   const MoneyWidget({
-    Key? key,
+    super.key,
     this.amount,
     this.unit,
     this.textStyle,
@@ -27,7 +27,7 @@ class MoneyWidget extends StatelessWidget {
     this.textAlign,
     this.color,
     this.hasSign = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -49,10 +49,11 @@ class MoneyWidget extends StatelessWidget {
     );
   }
 
-  getTextStyle(BuildContext context) {
+  TextStyle getTextStyle(BuildContext context) {
     return textStyle ??
         TextStyle(
-          fontSize: fontSize ??
+          fontSize:
+              fontSize ??
               (isBigSize == true
                   ? Theme.of(context).textTheme.headlineLarge?.fontSize
                   : null),

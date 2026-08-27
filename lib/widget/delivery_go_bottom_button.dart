@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mOrder/core/app/app.dart';
-import 'package:mOrder/core/common/constant.dart';
-import 'package:mOrder/core/widget/bottom_button.dart';
+import 'package:bloc_cubit_base/core/app/app.dart';
+import 'package:bloc_cubit_base/core/common/constant.dart';
+import 'package:bloc_cubit_base/core/widget/bottom_button.dart';
 
 class DeliveryGoBottomButton extends StatelessWidget {
   final String title;
@@ -14,7 +14,7 @@ class DeliveryGoBottomButton extends StatelessWidget {
   final bool showDivider;
 
   const DeliveryGoBottomButton({
-    Key? key,
+    super.key,
     required this.title,
     required this.onTap,
     this.width,
@@ -22,7 +22,7 @@ class DeliveryGoBottomButton extends StatelessWidget {
     this.isLightButton = false,
     this.isDisable = false,
     this.showDivider = true,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

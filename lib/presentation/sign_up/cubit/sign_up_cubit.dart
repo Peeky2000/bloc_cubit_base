@@ -1,23 +1,24 @@
-import 'package:mOrder/core/app/app_controller.dart';
-import 'package:mOrder/core/common/constant.dart';
-import 'package:mOrder/core/common/route.dart';
-import 'package:mOrder/core/routing/routing.dart';
-import 'package:mOrder/data/model/request/sign_up_request_model.dart';
-import 'package:mOrder/di/injection.dart';
-import 'package:mOrder/domain/use_case/auth_use_case.dart';
-import 'package:mOrder/l10n/l10n.dart';
-import 'package:mOrder/presentation/global_handler.dart';
-import 'package:equatable/equatable.dart';
-import 'package:mOrder/core/base_component/base_app_state.dart';
-import 'package:mOrder/core/base_component/base_cubit.dart';
-import 'package:mOrder/core/common/enum.dart';
+import 'package:bloc_cubit_base/core/app/app_controller.dart';
+import 'package:bloc_cubit_base/core/common/constant.dart';
+import 'package:bloc_cubit_base/core/common/route.dart';
+import 'package:bloc_cubit_base/core/routing/routing.dart';
+import 'package:bloc_cubit_base/domain/entities/auth/sign_up_params.dart';
+import 'package:bloc_cubit_base/domain/entities/common/app_enums.dart';
+import 'package:bloc_cubit_base/domain/use_case/auth_use_case.dart';
+import 'package:bloc_cubit_base/l10n/l10n.dart';
+import 'package:bloc_cubit_base/presentation/global_handler.dart';
+import 'package:bloc_cubit_base/core/base_component/base_app_state.dart';
+import 'package:bloc_cubit_base/core/base_component/base_cubit.dart';
+import 'package:bloc_cubit_base/core/common/enum.dart';
 import 'package:flutter/material.dart';
+import 'package:injectable/injectable.dart';
 
 part 'sign_up_state.dart';
 
+@injectable
 class SignUpCubit extends BaseCubit<SignUpState> {
-  final BuildContext? _context = Injector.getIt.get<AppController>().context;
-  final AuthUseCase _authUseCase = Injector.getIt<AuthUseCase>();
+  final AppController _appController;
+  final AuthUseCase _authUseCase;
 
   String _email = '';
   String _phone = '';
@@ -26,7 +27,10 @@ class SignUpCubit extends BaseCubit<SignUpState> {
   final List<String> _industry = [];
   ScaleLevel _level = ScaleLevel.KHONG_THUONG_XUYEN;
 
-  SignUpCubit() : super(SignUpState.initial());
+  SignUpCubit(this._authUseCase, this._appController)
+    : super(SignUpState.initial());
+
+  BuildContext? get _context => _appController.context;
 
   void onChangeShowPass() {
     emit(state.copyWith(showPass: !state.showPass));
@@ -56,15 +60,19 @@ class SignUpCubit extends BaseCubit<SignUpState> {
   }
 
   void onChangeSelectedIndustry(IndustryType type, String name, bool selected) {
-    List<IndustryType> industries =
-        (state.industries ?? []).map((e) => e).toList();
+    List<IndustryType> industries = (state.industries ?? [])
+        .map((e) => e)
+        .toList();
     selected ? industries.add(type) : industries.remove(type);
     selected ? _industry.add(name) : _industry.remove(name);
     emit(state.copyWith(industries: industries));
   }
 
-  void onTapSignUp(
-      {required String phone, required String email, required String pass}) {
+  void onTapSignUp({
+    required String phone,
+    required String email,
+    required String pass,
+  }) {
     String? errorPhone;
     String? errorEmail;
     String? errorPass;
@@ -90,12 +98,14 @@ class SignUpCubit extends BaseCubit<SignUpState> {
       errorPass = _context?.l10n.passIsInvalid;
       isValid = false;
     }
-    emit(state.copyWith(
-      errorPhone: errorPhone,
-      errorEmail: errorEmail,
-      errorPassword: errorPass,
-      forceUpdateError: true,
-    ));
+    emit(
+      state.copyWith(
+        errorPhone: errorPhone,
+        errorEmail: errorEmail,
+        errorPassword: errorPass,
+        forceUpdateError: true,
+      ),
+    );
     if (isValid) {
       if (phone[0] == '0') {
         _phone = '+84${phone.substring(1)}';
@@ -125,12 +135,14 @@ class SignUpCubit extends BaseCubit<SignUpState> {
       errScale = _context?.l10n.scaleLevelIsRequired;
       isValid = false;
     }
-    emit(state.copyWith(
-      errorShopName: errorShopName,
-      errScale: errScale,
-      errIndustry: errIndustry,
-      forceUpdateError: true,
-    ));
+    emit(
+      state.copyWith(
+        errorShopName: errorShopName,
+        errScale: errScale,
+        errIndustry: errIndustry,
+        forceUpdateError: true,
+      ),
+    );
     if (isValid) {
       _shopName = shopName;
       _signUp();
@@ -140,7 +152,7 @@ class SignUpCubit extends BaseCubit<SignUpState> {
   Future<void> _signUp() async {
     try {
       emit(state.copyWith(loading: LoadingStatus.loading));
-      SignUpRequestModel request = SignUpRequestModel(
+      final request = SignUpParams(
         email: _email,
         password: _password,
         phone: _phone,
@@ -162,11 +174,8 @@ class SignUpCubit extends BaseCubit<SignUpState> {
       phone: _phone,
       onComplete: () {
         SLIRouting.toNamed(
-          AppPage.CONFIRM_INFO,
-          arguments: {
-            'phone': _phone,
-            'page_success': AppPage.SIGN_IN,
-          },
+          AppPage.confirmInfo,
+          arguments: {'phone': _phone, 'page_success': AppPage.signIn},
         );
       },
       onError: (e) {

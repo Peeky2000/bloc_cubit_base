@@ -1,29 +1,32 @@
-import 'package:mOrder/data/model/request/sign_up_request_model.dart';
-import 'package:mOrder/domain/entities/auth/login.dart';
-import 'package:mOrder/domain/entities/auth/sign_up.dart';
-import 'package:mOrder/domain/entities/profile/account.dart';
-import 'package:mOrder/domain/entities/profile/update_account.dart';
-import 'package:mOrder/domain/repositories/auth_repo.dart';
-import 'package:mOrder/domain/repositories/user_repo.dart';
+import 'package:bloc_cubit_base/domain/entities/auth/login.dart';
+import 'package:bloc_cubit_base/domain/entities/auth/sign_up.dart';
+import 'package:bloc_cubit_base/domain/entities/auth/sign_up_params.dart';
+import 'package:bloc_cubit_base/domain/entities/profile/account.dart';
+import 'package:bloc_cubit_base/domain/entities/profile/update_account.dart';
+import 'package:bloc_cubit_base/domain/repositories/auth_repo.dart';
+import 'package:bloc_cubit_base/domain/repositories/user_repo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:injectable/injectable.dart';
 
+@lazySingleton
 class AuthUseCase {
   final AuthRepo _authRepo;
   final UserRepo _userRepo;
 
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth;
   String _verificationId = '';
 
-  AuthUseCase(this._authRepo, this._userRepo);
+  AuthUseCase(this._authRepo, this._userRepo, this._auth);
 
   bool isAppLogin() {
     return _authRepo.isAppLogin();
   }
 
-  Future<Login?> login(
-      {required String phone,
-      required String password,
-      bool isRememberLogin = false}) async {
+  Future<Login?> login({
+    required String phone,
+    required String password,
+    bool isRememberLogin = false,
+  }) async {
     Login? result = await _authRepo.appLogin(phone: phone, password: password);
     if (isRememberLogin) {
       await _authRepo.setTokenToLocal(tokenWrapper: result?.token);
@@ -34,7 +37,7 @@ class AuthUseCase {
 
   Account get accountLocal => _userRepo.account;
 
-  Future<SignUp?> userSignUp({required SignUpRequestModel request}) {
+  Future<SignUp?> userSignUp({required SignUpParams request}) {
     return _authRepo.userSignUp(request: request);
   }
 
@@ -53,8 +56,9 @@ class AuthUseCase {
     await _auth.verifyPhoneNumber(
       phoneNumber: phoneNumber,
       verificationCompleted: (credential) async {
-        UserCredential userCredential =
-            await _auth.signInWithCredential(credential);
+        UserCredential userCredential = await _auth.signInWithCredential(
+          credential,
+        );
         if (verificationCompleted != null) {
           verificationCompleted(userCredential.user != null);
         }
@@ -78,8 +82,11 @@ class AuthUseCase {
 
   Future<String?> verifyOTP({required String otp}) async {
     UserCredential credential = await _auth.signInWithCredential(
-        PhoneAuthProvider.credential(
-            verificationId: _verificationId, smsCode: otp));
+      PhoneAuthProvider.credential(
+        verificationId: _verificationId,
+        smsCode: otp,
+      ),
+    );
     return credential.user?.getIdToken();
   }
 
@@ -90,10 +97,14 @@ class AuthUseCase {
     }
   }
 
-  Future<void> resetPasswordPhone(
-      {required String idToken, required String newPassword}) {
+  Future<void> resetPasswordPhone({
+    required String idToken,
+    required String newPassword,
+  }) {
     return _authRepo.resetPasswordPhone(
-        idToken: idToken, newPassword: newPassword);
+      idToken: idToken,
+      newPassword: newPassword,
+    );
   }
 
   Future<void> logout() async {}

@@ -28,12 +28,11 @@ import 'package:<app>/l10n/l10n.dart';
 Text(context.l10n.passIsRequired)
 ```
 
-## Usage in Cubit (existing pattern)
+## Cubit/BLoC boundary
 
-```dart
-final ctx = Injector.getIt.get<AppController>().context;
-ctx?.l10n.emailPhoneIsInvalid
-```
+Do not pass or resolve `BuildContext` in a state owner. Cubit/BLoC emits typed
+validation/error values; the widget or `BlocListener` maps them through
+`context.l10n`.
 
 ## Add a new string
 
@@ -42,11 +41,8 @@ ctx?.l10n.emailPhoneIsInvalid
 
 ## Server message codes (optional)
 
-See root `README.md`:
-- `ServerMessageLocalization.delegate` in main
-- `assets/server_localization/`
-- `get_message_code.bash` for fetching JSON from server
-- `error_mapper` / `messageServerTranslate` for API errors
+Keep server codes as typed values until the UI boundary. Any remote catalog must
+be authenticated/validated and must not make domain or data depend on l10n.
 
 ## Rules
 

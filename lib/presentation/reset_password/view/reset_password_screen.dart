@@ -1,34 +1,33 @@
-import 'package:mOrder/core/app/app.dart';
-import 'package:mOrder/core/common/enum.dart';
-import 'package:mOrder/core/routing/routing.dart';
-import 'package:mOrder/generated/assets.gen.dart';
-import 'package:mOrder/l10n/l10n.dart';
-import 'package:mOrder/widget/delivery_go_button.dart';
-import 'package:mOrder/widget/loading_screen.dart';
+import 'package:bloc_cubit_base/core/app/app.dart';
+import 'package:bloc_cubit_base/core/common/enum.dart';
+import 'package:bloc_cubit_base/core/routing/routing.dart';
+import 'package:bloc_cubit_base/generated/assets.gen.dart';
+import 'package:bloc_cubit_base/l10n/l10n.dart';
+import 'package:bloc_cubit_base/widget/delivery_go_button.dart';
+import 'package:bloc_cubit_base/widget/loading_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:mOrder/core/extension/string_extension.dart';
-import 'package:mOrder/core/extension/int_extension.dart';
-import 'package:mOrder/core/widget/common_text_field.dart';
-import 'package:mOrder/core/widget/dialog_util.dart';
+import 'package:bloc_cubit_base/core/extension/int_extension.dart';
+import 'package:bloc_cubit_base/core/widget/common_text_field.dart';
+import 'package:bloc_cubit_base/core/widget/dialog_util.dart';
 import 'package:flutter/gestures.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mOrder/core/mixin/after_layout.dart';
-import 'package:mOrder/di/injection.dart';
-import 'package:mOrder/presentation/reset_password/cubit/reset_password_cubit.dart';
+import 'package:bloc_cubit_base/core/mixin/after_layout.dart';
+import 'package:bloc_cubit_base/di/injection.dart';
+import 'package:bloc_cubit_base/presentation/reset_password/cubit/reset_password_cubit.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 Widget resetPasswordScreenBuilder() => BlocProvider<ResetPasswordCubit>(
-      create: (_) => Injector.getIt.get<ResetPasswordCubit>(),
-      child: const ResetPasswordScreen(),
-    );
+  create: (_) => Injector.getIt.get<ResetPasswordCubit>(),
+  child: const ResetPasswordScreen(),
+);
 
 class ResetPasswordScreen extends StatefulWidget {
-  const ResetPasswordScreen({Key? key}) : super(key: key);
+  const ResetPasswordScreen({super.key});
 
   @override
-  _ResetPasswordScreenState createState() => _ResetPasswordScreenState();
+  State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
 }
 
 class _ResetPasswordScreenState extends State<ResetPasswordScreen>
@@ -51,7 +50,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
 
   @override
   void dispose() {
-    _resetPasswordCubit?.close();
+    _pageController.dispose();
+    _phoneController.dispose();
+    _newPasswordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -67,9 +69,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
               color: App.appColor?.textColorPrimary,
             ),
           ),
-          leading: BackButton(
-            onPressed: () => SLIRouting.back(),
-          ),
+          leading: BackButton(onPressed: () => SLIRouting.back()),
           centerTitle: true,
         ),
         Padding(
@@ -86,9 +86,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
                   color: App.appColor?.textColor,
                 ),
               ),
-              SizedBox(
-                height: 32.h,
-              ),
+              SizedBox(height: 32.h),
               BlocBuilder<ResetPasswordCubit, ResetPasswordState>(
                 builder: (context, state) {
                   return CommonTextField(
@@ -101,9 +99,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
                   );
                 },
               ),
-              SizedBox(
-                height: 32.h,
-              ),
+              SizedBox(height: 32.h),
               DeliveryGoButton(
                 title: context.l10n.sendRequestSignIn,
                 onTap: () {
@@ -113,7 +109,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
               ),
             ],
           ),
-        )
+        ),
       ],
     );
   }
@@ -146,7 +142,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
                 builder: (context, state) {
                   return Text(
                     context.l10n.confirmOTP(
-                        '${state.phone.substring(0, state.phone.length - 3)}***'),
+                      '${state.phone.substring(0, state.phone.length - 3)}***',
+                    ),
                     style: App.appStyle?.semiBold18?.copyWith(
                       color: App.appColor?.textColor,
                     ),
@@ -154,9 +151,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
                   );
                 },
               ),
-              SizedBox(
-                height: 32.h,
-              ),
+              SizedBox(height: 32.h),
               PinCodeTextField(
                 appContext: context,
                 length: 6,
@@ -191,40 +186,41 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
                             ),
                           )
                         : state.counter > 0
-                            ? Text(
-                                context.l10n.resendOTPAfter(
-                                    state.counter.formatTimeMMSS),
-                                style: App.appStyle?.medium14?.copyWith(
-                                  color: App.appColor?.textColorLight,
-                                ),
-                              )
-                            : Text.rich(
+                        ? Text(
+                            context.l10n.resendOTPAfter(
+                              state.counter.formatTimeMMSS,
+                            ),
+                            style: App.appStyle?.medium14?.copyWith(
+                              color: App.appColor?.textColorLight,
+                            ),
+                          )
+                        : Text.rich(
+                            TextSpan(
+                              children: [
                                 TextSpan(
-                                  children: [
-                                    TextSpan(
-                                        text:
-                                            '${context.l10n.dontReceivedOTP}. '),
-                                    TextSpan(
-                                      text: context.l10n.resendOTP,
-                                      style: App.appStyle?.medium14?.copyWith(
-                                        color: App.appColor?.textColor,
-                                        decoration: TextDecoration.underline,
-                                      ),
-                                      recognizer: TapGestureRecognizer()
-                                        ..onTap = () {},
-                                    ),
-                                  ],
+                                  text: '${context.l10n.dontReceivedOTP}. ',
+                                ),
+                                TextSpan(
+                                  text: context.l10n.resendOTP,
                                   style: App.appStyle?.medium14?.copyWith(
                                     color: App.appColor?.textColor,
+                                    decoration: TextDecoration.underline,
                                   ),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {},
                                 ),
-                              );
+                              ],
+                              style: App.appStyle?.medium14?.copyWith(
+                                color: App.appColor?.textColor,
+                              ),
+                            ),
+                          );
                   },
                 ),
               ),
             ],
           ),
-        )
+        ),
       ],
     );
   }
@@ -260,9 +256,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
                   color: App.appColor?.textColor,
                 ),
               ),
-              SizedBox(
-                height: 32.h,
-              ),
+              SizedBox(height: 32.h),
               BlocBuilder<ResetPasswordCubit, ResetPasswordState>(
                 builder: (context, state) {
                   return CommonTextField(
@@ -284,9 +278,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
                   );
                 },
               ),
-              SizedBox(
-                height: 32.h,
-              ),
+              SizedBox(height: 32.h),
               BlocBuilder<ResetPasswordCubit, ResetPasswordState>(
                 builder: (context, state) {
                   return CommonTextField(
@@ -308,21 +300,21 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
                   );
                 },
               ),
-              SizedBox(
-                height: 32.h,
-              ),
+              SizedBox(height: 32.h),
               DeliveryGoButton(
                 title: context.l10n.confirmPassword,
                 onTap: () {
                   String newPass = _newPasswordController.text.trim();
                   String confirm = _confirmPasswordController.text.trim();
                   _resetPasswordCubit?.onTapResetPassword(
-                      newPassword: newPass, confirmPassword: confirm);
+                    newPassword: newPass,
+                    confirmPassword: confirm,
+                  );
                 },
               ),
             ],
           ),
-        )
+        ),
       ],
     );
   }
@@ -339,20 +331,23 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
             closeText: context.l10n.close,
             retryText: context.l10n.retry,
             isShowRetry: true,
-            onTapRetry: () => _resetPasswordCubit
-                ?.onTapSendRequestLogin(_phoneController.text.trim()),
+            onTapRetry: () => _resetPasswordCubit?.onTapSendRequestLogin(
+              _phoneController.text.trim(),
+            ),
           );
         }
         switch (state.changePageStatus) {
           case ChangePageViewStatus.next:
             _pageController.nextPage(
-                duration: const Duration(milliseconds: 450),
-                curve: Curves.easeInOut);
+              duration: const Duration(milliseconds: 450),
+              curve: Curves.easeInOut,
+            );
             break;
           case ChangePageViewStatus.previous:
             _pageController.previousPage(
-                duration: const Duration(milliseconds: 450),
-                curve: Curves.easeInOut);
+              duration: const Duration(milliseconds: 450),
+              curve: Curves.easeInOut,
+            );
             break;
           default:
             break;

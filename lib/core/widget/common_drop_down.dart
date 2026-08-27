@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mOrder/core/extension/string_extension.dart';
+import 'package:bloc_cubit_base/core/extension/string_extension.dart';
 
 class CommonDropDown extends StatelessWidget {
   static CommonDropDownStyle commonDropDownStyle = const CommonDropDownStyle();
@@ -27,7 +27,7 @@ class CommonDropDown extends StatelessWidget {
   final Color? backgroundColor;
 
   const CommonDropDown({
-    Key? key,
+    super.key,
     this.title,
     this.hint = '',
     this.value,
@@ -46,7 +46,7 @@ class CommonDropDown extends StatelessWidget {
     this.maxLine,
     this.error,
     this.backgroundColor,
-  }) : super(key: key);
+  });
 
   EdgeInsets get _padding => padding ?? commonDropDownStyle.padding!;
 
@@ -57,7 +57,9 @@ class CommonDropDown extends StatelessWidget {
       children: [
         if (title.isNotNullOrEmpty)
           Padding(
-            padding: commonDropDownStyle.titlePadding ?? const EdgeInsets.only(bottom: 12.0),
+            padding:
+                commonDropDownStyle.titlePadding ??
+                const EdgeInsets.only(bottom: 12.0),
             child: Text(
               title!,
               style: titleStyle ?? commonDropDownStyle.titleStyle!,
@@ -67,20 +69,27 @@ class CommonDropDown extends StatelessWidget {
           color: Colors.transparent,
           child: InkWell(
             onTap: enable ? onTap : null,
-            borderRadius: BorderRadius.circular(radius ?? commonDropDownStyle.radius),
+            borderRadius: BorderRadius.circular(
+              radius ?? commonDropDownStyle.radius,
+            ),
             child: Container(
               width: width,
               decoration: BoxDecoration(
                 color: backgroundColor ?? commonDropDownStyle.backgroundColor,
-                  borderRadius: BorderRadius.circular(radius ?? commonDropDownStyle.radius),
-                  border: border ??
-                      Border.all(
-                          color: enable && error.isNullOrEmpty
-                              ? commonDropDownStyle.borderColor!
-                              : enable && error.isNotNullOrEmpty
-                                  ? commonDropDownStyle.errorBorderColor!
-                                  : commonDropDownStyle.disableBorderColor!,
-                          width: commonDropDownStyle.borderWidth ?? 1.0)),
+                borderRadius: BorderRadius.circular(
+                  radius ?? commonDropDownStyle.radius,
+                ),
+                border:
+                    border ??
+                    Border.all(
+                      color: enable && error.isNullOrEmpty
+                          ? commonDropDownStyle.borderColor!
+                          : enable && error.isNotNullOrEmpty
+                          ? commonDropDownStyle.errorBorderColor!
+                          : commonDropDownStyle.disableBorderColor!,
+                      width: commonDropDownStyle.borderWidth ?? 1.0,
+                    ),
+              ),
               child: Row(
                 children: [
                   Expanded(
@@ -91,27 +100,31 @@ class CommonDropDown extends StatelessWidget {
                         left: _padding.left,
                         bottom: _padding.bottom,
                       ),
-                      child: valueWidget ??
+                      child:
+                          valueWidget ??
                           (value.isNullOrEmpty
                               ? Text(
                                   hint,
-                                  style: hintStyle ?? commonDropDownStyle.hintStyle!,
+                                  style:
+                                      hintStyle ??
+                                      commonDropDownStyle.hintStyle!,
                                 )
                               : Text(
                                   value!,
-                                  style: valueStyle ?? commonDropDownStyle.valueStyle!,
+                                  style:
+                                      valueStyle ??
+                                      commonDropDownStyle.valueStyle!,
                                   maxLines: maxLine,
                                   overflow: TextOverflow.ellipsis,
                                 )),
                     ),
                   ),
-                  const SizedBox(
-                    width: 16,
-                  ),
+                  const SizedBox(width: 16),
                   enable
                       ? Padding(
                           padding: EdgeInsets.only(right: _padding.right),
-                          child: trailingIcon ??
+                          child:
+                              trailingIcon ??
                               Transform.rotate(
                                 angle: -pi / 2,
                                 child: const Icon(
@@ -121,7 +134,7 @@ class CommonDropDown extends StatelessWidget {
                                 ),
                               ),
                         )
-                      : const SizedBox()
+                      : const SizedBox(),
                 ],
               ),
             ),
@@ -129,15 +142,12 @@ class CommonDropDown extends StatelessWidget {
         ),
         if (enable && error.isNotNullOrEmpty)
           Padding(
-            padding: EdgeInsets.only(
-              top: 8.h,
-              left: _padding.left,
-            ),
+            padding: EdgeInsets.only(top: 8.h, left: _padding.left),
             child: Text(
               error ?? '',
               style: errorStyle ?? commonDropDownStyle.errorStyle,
             ),
-          )
+          ),
       ],
     );
   }
@@ -158,14 +168,26 @@ class CommonDropDownStyle {
   final double? borderWidth;
 
   const CommonDropDownStyle({
-    this.titleStyle =
-        const TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.w600),
-    this.valueStyle =
-        const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.normal),
-    this.hintStyle =
-        const TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.normal),
-    this.errorStyle =
-        const TextStyle(color: Colors.redAccent, fontSize: 14, fontWeight: FontWeight.normal),
+    this.titleStyle = const TextStyle(
+      color: Colors.black,
+      fontSize: 18,
+      fontWeight: FontWeight.w600,
+    ),
+    this.valueStyle = const TextStyle(
+      color: Colors.black,
+      fontSize: 16,
+      fontWeight: FontWeight.normal,
+    ),
+    this.hintStyle = const TextStyle(
+      color: Colors.grey,
+      fontSize: 16,
+      fontWeight: FontWeight.normal,
+    ),
+    this.errorStyle = const TextStyle(
+      color: Colors.redAccent,
+      fontSize: 14,
+      fontWeight: FontWeight.normal,
+    ),
     this.padding = const EdgeInsets.all(8.0),
     this.backgroundColor = Colors.transparent,
     this.borderColor = const Color(0xFFA6A6A6),

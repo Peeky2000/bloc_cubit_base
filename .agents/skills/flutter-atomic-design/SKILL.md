@@ -1,37 +1,38 @@
 ---
 name: flutter-atomic-design
 description: >
-  UI component placement for this base: core widgets, app widgets, and sli_common module.
-  Not a strict atoms folder tree. Trigger: "widget", "component", "reuse UI".
+  Pragmatic UI reuse and placement across feature views, app widgets, and the
+  sli_common Git submodule with Shadcn behind a stable facade.
+  Trigger: widget, component, design system, reuse UI, shadcn, sli_common.
 ---
 
-# UI Components (pragmatic)
+# UI components
 
-This base does **not** use `shared/presentation/widgets/atoms/`. Use the map below.
+This base uses ownership and reuse boundaries, not a mandatory atoms/molecules
+folder hierarchy.
 
-## Where to put widgets
+| Scope | Location |
+|---|---|
+| Reusable across products | standalone `sli_common` repo / `lib/modules/sli_common` submodule |
+| Reusable only in one app | `lib/core/widget/` or a neutral app widget folder |
+| Feature-specific | `lib/presentation/<feature>/view/` |
 
-| Scope | Location | Examples |
-|-------|----------|----------|
-| App-wide reusable | `lib/core/widget/` | `dialog_util.dart`, `bottom_button.dart`, `common_drop_down.dart` |
-| Feature-specific | `presentation/<feature>/view/` (private widgets) or subfolder | Screen-only layouts |
-| App branding | `lib/widget/` | `delivery_go_bottom_button.dart` |
-| Shared module | `lib/modules/sli_common/lib/` | Calendar, image loading, extensions |
+## Decision order
+
+1. Search app-memory and the public `sli_common` exports.
+2. Compose an existing `Sli*` component with app tokens/theme.
+3. Extend `sli_common` only when the abstraction is genuinely cross-product.
+4. Keep a widget in the feature when its semantics are product-specific.
 
 ## Rules
 
-- **Search app-memory** before creating (`mem_search.py`)
-- Reuse `core/widget` and `sli_common` first
-- Cubit/Bloc only at **screen** level — not inside shared widgets
-- Pass data via constructor — widgets stay dumb
-- Strings via `context.l10n`
+- App code imports stable `sli_common.dart` exports, not package internals.
+- Direct `shadcn_flutter` imports belong inside the `sli_common` adapter layer.
+- Shared widgets receive data/callbacks through constructors and do not own a
+  feature Cubit/BLoC.
+- Use semantic roles, design tokens, minimum touch targets, and loading/disabled
+  behavior. User-facing text comes from app l10n.
+- A shared-package change requires its own tests/analyze and a submodule pointer
+  update in the base.
 
-## Naming
-
-- Screen: `*_screen.dart`, builder: `*ScreenBuilder()`
-- No mandatory `App` prefix — follow neighbors in `core/widget/`
-
-## References
-
-- `references/layers.md` — conceptual; map Atom→`core/widget`, Molecule→composed widgets in screen
-- `rules/no-bloc-below-page.md`, `rules/page-is-thin.md` — still apply
+See `docs/architecture/ui-toolkit.md` and `docs/guides/use-sli-common.md`.

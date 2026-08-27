@@ -15,6 +15,6 @@
 - [ ] Model: `lib/data/model/response/{domain}/{name}_response_model.dart` (or `request/`)
 - [ ] `@JsonSerializable()`, `implements` entity when applicable
 - [ ] `@JsonKey` for API field names
-- [ ] Run `dart run build_runner build --delete-conflicting-outputs`
+- [ ] Run `derry gen`
 - [ ] `flutter analyze` clean
 - [ ] app-memory updated

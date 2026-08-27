@@ -1,8 +1,9 @@
 import 'dart:convert';
 
-import 'package:mOrder/data/model/response/profile/account_response_model.dart';
+import 'package:bloc_cubit_base/data/model/response/profile/account_response_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:mOrder/core/extension/string_extension.dart';
+import 'package:bloc_cubit_base/core/extension/string_extension.dart';
+import 'package:injectable/injectable.dart';
 
 String _accountKey = 'account_key';
 
@@ -14,6 +15,7 @@ abstract class UserLocalDataSource {
   Future<void> clearAccount();
 }
 
+@LazySingleton(as: UserLocalDataSource)
 class UserLocalDataSourceImpl implements UserLocalDataSource {
   final SharedPreferences _preferences;
 
@@ -30,7 +32,9 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
   @override
   Future<void> setAccount(AccountResponseModel? account) async {
     await _preferences.setString(
-        _accountKey, account != null ? jsonEncode(account) : '');
+      _accountKey,
+      account != null ? jsonEncode(account) : '',
+    );
   }
 
   @override

@@ -5,15 +5,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:mOrder/core/base_component/base_app_list_state.dart';
-import 'package:mOrder/core/common/enum.dart';
-import 'package:mOrder/core/extension/list_extension.dart';
-import 'package:mOrder/l10n/l10n.dart';
+import 'package:bloc_cubit_base/core/base_component/base_app_list_state.dart';
+import 'package:bloc_cubit_base/core/common/enum.dart';
+import 'package:bloc_cubit_base/core/extension/list_extension.dart';
+import 'package:bloc_cubit_base/l10n/l10n.dart';
 
-enum LoadingListStyle { IOS, ANDROID }
+enum LoadingListStyle { ios, android }
 
-class LoadingListScreen<B extends StateStreamable<S>,
-    S extends BaseAppListState> extends StatelessWidget {
+class LoadingListScreen<
+  B extends StateStreamable<S>,
+  S extends BaseAppListState
+>
+    extends StatelessWidget {
   final RefreshController refreshController;
   final Widget? emptyWidget;
   final Widget Function(BuildContext, S, int) builder;
@@ -34,7 +37,7 @@ class LoadingListScreen<B extends StateStreamable<S>,
   final bool shrinkWrap;
 
   const LoadingListScreen({
-    Key? key,
+    super.key,
     required this.refreshController,
     this.emptyWidget,
     required this.builder,
@@ -53,13 +56,13 @@ class LoadingListScreen<B extends StateStreamable<S>,
     this.header,
     this.footer,
     this.shrinkWrap = false,
-  }) : super(key: key);
+  });
 
   bool get _checkStyle {
     if (loadingStyle == null) {
       return Platform.isIOS;
     } else {
-      return loadingStyle == LoadingListStyle.IOS;
+      return loadingStyle == LoadingListStyle.ios;
     }
   }
 
@@ -71,56 +74,58 @@ class LoadingListScreen<B extends StateStreamable<S>,
         }
       },
       child: BlocBuilder<B, S>(
-          buildWhen: buildWhen ??
-              (current, old) =>
-                  current.loadingListModel != old.loadingListModel,
-          builder: (context, state) {
-            return state.loadingListModel.data.isEmpty &&
-                    (state.loadingListModel.loading == LoadingStatus.complete)
-                ? emptyWidget ?? const SizedBox()
-                : SmartRefresher(
-                    controller: refreshController,
-                    onRefresh: refreshData,
-                    enablePullDown: refreshData != null,
-                    enablePullUp: loadMore != null,
-                    onLoading: loadMore,
+        buildWhen:
+            buildWhen ??
+            (current, old) => current.loadingListModel != old.loadingListModel,
+        builder: (context, state) {
+          return state.loadingListModel.data.isEmpty &&
+                  (state.loadingListModel.loading == LoadingStatus.complete)
+              ? emptyWidget ?? const SizedBox()
+              : SmartRefresher(
+                  controller: refreshController,
+                  onRefresh: refreshData,
+                  enablePullDown: refreshData != null,
+                  enablePullUp: loadMore != null,
+                  onLoading: loadMore,
+                  reverse: reverse,
+                  header:
+                      header ??
+                      (_checkStyle
+                          ? ClassicHeader(
+                              canTwoLevelText: context.l10n.canTwoLevelText,
+                              releaseText: context.l10n.canRefreshText,
+                              idleText: context.l10n.idleRefreshText,
+                              completeText: context.l10n.refreshCompleted,
+                              refreshingText: context.l10n.refreshingText,
+                              failedText: context.l10n.refreshFailedText,
+                            )
+                          : const MaterialClassicHeader()),
+                  footer:
+                      footer ??
+                      ClassicFooter(
+                        canLoadingText: context.l10n.releaseToLoadMore,
+                        failedText: context.l10n.loadFail,
+                        loadingText: context.l10n.loading,
+                        noDataText: context.l10n.noMoreData,
+                        idleText: context.l10n.pullUpLoadMore,
+                      ),
+                  child: ListView.separated(
+                    itemCount: state.loadingListModel.data.length + extendItem,
+                    itemBuilder: (context, index) =>
+                        builder(context, state, index),
+                    padding: padding,
                     reverse: reverse,
-                    header: header ??
-                        (_checkStyle
-                            ? ClassicHeader(
-                                canTwoLevelText: context.l10n.canTwoLevelText,
-                                releaseText: context.l10n.canRefreshText,
-                                idleText: context.l10n.idleRefreshText,
-                                completeText: context.l10n.refreshCompleted,
-                                refreshingText: context.l10n.refreshingText,
-                                failedText: context.l10n.refreshFailedText,
-                              )
-                            : const MaterialClassicHeader()),
-                    footer: footer ??
-                        ClassicFooter(
-                          canLoadingText: context.l10n.releaseToLoadMore,
-                          failedText: context.l10n.loadFail,
-                          loadingText: context.l10n.loading,
-                          noDataText: context.l10n.noMoreData,
-                          idleText: context.l10n.pullUpLoadMore,
-                        ),
-                    child: ListView.separated(
-                      itemCount:
-                          state.loadingListModel.data.length + extendItem,
-                      itemBuilder: (context, index) =>
-                          builder(context, state, index),
-                      padding: padding,
-                      reverse: reverse,
-                      shrinkWrap: shrinkWrap,
-                      separatorBuilder: (context, index) {
-                        if (separatorBuilder != null) {
-                          return separatorBuilder!(context, state, index);
-                        }
-                        return const SizedBox();
-                      },
-                    ),
-                  );
-          }),
+                    shrinkWrap: shrinkWrap,
+                    separatorBuilder: (context, index) {
+                      if (separatorBuilder != null) {
+                        return separatorBuilder!(context, state, index);
+                      }
+                      return const SizedBox();
+                    },
+                  ),
+                );
+        },
+      ),
     );
   }
 
@@ -129,82 +134,77 @@ class LoadingListScreen<B extends StateStreamable<S>,
     return Stack(
       children: [
         _buildListResult(),
-        BlocBuilder<B, BaseAppListState>(builder: (context, state) {
-          return state.loadingListModel.loading == LoadingStatus.loading ||
-                  state.loadingListModel.loading == LoadingStatus.refresh
-              ? Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Opacity(
-                      opacity: opacity,
-                      child:
-                          ModalBarrier(dismissible: dismissible, color: color),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8.0)),
-                      child: const CupertinoActivityIndicator(
-                        radius: 14,
+        BlocBuilder<B, BaseAppListState>(
+          builder: (context, state) {
+            return state.loadingListModel.loading == LoadingStatus.loading ||
+                    state.loadingListModel.loading == LoadingStatus.refresh
+                ? Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Opacity(
+                        opacity: opacity,
+                        child: ModalBarrier(
+                          dismissible: dismissible,
+                          color: color,
+                        ),
                       ),
-                    ),
-                  ],
-                )
-              : const SizedBox();
-        })
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: const CupertinoActivityIndicator(radius: 14),
+                      ),
+                    ],
+                  )
+                : const SizedBox();
+          },
+        ),
       ],
     );
   }
 }
 
-class LoadingListModel<T> with EquatableMixin {
-  LoadingStatus loading;
-  List<T> data;
+class LoadingListModel<T> extends Equatable {
+  final LoadingStatus loading;
+  final List<T> data;
 
   LoadingListModel({
     this.loading = LoadingStatus.initial,
-    this.data = const [],
-  });
+    List<T> data = const [],
+  }) : data = List<T>.unmodifiable(data);
 
-  void addData(T? newData) {
-    if (newData != null) {
-      data.add(newData);
+  LoadingListModel<T> addData(T? newData) => newData == null
+      ? this
+      : LoadingListModel<T>(loading: loading, data: [...data, newData]);
+
+  LoadingListModel<T> addAllData(List<T>? listNewData) =>
+      listNewData == null || listNewData.isEmpty
+      ? this
+      : LoadingListModel<T>(loading: loading, data: [...data, ...listNewData]);
+
+  LoadingListModel<T> insertData(int index, T? newElement) {
+    if (newElement == null) {
+      return this;
     }
+    final updatedData = [...data]..insert(index, newElement);
+    return LoadingListModel<T>(loading: loading, data: updatedData);
   }
 
-  void addAllData(List<T>? listNewData) {
-    if (listNewData != null && listNewData.isNotEmpty) {
-      data.addAll(listNewData);
-    }
-  }
-
-  void insertData(int index, T? newElement) {
-    if (newElement != null) {
-      data.insert(index, newElement);
-    }
-  }
-
-  LoadingListModel<T> copyWithNewData({
-    LoadingStatus? loading,
-    List<T>? data,
-  }) {
+  LoadingListModel<T> copyWithNewData({LoadingStatus? loading, List<T>? data}) {
     return LoadingListModel<T>(
       loading: loading ?? this.loading,
       data: data ?? [],
     );
   }
 
-  LoadingListModel<T> copyWithAddData({
-    LoadingStatus? loading,
-    List<T>? data,
-  }) {
-    LoadingListModel<T> newLoadingModel = LoadingListModel<T>(
+  LoadingListModel<T> copyWithAddData({LoadingStatus? loading, List<T>? data}) {
+    final newLoadingModel = LoadingListModel<T>(
       loading: loading ?? this.loading,
-      data: [...this.data],
+      data: this.data,
     );
-    newLoadingModel.addAllData(data);
-    return newLoadingModel;
+    return newLoadingModel.addAllData(data);
   }
 
   LoadingListModel<T> copyWithInsertData(
@@ -212,12 +212,11 @@ class LoadingListModel<T> with EquatableMixin {
     LoadingStatus? loading,
     T? newElement,
   }) {
-    LoadingListModel<T> newLoadingModel = LoadingListModel<T>(
+    final newLoadingModel = LoadingListModel<T>(
       loading: loading ?? this.loading,
-      data: [...this.data],
+      data: data,
     );
-    newLoadingModel.insertData(index, newElement);
-    return newLoadingModel;
+    return newLoadingModel.insertData(index, newElement);
   }
 
   T? firstWhereOrNull(bool Function(T element) test) {
@@ -229,8 +228,5 @@ class LoadingListModel<T> with EquatableMixin {
   }
 
   @override
-  List<Object?> get props => [
-        loading,
-        data,
-      ];
+  List<Object?> get props => [loading, data];
 }

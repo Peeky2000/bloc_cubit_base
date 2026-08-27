@@ -1,21 +1,17 @@
 part of 'splash_cubit.dart';
 
-class SplashState with EquatableMixin {
-  bool? isLogin;
-  bool isPhoneVerified;
-  String? phone;
+class SplashState extends Equatable {
+  final bool? isLogin;
+  final bool isPhoneVerified;
+  final String? phone;
 
-  SplashState({this.isLogin, this.isPhoneVerified = false, this.phone});
+  const SplashState({this.isLogin, this.isPhoneVerified = false, this.phone});
 
   factory SplashState.initial() {
     return SplashState();
   }
 
-  SplashState copyWith({
-    bool? isLogin,
-    bool? isPhoneVerified,
-    String? phone,
-  }) {
+  SplashState copyWith({bool? isLogin, bool? isPhoneVerified, String? phone}) {
     return SplashState(
       isLogin: isLogin ?? this.isLogin,
       isPhoneVerified: isPhoneVerified ?? this.isPhoneVerified,
@@ -24,9 +20,5 @@ class SplashState with EquatableMixin {
   }
 
   @override
-  List<Object?> get props => [
-        isLogin,
-        isPhoneVerified,
-        phone,
-      ];
+  List<Object?> get props => [isLogin, isPhoneVerified, phone];
 }

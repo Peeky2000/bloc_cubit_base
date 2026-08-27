@@ -41,24 +41,28 @@ class SLIModalBottomSheetRoute<T> extends PopupRoute<T> {
     this.isDismissible = true,
     this.enableDrag = true,
     required this.isScrollControlled,
-    RouteSettings? settings,
+    super.settings,
     this.enterBottomSheetDuration = const Duration(milliseconds: 250),
     this.exitBottomSheetDuration = const Duration(milliseconds: 200),
-  }) : super(settings: settings);
+  });
 
   @override
   AnimationController createAnimationController() {
     assert(_animationController == null);
-    _animationController =
-        BottomSheet.createAnimationController(navigator!.overlay!);
+    _animationController = BottomSheet.createAnimationController(
+      navigator!.overlay!,
+    );
     _animationController!.duration = enterBottomSheetDuration;
     _animationController!.reverseDuration = exitBottomSheetDuration;
     return _animationController!;
   }
 
   @override
-  Widget buildPage(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation) {
+  Widget buildPage(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+  ) {
     final sheetTheme =
         theme?.bottomSheetTheme ?? Theme.of(context).bottomSheetTheme;
     // By definition, the bottom sheet is aligned to the bottom of the page
@@ -67,11 +71,13 @@ class SLIModalBottomSheetRoute<T> extends PopupRoute<T> {
       context: context,
       removeTop: removeTop,
       child: Padding(
-        padding:
-            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
         child: _SLIModalBottomSheet<T>(
           route: this,
-          backgroundColor: backgroundColor ??
+          backgroundColor:
+              backgroundColor ??
               sheetTheme.modalBackgroundColor ??
               sheetTheme.backgroundColor,
           elevation:
@@ -90,7 +96,7 @@ class SLIModalBottomSheetRoute<T> extends PopupRoute<T> {
 
 class _SLIModalBottomSheet<T> extends StatefulWidget {
   const _SLIModalBottomSheet({
-    Key? key,
+    super.key,
     this.route,
     this.backgroundColor,
     this.elevation,
@@ -99,7 +105,7 @@ class _SLIModalBottomSheet<T> extends StatefulWidget {
     this.isScrollControlled = false,
     this.enableDrag = true,
     this.isPersistent = false,
-  }) : super(key: key);
+  });
   final bool isPersistent;
   final SLIModalBottomSheetRoute<T>? route;
   final bool isScrollControlled;
@@ -146,15 +152,32 @@ class _SLIModalBottomSheetState<T> extends State<_SLIModalBottomSheet<T>> {
           explicitChildNodes: true,
           child: ClipRect(
             child: CustomSingleChildLayout(
-                delegate: _SLIModalBottomSheetLayout(
-                    animationValue, widget.isScrollControlled),
-                child: widget.isPersistent == false
-                    ? BottomSheet(
+              delegate: _SLIModalBottomSheetLayout(
+                animationValue,
+                widget.isScrollControlled,
+              ),
+              child: widget.isPersistent == false
+                  ? BottomSheet(
+                      animationController: widget.route!._animationController,
+                      onClosing: () {
+                        if (widget.route!.isCurrent) {
+                          Navigator.pop(context);
+                        }
+                      },
+                      builder: widget.route!.builder!,
+                      backgroundColor: widget.backgroundColor,
+                      elevation: widget.elevation,
+                      shape: widget.shape,
+                      clipBehavior: widget.clipBehavior,
+                      enableDrag: widget.enableDrag,
+                    )
+                  : Scaffold(
+                      bottomSheet: BottomSheet(
                         animationController: widget.route!._animationController,
                         onClosing: () {
-                          if (widget.route!.isCurrent) {
-                            Navigator.pop(context);
-                          }
+                          // if (widget.route.isCurrent) {
+                          //   Navigator.pop(context);
+                          // }
                         },
                         builder: widget.route!.builder!,
                         backgroundColor: widget.backgroundColor,
@@ -162,24 +185,9 @@ class _SLIModalBottomSheetState<T> extends State<_SLIModalBottomSheet<T>> {
                         shape: widget.shape,
                         clipBehavior: widget.clipBehavior,
                         enableDrag: widget.enableDrag,
-                      )
-                    : Scaffold(
-                        bottomSheet: BottomSheet(
-                          animationController:
-                              widget.route!._animationController,
-                          onClosing: () {
-                            // if (widget.route.isCurrent) {
-                            //   Navigator.pop(context);
-                            // }
-                          },
-                          builder: widget.route!.builder!,
-                          backgroundColor: widget.backgroundColor,
-                          elevation: widget.elevation,
-                          shape: widget.shape,
-                          clipBehavior: widget.clipBehavior,
-                          enableDrag: widget.enableDrag,
-                        ),
-                      )),
+                      ),
+                    ),
+            ),
           ),
         );
       },
@@ -189,7 +197,7 @@ class _SLIModalBottomSheetState<T> extends State<_SLIModalBottomSheet<T>> {
 
 class _SLIPerModalBottomSheet<T> extends StatefulWidget {
   const _SLIPerModalBottomSheet({
-    Key? key,
+    super.key,
     this.route,
     this.isPersistent,
     this.backgroundColor,
@@ -198,7 +206,7 @@ class _SLIPerModalBottomSheet<T> extends StatefulWidget {
     this.clipBehavior,
     this.isScrollControlled = false,
     this.enableDrag = true,
-  }) : super(key: key);
+  });
   final bool? isPersistent;
   final SLIModalBottomSheetRoute<T>? route;
   final bool isScrollControlled;
@@ -249,15 +257,32 @@ class _SLIPerModalBottomSheetState<T>
           explicitChildNodes: true,
           child: ClipRect(
             child: CustomSingleChildLayout(
-                delegate: _SLIModalBottomSheetLayout(
-                    animationValue, widget.isScrollControlled),
-                child: widget.isPersistent == false
-                    ? BottomSheet(
+              delegate: _SLIModalBottomSheetLayout(
+                animationValue,
+                widget.isScrollControlled,
+              ),
+              child: widget.isPersistent == false
+                  ? BottomSheet(
+                      animationController: widget.route!._animationController,
+                      onClosing: () {
+                        if (widget.route!.isCurrent) {
+                          Navigator.pop(context);
+                        }
+                      },
+                      builder: widget.route!.builder!,
+                      backgroundColor: widget.backgroundColor,
+                      elevation: widget.elevation,
+                      shape: widget.shape,
+                      clipBehavior: widget.clipBehavior,
+                      enableDrag: widget.enableDrag,
+                    )
+                  : Scaffold(
+                      bottomSheet: BottomSheet(
                         animationController: widget.route!._animationController,
                         onClosing: () {
-                          if (widget.route!.isCurrent) {
-                            Navigator.pop(context);
-                          }
+                          // if (widget.route.isCurrent) {
+                          //   Navigator.pop(context);
+                          // }
                         },
                         builder: widget.route!.builder!,
                         backgroundColor: widget.backgroundColor,
@@ -265,24 +290,9 @@ class _SLIPerModalBottomSheetState<T>
                         shape: widget.shape,
                         clipBehavior: widget.clipBehavior,
                         enableDrag: widget.enableDrag,
-                      )
-                    : Scaffold(
-                        bottomSheet: BottomSheet(
-                          animationController:
-                              widget.route!._animationController,
-                          onClosing: () {
-                            // if (widget.route.isCurrent) {
-                            //   Navigator.pop(context);
-                            // }
-                          },
-                          builder: widget.route!.builder!,
-                          backgroundColor: widget.backgroundColor,
-                          elevation: widget.elevation,
-                          shape: widget.shape,
-                          clipBehavior: widget.clipBehavior,
-                          enableDrag: widget.enableDrag,
-                        ),
-                      )),
+                      ),
+                    ),
+            ),
           ),
         );
       },

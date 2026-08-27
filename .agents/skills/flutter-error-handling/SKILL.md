@@ -1,39 +1,33 @@
 ---
 name: flutter-error-handling
 description: >
-  Error handling for this base: core exceptions, Dio interceptors, ErrorMapper,
-  handleErrorResponse + DialogUtil. Trigger: "exception", "error", "dialog", "401".
+  Layered error handling for this base: infrastructure exceptions, mapping,
+  state errors, UI effects, redacted diagnostics, and session expiry.
+  Trigger: exception, error, failure, dialog, retry, 401.
 ---
 
-# Error Handling
+# Error handling
 
-## Key files
+## Direction
 
-| File | Role |
-|------|------|
-| `lib/core/error/exception.dart` | `ServerException`, `NetworkIssueException`, `GeneralException`, … |
-| `lib/core/error/error_to_string_mapper.dart` | `ErrorMapper.parse(error)` → user message |
-| `lib/presentation/global_handler.dart` | `handleErrorResponse(error, onRetry: …)` |
-| `lib/core/widget/dialog_util.dart` | Error dialog UI |
-| `lib/data/datasource/remote/interceptor/` | Auth, network, session interceptors |
-
-## Cubit pattern
-
-```dart
-} catch (e) {
-  emit(state.copyWith(loading: LoadingStatus.error));
-  handleErrorResponse(e, onRetry: () => _retry());
-}
+```text
+ApiClient/interceptors throw → DataSource propagates → Repository maps if needed
+→ UseCase propagates domain meaning → Cubit/BLoC emits error → UI renders/effects
 ```
 
 ## Rules
 
-- Data sources / API: throw or propagate — do not show UI
-- Cubit: catch, update state, call `handleErrorResponse` for global dialog when appropriate
-- UI: do not inspect raw `DioException` in widgets
-- Field validation errors: keep in state (`errorUsername`, …) — not `handleErrorResponse`
+- Data and domain code never imports UI, navigates, or displays dialogs.
+- Interceptors classify transport/session problems but do not access BuildContext.
+- Cubit/BLoC stores a recoverable error/failure in state and exposes retry as a
+  method/event. UI maps that value to localized copy and presentation.
+- `presentation/global_handler.dart` is a legacy compatibility adapter, not the
+  pattern for new features. New code uses `BlocListener`/`BlocConsumer` for
+  one-shot dialogs and navigation.
+- Field validation errors are typed state, not raw Dio errors or hardcoded copy.
+- Never log tokens, cookies, passwords, personal data, or unredacted bodies.
+- Session refresh must be single-flight; terminal expiry clears credentials and
+  emits one app-level session event.
 
-## References
-
-- `references/exception-hierarchy.md` — align with `core/error/exception.dart`
-- Ignore unauthorized go_router redirect docs unless app adds that flow in `AppCubit`
+Test failure mapping, retry state, redaction, and concurrent 401 behavior when
+the relevant implementation changes.

@@ -1,15 +1,17 @@
-import 'package:mOrder/data/datasource/local/token_provider.dart';
-import 'package:mOrder/data/datasource/remote/auth_remote_data_source.dart';
-import 'package:mOrder/data/model/request/sign_up_request_model.dart';
-import 'package:mOrder/data/model/response/auth/sign_up_response_model.dart';
-import 'package:mOrder/data/model/response/auth/token_wrapper_response_model.dart';
-import 'package:mOrder/data/model/response/profile/update_account_response_model.dart';
-import 'package:mOrder/data/model/response/token_response_model.dart';
-import 'package:mOrder/domain/entities/auth/login.dart';
-import 'package:mOrder/domain/entities/auth/token_wrapper.dart';
-import 'package:mOrder/domain/repositories/auth_repo.dart';
-import 'package:mOrder/core/extension/string_extension.dart';
+import 'package:bloc_cubit_base/data/datasource/local/token_provider.dart';
+import 'package:bloc_cubit_base/data/datasource/remote/auth_remote_data_source.dart';
+import 'package:bloc_cubit_base/data/model/response/auth/sign_up_response_model.dart';
+import 'package:bloc_cubit_base/data/model/response/auth/token_wrapper_response_model.dart';
+import 'package:bloc_cubit_base/data/model/response/profile/update_account_response_model.dart';
+import 'package:bloc_cubit_base/data/model/response/token_response_model.dart';
+import 'package:bloc_cubit_base/domain/entities/auth/login.dart';
+import 'package:bloc_cubit_base/domain/entities/auth/sign_up_params.dart';
+import 'package:bloc_cubit_base/domain/entities/auth/token_wrapper.dart';
+import 'package:bloc_cubit_base/domain/repositories/auth_repo.dart';
+import 'package:bloc_cubit_base/core/extension/string_extension.dart';
+import 'package:injectable/injectable.dart';
 
+@LazySingleton(as: AuthRepo)
 class AuthRepoImpl implements AuthRepo {
   final AuthRemoteDataSource _authRemoteDataSource;
   final TokenProvider _tokenProvider;
@@ -24,8 +26,9 @@ class AuthRepoImpl implements AuthRepo {
   @override
   Future<void> setTokenToLocal({TokenWrapper? tokenWrapper}) async {
     if (tokenWrapper is TokenWrapperResponseModel?) {
-      await _tokenProvider
-          .setToken(TokenResponseModel.fromTokenWrapperResponse(tokenWrapper));
+      await _tokenProvider.setToken(
+        TokenResponseModel.fromTokenWrapperResponse(tokenWrapper),
+      );
     }
   }
 
@@ -35,8 +38,7 @@ class AuthRepoImpl implements AuthRepo {
   }
 
   @override
-  Future<SignUpResponseModel?> userSignUp(
-      {required SignUpRequestModel request}) {
+  Future<SignUpResponseModel?> userSignUp({required SignUpParams request}) {
     return _authRemoteDataSource.userSignUp(request: request);
   }
 
@@ -46,9 +48,13 @@ class AuthRepoImpl implements AuthRepo {
   }
 
   @override
-  Future<void> resetPasswordPhone(
-      {required String idToken, required String newPassword}) {
+  Future<void> resetPasswordPhone({
+    required String idToken,
+    required String newPassword,
+  }) {
     return _authRemoteDataSource.resetPasswordPhone(
-        idToken: idToken, newPassword: newPassword);
+      idToken: idToken,
+      newPassword: newPassword,
+    );
   }
 }

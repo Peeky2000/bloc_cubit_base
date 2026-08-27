@@ -1,0 +1,51 @@
+name: Flutter CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.44.5
+          channel: stable
+          cache: true
+
+      - name: Resolve dependencies
+        run: flutter pub get
+
+      - name: Verify generated code
+        run: |
+          dart run build_runner build
+          git diff --exit-code
+
+      - name: Verify formatting
+        run: ./scripts/format.sh --check
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Check architecture boundaries
+        run: ./scripts/check_architecture.sh
+
+      - name: Test application
+        run: flutter test
+
+      - name: Analyze UI toolkit public surface
+        working-directory: lib/modules/sli_common
+        run: flutter analyze lib/src test example/lib
+
+      - name: Test UI toolkit
+        working-directory: lib/modules/sli_common
+        run: flutter test

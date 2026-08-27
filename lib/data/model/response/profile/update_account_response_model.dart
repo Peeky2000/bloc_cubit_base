@@ -1,5 +1,5 @@
-import 'package:mOrder/data/model/response/profile/account_response_model.dart';
-import 'package:mOrder/domain/entities/profile/update_account.dart';
+import 'package:bloc_cubit_base/data/model/response/profile/account_response_model.dart';
+import 'package:bloc_cubit_base/domain/entities/profile/update_account.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'update_account_response_model.g.dart';

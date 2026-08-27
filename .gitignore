@@ -65,3 +65,11 @@ ios/fastlane/*-deploy-key-ios.json
 android/fastlane/*-deploy-key-android.json
 
 lib/build/
+
+# Signing material must be provided by the developer machine or CI secrets.
+certificate/
+*.mobileprovision
+*.p12
+*.pfx
+*.jks
+*.keystore

@@ -1,7 +1,7 @@
-import 'package:mOrder/bootstrap.dart';
-import 'package:mOrder/core/app/main_app.dart';
-import 'package:mOrder/core/common/enum.dart';
+import 'package:bloc_cubit_base/bootstrap.dart';
+import 'package:bloc_cubit_base/core/app/app_config.dart';
+import 'package:bloc_cubit_base/core/app/main_app.dart';
 
 Future<void> main() async {
-  bootstrap(() => const MainApp(), environment: Environment.PROD);
+  await bootstrap(buildMainApp, environment: AppEnvironment.production);
 }

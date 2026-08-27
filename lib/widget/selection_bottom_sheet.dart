@@ -1,7 +1,7 @@
-import 'package:mOrder/core/app/app.dart';
+import 'package:bloc_cubit_base/core/app/app.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mOrder/core/widget/bottom_sheet_widget.dart';
+import 'package:bloc_cubit_base/core/widget/bottom_sheet_widget.dart';
 
 class SelectionItemModel<T> {
   final T value;
@@ -20,7 +20,7 @@ class SelectionBottomSheet<T> extends StatefulWidget {
   final double? height;
 
   const SelectionBottomSheet({
-    Key? key,
+    super.key,
     this.title = '',
     required this.data,
     this.indexSelected,
@@ -28,7 +28,7 @@ class SelectionBottomSheet<T> extends StatefulWidget {
     this.onSelected,
     this.isIntrinsicHeight = true,
     this.height,
-  }) : super(key: key);
+  });
 
   @override
   State<SelectionBottomSheet> createState() => _SelectionBottomSheetState();
@@ -52,31 +52,34 @@ class _SelectionBottomSheetState extends State<SelectionBottomSheet> {
       isIntrinsicHeight: widget.isIntrinsicHeight,
       height: widget.height,
       child: SingleChildScrollView(
-        child: Column(
-          children: List.generate(
-            listShow.length,
-            (index) => RadioListTile<dynamic>(
-              value: listShow[index].value,
-              groupValue:
-                  indexSelected == null ? null : listShow[indexSelected!].value,
-              title: Text(
-                listShow[index].title,
-                style: App.appStyle?.medium14?.copyWith(
-                  color: App.appColor?.textColor,
+        child: RadioGroup<dynamic>(
+          groupValue: indexSelected == null
+              ? null
+              : listShow[indexSelected!].value,
+          onChanged: (value) {
+            final index = listShow.indexWhere((item) => item.value == value);
+            if (index < 0) {
+              return;
+            }
+            setState(() => indexSelected = index);
+            widget.onSelected?.call(index);
+          },
+          child: Column(
+            children: List.generate(
+              listShow.length,
+              (index) => RadioListTile<dynamic>(
+                value: listShow[index].value,
+                title: Text(
+                  listShow[index].title,
+                  style: App.appStyle?.medium14?.copyWith(
+                    color: App.appColor?.textColor,
+                  ),
                 ),
+                selectedTileColor: Colors.white,
+                activeColor: App.appColor?.primaryColor,
+                contentPadding: const EdgeInsets.symmetric(horizontal: 0.0),
+                controlAffinity: ListTileControlAffinity.leading,
               ),
-              selectedTileColor: Colors.white,
-              activeColor: App.appColor?.primaryColor,
-              contentPadding: const EdgeInsets.symmetric(horizontal: 0.0),
-              controlAffinity: ListTileControlAffinity.leading,
-              onChanged: (value) {
-                setState(() {
-                  indexSelected = index;
-                });
-                if (widget.onSelected != null) {
-                  widget.onSelected!(index);
-                }
-              },
             ),
           ),
         ),
@@ -95,7 +98,7 @@ class MultiSelectionBottomSheet<T> extends StatefulWidget {
   final double? height;
 
   const MultiSelectionBottomSheet({
-    Key? key,
+    super.key,
     this.title = '',
     required this.data,
     this.indexSelected = const [],
@@ -103,7 +106,7 @@ class MultiSelectionBottomSheet<T> extends StatefulWidget {
     this.onSelected,
     this.isIntrinsicHeight = true,
     this.height,
-  }) : super(key: key);
+  });
 
   @override
   State<MultiSelectionBottomSheet> createState() =>
@@ -124,7 +127,7 @@ class _MultiSelectionBottomSheetState extends State<MultiSelectionBottomSheet> {
     listShow = widget.data;
   }
 
-  Widget buildItem(index) {
+  Widget buildItem(int index) {
     bool isSelected = indexSelected.contains(index);
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
@@ -144,8 +147,10 @@ class _MultiSelectionBottomSheetState extends State<MultiSelectionBottomSheet> {
               height: 16.w,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4.r),
-                border:
-                    Border.all(color: App.appColor!.borderColor!, width: 1.0),
+                border: Border.all(
+                  color: App.appColor!.borderColor!,
+                  width: 1.0,
+                ),
               ),
               child: isSelected
                   ? Icon(
@@ -165,7 +170,7 @@ class _MultiSelectionBottomSheetState extends State<MultiSelectionBottomSheet> {
                   ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -180,10 +185,7 @@ class _MultiSelectionBottomSheetState extends State<MultiSelectionBottomSheet> {
       height: widget.height,
       child: SingleChildScrollView(
         child: Column(
-          children: List.generate(
-            listShow.length,
-            (index) => buildItem(index),
-          ),
+          children: List.generate(listShow.length, (index) => buildItem(index)),
         ),
       ),
     );

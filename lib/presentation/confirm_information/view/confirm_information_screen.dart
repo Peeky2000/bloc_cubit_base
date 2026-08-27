@@ -1,17 +1,17 @@
-import 'package:mOrder/core/app/app.dart';
-import 'package:mOrder/core/routing/routing.dart';
-import 'package:mOrder/generated/assets.gen.dart';
-import 'package:mOrder/l10n/l10n.dart';
-import 'package:mOrder/widget/loading_screen.dart';
+import 'package:bloc_cubit_base/core/app/app.dart';
+import 'package:bloc_cubit_base/core/routing/routing.dart';
+import 'package:bloc_cubit_base/generated/assets.gen.dart';
+import 'package:bloc_cubit_base/l10n/l10n.dart';
+import 'package:bloc_cubit_base/widget/loading_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:mOrder/core/extension/int_extension.dart';
-import 'package:mOrder/core/widget/dialog_util.dart';
+import 'package:bloc_cubit_base/core/extension/int_extension.dart';
+import 'package:bloc_cubit_base/core/widget/dialog_util.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mOrder/core/mixin/after_layout.dart';
-import 'package:mOrder/di/injection.dart';
-import 'package:mOrder/presentation/confirm_information/cubit/confirm_information_cubit.dart';
+import 'package:bloc_cubit_base/core/mixin/after_layout.dart';
+import 'package:bloc_cubit_base/di/injection.dart';
+import 'package:bloc_cubit_base/presentation/confirm_information/cubit/confirm_information_cubit.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
@@ -22,10 +22,10 @@ Widget confirmInformationScreenBuilder() =>
     );
 
 class ConfirmInformationScreen extends StatefulWidget {
-  const ConfirmInformationScreen({Key? key}) : super(key: key);
+  const ConfirmInformationScreen({super.key});
 
   @override
-  _ConfirmInformationScreenState createState() =>
+  State<ConfirmInformationScreen> createState() =>
       _ConfirmInformationScreenState();
 }
 
@@ -42,12 +42,6 @@ class _ConfirmInformationScreenState extends State<ConfirmInformationScreen>
   @override
   void afterFirstLayout(BuildContext context) {}
 
-  @override
-  void dispose() {
-    _confirmInformationCubit?.close();
-    super.dispose();
-  }
-
   Widget _buildBody() {
     return SingleChildScrollView(
       physics: const ClampingScrollPhysics(),
@@ -62,7 +56,8 @@ class _ConfirmInformationScreenState extends State<ConfirmInformationScreen>
             builder: (context, state) {
               return Text(
                 context.l10n.confirmOTP(
-                    '${_confirmInformationCubit?.phone.substring(0, _confirmInformationCubit!.phone.length - 3)}***'),
+                  '${_confirmInformationCubit?.phone.substring(0, _confirmInformationCubit!.phone.length - 3)}***',
+                ),
                 style: App.appStyle?.semiBold18?.copyWith(
                   color: App.appColor?.textColor,
                 ),
@@ -70,9 +65,7 @@ class _ConfirmInformationScreenState extends State<ConfirmInformationScreen>
               );
             },
           ),
-          SizedBox(
-            height: 32.h,
-          ),
+          SizedBox(height: 32.h),
           PinCodeTextField(
             appContext: context,
             length: 6,
@@ -98,18 +91,19 @@ class _ConfirmInformationScreenState extends State<ConfirmInformationScreen>
             padding: EdgeInsets.only(top: 16.h, bottom: 32.h),
             child:
                 BlocBuilder<ConfirmInformationCubit, ConfirmInformationState>(
-              builder: (context, state) {
-                return state.isVerifying
-                    ? Text(
-                        '${context.l10n.verifying}...',
-                        style: App.appStyle?.medium14?.copyWith(
-                          color: App.appColor?.textColor,
-                        ),
-                      )
-                    : state.counter > 0
+                  builder: (context, state) {
+                    return state.isVerifying
                         ? Text(
-                            context.l10n
-                                .resendOTPAfter(state.counter.formatTimeMMSS),
+                            '${context.l10n.verifying}...',
+                            style: App.appStyle?.medium14?.copyWith(
+                              color: App.appColor?.textColor,
+                            ),
+                          )
+                        : state.counter > 0
+                        ? Text(
+                            context.l10n.resendOTPAfter(
+                              state.counter.formatTimeMMSS,
+                            ),
                             style: App.appStyle?.medium14?.copyWith(
                               color: App.appColor?.textColorLight,
                             ),
@@ -118,7 +112,8 @@ class _ConfirmInformationScreenState extends State<ConfirmInformationScreen>
                             TextSpan(
                               children: [
                                 TextSpan(
-                                    text: '${context.l10n.dontReceivedOTP}. '),
+                                  text: '${context.l10n.dontReceivedOTP}. ',
+                                ),
                                 TextSpan(
                                   text: context.l10n.resendOTP,
                                   style: App.appStyle?.medium14?.copyWith(
@@ -135,8 +130,8 @@ class _ConfirmInformationScreenState extends State<ConfirmInformationScreen>
                               ),
                             ),
                           );
-              },
-            ),
+                  },
+                ),
           ),
         ],
       ),
@@ -169,9 +164,7 @@ class _ConfirmInformationScreenState extends State<ConfirmInformationScreen>
             ),
           ),
           leading: (ModalRoute.of(context)?.canPop ?? false)
-              ? BackButton(
-                  onPressed: () => SLIRouting.back(),
-                )
+              ? BackButton(onPressed: () => SLIRouting.back())
               : null,
           centerTitle: true,
         ),

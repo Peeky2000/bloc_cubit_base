@@ -1,84 +1,81 @@
-# Project Prerequisites (AI / specs)
+# Project Prerequisites
 
-Cập nhật khi fork base sang dự án mới. Đọc `pubspec.yaml` để lấy tên package thực tế.
+Update this file whenever the base is forked or a foundational package changes.
 
----
+## Toolchain
 
-## 1. Application
+- Flutter: pinned by `.fvmrc` (FVM is recommended, not required).
+- Dart SDK: `^3.10.0`.
+- Derry: `dart pub global activate derry`.
+- Git submodules: required for `lib/modules/sli_common`.
+- Platforms: Android and iOS.
 
-| Field | Value |
-|-------|--------|
-| Package name | `pubspec.yaml` → field `name:` |
-| Import prefix | `package:<name>/...` |
-| Platforms | Android, iOS |
-| Entry | `lib/main_*.dart` (env variants) |
+Bootstrap a clone with `derry bootstrap`.
 
----
+## Structure and dependency direction
 
-## 2. Architecture
+```text
+lib/presentation/  UI + Cubit/BLoC
+        ↓
+lib/domain/        entities, repository contracts, use cases
+        ↑
+lib/data/          models, data sources, repository implementations
 
-**Clean Architecture** — presentation → domain → data → core:
-
-```
-lib/presentation/   # UI + Cubit
-lib/domain/         # entities, repositories (abstract), use_case
-lib/data/           # models, datasources, repository impl
-lib/core/           # routing, errors, shared widgets, app config
-lib/di/             # Injector (get_it)
+lib/core/          application/infrastructure primitives
+lib/di/            injectable composition root and generated graph
 ```
 
-**Luồng bắt buộc:** `Cubit → UseCase → Repository → DataSource`
+Required flow: `Cubit/BLoC → UseCase → Repository → DataSource`.
+See [dependency rules](architecture/dependency-rules.md).
 
-Chi tiết: [project-convention](../.agents/skills/project-convention/SKILL.md) · [canonical-paths](../.agents/skills/project-convention/references/canonical-paths.md)
-
----
-
-## 3. Tech stack
+## Stack
 
 | Concern | Implementation |
-|---------|----------------|
-| State | `flutter_bloc`, `BaseCubit`, `BaseAppState`, `LoadingStatus` |
-| DI | `get_it`, `lib/di/injection.dart` |
-| HTTP | `dio`, `ApiHandler` / `ApiClient` |
-| Serialization | `json_serializable` + `build_runner` |
+|---|---|
+| State | `flutter_bloc`, `BaseCubit`/`BaseBloc`, `BaseAppState`, Equatable |
+| DI | `get_it + injectable`, constructor injection, generated config |
+| HTTP | Dio, `ApiHandler` / `ApiClient` |
+| Models | `json_serializable` + `build_runner` |
+| Local settings | `shared_preferences` through data sources |
+| Secrets/tokens | `flutter_secure_storage` through `TokenProvider` |
 | Navigation | `SLIRouting`, `AppPage` |
-| Localization | gen-l10n — `lib/l10n/arb/` |
-| Errors | `handleErrorResponse`, `ErrorMapper` |
+| Localization | Flutter gen-l10n, `lib/l10n/arb/` |
+| Network inspection | redacted Alice integration, non-production only |
+| Shared UI | `sli_common` Git submodule, Shadcn adapter |
 
-**Không dùng trong base:** `go_router`, `injectable`, `freezed`, `retrofit`, `easy_localization`, `lib/features/`, `lib/shared/`.
+Intentional defaults: no Freezed requirement, no HydratedBloc requirement, no
+`go_router`, no Retrofit, and REST rather than GraphQL. These can be added to a
+real product only after documenting the need and dependency boundaries.
 
----
+## Runtime configuration
 
-## 4. Layer order (feature mới)
+Entrypoints are `lib/main_{local,dev,staging,prod}.dart`. Configuration comes
+from typed `AppConfig` and `--dart-define`, not asset-based `.env` files.
 
-Entity → Model → DataSource → Repository → UseCase → Cubit → Screen → Route → ARB → DI
+Common values:
 
----
+- `API_BASE_URL`
+- `ENABLE_NETWORK_INSPECTOR`
 
-## 5. AI workflow
+Never commit production credentials, API secrets, signing keys, provisioning
+profiles, or environment files containing secrets.
 
-| Artifact | Path |
-|----------|------|
-| Process | `/ai-process.md` |
-| Brainstorm | `docs/brainstorm/` |
-| Spec | `docs/specs/{NNN}-{name}/fe.md` |
-| Plan | `docs/plan/` |
-| Review | `docs/reviews/` |
-
----
-
-## 6. Quality commands
+## Quality commands
 
 ```bash
-flutter pub get
-dart format lib/
-flutter analyze
-dart run build_runner build --delete-conflicting-outputs
+derry get
+derry gen
+derry analyze
+derry test
+derry quality
 ```
 
----
+Architecture boundaries are also enforced by
+`scripts/check_architecture.sh` and CI.
 
-## 7. App memory
+## AI workflow
+
+Start from `/AGENTS.md` and `/ai-process.md`. Search existing artifacts with:
 
 ```bash
 python3 .agents/skills/app-memory/scripts/mem_search.py "<keyword>"

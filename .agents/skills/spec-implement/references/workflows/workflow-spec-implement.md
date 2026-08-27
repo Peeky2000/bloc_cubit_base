@@ -124,7 +124,8 @@ Once **all** checklists are completed, go back and review all generated code.
 ### 4.2 Review against project rules
 
 - Apply rules in `.cursor/rules/` (code-style, project-conventions, library-search, etc.).
-- Check: Dart naming conventions (snake_case files, PascalCase classes, camelCase vars), file placement in Clean Architecture layers, proper use of `@freezed`, `@injectable`, `@JsonKey`, correct import paths, no unused imports.
+- Check Dart naming, canonical Clean Architecture paths, immutable Equatable state,
+  correct `@injectable`/`@JsonKey` use, constructor injection, imports, and unused code.
 - If violations are found → **fix them** and **repeat** the review until no errors remain.
 
 **Rules:**

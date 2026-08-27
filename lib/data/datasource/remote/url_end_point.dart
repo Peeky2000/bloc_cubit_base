@@ -1,9 +1,9 @@
 class UrlEndPoint {
-  static const _AuthEndPoint auth = _AuthEndPoint();
+  static const AuthEndPoint auth = AuthEndPoint();
 }
 
-class _AuthEndPoint {
-  const _AuthEndPoint();
+class AuthEndPoint {
+  const AuthEndPoint();
 
   final String _authPath = '/auth';
 

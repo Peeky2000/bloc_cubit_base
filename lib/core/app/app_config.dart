@@ -1,52 +1,96 @@
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:mOrder/core/common/enum.dart';
+enum AppEnvironment {
+  local,
+  development,
+  staging,
+  production;
 
-class AppConfig {
-  final Environment _environment;
-
-  Map<String, dynamic> _config = {};
-
-  String get baseUrl => _config[_Config.BASE_URL];
-
-  Environment get env => _environment;
-
-  AppConfig(Environment environment) : _environment = environment;
-
-  Future<void> setup() async {
-    await dotenv.load(fileName: '.env');
-    switch (_environment) {
-      case Environment.LOCAL:
-        _config = _Config().localConstants;
-        break;
-      case Environment.DEV:
-        _config = _Config().devConstants;
-        break;
-      case Environment.STAGING:
-        _config = _Config().stagingConstants;
-        break;
-      case Environment.PROD:
-        _config = _Config().prodConstants;
-        break;
-    }
-  }
+  bool get isProduction => this == AppEnvironment.production;
 }
 
-class _Config {
-  static const BASE_URL = 'BASE_URL';
+/// Immutable runtime configuration selected by a minimal environment entry point.
+class AppConfig {
+  AppConfig({
+    required this.environment,
+    required this.baseUri,
+    required this.enableNetworkInspector,
+  }) {
+    _validate();
+  }
 
-  Map<String, dynamic> get localConstants => {
-        BASE_URL: dotenv.env['BASE_URL_LOCAL'] ?? '',
-      };
+  factory AppConfig.forEnvironment(AppEnvironment environment) {
+    const baseUrlOverride = String.fromEnvironment('API_BASE_URL');
+    final defaultBaseUrl = switch (environment) {
+      AppEnvironment.local => 'http://localhost:3000',
+      AppEnvironment.development => 'https://api.dev.example.com',
+      AppEnvironment.staging => 'https://api.staging.example.com',
+      AppEnvironment.production => 'https://api.example.com',
+    };
+    const inspectorOverride = String.fromEnvironment(
+      'ENABLE_NETWORK_INSPECTOR',
+    );
 
-  Map<String, dynamic> get devConstants => {
-        BASE_URL: dotenv.env['BASE_URL_DEV'] ?? '',
-      };
+    return AppConfig(
+      environment: environment,
+      baseUri: Uri.parse(
+        baseUrlOverride.isEmpty ? defaultBaseUrl : baseUrlOverride,
+      ),
+      enableNetworkInspector: _parseInspectorOverride(
+        inspectorOverride,
+        defaultValue: !environment.isProduction,
+      ),
+    );
+  }
 
-  Map<String, dynamic> stagingConstants = {
-    BASE_URL: dotenv.env['BASE_URL_STAGING'] ?? '',
-  };
+  final AppEnvironment environment;
+  final Uri baseUri;
+  final bool enableNetworkInspector;
 
-  Map<String, dynamic> prodConstants = {
-    BASE_URL: dotenv.env['BASE_URL_PROD'] ?? '',
-  };
+  String get baseUrl => baseUri.toString();
+
+  static bool _parseInspectorOverride(
+    String value, {
+    required bool defaultValue,
+  }) {
+    if (value.isEmpty) {
+      return defaultValue;
+    }
+    return switch (value.toLowerCase()) {
+      'true' => true,
+      'false' => false,
+      _ => throw ArgumentError.value(
+        value,
+        'ENABLE_NETWORK_INSPECTOR',
+        'Expected true or false.',
+      ),
+    };
+  }
+
+  void _validate() {
+    if (!baseUri.hasScheme || !baseUri.hasAuthority) {
+      throw ArgumentError.value(
+        baseUri,
+        'baseUri',
+        'A base URL must include an HTTP(S) scheme and host.',
+      );
+    }
+    if (baseUri.scheme != 'http' && baseUri.scheme != 'https') {
+      throw ArgumentError.value(
+        baseUri,
+        'baseUri',
+        'Only HTTP(S) base URLs are supported.',
+      );
+    }
+    if (environment.isProduction && baseUri.scheme != 'https') {
+      throw ArgumentError.value(
+        baseUri,
+        'baseUri',
+        'Production requires HTTPS.',
+      );
+    }
+    if (environment.isProduction && enableNetworkInspector) {
+      throw ArgumentError(
+        'The network inspector cannot be enabled in production.',
+      );
+    }
+  }
 }

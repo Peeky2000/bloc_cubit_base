@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mOrder/core/base_component/base_app_state.dart';
-import 'package:mOrder/core/common/enum.dart';
+import 'package:bloc_cubit_base/core/base_component/base_app_state.dart';
+import 'package:bloc_cubit_base/core/common/enum.dart';
 
 class LoadingScreen<B extends StateStreamable<S>, S extends BaseAppState>
     extends StatelessWidget {
@@ -14,14 +14,14 @@ class LoadingScreen<B extends StateStreamable<S>, S extends BaseAppState>
   final Function(BuildContext, S)? listener;
 
   const LoadingScreen({
-    Key? key,
+    super.key,
     required this.builder,
     this.opacity = 0.3,
     this.color = Colors.black,
     this.dismissible = false,
     this.buildWhen,
     this.listener,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +34,10 @@ class LoadingScreen<B extends StateStreamable<S>, S extends BaseAppState>
       child: Stack(
         children: [
           BlocBuilder<B, S>(
-              buildWhen:
-                  buildWhen ?? (current, old) => current.loading != old.loading,
-              builder: (context, state) => builder(context, state)),
+            buildWhen:
+                buildWhen ?? (current, old) => current.loading != old.loading,
+            builder: (context, state) => builder(context, state),
+          ),
           BlocBuilder<B, S>(
             buildWhen: (previous, current) =>
                 previous.loading != current.loading,
@@ -48,16 +49,17 @@ class LoadingScreen<B extends StateStreamable<S>, S extends BaseAppState>
                         Opacity(
                           opacity: opacity,
                           child: ModalBarrier(
-                              dismissible: dismissible, color: color),
+                            dismissible: dismissible,
+                            color: color,
+                          ),
                         ),
                         Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(8.0)),
-                          child: const CupertinoActivityIndicator(
-                            radius: 14,
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8.0),
                           ),
+                          child: const CupertinoActivityIndicator(radius: 14),
                         ),
                       ],
                     )

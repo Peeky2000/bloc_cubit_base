@@ -8,19 +8,20 @@ class ExpandedWidget extends StatefulWidget {
   final Duration duration;
 
   const ExpandedWidget({
-    Key? key,
+    super.key,
     this.expand = false,
     this.child,
     this.curve = Curves.easeInOut,
     this.axis = Axis.vertical,
     this.duration = const Duration(milliseconds: 500),
-  }) : super(key: key);
+  });
 
   @override
-  _ExpandedWidgetState createState() => _ExpandedWidgetState();
+  State<ExpandedWidget> createState() => _ExpandedWidgetState();
 }
 
-class _ExpandedWidgetState extends State<ExpandedWidget> with SingleTickerProviderStateMixin {
+class _ExpandedWidgetState extends State<ExpandedWidget>
+    with SingleTickerProviderStateMixin {
   late AnimationController expandController;
   late Animation<double> animation;
 
@@ -33,11 +34,11 @@ class _ExpandedWidgetState extends State<ExpandedWidget> with SingleTickerProvid
 
   ///Setting up the animation
   void prepareAnimations() {
-    expandController = AnimationController(vsync: this, duration: widget.duration);
-    animation = CurvedAnimation(
-      parent: expandController,
-      curve: widget.curve,
+    expandController = AnimationController(
+      vsync: this,
+      duration: widget.duration,
     );
+    animation = CurvedAnimation(parent: expandController, curve: widget.curve);
   }
 
   void _runExpandCheck() {
@@ -63,7 +64,9 @@ class _ExpandedWidgetState extends State<ExpandedWidget> with SingleTickerProvid
   @override
   Widget build(BuildContext context) {
     return SizeTransition(
-      axisAlignment: 1.0,
+      alignment: widget.axis == Axis.vertical
+          ? Alignment.bottomCenter
+          : Alignment.centerRight,
       sizeFactor: animation,
       axis: widget.axis,
       child: widget.child,

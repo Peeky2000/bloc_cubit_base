@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mOrder/core/app/app.dart';
-import 'package:mOrder/core/common/constant.dart';
-import 'package:mOrder/core/widget/ink_well_button.dart';
+import 'package:bloc_cubit_base/core/app/app.dart';
+import 'package:bloc_cubit_base/core/common/constant.dart';
+import 'package:bloc_cubit_base/core/widget/ink_well_button.dart';
 
 class DeliveryGoButton extends StatelessWidget {
   final String? title;
@@ -18,7 +18,7 @@ class DeliveryGoButton extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
 
   const DeliveryGoButton({
-    Key? key,
+    super.key,
     required this.title,
     this.width,
     this.onTap,
@@ -30,7 +30,7 @@ class DeliveryGoButton extends StatelessWidget {
     this.icon,
     this.isWrapContentChild = false,
     this.padding,
-  }) : super(key: key);
+  });
 
   Widget _buildLabel() {
     return Padding(
@@ -38,12 +38,8 @@ class DeliveryGoButton extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const SizedBox(
-            width: 24,
-          ),
-          SizedBox(
-            width: 8.w,
-          ),
+          const SizedBox(width: 24),
+          SizedBox(width: 8.w),
           Expanded(
             child: Text(
               title ?? '',
@@ -55,10 +51,8 @@ class DeliveryGoButton extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(
-            width: 8.w,
-          ),
-          icon!
+          SizedBox(width: 8.w),
+          icon!,
         ],
       ),
     );

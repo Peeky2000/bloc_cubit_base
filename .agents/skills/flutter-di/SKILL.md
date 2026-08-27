@@ -1,53 +1,64 @@
 ---
 name: flutter-di
 description: >
-  Guide for Dependency Injection in this base using get_it with manual registration
-  in lib/di/injection.dart (Injector). Use when registering Cubits, UseCases,
-  repositories, or data sources. Trigger: "dependency injection", "get_it",
-  "Injector", "registerFactory", "setupDomain".
+  Dependency injection for this base using get_it, injectable, generated
+  injection.config.dart, constructor injection, and explicit runtime modules.
+  Trigger: dependency injection, get_it, injectable, @injectable,
+  @lazySingleton, configureDependencies, injection.config.dart.
 ---
 
-# Flutter DI — get_it (manual)
+# Flutter DI — get_it + injectable
 
-## Entry point
+## Source of truth
 
+| File | Role |
+|---|---|
+| `lib/di/injection.dart` | owns `getIt` and `configureDependencies()` |
+| `lib/di/register_module.dart` | platform/runtime dependencies and pre-resolved async values |
+| `lib/di/injection.config.dart` | generated graph; never edit manually |
+
+## Scopes
+
+| Type | Annotation |
+|---|---|
+| Screen-scoped Cubit/BLoC | `@injectable` (factory) |
+| Stateless UseCase/service | `@lazySingleton` |
+| Repository binding | `@LazySingleton(as: XxxRepo)` on implementation |
+| DataSource binding | `@LazySingleton(as: XxxDataSource)` on implementation |
+| App-lifetime coordinator | `@singleton`, only with an explicit lifetime reason |
+| External/async dependency | provider in `@module` / `@preResolve` |
+
+## Required pattern
+
+```dart
+@injectable
+class ProductCubit extends BaseCubit<ProductState> {
+  ProductCubit(this._useCase) : super(ProductState.initial());
+
+  final ProductUseCase _useCase;
+}
+
+@LazySingleton(as: ProductRepo)
+class ProductRepoImpl implements ProductRepo {
+  ProductRepoImpl(this._remoteDataSource);
+  final ProductRemoteDataSource _remoteDataSource;
+}
 ```
-lib/di/injection.dart
-└── class Injector
-    ├── setupEnvironment()
-    ├── setupData()
-    ├── setupDomain()
-    └── setupPresentation()
-```
 
-Access: `Injector.getIt.get<T>()`
-
-## Registration guide
-
-| Type | Method | Example |
-|------|--------|---------|
-| Cubit | `registerFactory` | `registerFactory<SignInCubit>(() => SignInCubit())` |
-| UseCase | `registerLazySingleton` | `registerLazySingleton<AuthUseCase>(() => AuthUseCase(getIt(), getIt()))` |
-| Repo interface | `registerLazySingleton<AuthRepo>(() => AuthRepoImpl(getIt(), getIt()))` |
-| DataSource | `registerLazySingleton` | `registerLazySingleton<AuthRemoteDataSource>(() => AuthRemoteDataSourceImpl(getIt()))` |
-| ApiHandler | `registerLazySingleton` | `registerLazySingleton<ApiHandler>(() => ApiClient(...))` |
+After annotations or constructor dependencies change, run `derry gen` and
+commit the regenerated config.
 
 ## Rules
 
-- **No** `injectable`, **no** `injection.config.dart`
-- Cubits: always **factory**
-- Register repo as **interface** type, impl in closure
-- Add imports at top of `injection.dart` for new types
+- Do not call `getIt`, `Injector`, or `GetIt.instance` inside a Cubit/BLoC,
+  UseCase, repository, or data source.
+- Resolution is allowed only in composition roots: bootstrap, route/screen
+  builders, and explicit integration adapters.
+- Depend on domain interfaces, not data implementations.
+- Prefer constructor injection; do not add field injection or hidden globals.
+- Cubits/BLoCs are factories unless an app-lifetime state owner is explicitly
+  documented and provided with `BlocProvider.value`.
+- Never hand-edit `injection.config.dart`.
 
-## References
-
-| Topic | File |
-|-------|------|
-| Scopes | `project-convention/rules/di-scopes.md` |
-| Full example | `lib/di/injection.dart` |
-
-## Rules files (still valid conceptually)
-
-- `rules/bloc-is-factory.md` — apply as `registerFactory` for Cubits
-- `rules/inject-interface-not-impl.md` — register `AuthRepo`, not only `AuthRepoImpl` in getIt type
-- Ignore `rules/external-libs-use-module.md` injectable `@module` — register SharedPreferences in `setupData` like existing code
+See `docs/architecture/dependency-injection.md` and
+`project-convention/rules/di-scopes.md`.

@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart' as dio;
-import 'package:mOrder/core/app/app_controller.dart';
-import 'package:mOrder/core/error/exception.dart';
-import 'package:mOrder/data/model/response/base_response_model.dart';
-import 'package:mOrder/di/injection.dart';
-import 'package:mOrder/l10n/l10n.dart';
+import 'package:bloc_cubit_base/core/app/app_controller.dart';
+import 'package:bloc_cubit_base/core/error/exception.dart';
+import 'package:bloc_cubit_base/data/model/response/base_response_model.dart';
+import 'package:bloc_cubit_base/di/injection.dart';
+import 'package:bloc_cubit_base/l10n/l10n.dart';
 
 part 'error_mapper_item.dart';
 
@@ -24,16 +24,21 @@ class ErrorMapper {
     return item.getDisplay(error);
   }
 
-  static String parse(dynamic error,
-      [List<ErrorToStringMapperItem>? customItems]) {
+  static String parse(
+    dynamic error, [
+    List<ErrorToStringMapperItem>? customItems,
+  ]) {
     return instance._map(error, customItems);
   }
 
   ErrorToStringMapperItem _findItem(
-      dynamic exception, List<ErrorToStringMapperItem>? customItems) {
+    dynamic exception,
+    List<ErrorToStringMapperItem>? customItems,
+  ) {
     if (customItems != null && customItems.isNotEmpty) {
-      final index =
-          customItems.indexWhere((element) => element.isMatch(exception));
+      final index = customItems.indexWhere(
+        (element) => element.isMatch(exception),
+      );
       if (index >= 0) {
         return customItems[index];
       }

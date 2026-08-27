@@ -3,11 +3,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:mOrder/core/extension/string_extension.dart';
-import 'package:mOrder/core/widget/expanded_widget.dart';
+import 'package:bloc_cubit_base/core/extension/string_extension.dart';
+import 'package:bloc_cubit_base/core/widget/expanded_widget.dart';
 
 class CommonTextField extends StatelessWidget {
-  static CommonTextFieldStyle commonTextFieldStyle = const CommonTextFieldStyle();
+  static CommonTextFieldStyle commonTextFieldStyle =
+      const CommonTextFieldStyle();
 
   final String? title;
   final String? note;
@@ -61,94 +62,135 @@ class CommonTextField extends StatelessWidget {
   final Widget? counter;
 
   InputBorder get border {
-    if (!(isUseDefaultError ?? commonTextFieldStyle.isUseDefaultError) && error.isNotNullOrEmpty) {
+    if (!(isUseDefaultError ?? commonTextFieldStyle.isUseDefaultError) &&
+        error.isNotNullOrEmpty) {
       return isUnderline
           ? UnderlineInputBorder(
               borderSide: BorderSide(
-                  color: errorBorderColor ?? commonTextFieldStyle.errorBorderColor!,
-                  width: commonTextFieldStyle.borderWidth ?? borderWidth),
+                color:
+                    errorBorderColor ?? commonTextFieldStyle.errorBorderColor!,
+                width: commonTextFieldStyle.borderWidth ?? borderWidth,
+              ),
             )
           : OutlineInputBorder(
-              borderRadius: BorderRadius.circular(radius ?? commonTextFieldStyle.borderRadius),
+              borderRadius: BorderRadius.circular(
+                radius ?? commonTextFieldStyle.borderRadius,
+              ),
               borderSide: BorderSide(
-                  color: errorBorderColor ?? commonTextFieldStyle.errorBorderColor!,
-                  width: commonTextFieldStyle.borderWidth ?? borderWidth),
+                color:
+                    errorBorderColor ?? commonTextFieldStyle.errorBorderColor!,
+                width: commonTextFieldStyle.borderWidth ?? borderWidth,
+              ),
             );
     }
     return isUnderline
         ? UnderlineInputBorder(
             borderSide: BorderSide(
-                color: borderColor ?? commonTextFieldStyle.borderColor!,
-                width: commonTextFieldStyle.borderWidth ?? borderWidth),
+              color: borderColor ?? commonTextFieldStyle.borderColor!,
+              width: commonTextFieldStyle.borderWidth ?? borderWidth,
+            ),
           )
         : OutlineInputBorder(
-            borderRadius: BorderRadius.circular(radius ?? commonTextFieldStyle.borderRadius),
+            borderRadius: BorderRadius.circular(
+              radius ?? commonTextFieldStyle.borderRadius,
+            ),
             borderSide: BorderSide(
-                color: borderColor ?? commonTextFieldStyle.borderColor!,
-                width: commonTextFieldStyle.borderWidth ?? borderWidth),
+              color: borderColor ?? commonTextFieldStyle.borderColor!,
+              width: commonTextFieldStyle.borderWidth ?? borderWidth,
+            ),
           );
   }
 
   InputBorder get focusedBorder {
-    if (!(isUseDefaultError ?? commonTextFieldStyle.isUseDefaultError) && error.isNotNullOrEmpty) {
+    if (!(isUseDefaultError ?? commonTextFieldStyle.isUseDefaultError) &&
+        error.isNotNullOrEmpty) {
       return isUnderline
           ? UnderlineInputBorder(
               borderSide: BorderSide(
-                  color: focusedErrorBorderColor ?? commonTextFieldStyle.focusedErrorBorderColor!,
-                  width: commonTextFieldStyle.borderWidth ?? borderWidth),
+                color:
+                    focusedErrorBorderColor ??
+                    commonTextFieldStyle.focusedErrorBorderColor!,
+                width: commonTextFieldStyle.borderWidth ?? borderWidth,
+              ),
             )
           : OutlineInputBorder(
-              borderRadius: BorderRadius.circular(radius ?? commonTextFieldStyle.borderRadius),
+              borderRadius: BorderRadius.circular(
+                radius ?? commonTextFieldStyle.borderRadius,
+              ),
               borderSide: BorderSide(
-                  color: focusedErrorBorderColor ?? commonTextFieldStyle.focusedErrorBorderColor!,
-                  width: commonTextFieldStyle.borderWidth ?? borderWidth),
+                color:
+                    focusedErrorBorderColor ??
+                    commonTextFieldStyle.focusedErrorBorderColor!,
+                width: commonTextFieldStyle.borderWidth ?? borderWidth,
+              ),
             );
     }
     return isUnderline
         ? UnderlineInputBorder(
             borderSide: BorderSide(
-                color: focusedBorderColor ?? commonTextFieldStyle.focusedBorderColor!,
-                width: commonTextFieldStyle.borderWidth ?? borderWidth),
+              color:
+                  focusedBorderColor ??
+                  commonTextFieldStyle.focusedBorderColor!,
+              width: commonTextFieldStyle.borderWidth ?? borderWidth,
+            ),
           )
         : OutlineInputBorder(
-            borderRadius: BorderRadius.circular(radius ?? commonTextFieldStyle.borderRadius),
+            borderRadius: BorderRadius.circular(
+              radius ?? commonTextFieldStyle.borderRadius,
+            ),
             borderSide: BorderSide(
-                color: focusedBorderColor ?? commonTextFieldStyle.focusedBorderColor!,
-                width: commonTextFieldStyle.borderWidth ?? borderWidth),
+              color:
+                  focusedBorderColor ??
+                  commonTextFieldStyle.focusedBorderColor!,
+              width: commonTextFieldStyle.borderWidth ?? borderWidth,
+            ),
           );
   }
 
   InputBorder get enabledBorder {
-    if (!(isUseDefaultError ?? commonTextFieldStyle.isUseDefaultError) && error.isNotNullOrEmpty) {
+    if (!(isUseDefaultError ?? commonTextFieldStyle.isUseDefaultError) &&
+        error.isNotNullOrEmpty) {
       return isUnderline
           ? UnderlineInputBorder(
               borderSide: BorderSide(
-                  color: errorBorderColor ?? commonTextFieldStyle.errorBorderColor!,
-                  width: commonTextFieldStyle.borderWidth ?? borderWidth),
+                color:
+                    errorBorderColor ?? commonTextFieldStyle.errorBorderColor!,
+                width: commonTextFieldStyle.borderWidth ?? borderWidth,
+              ),
             )
           : OutlineInputBorder(
-              borderRadius: BorderRadius.circular(radius ?? commonTextFieldStyle.borderRadius),
+              borderRadius: BorderRadius.circular(
+                radius ?? commonTextFieldStyle.borderRadius,
+              ),
               borderSide: BorderSide(
-                  color: errorBorderColor ?? commonTextFieldStyle.errorBorderColor!,
-                  width: commonTextFieldStyle.borderWidth ?? borderWidth),
+                color:
+                    errorBorderColor ?? commonTextFieldStyle.errorBorderColor!,
+                width: commonTextFieldStyle.borderWidth ?? borderWidth,
+              ),
             );
     }
     return isUnderline
         ? UnderlineInputBorder(
             borderSide: BorderSide(
-                color: enableBorderColor ?? commonTextFieldStyle.enableBorderColor!,
-                width: commonTextFieldStyle.borderWidth ?? borderWidth),
+              color:
+                  enableBorderColor ?? commonTextFieldStyle.enableBorderColor!,
+              width: commonTextFieldStyle.borderWidth ?? borderWidth,
+            ),
           )
         : OutlineInputBorder(
-            borderRadius: BorderRadius.circular(radius ?? commonTextFieldStyle.borderRadius),
+            borderRadius: BorderRadius.circular(
+              radius ?? commonTextFieldStyle.borderRadius,
+            ),
             borderSide: BorderSide(
-                color: enableBorderColor ?? commonTextFieldStyle.enableBorderColor!,
-                width: commonTextFieldStyle.borderWidth ?? borderWidth),
+              color:
+                  enableBorderColor ?? commonTextFieldStyle.enableBorderColor!,
+              width: commonTextFieldStyle.borderWidth ?? borderWidth,
+            ),
           );
   }
 
   const CommonTextField({
-    Key? key,
+    super.key,
     this.title,
     this.note,
     this.controller,
@@ -199,7 +241,7 @@ class CommonTextField extends StatelessWidget {
     this.counterText,
     this.counterStyle,
     this.counter,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -208,21 +250,37 @@ class CommonTextField extends StatelessWidget {
       children: [
         if (title.isNotNullOrEmpty)
           Padding(
-            padding: commonTextFieldStyle.titlePadding ?? const EdgeInsets.only(bottom: 12.0),
-            child: Text.rich(TextSpan(children: [
+            padding:
+                commonTextFieldStyle.titlePadding ??
+                const EdgeInsets.only(bottom: 12.0),
+            child: Text.rich(
               TextSpan(
-                text: title!,
-                style: titleStyle ??
-                    commonTextFieldStyle.titleStyle ??
-                    const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600),
+                children: [
+                  TextSpan(
+                    text: title!,
+                    style:
+                        titleStyle ??
+                        commonTextFieldStyle.titleStyle ??
+                        const TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
+                  TextSpan(
+                    text: note ?? '',
+                    style:
+                        noteStyle ??
+                        commonTextFieldStyle.noteStyle ??
+                        const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
+                ],
               ),
-              TextSpan(
-                text: note ?? '',
-                style: noteStyle ??
-                    commonTextFieldStyle.noteStyle ??
-                    const TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.w600),
-              )
-            ])),
+            ),
           ),
         TextField(
           controller: controller,
@@ -260,55 +318,76 @@ class CommonTextField extends StatelessWidget {
             counterText: counterText,
             counterStyle: counterStyle,
             counter: counter,
-            errorText: (isUseDefaultError ?? commonTextFieldStyle.isUseDefaultError)
+            errorText:
+                (isUseDefaultError ?? commonTextFieldStyle.isUseDefaultError)
                 ? (error.isNotNullOrEmpty ? error : null)
                 : null,
             errorStyle: errorStyle ?? commonTextFieldStyle.errorStyle,
-            contentPadding: contentPadding ?? commonTextFieldStyle.contentPadding,
+            contentPadding:
+                contentPadding ?? commonTextFieldStyle.contentPadding,
             errorMaxLines: 2,
             border: border,
             disabledBorder: isUnderline
                 ? UnderlineInputBorder(
                     borderSide: BorderSide(
-                        color: disableBorderColor ?? commonTextFieldStyle.disableBorderColor!,
-                        width: commonTextFieldStyle.borderWidth ?? borderWidth),
+                      color:
+                          disableBorderColor ??
+                          commonTextFieldStyle.disableBorderColor!,
+                      width: commonTextFieldStyle.borderWidth ?? borderWidth,
+                    ),
                   )
                 : OutlineInputBorder(
-                    borderRadius:
-                        BorderRadius.circular(radius ?? commonTextFieldStyle.borderRadius),
+                    borderRadius: BorderRadius.circular(
+                      radius ?? commonTextFieldStyle.borderRadius,
+                    ),
                     borderSide: BorderSide(
-                        color: disableBorderColor ?? commonTextFieldStyle.disableBorderColor!,
-                        width: 1.0),
+                      color:
+                          disableBorderColor ??
+                          commonTextFieldStyle.disableBorderColor!,
+                      width: 1.0,
+                    ),
                   ),
             focusedBorder: focusedBorder,
             enabledBorder: enabledBorder,
             errorBorder: isUnderline
                 ? UnderlineInputBorder(
                     borderSide: BorderSide(
-                        color: errorBorderColor ?? commonTextFieldStyle.errorBorderColor!,
-                        width: commonTextFieldStyle.borderWidth ?? borderWidth),
+                      color:
+                          errorBorderColor ??
+                          commonTextFieldStyle.errorBorderColor!,
+                      width: commonTextFieldStyle.borderWidth ?? borderWidth,
+                    ),
                   )
                 : OutlineInputBorder(
-                    borderRadius:
-                        BorderRadius.circular(radius ?? commonTextFieldStyle.borderRadius),
+                    borderRadius: BorderRadius.circular(
+                      radius ?? commonTextFieldStyle.borderRadius,
+                    ),
                     borderSide: BorderSide(
-                        color: errorBorderColor ?? commonTextFieldStyle.errorBorderColor!,
-                        width: commonTextFieldStyle.borderWidth ?? borderWidth),
+                      color:
+                          errorBorderColor ??
+                          commonTextFieldStyle.errorBorderColor!,
+                      width: commonTextFieldStyle.borderWidth ?? borderWidth,
+                    ),
                   ),
             focusedErrorBorder: isUnderline
                 ? UnderlineInputBorder(
                     borderSide: BorderSide(
-                        color: focusedErrorBorderColor ??
-                            commonTextFieldStyle.focusedErrorBorderColor!,
-                        width: commonTextFieldStyle.borderWidth ?? borderWidth),
+                      color:
+                          focusedErrorBorderColor ??
+                          commonTextFieldStyle.focusedErrorBorderColor!,
+                      width: commonTextFieldStyle.borderWidth ?? borderWidth,
+                    ),
                   )
                 : OutlineInputBorder(
-                    borderRadius:
-                        BorderRadius.circular(radius ?? commonTextFieldStyle.borderRadius),
+                    borderRadius: BorderRadius.circular(
+                      radius ?? commonTextFieldStyle.borderRadius,
+                    ),
                     borderSide: BorderSide(
-                        color: focusedErrorBorderColor ??
-                            commonTextFieldStyle.focusedErrorBorderColor!,
-                        width: commonTextFieldStyle.borderWidth ?? borderWidth),
+                      color:
+                          focusedErrorBorderColor ??
+                          commonTextFieldStyle.focusedErrorBorderColor!,
+                      width: commonTextFieldStyle.borderWidth ?? borderWidth,
+                    ),
                   ),
           ),
         ),
@@ -325,7 +404,7 @@ class CommonTextField extends StatelessWidget {
                       style: errorStyle ?? commonTextFieldStyle.errorStyle,
                     ),
                   ),
-                )
+                ),
       ],
     );
   }
@@ -352,15 +431,31 @@ class CommonTextFieldStyle {
   final Widget Function(String?)? errorBuilder;
 
   const CommonTextFieldStyle({
-    this.titleStyle =
-        const TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.w600),
-    this.noteStyle = const TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.w600),
-    this.labelStyle =
-        const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.normal),
-    this.hintStyle =
-        const TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.normal),
-    this.errorStyle =
-        const TextStyle(color: Colors.redAccent, fontSize: 14, fontWeight: FontWeight.normal),
+    this.titleStyle = const TextStyle(
+      color: Colors.black,
+      fontSize: 18,
+      fontWeight: FontWeight.w600,
+    ),
+    this.noteStyle = const TextStyle(
+      color: Colors.grey,
+      fontSize: 16,
+      fontWeight: FontWeight.w600,
+    ),
+    this.labelStyle = const TextStyle(
+      color: Colors.black,
+      fontSize: 16,
+      fontWeight: FontWeight.normal,
+    ),
+    this.hintStyle = const TextStyle(
+      color: Colors.grey,
+      fontSize: 16,
+      fontWeight: FontWeight.normal,
+    ),
+    this.errorStyle = const TextStyle(
+      color: Colors.redAccent,
+      fontSize: 14,
+      fontWeight: FontWeight.normal,
+    ),
     this.contentPadding = const EdgeInsets.all(8.0),
     this.borderColor = Colors.grey,
     this.focusedErrorBorderColor = Colors.redAccent,
@@ -388,12 +483,19 @@ class ThousandsFormatter extends NumberInputFormatter {
   final bool allowFraction;
 
   ThousandsFormatter({this.formatter, this.allowFraction = false})
-      : _decimalSeparator = (formatter ?? _formatter).symbols.DECIMAL_SEP,
-        _decimalRegex = RegExp(
-            allowFraction ? '[0-9]+([${(formatter ?? _formatter).symbols.DECIMAL_SEP}])?' : r'\d+'),
-        _decimalFormatter = FilteringTextInputFormatter.allow(RegExp(allowFraction
+    : _decimalSeparator = (formatter ?? _formatter).symbols.DECIMAL_SEP,
+      _decimalRegex = RegExp(
+        allowFraction
             ? '[0-9]+([${(formatter ?? _formatter).symbols.DECIMAL_SEP}])?'
-            : r'\d+'));
+            : r'\d+',
+      ),
+      _decimalFormatter = FilteringTextInputFormatter.allow(
+        RegExp(
+          allowFraction
+              ? '[0-9]+([${(formatter ?? _formatter).symbols.DECIMAL_SEP}])?'
+              : r'\d+',
+        ),
+      );
 
   @override
   String _formatPattern(String? digits) {
@@ -416,7 +518,10 @@ class ThousandsFormatter extends NumberInputFormatter {
   }
 
   @override
-  TextEditingValue _formatValue(TextEditingValue oldValue, TextEditingValue newValue) {
+  TextEditingValue _formatValue(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
     return _decimalFormatter.formatEditUpdate(oldValue, newValue);
   }
 
@@ -457,7 +562,10 @@ class CreditCardFormatter extends NumberInputFormatter {
   }
 
   @override
-  TextEditingValue _formatValue(TextEditingValue oldValue, TextEditingValue newValue) {
+  TextEditingValue _formatValue(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
     return _digitOnlyFormatter.formatEditUpdate(oldValue, newValue);
   }
 
@@ -476,7 +584,10 @@ abstract class NumberInputFormatter extends TextInputFormatter {
   TextEditingValue? _lastNewValue;
 
   @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
     /// nothing changes, nothing to do
     if (newValue.text == _lastNewValue?.text) {
       return newValue;
@@ -522,9 +633,10 @@ abstract class NumberInputFormatter extends TextInputFormatter {
     }
 
     return newValue.copyWith(
-        text: newText,
-        selection: TextSelection.collapsed(offset: selectionIndex),
-        composing: TextRange.empty);
+      text: newText,
+      selection: TextSelection.collapsed(offset: selectionIndex),
+      composing: TextRange.empty,
+    );
   }
 
   /// check character from user input or being inserted by pattern formatter
@@ -534,12 +646,18 @@ abstract class NumberInputFormatter extends TextInputFormatter {
   String _formatPattern(String digits);
 
   /// validate user input
-  TextEditingValue _formatValue(TextEditingValue oldValue, TextEditingValue newValue);
+  TextEditingValue _formatValue(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  );
 }
 
 class DateFormatter extends TextInputFormatter {
   @override
-  TextEditingValue formatEditUpdate(TextEditingValue prevText, TextEditingValue currText) {
+  TextEditingValue formatEditUpdate(
+    TextEditingValue prevText,
+    TextEditingValue currText,
+  ) {
     int selectionIndex;
 
     // Get the previous and current input strings
@@ -587,20 +705,21 @@ class DateFormatter extends TextInputFormatter {
     } else if (cLen == 3 && pLen == 2) {
       if (int.parse(cText.substring(2, 3)) > 1) {
         // Replace char
-        cText = cText.substring(0, 2) + '/';
+        cText = '${cText.substring(0, 2)}/';
       } else {
         // Insert / char
-        cText = cText.substring(0, pLen) + '/' + cText.substring(pLen, pLen + 1);
+        cText =
+            '${cText.substring(0, pLen)}/${cText.substring(pLen, pLen + 1)}';
       }
     } else if (cLen == 6 && pLen == 5) {
       // Can only be 1 or 2 - if so insert a / char
       int y1 = int.parse(cText.substring(5, 6));
       if (y1 < 1 || y1 > 2) {
         // Replace char
-        cText = cText.substring(0, 5) + '/';
+        cText = '${cText.substring(0, 5)}/';
       } else {
         // Insert / char
-        cText = cText.substring(0, 5) + '/' + cText.substring(5, 6);
+        cText = '${cText.substring(0, 5)}/${cText.substring(5, 6)}';
       }
     } else if (cLen == 7) {
       // Can only be 1 or 2

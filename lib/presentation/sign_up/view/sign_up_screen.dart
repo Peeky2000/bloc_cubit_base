@@ -1,37 +1,38 @@
-import 'package:mOrder/core/app/app.dart';
-import 'package:mOrder/core/app/app_controller.dart';
-import 'package:mOrder/core/common/enum.dart';
-import 'package:mOrder/core/common/route.dart';
-import 'package:mOrder/core/extension/list_extension.dart';
-import 'package:mOrder/core/routing/routing.dart';
-import 'package:mOrder/generated/assets.gen.dart';
-import 'package:mOrder/l10n/l10n.dart';
-import 'package:mOrder/widget/delivery_go_button.dart';
-import 'package:mOrder/widget/loading_screen.dart';
-import 'package:mOrder/widget/selection_bottom_sheet.dart';
+import 'package:bloc_cubit_base/core/app/app.dart';
+import 'package:bloc_cubit_base/core/app/app_controller.dart';
+import 'package:bloc_cubit_base/core/common/enum.dart';
+import 'package:bloc_cubit_base/core/common/route.dart';
+import 'package:bloc_cubit_base/domain/entities/common/app_enums.dart';
+import 'package:bloc_cubit_base/core/extension/list_extension.dart';
+import 'package:bloc_cubit_base/core/routing/routing.dart';
+import 'package:bloc_cubit_base/generated/assets.gen.dart';
+import 'package:bloc_cubit_base/l10n/l10n.dart';
+import 'package:bloc_cubit_base/widget/delivery_go_button.dart';
+import 'package:bloc_cubit_base/widget/loading_screen.dart';
+import 'package:bloc_cubit_base/widget/selection_bottom_sheet.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mOrder/core/mixin/after_layout.dart';
-import 'package:mOrder/di/injection.dart';
-import 'package:mOrder/presentation/sign_up/cubit/sign_up_cubit.dart';
-import 'package:mOrder/core/widget/common_text_field.dart';
-import 'package:mOrder/core/widget/common_drop_down.dart';
-import 'package:mOrder/core/widget/dialog_util.dart';
-import 'package:mOrder/core/helper/log.dart';
+import 'package:bloc_cubit_base/core/mixin/after_layout.dart';
+import 'package:bloc_cubit_base/di/injection.dart';
+import 'package:bloc_cubit_base/presentation/sign_up/cubit/sign_up_cubit.dart';
+import 'package:bloc_cubit_base/core/widget/common_text_field.dart';
+import 'package:bloc_cubit_base/core/widget/common_drop_down.dart';
+import 'package:bloc_cubit_base/core/widget/dialog_util.dart';
+import 'package:bloc_cubit_base/core/helper/log.dart';
 
 Widget signUpScreenBuilder() => BlocProvider<SignUpCubit>(
-      create: (_) => Injector.getIt.get<SignUpCubit>(),
-      child: const SignUpScreen(),
-    );
+  create: (_) => Injector.getIt.get<SignUpCubit>(),
+  child: const SignUpScreen(),
+);
 
 class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({Key? key}) : super(key: key);
+  const SignUpScreen({super.key});
 
   @override
-  _SignUpScreenState createState() => _SignUpScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
 class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
@@ -53,70 +54,95 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
     _signUpCubit = context.read<SignUpCubit>();
     itemsScaleLevel = [
       SelectionItemModel(
-          value: ScaleLevel.KHONG_THUONG_XUYEN,
-          title: appContext?.l10n.scaleL1 ?? ''),
+        value: ScaleLevel.KHONG_THUONG_XUYEN,
+        title: appContext?.l10n.scaleL1 ?? '',
+      ),
       SelectionItemModel(
-          value: ScaleLevel.DUOI_150_THANG,
-          title: appContext?.l10n.scaleL2 ?? ''),
+        value: ScaleLevel.DUOI_150_THANG,
+        title: appContext?.l10n.scaleL2 ?? '',
+      ),
       SelectionItemModel(
-          value: ScaleLevel.DUOI_900_THANG,
-          title: appContext?.l10n.scaleL3 ?? ''),
+        value: ScaleLevel.DUOI_900_THANG,
+        title: appContext?.l10n.scaleL3 ?? '',
+      ),
       SelectionItemModel(
-          value: ScaleLevel.DUOI_3000_THANG,
-          title: appContext?.l10n.scaleL4 ?? ''),
+        value: ScaleLevel.DUOI_3000_THANG,
+        title: appContext?.l10n.scaleL4 ?? '',
+      ),
       SelectionItemModel(
-          value: ScaleLevel.DUOI_6000_THANG,
-          title: appContext?.l10n.scaleL5 ?? ''),
+        value: ScaleLevel.DUOI_6000_THANG,
+        title: appContext?.l10n.scaleL5 ?? '',
+      ),
       SelectionItemModel(
-          value: ScaleLevel.TREN_6000_THANG,
-          title: appContext?.l10n.scaleL6 ?? ''),
+        value: ScaleLevel.TREN_6000_THANG,
+        title: appContext?.l10n.scaleL6 ?? '',
+      ),
     ];
     itemsIndustry = [
       SelectionItemModel(
-          value: IndustryType.THOI_TRANG,
-          title: appContext?.l10n.fashion ?? ''),
+        value: IndustryType.THOI_TRANG,
+        title: appContext?.l10n.fashion ?? '',
+      ),
       SelectionItemModel(
-          value: IndustryType.MY_PHAM, title: appContext?.l10n.cosmetics ?? ''),
+        value: IndustryType.MY_PHAM,
+        title: appContext?.l10n.cosmetics ?? '',
+      ),
       SelectionItemModel(
-          value: IndustryType.NOI_THAT, title: appContext?.l10n.industry ?? ''),
+        value: IndustryType.NOI_THAT,
+        title: appContext?.l10n.industry ?? '',
+      ),
       SelectionItemModel(
-          value: IndustryType.ME_VA_BE,
-          title: appContext?.l10n.motherAndBaby ?? ''),
+        value: IndustryType.ME_VA_BE,
+        title: appContext?.l10n.motherAndBaby ?? '',
+      ),
       SelectionItemModel(
-          value: IndustryType.MAY_TINH,
-          title: appContext?.l10n.computers ?? ''),
+        value: IndustryType.MAY_TINH,
+        title: appContext?.l10n.computers ?? '',
+      ),
       SelectionItemModel(
-          value: IndustryType.HANG_HOA_DE_VO,
-          title: appContext?.l10n.fragileGoods ?? ''),
+        value: IndustryType.HANG_HOA_DE_VO,
+        title: appContext?.l10n.fragileGoods ?? '',
+      ),
       SelectionItemModel(
-          value: IndustryType.TIVI_VA_THIET_BI_GIA_DUNG,
-          title: appContext?.l10n.householdElectrical ?? ''),
+        value: IndustryType.TIVI_VA_THIET_BI_GIA_DUNG,
+        title: appContext?.l10n.householdElectrical ?? '',
+      ),
       SelectionItemModel(
-          value: IndustryType.GIA_DUNG,
-          title: appContext?.l10n.houseware ?? ''),
+        value: IndustryType.GIA_DUNG,
+        title: appContext?.l10n.houseware ?? '',
+      ),
       SelectionItemModel(
-          value: IndustryType.XE_MAY_VA_PHUONG_TIEN,
-          title: appContext?.l10n.motorcycles ?? ''),
+        value: IndustryType.XE_MAY_VA_PHUONG_TIEN,
+        title: appContext?.l10n.motorcycles ?? '',
+      ),
       SelectionItemModel(
-          value: IndustryType.CAY_TRONG_VA_NONG_NGHIEP,
-          title: appContext?.l10n.drums ?? ''),
+        value: IndustryType.CAY_TRONG_VA_NONG_NGHIEP,
+        title: appContext?.l10n.drums ?? '',
+      ),
       SelectionItemModel(
-          value: IndustryType.THUC_PHAM_VA_NONG_SAN,
-          title: appContext?.l10n.food ?? ''),
+        value: IndustryType.THUC_PHAM_VA_NONG_SAN,
+        title: appContext?.l10n.food ?? '',
+      ),
       SelectionItemModel(
-          value: IndustryType.DUNG_CU_VA_PHU_KIEN,
-          title: appContext?.l10n.sports ?? ''),
+        value: IndustryType.DUNG_CU_VA_PHU_KIEN,
+        title: appContext?.l10n.sports ?? '',
+      ),
       SelectionItemModel(
-          value: IndustryType.TRANG_SUC_VA_PHU_KIEN,
-          title: appContext?.l10n.jewelry ?? ''),
+        value: IndustryType.TRANG_SUC_VA_PHU_KIEN,
+        title: appContext?.l10n.jewelry ?? '',
+      ),
       SelectionItemModel(
-          value: IndustryType.HANG_TIEU_DUNG,
-          title: appContext?.l10n.consumables ?? ''),
+        value: IndustryType.HANG_TIEU_DUNG,
+        title: appContext?.l10n.consumables ?? '',
+      ),
       SelectionItemModel(
-          value: IndustryType.SACH_VA_VAN_PHONG_PHAM,
-          title: appContext?.l10n.books ?? ''),
+        value: IndustryType.SACH_VA_VAN_PHONG_PHAM,
+        title: appContext?.l10n.books ?? '',
+      ),
       SelectionItemModel(
-          value: IndustryType.KHAC, title: appContext?.l10n.other ?? ''),
+        value: IndustryType.KHAC,
+        title: appContext?.l10n.other ?? '',
+      ),
     ];
   }
 
@@ -125,7 +151,11 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
 
   @override
   void dispose() {
-    _signUpCubit?.close();
+    _pageController.dispose();
+    _phoneEditingController.dispose();
+    _emailEditingController.dispose();
+    _passEditingController.dispose();
+    _shopNameEditingController.dispose();
     super.dispose();
   }
 
@@ -169,9 +199,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
               );
             },
           ),
-          SizedBox(
-            height: 16.h,
-          ),
+          SizedBox(height: 16.h),
           BlocBuilder<SignUpCubit, SignUpState>(
             builder: (context, state) {
               return CommonTextField(
@@ -183,9 +211,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
               );
             },
           ),
-          SizedBox(
-            height: 16.h,
-          ),
+          SizedBox(height: 16.h),
           BlocBuilder<SignUpCubit, SignUpState>(
             builder: (context, state) {
               return CommonTextField(
@@ -195,8 +221,10 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
                 keyboardType: TextInputType.visiblePassword,
                 error: state.errorPassword,
                 obscureText: !(_signUpCubit?.state.showPass ?? false),
-                suffixConstraints:
-                    BoxConstraints.tightFor(width: 44.w, height: 20.w),
+                suffixConstraints: BoxConstraints.tightFor(
+                  width: 44.w,
+                  height: 20.w,
+                ),
                 suffix: GestureDetector(
                   onTap: () => _signUpCubit?.onChangeShowPass(),
                   child: Icon(
@@ -209,9 +237,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
               );
             },
           ),
-          SizedBox(
-            height: 32.h,
-          ),
+          SizedBox(height: 32.h),
           DeliveryGoButton(
             title: context.l10n.signUpNowPerWord,
             onTap: () {
@@ -221,29 +247,29 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
               _signUpCubit?.onTapSignUp(phone: phone, email: email, pass: pass);
             },
           ),
-          SizedBox(
-            height: 32.h,
-          ),
+          SizedBox(height: 32.h),
           Text.rich(
-            TextSpan(children: [
-              TextSpan(
-                text: '${context.l10n.alreadyAcc} ',
-                style: App.appStyle?.medium14?.copyWith(
-                  color: App.appColor?.textColor,
+            TextSpan(
+              children: [
+                TextSpan(
+                  text: '${context.l10n.alreadyAcc} ',
+                  style: App.appStyle?.medium14?.copyWith(
+                    color: App.appColor?.textColor,
+                  ),
                 ),
-              ),
-              TextSpan(
-                text: context.l10n.signInNow,
-                style: App.appStyle?.medium14?.copyWith(
-                  color: App.appColor?.textColorPrimary,
-                  decoration: TextDecoration.underline,
+                TextSpan(
+                  text: context.l10n.signInNow,
+                  style: App.appStyle?.medium14?.copyWith(
+                    color: App.appColor?.textColorPrimary,
+                    decoration: TextDecoration.underline,
+                  ),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      SLIRouting.offAllNamed(AppPage.signIn);
+                    },
                 ),
-                recognizer: TapGestureRecognizer()
-                  ..onTap = () {
-                    SLIRouting.offAllNamed(AppPage.SIGN_IN);
-                  },
-              ),
-            ]),
+              ],
+            ),
           ),
         ],
       ),
@@ -252,7 +278,8 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
 
   void _showSelectionScale() {
     int index = itemsScaleLevel.indexWhere(
-        (element) => element.value == _signUpCubit?.state.currentScaleLevel);
+      (element) => element.value == _signUpCubit?.state.currentScaleLevel,
+    );
     SLIRouting.bottomSheet(
       SelectionBottomSheet(
         title: context.l10n.shippingScale,
@@ -281,7 +308,10 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
         data: itemsIndustry,
         isIntrinsicHeight: true,
         onSelected: (index, selected) => _signUpCubit?.onChangeSelectedIndustry(
-            itemsIndustry[index].value, itemsIndustry[index].title, selected),
+          itemsIndustry[index].value,
+          itemsIndustry[index].title,
+          selected,
+        ),
         indexSelected: listIndex,
       ),
       isScrollControlled: true,
@@ -322,9 +352,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
                   );
                 },
               ),
-              SizedBox(
-                height: 16.h,
-              ),
+              SizedBox(height: 16.h),
               BlocBuilder<SignUpCubit, SignUpState>(
                 builder: (context, state) {
                   List<String> names = [];
@@ -346,14 +374,13 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
                   );
                 },
               ),
-              SizedBox(
-                height: 16.h,
-              ),
+              SizedBox(height: 16.h),
               BlocBuilder<SignUpCubit, SignUpState>(
                 builder: (context, state) {
                   String? title = itemsScaleLevel
                       .firstWhereOrNull(
-                          (item) => item.value == state.currentScaleLevel)
+                        (item) => item.value == state.currentScaleLevel,
+                      )
                       ?.title;
                   return CommonDropDown(
                     title: context.l10n.shippingScale,
@@ -364,15 +391,11 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
                   );
                 },
               ),
-              SizedBox(
-                height: 32.h,
-              ),
+              SizedBox(height: 32.h),
               Text.rich(
                 TextSpan(
                   children: [
-                    TextSpan(
-                      text: '${context.l10n.tos1} ',
-                    ),
+                    TextSpan(text: '${context.l10n.tos1} '),
                     TextSpan(
                       text: context.l10n.tos2,
                       style: App.appStyle?.bold14?.copyWith(
@@ -384,9 +407,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
                           Log.t(message: 'dasdasd');
                         },
                     ),
-                    TextSpan(
-                      text: ' ${context.l10n.and} ',
-                    ),
+                    TextSpan(text: ' ${context.l10n.and} '),
                     TextSpan(
                       text: context.l10n.tos3,
                       style: App.appStyle?.bold14?.copyWith(
@@ -398,9 +419,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
                           Log.t(message: 'dasdasd');
                         },
                     ),
-                    TextSpan(
-                      text: ' ${context.l10n.tos4}',
-                    ),
+                    TextSpan(text: ' ${context.l10n.tos4}'),
                   ],
                 ),
                 style: App.appStyle?.regular14?.copyWith(
@@ -408,9 +427,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(
-                height: 32.h,
-              ),
+              SizedBox(height: 32.h),
               DeliveryGoButton(
                 title: context.l10n.confirmInfo,
                 onTap: () {
@@ -425,9 +442,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
           alignment: Alignment.topLeft,
           child: Padding(
             padding: EdgeInsets.only(top: 24.h, left: 12.w),
-            child: BackButton(
-              onPressed: () => _signUpCubit?.previousPage(),
-            ),
+            child: BackButton(onPressed: () => _signUpCubit?.previousPage()),
           ),
         ),
       ],
@@ -478,9 +493,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
           children: [
             AspectRatio(
               aspectRatio: 430.0.w / 320.0.h,
-              child: Assets.images.imgAds.image(
-                fit: BoxFit.cover,
-              ),
+              child: Assets.images.imgAds.image(fit: BoxFit.cover),
             ),
             BlocBuilder<SignUpCubit, SignUpState>(
               builder: (context, state) {
@@ -492,15 +505,12 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
                       physics: const NeverScrollableScrollPhysics(),
                       controller: _pageController,
                       onPageChanged: (index) => _signUpCubit?.changePage(index),
-                      children: [
-                        _buildSignUpPage(),
-                        _buildInfoShop(),
-                      ],
+                      children: [_buildSignUpPage(), _buildInfoShop()],
                     ),
                   ),
                 );
               },
-            )
+            ),
           ],
         ),
       ),

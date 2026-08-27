@@ -1,34 +1,34 @@
 import 'dart:async';
 
-import 'package:mOrder/core/app/app_controller.dart';
-import 'package:mOrder/core/common/constant.dart';
-import 'package:mOrder/core/common/route.dart';
-import 'package:mOrder/core/error/exception.dart';
-import 'package:mOrder/core/routing/routing.dart';
-import 'package:mOrder/di/injection.dart';
-import 'package:mOrder/domain/use_case/auth_use_case.dart';
-import 'package:mOrder/l10n/l10n.dart';
-import 'package:mOrder/presentation/global_handler.dart';
-import 'package:mOrder/presentation/success/success_screen.dart';
+import 'package:bloc_cubit_base/core/app/app_controller.dart';
+import 'package:bloc_cubit_base/core/common/constant.dart';
+import 'package:bloc_cubit_base/core/common/route.dart';
+import 'package:bloc_cubit_base/core/error/exception.dart';
+import 'package:bloc_cubit_base/core/routing/routing.dart';
+import 'package:bloc_cubit_base/domain/use_case/auth_use_case.dart';
+import 'package:bloc_cubit_base/l10n/l10n.dart';
+import 'package:bloc_cubit_base/presentation/global_handler.dart';
+import 'package:bloc_cubit_base/presentation/success/success_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:equatable/equatable.dart';
-import 'package:mOrder/core/base_component/base_app_state.dart';
-import 'package:mOrder/core/base_component/base_cubit.dart';
-import 'package:mOrder/core/common/enum.dart';
+import 'package:injectable/injectable.dart';
+import 'package:bloc_cubit_base/core/base_component/base_app_state.dart';
+import 'package:bloc_cubit_base/core/base_component/base_cubit.dart';
+import 'package:bloc_cubit_base/core/common/enum.dart';
 
 part 'confirm_information_state.dart';
 
+@injectable
 class ConfirmInformationCubit extends BaseCubit<ConfirmInformationState> {
   String phone = '';
-  String pageSuccess = AppPage.HOME;
+  String pageSuccess = AppPage.home;
   Timer? _timer;
   int counter = Constant.timePeriodOTP;
-  final BuildContext? _context = Injector.getIt.get<AppController>().context;
+  final AppController _appController;
+  final AuthUseCase _authUseCase;
 
-  final AuthUseCase _authUseCase = Injector.getIt.get<AuthUseCase>();
-
-  ConfirmInformationCubit() : super(ConfirmInformationState.initial()) {
+  ConfirmInformationCubit(this._authUseCase, this._appController)
+    : super(ConfirmInformationState.initial()) {
     dynamic data = SLIRouting.routing.args;
     if (data is Map<String, dynamic> && data.containsKey('phone')) {
       phone = data['phone'];
@@ -37,6 +37,8 @@ class ConfirmInformationCubit extends BaseCubit<ConfirmInformationState> {
       pageSuccess = data['page_success'];
     }
   }
+
+  BuildContext? get _context => _appController.context;
 
   @override
   Future<void> close() {
@@ -55,8 +57,13 @@ class ConfirmInformationCubit extends BaseCubit<ConfirmInformationState> {
       },
     );
     counter = Constant.timePeriodOTP;
-    emit(state.copyWith(
-        loading: LoadingStatus.complete, counter: counter, isVerifying: false));
+    emit(
+      state.copyWith(
+        loading: LoadingStatus.complete,
+        counter: counter,
+        isVerifying: false,
+      ),
+    );
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (!state.isVerifying && counter > 0) {
         counter--;

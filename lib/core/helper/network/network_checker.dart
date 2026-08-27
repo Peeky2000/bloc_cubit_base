@@ -2,21 +2,21 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:mOrder/core/helper/lib/data_connection_checker.dart';
+import 'package:bloc_cubit_base/core/helper/lib/data_connection_checker.dart';
 
 class NetworkChecker {
   NetworkChecker();
 
-  StreamSubscription? _subscription;
-  StreamSubscription? _subscriptionDataChecker;
-  StreamController<bool> connectController = StreamController<bool>.broadcast();
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
+  StreamSubscription<DataConnectionStatus>? _statusSubscription;
+  final StreamController<bool> connectController =
+      StreamController<bool>.broadcast();
   final DataConnectionChecker _checker = DataConnectionChecker();
   bool? isConnected;
 
   Future<void> init() async {
-    connectController.stream.listen((event) {
-      isConnected = event;
-    });
+    await _connectivitySubscription?.cancel();
+    await _statusSubscription?.cancel();
     _checker.addresses = [
       AddressCheckOptions(
         InternetAddress('1.1.1.1'),
@@ -50,26 +50,33 @@ class NetworkChecker {
       ),
     ];
     _checker.checkInterval = const Duration(seconds: 15);
-    _subscription = Connectivity().onConnectivityChanged.listen((List<ConnectivityResult> result) {
+    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((
+      List<ConnectivityResult> result,
+    ) async {
       if (!result.contains(ConnectivityResult.none)) {
-        _checker.onStatusChange.listen((status) {
-          bool isConnectedData = status == DataConnectionStatus.connected;
-          if (isConnected != null &&
-              isConnected != isConnectedData &&
-              !result.contains(ConnectivityResult.none)) {
-            connectController.sink.add(isConnectedData);
-          } else {
-            isConnected ??= isConnectedData;
-          }
+        await _statusSubscription?.cancel();
+        _statusSubscription = _checker.onStatusChange.listen((status) {
+          _emit(status == DataConnectionStatus.connected);
         });
       } else {
-        connectController.sink.add(false);
-        // _subscriptionDataChecker?.cancel();
+        await _statusSubscription?.cancel();
+        _statusSubscription = null;
+        _emit(false);
       }
     });
   }
 
+  void _emit(bool value) {
+    if (isConnected == value) {
+      return;
+    }
+    isConnected = value;
+    connectController.add(value);
+  }
+
   Future<void> dispose() async {
-    await _subscription?.cancel();
+    await _connectivitySubscription?.cancel();
+    await _statusSubscription?.cancel();
+    await connectController.close();
   }
 }

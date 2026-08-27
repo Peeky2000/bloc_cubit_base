@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mOrder/core/app/app.dart';
-import 'package:mOrder/core/helper/network/network_checker.dart';
-import 'package:mOrder/di/injection.dart';
-import 'package:mOrder/generated/assets.gen.dart';
-import 'package:mOrder/l10n/l10n.dart';
-import 'package:mOrder/core/widget/ink_well_button.dart';
+import 'package:bloc_cubit_base/core/app/app.dart';
+import 'package:bloc_cubit_base/core/helper/network/network_checker.dart';
+import 'package:bloc_cubit_base/di/injection.dart';
+import 'package:bloc_cubit_base/generated/assets.gen.dart';
+import 'package:bloc_cubit_base/l10n/l10n.dart';
+import 'package:bloc_cubit_base/core/widget/ink_well_button.dart';
 
 class NoInternetScreen extends StatelessWidget {
   final VoidCallback onRetry;
 
-  const NoInternetScreen({Key? key, required this.onRetry}) : super(key: key);
+  const NoInternetScreen({super.key, required this.onRetry});
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return WillPopScope(
-      onWillPop: () async {
-        return false;
-      },
+    return PopScope(
+      canPop: false,
       child: Scaffold(
         body: Center(
           child: Column(
@@ -26,9 +24,7 @@ class NoInternetScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Assets.images.imgDisconnect.svg(),
-              SizedBox(
-                height: 16.0.h,
-              ),
+              SizedBox(height: 16.0.h),
               StreamBuilder<bool>(
                 stream: Injector.getIt
                     .get<NetworkChecker>()
@@ -46,30 +42,29 @@ class NoInternetScreen extends StatelessWidget {
                   );
                 },
               ),
-              SizedBox(
-                height: 32.0.h,
-              ),
+              SizedBox(height: 32.0.h),
               StreamBuilder<bool>(
-                  stream: Injector.getIt
-                      .get<NetworkChecker>()
-                      .connectController
-                      .stream,
-                  builder: (context, snapshot) {
-                    return InkWellButton(
-                      title: context.l10n.retry,
-                      width: 180.w,
-                      onTap: snapshot.data == true
-                          ? () {
-                              if (Injector.getIt
-                                      .get<NetworkChecker>()
-                                      .isConnected ==
-                                  true) {
-                                onRetry();
-                              }
+                stream: Injector.getIt
+                    .get<NetworkChecker>()
+                    .connectController
+                    .stream,
+                builder: (context, snapshot) {
+                  return InkWellButton(
+                    title: context.l10n.retry,
+                    width: 180.w,
+                    onTap: snapshot.data == true
+                        ? () {
+                            if (Injector.getIt
+                                    .get<NetworkChecker>()
+                                    .isConnected ==
+                                true) {
+                              onRetry();
                             }
-                          : null,
-                    );
-                  }),
+                          }
+                        : null,
+                  );
+                },
+              ),
             ],
           ),
         ),

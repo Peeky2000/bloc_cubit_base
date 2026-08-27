@@ -1,8 +1,10 @@
-import 'package:mOrder/data/datasource/local/user_local_data_source.dart';
-import 'package:mOrder/data/model/response/profile/account_response_model.dart';
-import 'package:mOrder/domain/entities/profile/account.dart';
-import 'package:mOrder/domain/repositories/user_repo.dart';
+import 'package:bloc_cubit_base/data/datasource/local/user_local_data_source.dart';
+import 'package:bloc_cubit_base/data/model/response/profile/account_response_model.dart';
+import 'package:bloc_cubit_base/domain/entities/profile/account.dart';
+import 'package:bloc_cubit_base/domain/repositories/user_repo.dart';
+import 'package:injectable/injectable.dart';
 
+@LazySingleton(as: UserRepo)
 class UserRepoImpl implements UserRepo {
   final UserLocalDataSource _userLocalDataSource;
 

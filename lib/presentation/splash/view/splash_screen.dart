@@ -1,25 +1,25 @@
-import 'package:mOrder/core/app/app.dart';
-import 'package:mOrder/core/common/route.dart';
-import 'package:mOrder/core/routing/routing.dart';
+import 'package:bloc_cubit_base/core/app/app.dart';
+import 'package:bloc_cubit_base/core/common/route.dart';
+import 'package:bloc_cubit_base/core/routing/routing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mOrder/core/mixin/after_layout.dart';
-import 'package:mOrder/di/injection.dart';
-import 'package:mOrder/generated/assets.gen.dart';
-import 'package:mOrder/presentation/splash/cubit/splash_cubit.dart';
+import 'package:bloc_cubit_base/core/mixin/after_layout.dart';
+import 'package:bloc_cubit_base/di/injection.dart';
+import 'package:bloc_cubit_base/generated/assets.gen.dart';
+import 'package:bloc_cubit_base/presentation/splash/cubit/splash_cubit.dart';
 
 Widget splashScreenBuilder() => BlocProvider<SplashCubit>(
-      create: (_) => Injector.getIt.get<SplashCubit>(),
-      child: const SplashScreen(),
-    );
+  create: (_) => Injector.getIt.get<SplashCubit>(),
+  child: const SplashScreen(),
+);
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
 
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  State<SplashScreen> createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen> with AfterLayoutMixin {
@@ -33,12 +33,6 @@ class _SplashScreenState extends State<SplashScreen> with AfterLayoutMixin {
   }
 
   @override
-  void dispose() {
-    _splashCubit?.close();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocListener<SplashCubit, SplashState>(
@@ -46,13 +40,13 @@ class _SplashScreenState extends State<SplashScreen> with AfterLayoutMixin {
           switch (state.isLogin) {
             case true:
               if (state.isPhoneVerified) {
-                SLIRouting.offAllNamed(AppPage.HOME);
+                SLIRouting.offAllNamed(AppPage.home);
               } else {
                 _splashCubit?.sendCodeVerify();
               }
               break;
             case false:
-              SLIRouting.offAllNamed(AppPage.SIGN_IN);
+              SLIRouting.offAllNamed(AppPage.signIn);
               break;
             default:
               break;

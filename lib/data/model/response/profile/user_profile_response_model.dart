@@ -1,6 +1,6 @@
-import 'package:mOrder/core/adapter/time_iso8601_converter.dart';
-import 'package:mOrder/core/common/enum.dart';
-import 'package:mOrder/domain/entities/profile/user_profile.dart';
+import 'package:bloc_cubit_base/core/adapter/time_iso8601_converter.dart';
+import 'package:bloc_cubit_base/domain/entities/common/app_enums.dart';
+import 'package:bloc_cubit_base/domain/entities/profile/user_profile.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'user_profile_response_model.g.dart';

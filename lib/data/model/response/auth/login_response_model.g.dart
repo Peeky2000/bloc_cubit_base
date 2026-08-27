@@ -11,15 +11,14 @@ LoginResponseModel _$LoginResponseModelFromJson(Map<String, dynamic> json) =>
       json['account'] == null
           ? null
           : AccountResponseModel.fromJson(
-              json['account'] as Map<String, dynamic>),
+              json['account'] as Map<String, dynamic>,
+            ),
       json['tokens'] == null
           ? null
           : TokenWrapperResponseModel.fromJson(
-              json['tokens'] as Map<String, dynamic>),
+              json['tokens'] as Map<String, dynamic>,
+            ),
     );
 
 Map<String, dynamic> _$LoginResponseModelToJson(LoginResponseModel instance) =>
-    <String, dynamic>{
-      'account': instance.account,
-      'tokens': instance.token,
-    };
+    <String, dynamic>{'account': instance.account, 'tokens': instance.token};

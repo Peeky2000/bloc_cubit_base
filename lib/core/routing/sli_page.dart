@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:mOrder/core/routing/default_transitions.dart';
-import 'package:mOrder/core/routing/sli_page_route.dart';
+import 'package:bloc_cubit_base/core/routing/default_transitions.dart';
+import 'package:bloc_cubit_base/core/routing/sli_page_route.dart';
 
 class SLIPage<T> extends Page<T> {
   final Widget page;
@@ -18,17 +18,16 @@ class SLIPage<T> extends Page<T> {
   final Duration? transitionDuration;
   final bool fullscreenDialog;
   final bool preventDuplicates;
+  final String _name;
   @override
-  final Object? arguments;
-  @override
-  final String name;
+  String get name => _name;
   final List<SLIPage> children;
   final SLIPage? unknownRoute;
   final bool showCupertinoParallax;
   final PathDecoded path;
 
   SLIPage({
-    required this.name,
+    required String name,
     required this.page,
     this.title,
     this.participatesInRootNavigator,
@@ -46,17 +45,16 @@ class SLIPage<T> extends Page<T> {
     this.fullscreenDialog = false,
     this.children = const <SLIPage>[],
     this.unknownRoute,
-    this.arguments,
+    super.arguments,
     this.showCupertinoParallax = true,
     this.preventDuplicates = true,
-  })  : path = _nameToRegex(name),
-        assert(name.startsWith('/'),
-            'It is necessary to start route name [$name] with a slash: /$name'),
-        super(
-          key: ValueKey(name),
-          name: name,
-          arguments: arguments,
-        );
+  }) : _name = name,
+       path = _nameToRegex(name),
+       assert(
+         name.startsWith('/'),
+         'It is necessary to start route name [$name] with a slash: /$name',
+       ),
+       super(key: ValueKey(name), name: name);
 
   @override
   Route<T> createRoute(BuildContext context) {
@@ -74,7 +72,7 @@ class SLIPage<T> extends Page<T> {
   static PathDecoded _nameToRegex(String path) {
     var keys = <String?>[];
 
-    String _replace(Match pattern) {
+    String replace(Match pattern) {
       var buffer = StringBuffer('(?:');
 
       if (pattern[1] != null) buffer.write('.');
@@ -86,7 +84,7 @@ class SLIPage<T> extends Page<T> {
     }
 
     var stringPath = '$path/?'
-        .replaceAllMapped(RegExp(r'(\.)?:(\w+)(\?)?'), _replace)
+        .replaceAllMapped(RegExp(r'(\.)?:(\w+)(\?)?'), replace)
         .replaceAll('//', '/');
 
     return PathDecoded(RegExp('^$stringPath\$'), keys);

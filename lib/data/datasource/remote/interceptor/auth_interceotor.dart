@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:mOrder/data/datasource/local/token_provider.dart';
-import 'package:mOrder/core/extension/string_extension.dart';
+import 'package:bloc_cubit_base/data/datasource/local/token_provider.dart';
+import 'package:bloc_cubit_base/core/extension/string_extension.dart';
 
 class AuthInterceptor extends QueuedInterceptor {
   final TokenProvider _tokenProvider;

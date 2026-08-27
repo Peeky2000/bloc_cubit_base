@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mOrder/core/routing/default_transitions.dart';
-import 'package:mOrder/core/routing/sli_transaction_mixin.dart';
+import 'package:bloc_cubit_base/core/routing/default_transitions.dart';
+import 'package:bloc_cubit_base/core/routing/sli_transaction_mixin.dart';
 
 class SLIPageRoute<T> extends PageRoute<T> with SLIPageRouteTransitionMixin<T> {
   @override
@@ -44,7 +44,7 @@ class SLIPageRoute<T> extends PageRoute<T> with SLIPageRouteTransitionMixin<T> {
 
   SLIPageRoute({
     required this.page,
-    RouteSettings? settings,
+    super.settings,
     this.transitionDuration = const Duration(milliseconds: 300),
     this.opaque = true,
     this.parameter,
@@ -60,13 +60,16 @@ class SLIPageRoute<T> extends PageRoute<T> with SLIPageRouteTransitionMixin<T> {
     this.showCupertinoParallax = true,
     this.barrierLabel,
     this.maintainState = true,
-    bool fullscreenDialog = false,
+    super.fullscreenDialog,
     this.gestureWidth,
-  }) : super(settings: settings, fullscreenDialog: fullscreenDialog);
+  });
 
   @override
-  Widget buildPage(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation) {
+  Widget buildPage(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+  ) {
     final child = buildContent(context);
     final Widget result = Semantics(
       scopesRoute: true,

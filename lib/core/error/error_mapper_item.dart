@@ -14,8 +14,7 @@ abstract class ErrorToStringMapperItem {
 
 class NoNetworkMapperItem extends ErrorToStringMapperItem {
   NoNetworkMapperItem()
-      : super(
-            Injector.getIt.get<AppController>().context?.l10n.noInternet ?? '');
+    : super(Injector.getIt.get<AppController>().context?.l10n.noInternet ?? '');
 
   @override
   bool isMatch(Exception exception) => exception is NetworkIssueException;
@@ -23,8 +22,7 @@ class NoNetworkMapperItem extends ErrorToStringMapperItem {
 
 class GeneralErrorMapperItem extends ErrorToStringMapperItem {
   GeneralErrorMapperItem()
-      : super(
-            Injector.getIt.get<AppController>().context?.l10n.errGeneral ?? '');
+    : super(Injector.getIt.get<AppController>().context?.l10n.errGeneral ?? '');
 
   @override
   String getDisplay(exception) {
@@ -38,16 +36,17 @@ class GeneralErrorMapperItem extends ErrorToStringMapperItem {
 
 class HttpErrorResponseMapperItem extends ErrorToStringMapperItem {
   HttpErrorResponseMapperItem()
-      : super(
-            Injector.getIt.get<AppController>().context?.l10n.errGeneral ?? '');
+    : super(Injector.getIt.get<AppController>().context?.l10n.errGeneral ?? '');
 
   @override
   String getDisplay(dynamic exception) {
     if (exception is ServerException && exception.hasError) {
       final dio.Response? errorResp = exception.error.response;
       if (errorResp != null) {
-        BaseResponseModel<dynamic> result =
-            BaseResponseModel.fromJson(errorResp.data, (json) => json);
+        BaseResponseModel<dynamic> result = BaseResponseModel.fromJson(
+          errorResp.data,
+          (json) => json,
+        );
         return result.message;
       }
     }

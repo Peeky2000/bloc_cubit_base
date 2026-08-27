@@ -1,31 +1,31 @@
-import 'package:mOrder/core/app/app.dart';
-import 'package:mOrder/core/common/route.dart';
-import 'package:mOrder/core/routing/routing.dart';
-import 'package:mOrder/generated/assets.gen.dart';
-import 'package:mOrder/l10n/l10n.dart';
-import 'package:mOrder/widget/delivery_go_button.dart';
-import 'package:mOrder/widget/loading_screen.dart';
+import 'package:bloc_cubit_base/core/app/app.dart';
+import 'package:bloc_cubit_base/core/common/route.dart';
+import 'package:bloc_cubit_base/core/routing/routing.dart';
+import 'package:bloc_cubit_base/generated/assets.gen.dart';
+import 'package:bloc_cubit_base/l10n/l10n.dart';
+import 'package:bloc_cubit_base/widget/delivery_go_button.dart';
+import 'package:bloc_cubit_base/widget/loading_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mOrder/core/mixin/after_layout.dart';
-import 'package:mOrder/di/injection.dart';
-import 'package:mOrder/presentation/sign_in/cubit/sign_in_cubit.dart';
+import 'package:bloc_cubit_base/core/mixin/after_layout.dart';
+import 'package:bloc_cubit_base/di/injection.dart';
+import 'package:bloc_cubit_base/presentation/sign_in/cubit/sign_in_cubit.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mOrder/core/widget/common_text_field.dart';
-import 'package:mOrder/core/widget/dialog_util.dart';
+import 'package:bloc_cubit_base/core/widget/common_text_field.dart';
+import 'package:bloc_cubit_base/core/widget/dialog_util.dart';
 
 Widget signInScreenBuilder() => BlocProvider<SignInCubit>(
-      create: (_) => Injector.getIt.get<SignInCubit>(),
-      child: const SignInScreen(),
-    );
+  create: (_) => Injector.getIt.get<SignInCubit>(),
+  child: const SignInScreen(),
+);
 
 class SignInScreen extends StatefulWidget {
-  const SignInScreen({Key? key}) : super(key: key);
+  const SignInScreen({super.key});
 
   @override
-  _SignInScreenState createState() => _SignInScreenState();
+  State<SignInScreen> createState() => _SignInScreenState();
 }
 
 class _SignInScreenState extends State<SignInScreen> with AfterLayoutMixin {
@@ -45,7 +45,8 @@ class _SignInScreenState extends State<SignInScreen> with AfterLayoutMixin {
 
   @override
   void dispose() {
-    _signInCubit?.close();
+    _usernameTextController.dispose();
+    _passTextController.dispose();
     super.dispose();
   }
 
@@ -54,12 +55,14 @@ class _SignInScreenState extends State<SignInScreen> with AfterLayoutMixin {
       children: [
         BlocBuilder<SignInCubit, SignInState>(
           builder: (context, state) {
-            return Radio<bool>(
-              value: true,
-              groupValue: state.isRememberLogin,
-              onChanged: (value) => _signInCubit?.onChangeRememberLogin(),
-              activeColor: App.appColor?.primaryColor,
-              toggleable: true,
+            return RadioGroup<bool>(
+              groupValue: state.isRememberLogin ? true : null,
+              onChanged: (_) => _signInCubit?.onChangeRememberLogin(),
+              child: Radio<bool>(
+                value: true,
+                activeColor: App.appColor?.primaryColor,
+                toggleable: true,
+              ),
             );
           },
         ),
@@ -86,7 +89,7 @@ class _SignInScreenState extends State<SignInScreen> with AfterLayoutMixin {
               decoration: TextDecoration.underline,
             ),
           ),
-        )
+        ),
       ],
     );
   }
@@ -123,9 +126,7 @@ class _SignInScreenState extends State<SignInScreen> with AfterLayoutMixin {
               );
             },
           ),
-          SizedBox(
-            height: 16.h,
-          ),
+          SizedBox(height: 16.h),
           BlocBuilder<SignInCubit, SignInState>(
             builder: (context, state) {
               return CommonTextField(
@@ -135,8 +136,10 @@ class _SignInScreenState extends State<SignInScreen> with AfterLayoutMixin {
                 keyboardType: TextInputType.visiblePassword,
                 error: state.errorPassword,
                 obscureText: !(_signInCubit?.state.showPass ?? false),
-                suffixConstraints:
-                    BoxConstraints.tightFor(width: 44.w, height: 20.w),
+                suffixConstraints: BoxConstraints.tightFor(
+                  width: 44.w,
+                  height: 20.w,
+                ),
                 suffix: GestureDetector(
                   onTap: () => _signInCubit?.onChangeShowPass(),
                   child: Icon(
@@ -149,13 +152,9 @@ class _SignInScreenState extends State<SignInScreen> with AfterLayoutMixin {
               );
             },
           ),
-          SizedBox(
-            height: 32.h,
-          ),
+          SizedBox(height: 32.h),
           _buildOption(),
-          SizedBox(
-            height: 32.h,
-          ),
+          SizedBox(height: 32.h),
           DeliveryGoButton(
             title: context.l10n.signInNowPerWord,
             onTap: () {
@@ -164,29 +163,29 @@ class _SignInScreenState extends State<SignInScreen> with AfterLayoutMixin {
               _signInCubit?.onTapSignIn(username: username, pass: pass);
             },
           ),
-          SizedBox(
-            height: 32.h,
-          ),
+          SizedBox(height: 32.h),
           Text.rich(
-            TextSpan(children: [
-              TextSpan(
-                text: '${context.l10n.notReadyAcc}. ',
-                style: App.appStyle?.medium14?.copyWith(
-                  color: App.appColor?.textColor,
+            TextSpan(
+              children: [
+                TextSpan(
+                  text: '${context.l10n.notReadyAcc}. ',
+                  style: App.appStyle?.medium14?.copyWith(
+                    color: App.appColor?.textColor,
+                  ),
                 ),
-              ),
-              TextSpan(
-                text: context.l10n.signUpNow,
-                style: App.appStyle?.medium14?.copyWith(
-                  color: App.appColor?.textColorPrimary,
-                  decoration: TextDecoration.underline,
+                TextSpan(
+                  text: context.l10n.signUpNow,
+                  style: App.appStyle?.medium14?.copyWith(
+                    color: App.appColor?.textColorPrimary,
+                    decoration: TextDecoration.underline,
+                  ),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      SLIRouting.offAllNamed(AppPage.signUp);
+                    },
                 ),
-                recognizer: TapGestureRecognizer()
-                  ..onTap = () {
-                    SLIRouting.offAllNamed(AppPage.SIGN_UP);
-                  },
-              ),
-            ]),
+              ],
+            ),
           ),
         ],
       ),
@@ -216,11 +215,9 @@ class _SignInScreenState extends State<SignInScreen> with AfterLayoutMixin {
           children: [
             AspectRatio(
               aspectRatio: 430.0.w / 320.0.h,
-              child: Assets.images.imgAds.image(
-                fit: BoxFit.cover,
-              ),
+              child: Assets.images.imgAds.image(fit: BoxFit.cover),
             ),
-            _buildContent()
+            _buildContent(),
           ],
         ),
       ),

@@ -1,17 +1,15 @@
 import 'dart:io';
 
-import 'package:mOrder/core/app/app_controller.dart';
-import 'package:mOrder/data/datasource/remote/interceptor/curl_interceptor.dart';
-import 'package:mOrder/di/injection.dart';
+import 'package:bloc_cubit_base/core/helper/network/network_checker.dart';
+import 'package:bloc_cubit_base/core/network/network_inspector.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
-import 'package:mOrder/core/error/exception.dart';
-import 'package:mOrder/data/datasource/local/token_provider.dart';
-import 'package:mOrder/data/datasource/remote/interceptor/auth_interceotor.dart';
-import 'package:mOrder/data/datasource/remote/interceptor/network_interceptor.dart';
-import 'package:mOrder/data/datasource/remote/interceptor/session_interceptor.dart';
-import 'package:mOrder/data/model/response/base_list_response_model.dart';
-import 'package:mOrder/data/model/response/base_response_model.dart';
+import 'package:bloc_cubit_base/core/error/exception.dart';
+import 'package:bloc_cubit_base/data/datasource/local/token_provider.dart';
+import 'package:bloc_cubit_base/data/datasource/remote/interceptor/auth_interceotor.dart';
+import 'package:bloc_cubit_base/data/datasource/remote/interceptor/network_interceptor.dart';
+import 'package:bloc_cubit_base/data/datasource/remote/interceptor/session_interceptor.dart';
+import 'package:bloc_cubit_base/data/model/response/base_list_response_model.dart';
+import 'package:bloc_cubit_base/data/model/response/base_response_model.dart';
 
 typedef ApiResponseToModelParser<T> = T Function(Map<String, dynamic> json);
 
@@ -72,6 +70,8 @@ abstract class ApiHandler {
 class ApiClient implements ApiHandler {
   Dio _dio = Dio();
   final TokenProvider tokenProvider;
+  final NetworkChecker networkChecker;
+  final NetworkInspector networkInspector;
   final String baseUrl;
   String get baseUrlWithFormat {
     if (baseUrl.contains('localhost') && Platform.isAndroid) {
@@ -80,35 +80,34 @@ class ApiClient implements ApiHandler {
     return baseUrl;
   }
 
-  ApiClient({required this.baseUrl, required this.tokenProvider}) {
+  ApiClient({
+    required this.baseUrl,
+    required this.tokenProvider,
+    required this.networkChecker,
+    required this.networkInspector,
+  }) {
     init();
   }
 
   void init() {
-    _dio = Dio(BaseOptions(
+    _dio = Dio(
+      BaseOptions(
         followRedirects: false,
         baseUrl: baseUrlWithFormat,
         connectTimeout: const Duration(seconds: 30),
         receiveTimeout: const Duration(seconds: 30),
-        sendTimeout: const Duration(seconds: 30)));
+        sendTimeout: const Duration(seconds: 30),
+      ),
+    );
     _dio.interceptors.addAll([
-      NetworkInterceptor(),
+      NetworkInterceptor(networkChecker),
       AuthInterceptor(tokenProvider),
       SessionInterceptor(
-          baseUrl: baseUrlWithFormat,
-          tokenProvider: tokenProvider,
-          onSessionExpired: () {
-            Injector.getIt.get<AppController>().showSessionEnd();
-          }),
-      CurlInterceptor(),
-      if (kDebugMode)
-        LogInterceptor(
-          request: true,
-          requestBody: true,
-          responseBody: true,
-          responseHeader: true,
-          requestHeader: true,
-        ),
+        baseUrl: baseUrlWithFormat,
+        tokenProvider: tokenProvider,
+        onSessionExpired: tokenProvider.clearToken,
+      ),
+      ?networkInspector.interceptor,
     ]);
   }
 
@@ -133,7 +132,9 @@ class ApiClient implements ApiHandler {
         return BaseResponseModel<T>(data: null, message: 'Empty Response');
       }
       return BaseResponseModel<T>.fromJson(
-          response.data, (json) => parser(json as Map<String, dynamic>));
+        response.data,
+        (json) => parser(json as Map<String, dynamic>),
+      );
     });
   }
 
@@ -156,7 +157,9 @@ class ApiClient implements ApiHandler {
         return BaseResponseModel<T>(data: null, message: 'Empty Response');
       }
       return BaseResponseModel<T>.fromJson(
-          response.data, (json) => parser(json as Map<String, dynamic>));
+        response.data,
+        (json) => parser(json as Map<String, dynamic>),
+      );
     });
   }
 
@@ -181,7 +184,9 @@ class ApiClient implements ApiHandler {
         return BaseResponseModel<T>(data: null, message: 'Empty Response');
       }
       return BaseResponseModel<T>.fromJson(
-          response.data, (json) => parser(json as Map<String, dynamic>));
+        response.data,
+        (json) => parser(json as Map<String, dynamic>),
+      );
     });
   }
 
@@ -206,7 +211,9 @@ class ApiClient implements ApiHandler {
         return BaseResponseModel<T>(data: null, message: 'Empty Response');
       }
       return BaseResponseModel<T>.fromJson(
-          response.data, (json) => parser(json as Map<String, dynamic>));
+        response.data,
+        (json) => parser(json as Map<String, dynamic>),
+      );
     });
   }
 
@@ -231,7 +238,9 @@ class ApiClient implements ApiHandler {
         return BaseResponseModel<T>(data: null, message: 'Empty Response');
       }
       return BaseResponseModel<T>.fromJson(
-          response.data, (json) => parser(json as Map<String, dynamic>));
+        response.data,
+        (json) => parser(json as Map<String, dynamic>),
+      );
     });
   }
 
@@ -249,11 +258,13 @@ class ApiClient implements ApiHandler {
         options: options,
       );
       return BaseListResponseModel<T>.fromJson(
-          response.data, (json) => parser(json as Map<String, dynamic>));
+        response.data,
+        (json) => parser(json as Map<String, dynamic>),
+      );
     });
   }
 
-  Future<T> _remapError<T>(ValueGetter<Future<T>> func) async {
+  Future<T> _remapError<T>(Future<T> Function() func) async {
     try {
       return await func();
     } catch (e) {
@@ -261,7 +272,7 @@ class ApiClient implements ApiHandler {
     }
   }
 
-  Future<dynamic> _apiErrorToInternalError(e) async {
+  Future<Object> _apiErrorToInternalError(Object e) async {
     if (e is DioException) {
       if (e.type == DioExceptionType.connectionTimeout ||
           e.type == DioExceptionType.receiveTimeout ||

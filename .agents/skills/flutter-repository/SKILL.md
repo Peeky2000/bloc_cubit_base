@@ -23,6 +23,7 @@ abstract class AuthRepo {
 }
 
 // data
+@LazySingleton(as: AuthRepo)
 class AuthRepoImpl implements AuthRepo {
   AuthRepoImpl(this._remote, this._tokenProvider);
   final AuthRemoteDataSource _remote;
@@ -32,12 +33,11 @@ class AuthRepoImpl implements AuthRepo {
 
 ## Rules
 
-- Register: `registerLazySingleton<AuthRepo>(() => AuthRepoImpl(getIt(), getIt()))`
+- Bind the implementation with `@LazySingleton(as: AuthRepo)`
+- Constructor-inject data sources; never resolve `getIt` internally
 - Orchestrate remote + local; **no** UI, **no** form validation
 - Prefer returning types that implement domain entities (`Login`, etc.)
 - UseCases call repos — Cubits call UseCases
 
-## References
-
-- `references/interface-and-impl.md` — use domain/data paths above
-- `rules/no-catch-unless-transform.md` — still apply
+- Catch only to transform an infrastructure failure into a documented domain
+  failure or to implement repository-level fallback; never swallow an error.

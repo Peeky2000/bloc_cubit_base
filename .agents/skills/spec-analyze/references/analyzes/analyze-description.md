@@ -14,7 +14,7 @@ Use this flow when the requester provides a **requirement description** and/or a
 
 3. **When only documentation + description** (no Figma / screenshot)
    - If concrete implementation (component, pattern, or tech choice) is needed, **research** in the relevant skill or codebase and suggest how to implement.
-   - Use design-to-code and project conventions to infer structure where the design is not visual.
+   - Use project conventions, app-memory, and UI toolkit ownership rules to infer structure where the design is not visual.
 
 4. **Output for main workflow**
    - Requirements understanding to feed into Step 3 (Load skills and analyze) and into fe.md (design inputs, in scope/out of scope, acceptance criteria). No design assets to save.

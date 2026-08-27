@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mOrder/core/app/app_controller.dart';
-import 'package:mOrder/di/injection.dart';
+
+import 'package:bloc_cubit_base/core/app/app_controller.dart';
+import 'package:bloc_cubit_base/di/injection.dart';
 
 class AppColor {
   Color? primaryColor;

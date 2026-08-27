@@ -6,5 +6,7 @@
 - [ ] `lib/domain/use_case/{name}_use_case.dart`
 - [ ] Methods listed in spec implemented
 - [ ] Calls repo(s) only — no UI
-- [ ] Registered in `Injector.setupDomain()`
+- [ ] Annotated `@lazySingleton` and constructor-injects repository interfaces
+- [ ] No service-locator, Flutter, or UI dependency
+- [ ] Run `derry gen`
 - [ ] `flutter analyze`

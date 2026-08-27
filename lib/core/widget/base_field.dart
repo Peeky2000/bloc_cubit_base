@@ -17,7 +17,7 @@ class BaseField extends StatelessWidget {
   final BaseFieldType type;
 
   const BaseField({
-    Key? key,
+    super.key,
     this.title,
     this.value,
     this.titleWidget,
@@ -29,7 +29,7 @@ class BaseField extends StatelessWidget {
     this.crossAxisAlignment,
     this.mainAxisAlignment,
     this.type = BaseFieldType.horizontal,
-  }) : super(key: key);
+  });
 
   Widget _buildBaseHorizontal() {
     return Row(
@@ -45,7 +45,7 @@ class BaseField extends StatelessWidget {
             Text(
               value ?? '',
               style: valueStyle ?? baseFieldStyle.valueDefaultStyle,
-            )
+            ),
       ],
     );
   }
@@ -60,9 +60,7 @@ class BaseField extends StatelessWidget {
               title ?? '',
               style: titleStyle ?? baseFieldStyle.titleDefaultStyle,
             ),
-        SizedBox(
-          height: 8.0.h,
-        ),
+        SizedBox(height: 8.0.h),
         valueWidget ??
             Text(
               value ?? '',
@@ -80,13 +78,11 @@ class BaseField extends StatelessWidget {
       children: [
         Padding(
           padding: padding ?? EdgeInsets.symmetric(vertical: 16.w),
-          child: type == BaseFieldType.horizontal ? _buildBaseHorizontal() : _buildBaseVertical(),
+          child: type == BaseFieldType.horizontal
+              ? _buildBaseHorizontal()
+              : _buildBaseVertical(),
         ),
-        if (showDivider)
-          const Divider(
-            thickness: 1.0,
-            height: 0.0,
-          )
+        if (showDivider) const Divider(thickness: 1.0, height: 0.0),
       ],
     );
   }
@@ -98,9 +94,16 @@ class BaseFieldStyle {
   final TextStyle? titleDefaultStyle;
   final TextStyle? valueDefaultStyle;
 
-  const BaseFieldStyle(
-      {this.titleDefaultStyle =
-          const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.black),
-      this.valueDefaultStyle =
-          const TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: Colors.grey)});
+  const BaseFieldStyle({
+    this.titleDefaultStyle = const TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w600,
+      color: Colors.black,
+    ),
+    this.valueDefaultStyle = const TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.normal,
+      color: Colors.grey,
+    ),
+  });
 }

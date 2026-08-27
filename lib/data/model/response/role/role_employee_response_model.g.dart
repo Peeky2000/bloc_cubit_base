@@ -7,31 +7,32 @@ part of 'role_employee_response_model.dart';
 // **************************************************************************
 
 RoleEmployeeResponseModel _$RoleEmployeeResponseModelFromJson(
-        Map<String, dynamic> json) =>
-    RoleEmployeeResponseModel(
-      id: json['id'] as int?,
-      name: json['name'] as String?,
-      rights: (json['rights'] as List<dynamic>?)
-          ?.map((e) => $enumDecode(_$RoleEmployeeShopEnumMap, e))
-          .toList(),
-      type: json['type'] as String?,
-      updatedAt: const TimeIso8601JsonConverter()
-          .fromJson(json['updatedAt'] as String?),
-      createdAt: const TimeIso8601JsonConverter()
-          .fromJson(json['createdAt'] as String?),
-    );
+  Map<String, dynamic> json,
+) => RoleEmployeeResponseModel(
+  id: (json['id'] as num?)?.toInt(),
+  name: json['name'] as String?,
+  rights: (json['rights'] as List<dynamic>?)
+      ?.map((e) => $enumDecode(_$RoleEmployeeShopEnumMap, e))
+      .toList(),
+  type: json['type'] as String?,
+  updatedAt: const TimeIso8601JsonConverter().fromJson(
+    json['updatedAt'] as String?,
+  ),
+  createdAt: const TimeIso8601JsonConverter().fromJson(
+    json['createdAt'] as String?,
+  ),
+);
 
 Map<String, dynamic> _$RoleEmployeeResponseModelToJson(
-        RoleEmployeeResponseModel instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'name': instance.name,
-      'rights':
-          instance.rights?.map((e) => _$RoleEmployeeShopEnumMap[e]!).toList(),
-      'type': instance.type,
-      'updatedAt': const TimeIso8601JsonConverter().toJson(instance.updatedAt),
-      'createdAt': const TimeIso8601JsonConverter().toJson(instance.createdAt),
-    };
+  RoleEmployeeResponseModel instance,
+) => <String, dynamic>{
+  'id': instance.id,
+  'name': instance.name,
+  'rights': instance.rights?.map((e) => _$RoleEmployeeShopEnumMap[e]!).toList(),
+  'type': instance.type,
+  'updatedAt': const TimeIso8601JsonConverter().toJson(instance.updatedAt),
+  'createdAt': const TimeIso8601JsonConverter().toJson(instance.createdAt),
+};
 
 const _$RoleEmployeeShopEnumMap = {
   RoleEmployeeShop.EXCEL_MENU: 'EXCEL_MENU',

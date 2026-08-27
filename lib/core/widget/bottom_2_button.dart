@@ -19,7 +19,7 @@ class Bottom2Button extends StatelessWidget {
   final double elevation;
 
   const Bottom2Button({
-    Key? key,
+    super.key,
     this.title1,
     this.title2,
     this.onTapButton1,
@@ -35,7 +35,7 @@ class Bottom2Button extends StatelessWidget {
     this.button2Color,
     this.isDivider,
     this.elevation = 1.0,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +44,7 @@ class Bottom2Button extends StatelessWidget {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: elevation,
             offset: Offset(0, -elevation),
           ),

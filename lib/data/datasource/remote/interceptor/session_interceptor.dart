@@ -1,128 +1,115 @@
-import 'package:mOrder/data/datasource/remote/interceptor/curl_interceptor.dart';
-import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
-import 'package:mOrder/data/datasource/local/token_provider.dart';
-import 'package:mOrder/data/datasource/remote/url_end_point.dart';
-import 'package:mOrder/data/model/response/base_response_model.dart';
-import 'package:mOrder/data/model/response/token_response_model.dart';
-import 'package:mOrder/core/extension/string_extension.dart';
+import 'dart:async';
 
-final List<String> _arrSkipAuthPath = [
+import 'package:bloc_cubit_base/core/extension/string_extension.dart';
+import 'package:bloc_cubit_base/data/datasource/local/token_provider.dart';
+import 'package:bloc_cubit_base/data/datasource/remote/url_end_point.dart';
+import 'package:bloc_cubit_base/data/model/response/base_response_model.dart';
+import 'package:bloc_cubit_base/data/model/response/token_response_model.dart';
+import 'package:dio/dio.dart';
+
+final List<String> _skipRefreshPaths = [
   UrlEndPoint.auth.login,
   UrlEndPoint.auth.signUp,
+  UrlEndPoint.auth.refreshToken,
 ];
 
-class SessionInterceptor extends QueuedInterceptor {
-  final TokenProvider tokenProvider;
-  final VoidCallback onSessionExpired;
-  final String baseUrl;
-
+class SessionInterceptor extends Interceptor {
   SessionInterceptor({
     required this.baseUrl,
     required this.onSessionExpired,
     required this.tokenProvider,
   });
 
-  @override
-  void onError(DioException err, ErrorInterceptorHandler handler) async {
-    final token = tokenProvider.token;
-    final errorCode = err.response?.statusCode;
-    final authorization = 'Bearer ${token.accessToken}';
-    if (_shouldRefreshToken(err.requestOptions.path, token, errorCode)) {
-      final originalOptions = err.requestOptions;
-      // If the token has been updated, repeat directly.
-      if (authorization != originalOptions.headers['Authorization']) {
-        originalOptions.headers['Authorization'] = authorization;
-        // retry original request
-        try {
-          Dio dio = Dio()
-            ..interceptors.addAll([
-              CurlInterceptor(),
-              LogInterceptor(
-                request: kDebugMode,
-                requestBody: kDebugMode,
-                responseBody: kDebugMode,
-                responseHeader: false,
-                requestHeader: kDebugMode,
-              ),
-            ]);
-          Response res = await dio.fetch(originalOptions);
-          handler.resolve(res);
-          return;
-        } on DioException catch (e) {
-          handler.reject(e);
-        }
-      }
-      // Lock to block the incoming request until the token updated
+  final TokenProvider tokenProvider;
+  final FutureOr<void> Function() onSessionExpired;
+  final String baseUrl;
 
-      Dio dio = Dio()
-        ..options = BaseOptions(
-          baseUrl: baseUrl,
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        )
-        ..interceptors.addAll([
-          CurlInterceptor(),
-          if (kDebugMode)
-            LogInterceptor(
-              request: true,
-              requestBody: true,
-              responseBody: true,
-              responseHeader: true,
-              requestHeader: true,
-            ),
-        ]);
-      try {
-        Response response = await dio.post(
-          UrlEndPoint.auth.refreshToken,
-          data: {
-            'refreshToken': token.refreshToken ?? '',
-          },
-        );
-        BaseResponseModel<TokenResponseModel> base =
-            BaseResponseModel<TokenResponseModel>.fromJson(
-                response.data,
-                (json) =>
-                    TokenResponseModel.fromJson(json as Map<String, dynamic>));
-        tokenProvider.setToken(base.data);
-        originalOptions.headers['Authorization'] =
-            'Bearer ${base.data?.accessToken ?? ''}';
-        // Map<String, dynamic> data = jsonDecode(_originalOptions.data);
-        // if (data.containsKey('accessToken')) {
-        //   data['accessToken'] = newToken.accessToken ?? ''; // TODO: update new token in body
-        //   _originalOptions.data = data;
-        // }
-        try {
-          Dio dioFetchAgain = Dio()
-            ..interceptors.addAll([
-              CurlInterceptor(),
-              LogInterceptor(
-                request: kDebugMode,
-                requestBody: kDebugMode,
-                responseBody: kDebugMode,
-                responseHeader: false,
-                requestHeader: kDebugMode,
-              ),
-            ]);
-          Response res = await dioFetchAgain.fetch(originalOptions);
-          handler.resolve(res);
-          return;
-        } on DioException catch (e) {
-          handler.reject(e);
-        }
-      } on DioException catch (e) {
-        onSessionExpired();
-        return handler.next(e);
-      }
+  Future<String?>? _refreshing;
+
+  @override
+  Future<void> onError(
+    DioException err,
+    ErrorInterceptorHandler handler,
+  ) async {
+    if (!_shouldRefresh(err)) {
+      handler.next(err);
+      return;
     }
-    return handler.next(err);
+
+    final request = err.requestOptions;
+    final currentAccessToken = tokenProvider.token.accessToken;
+    final requestAuthorization = request.headers['Authorization'];
+
+    try {
+      final accessToken = requestAuthorization != 'Bearer $currentAccessToken'
+          ? currentAccessToken
+          : await _singleFlightRefresh();
+
+      if (accessToken.isNullOrEmpty) {
+        await tokenProvider.clearToken();
+        await onSessionExpired();
+        handler.next(err);
+        return;
+      }
+
+      request.headers['Authorization'] = 'Bearer $accessToken';
+      final response = await Dio().fetch<dynamic>(request);
+      handler.resolve(response);
+    } on DioException catch (refreshError) {
+      await tokenProvider.clearToken();
+      await onSessionExpired();
+      handler.next(refreshError);
+    } catch (_) {
+      await tokenProvider.clearToken();
+      await onSessionExpired();
+      handler.next(err);
+    }
   }
 
-  /// If the token is not existing or the error not relate to token issue, continue with the error
-  bool _shouldRefreshToken(
-          String path, TokenResponseModel token, int? errorCode) =>
-      token.accessToken.isNotNullOrEmpty &&
-      !_arrSkipAuthPath.contains(path) &&
-      (errorCode == 401 || errorCode == 403);
+  bool _shouldRefresh(DioException error) {
+    final statusCode = error.response?.statusCode;
+    return tokenProvider.token.accessToken.isNotNullOrEmpty &&
+        !_skipRefreshPaths.contains(error.requestOptions.path) &&
+        (statusCode == 401 || statusCode == 403);
+  }
+
+  Future<String?> _singleFlightRefresh() {
+    final activeRefresh = _refreshing;
+    if (activeRefresh != null) {
+      return activeRefresh;
+    }
+
+    final refresh = _refreshToken();
+    _refreshing = refresh;
+    return refresh.whenComplete(() {
+      if (identical(_refreshing, refresh)) {
+        _refreshing = null;
+      }
+    });
+  }
+
+  Future<String?> _refreshToken() async {
+    final refreshToken = tokenProvider.token.refreshToken;
+    if (refreshToken.isNullOrEmpty) {
+      return null;
+    }
+
+    final response =
+        await Dio(
+          BaseOptions(
+            baseUrl: baseUrl,
+            headers: const {'Content-Type': 'application/json'},
+          ),
+        ).post<dynamic>(
+          UrlEndPoint.auth.refreshToken,
+          data: {'refreshToken': refreshToken},
+        );
+
+    final parsed = BaseResponseModel<TokenResponseModel>.fromJson(
+      response.data as Map<String, dynamic>,
+      (json) => TokenResponseModel.fromJson(json as Map<String, dynamic>),
+    );
+    await tokenProvider.setToken(parsed.data);
+    return parsed.data?.accessToken;
+  }
 }

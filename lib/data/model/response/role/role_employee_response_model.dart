@@ -1,6 +1,6 @@
-import 'package:mOrder/core/adapter/time_iso8601_converter.dart';
-import 'package:mOrder/core/common/enum.dart';
-import 'package:mOrder/domain/entities/role/role_employee.dart';
+import 'package:bloc_cubit_base/core/adapter/time_iso8601_converter.dart';
+import 'package:bloc_cubit_base/domain/entities/common/app_enums.dart';
+import 'package:bloc_cubit_base/domain/entities/role/role_employee.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'role_employee_response_model.g.dart';

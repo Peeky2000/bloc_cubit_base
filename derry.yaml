@@ -1,0 +1,67 @@
+bootstrap:
+  (description): Initialize submodules, dependencies, and generated code
+  (scripts):
+    - ./scripts/bootstrap.sh
+
+get:
+  (description): Resolve Flutter dependencies
+  (scripts):
+    - ./scripts/flutterw.sh pub get
+
+gen:
+  (description): Generate code and format generated/owned Dart sources
+  (scripts):
+    - ./scripts/generate.sh
+
+format:
+  (description): Format application and test sources
+  (scripts):
+    - ./scripts/format.sh
+
+analyze:
+  (description): Run static analysis and architecture checks
+  (scripts):
+    - ./scripts/flutterw.sh analyze
+    - ./scripts/check_architecture.sh
+
+test:
+  (description): Run the application test suite
+  (scripts):
+    - ./scripts/flutterw.sh test
+
+quality:
+  (description): Run format verification, analysis, architecture, and tests
+  (scripts):
+    - ./scripts/quality.sh
+
+run:
+  local:
+    (description): Run the local environment
+    (scripts):
+      - ./scripts/flutterw.sh run -t lib/main_local.dart
+  dev:
+    (description): Run the development environment
+    (scripts):
+      - ./scripts/flutterw.sh run -t lib/main_dev.dart
+  staging:
+    (description): Run the staging environment
+    (scripts):
+      - ./scripts/flutterw.sh run -t lib/main_staging.dart
+  prod:
+    (description): Run the production environment
+    (scripts):
+      - ./scripts/flutterw.sh run -t lib/main_prod.dart
+
+build:
+  apk:
+    (description): Build a production APK
+    (scripts):
+      - ./scripts/flutterw.sh build apk -t lib/main_prod.dart
+  appbundle:
+    (description): Build a production Android App Bundle
+    (scripts):
+      - ./scripts/flutterw.sh build appbundle -t lib/main_prod.dart
+  ipa:
+    (description): Build a production iOS archive
+    (scripts):
+      - ./scripts/flutterw.sh build ipa -t lib/main_prod.dart

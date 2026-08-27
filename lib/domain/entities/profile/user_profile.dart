@@ -1,4 +1,4 @@
-import 'package:mOrder/core/common/enum.dart';
+import 'package:bloc_cubit_base/domain/entities/common/app_enums.dart';
 
 abstract class UserProfile {
   int? get id;

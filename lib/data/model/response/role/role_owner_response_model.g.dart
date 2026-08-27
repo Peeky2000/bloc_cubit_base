@@ -7,31 +7,32 @@ part of 'role_owner_response_model.dart';
 // **************************************************************************
 
 RoleOwnerResponseModel _$RoleOwnerResponseModelFromJson(
-        Map<String, dynamic> json) =>
-    RoleOwnerResponseModel(
-      id: json['id'] as int?,
-      name: json['name'] as String?,
-      rights: (json['rights'] as List<dynamic>?)
-          ?.map((e) => $enumDecode(_$RoleOwnerShopEnumMap, e))
-          .toList(),
-      type: json['type'] as String?,
-      updatedAt: const TimeIso8601JsonConverter()
-          .fromJson(json['updatedAt'] as String?),
-      createdAt: const TimeIso8601JsonConverter()
-          .fromJson(json['createdAt'] as String?),
-    );
+  Map<String, dynamic> json,
+) => RoleOwnerResponseModel(
+  id: (json['id'] as num?)?.toInt(),
+  name: json['name'] as String?,
+  rights: (json['rights'] as List<dynamic>?)
+      ?.map((e) => $enumDecode(_$RoleOwnerShopEnumMap, e))
+      .toList(),
+  type: json['type'] as String?,
+  updatedAt: const TimeIso8601JsonConverter().fromJson(
+    json['updatedAt'] as String?,
+  ),
+  createdAt: const TimeIso8601JsonConverter().fromJson(
+    json['createdAt'] as String?,
+  ),
+);
 
 Map<String, dynamic> _$RoleOwnerResponseModelToJson(
-        RoleOwnerResponseModel instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'name': instance.name,
-      'rights':
-          instance.rights?.map((e) => _$RoleOwnerShopEnumMap[e]!).toList(),
-      'type': instance.type,
-      'updatedAt': const TimeIso8601JsonConverter().toJson(instance.updatedAt),
-      'createdAt': const TimeIso8601JsonConverter().toJson(instance.createdAt),
-    };
+  RoleOwnerResponseModel instance,
+) => <String, dynamic>{
+  'id': instance.id,
+  'name': instance.name,
+  'rights': instance.rights?.map((e) => _$RoleOwnerShopEnumMap[e]!).toList(),
+  'type': instance.type,
+  'updatedAt': const TimeIso8601JsonConverter().toJson(instance.updatedAt),
+  'createdAt': const TimeIso8601JsonConverter().toJson(instance.createdAt),
+};
 
 const _$RoleOwnerShopEnumMap = {
   RoleOwnerShop.COD_REPORT_COMING_SOON: 'COD_REPORT_COMING_SOON',

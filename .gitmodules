@@ -1,3 +1,4 @@
-[submodule "sli_common"]
+[submodule "lib/modules/sli_common"]
 	path = lib/modules/sli_common
-	url = https://github.com/Peeky2000/sli_common
+	url = https://github.com/Peeky2000/sli_common.git
+	branch = dev

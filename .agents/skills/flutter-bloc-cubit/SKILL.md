@@ -1,53 +1,46 @@
 ---
 name: flutter-bloc-cubit
 description: >
-  Cubit state management for this base: BaseCubit, BaseAppState, LoadingStatus,
-  Equatable states. Cubits call UseCases. Trigger: "cubit", "bloc", "state", "emit".
+  State management for this base using BaseCubit or BaseBloc, immutable
+  BaseAppState, LoadingStatus, Equatable, copyWith, and constructor-injected
+  UseCases. Trigger: cubit, bloc, state, event, emit, BlocProvider.
 ---
 
-# BLoC / Cubit
+# Cubit and BLoC
 
-## Default: Cubit
+## Choose deliberately
 
-This base uses **Cubit** (extends `BaseCubit`) for screens. Use classic BLoC only if you need complex concurrent events.
+- Use Cubit by default for method-driven screen state and linear workflows.
+- Use classic BLoC when named events, debouncing/restartability, event
+  transformers, or multiple event producers make behavior clearer.
+- Both follow the same dependency and state rules.
 
-## File layout
+## State contract
 
-```
-presentation/<feature>/cubit/
-├── <feature>_cubit.dart
-└── <feature>_state.dart    # part of cubit file
-```
+- Extend `BaseAppState` for feature state.
+- Keep every field `final`; extend Equatable and declare complete `props`.
+- Implement typed `copyWith` and an `initial()` factory or const initial value.
+- Model async lifecycle with `LoadingStatus` while preserving feature data.
+- Put recoverable errors in state. One-shot navigation/dialog effects stay at
+  the presentation boundary and must not be executed by data/domain layers.
 
-## State
+## State owner rules
 
-- Extend `BaseAppState` (has `loading: LoadingStatus`, `error`)
-- Mix in `EquatableMixin` for `props`
-- Implement `copyWith` + `initial()` factory
-- Use `LoadingStatus.loading | complete | error | initial`
+- Receive a UseCase through the constructor; never resolve a locator internally.
+- Call UseCases only, not repositories or data sources.
+- Emit loading before awaited work and complete/error afterward.
+- Do not retain `BuildContext`, access widgets, translate strings, or navigate
+  from reusable business logic.
+- Validate business/input shape in testable Dart code; UI translates typed
+  validation results.
 
-## Cubit
+## DI and UI
 
-- Extend `BaseCubit<YourState>`
-- Resolve `UseCase` via `Injector.getIt` (see `SignInCubit`)
-- `emit(state.copyWith(loading: LoadingStatus.loading))` before async
-- Catch errors → `handleErrorResponse(e, onRetry: ...)`
-- **Validate forms in Cubit** (regex from `core/common/constant.dart`, messages from `l10n`)
+Annotate feature Cubits/BLoCs with `@injectable`. Resolve them once in a route or
+screen builder and provide with `BlocProvider`. Never resolve from `build()`.
 
-## Flow
+Test state transitions with `bloc_test`, including success, failure, retry, and
+concurrency behavior for classic BLoC.
 
-```
-Cubit → UseCase → Repo → DataSource
-```
-
-Never: `Cubit → Repo` or `Cubit → RemoteDataSource`
-
-## DI
-
-`Injector.setupPresentation()` → `registerFactory<YourCubit>(() => YourCubit())`
-
-## References
-
-- `references/cubit.md`, `references/state.md` — align with BaseCubit pattern
-- `rules/validate-in-bloc.md`, `rules/emit-loading-before-async.md` — apply
-- Ignore `rules/sealed-state.md` freezed requirement — use BaseAppState pattern instead
+See `docs/architecture/state-management.md` and
+`docs/guides/choose-cubit-or-bloc.md`.

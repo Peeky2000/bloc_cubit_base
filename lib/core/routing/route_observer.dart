@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:mOrder/core/routing/sli_bottomsheet.dart';
-import 'package:mOrder/core/routing/sli_page_route.dart';
+import 'package:bloc_cubit_base/core/routing/sli_bottomsheet.dart';
+import 'package:bloc_cubit_base/core/routing/sli_page_route.dart';
 
 String? _extractRouteName(Route? route) {
   if (route?.settings.name != null) {
@@ -79,8 +79,9 @@ class SLIRouteObserver extends NavigatorObserver {
       value.route = route;
       value.isBack = false;
       value.removed = '';
-      value.isBottomSheet =
-          newRoute.isBottomSheet ? true : value.isBottomSheet ?? false;
+      value.isBottomSheet = newRoute.isBottomSheet
+          ? true
+          : value.isBottomSheet ?? false;
     });
   }
 
@@ -97,8 +98,9 @@ class SLIRouteObserver extends NavigatorObserver {
       value.isBack = false;
       value.removed = routeName ?? '';
       value.previous = routeName ?? '';
-      value.isBottomSheet =
-          currentRoute.isBottomSheet ? false : value.isBottomSheet;
+      value.isBottomSheet = currentRoute.isBottomSheet
+          ? false
+          : value.isBottomSheet;
     });
   }
 
@@ -122,8 +124,9 @@ class SLIRouteObserver extends NavigatorObserver {
       value.isBack = false;
       value.removed = '';
       value.previous = '$oldName';
-      value.isBottomSheet =
-          currentRoute.isBottomSheet ? false : value.isBottomSheet;
+      value.isBottomSheet = currentRoute.isBottomSheet
+          ? false
+          : value.isBottomSheet;
     });
   }
 }

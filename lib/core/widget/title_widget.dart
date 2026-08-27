@@ -14,7 +14,7 @@ class TitleWidget extends StatelessWidget {
   final CrossAxisAlignment crossAxisAlignment;
 
   const TitleWidget({
-    Key? key,
+    super.key,
     required this.title,
     this.titleStyle,
     this.titleWidget,
@@ -23,7 +23,7 @@ class TitleWidget extends StatelessWidget {
     this.valueWidget,
     this.mainAxisAlignment = MainAxisAlignment.start,
     this.crossAxisAlignment = CrossAxisAlignment.center,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -34,23 +34,28 @@ class TitleWidget extends StatelessWidget {
         titleWidget ??
             Text(
               title ?? '',
-              style: titleStyle ??
+              style:
+                  titleStyle ??
                   defaultTitleStyle ??
                   TextStyle(
-                      fontSize: 16,
-                      color: Theme.of(context).primaryColor,
-                      fontWeight: FontWeight.bold),
+                    fontSize: 16,
+                    color: Theme.of(context).primaryColor,
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
         const SizedBox(width: 24),
         Expanded(
-            child: valueWidget ??
-                Text(
-                  value ?? '',
-                  textAlign: TextAlign.right,
-                  style: valueStyle ??
-                      defaultValueStyle ??
-                      const TextStyle(fontSize: 14, color: Colors.grey),
-                ))
+          child:
+              valueWidget ??
+              Text(
+                value ?? '',
+                textAlign: TextAlign.right,
+                style:
+                    valueStyle ??
+                    defaultValueStyle ??
+                    const TextStyle(fontSize: 14, color: Colors.grey),
+              ),
+        ),
       ],
     );
   }

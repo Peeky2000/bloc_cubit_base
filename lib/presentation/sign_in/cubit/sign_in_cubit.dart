@@ -1,26 +1,29 @@
-import 'package:mOrder/core/app/app_controller.dart';
-import 'package:mOrder/core/common/constant.dart';
-import 'package:mOrder/core/common/route.dart';
-import 'package:mOrder/core/routing/routing.dart';
-import 'package:mOrder/di/injection.dart';
-import 'package:mOrder/domain/entities/auth/login.dart';
-import 'package:mOrder/domain/use_case/auth_use_case.dart';
-import 'package:mOrder/l10n/l10n.dart';
-import 'package:mOrder/presentation/global_handler.dart';
-import 'package:equatable/equatable.dart';
-import 'package:mOrder/core/base_component/base_app_state.dart';
-import 'package:mOrder/core/base_component/base_cubit.dart';
-import 'package:mOrder/core/common/enum.dart';
+import 'package:bloc_cubit_base/core/app/app_controller.dart';
+import 'package:bloc_cubit_base/core/common/constant.dart';
+import 'package:bloc_cubit_base/core/common/route.dart';
+import 'package:bloc_cubit_base/core/routing/routing.dart';
+import 'package:bloc_cubit_base/domain/entities/auth/login.dart';
+import 'package:bloc_cubit_base/domain/use_case/auth_use_case.dart';
+import 'package:bloc_cubit_base/l10n/l10n.dart';
+import 'package:bloc_cubit_base/presentation/global_handler.dart';
+import 'package:bloc_cubit_base/core/base_component/base_app_state.dart';
+import 'package:bloc_cubit_base/core/base_component/base_cubit.dart';
+import 'package:bloc_cubit_base/core/common/enum.dart';
 import 'package:flutter/material.dart';
+import 'package:injectable/injectable.dart';
 
 part 'sign_in_state.dart';
 
+@injectable
 class SignInCubit extends BaseCubit<SignInState> {
-  final BuildContext? _context = Injector.getIt.get<AppController>().context;
-  final AuthUseCase _authUseCase = Injector.getIt.get<AuthUseCase>();
+  final AppController _appController;
+  final AuthUseCase _authUseCase;
   String usernameFormat = '';
 
-  SignInCubit() : super(SignInState.initial());
+  SignInCubit(this._authUseCase, this._appController)
+    : super(SignInState.initial());
+
+  BuildContext? get _context => _appController.context;
 
   void onChangeRememberLogin() {
     emit(state.copyWith(isRememberLogin: !state.isRememberLogin));
@@ -49,11 +52,13 @@ class SignInCubit extends BaseCubit<SignInState> {
       errorPass = _context?.l10n.passIsInvalid;
       isValid = false;
     }
-    emit(state.copyWith(
-      errorUsername: errorUsername,
-      errorPassword: errorPass,
-      forceUpdateError: true,
-    ));
+    emit(
+      state.copyWith(
+        errorUsername: errorUsername,
+        errorPassword: errorPass,
+        forceUpdateError: true,
+      ),
+    );
     if (isValid) {
       _signIn(username: username, pass: pass);
     }
@@ -68,21 +73,24 @@ class SignInCubit extends BaseCubit<SignInState> {
         usernameFormat = username;
       }
       Login? loginInfo = await _authUseCase.login(
-          phone: usernameFormat,
-          password: pass,
-          isRememberLogin: state.isRememberLogin);
+        phone: usernameFormat,
+        password: pass,
+        isRememberLogin: state.isRememberLogin,
+      );
       emit(state.copyWith(loading: LoadingStatus.complete));
       if (loginInfo != null) {
         if (loginInfo.account?.isPhoneVerified == false) {
           await sendCodeVerify();
         } else {
-          SLIRouting.offAllNamed(AppPage.HOME);
+          SLIRouting.offAllNamed(AppPage.home);
         }
       }
     } catch (e) {
       emit(state.copyWith(loading: LoadingStatus.error));
-      handleErrorResponse(e,
-          onRetry: () => _signIn(username: username, pass: pass));
+      handleErrorResponse(
+        e,
+        onRetry: () => _signIn(username: username, pass: pass),
+      );
     }
   }
 
@@ -91,11 +99,8 @@ class SignInCubit extends BaseCubit<SignInState> {
       phone: usernameFormat,
       onComplete: () {
         SLIRouting.offAllNamed(
-          AppPage.CONFIRM_INFO,
-          arguments: {
-            'phone': usernameFormat,
-            'page_success': AppPage.HOME,
-          },
+          AppPage.confirmInfo,
+          arguments: {'phone': usernameFormat, 'page_success': AppPage.home},
         );
       },
       onError: (e) {
@@ -105,6 +110,6 @@ class SignInCubit extends BaseCubit<SignInState> {
   }
 
   void onTapForgotPassword() {
-    SLIRouting.toNamed(AppPage.RESET_PASSWORD);
+    SLIRouting.toNamed(AppPage.resetPassword);
   }
 }

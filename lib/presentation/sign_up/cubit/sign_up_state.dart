@@ -1,21 +1,21 @@
 part of 'sign_up_cubit.dart';
 
-class SignUpState extends BaseAppState with EquatableMixin {
-  bool showPass;
-  int currentPage;
-  ChangePageViewStatus? changePageViewStatus;
-  ScaleLevel? currentScaleLevel;
-  List<IndustryType>? industries;
-  String? errorPhone;
-  String? errorEmail;
-  String? errorPassword;
-  String? errorShopName;
-  String? errIndustry;
-  String? errScale;
+class SignUpState extends BaseAppState {
+  final bool showPass;
+  final int currentPage;
+  final ChangePageViewStatus? changePageViewStatus;
+  final ScaleLevel? currentScaleLevel;
+  final List<IndustryType>? industries;
+  final String? errorPhone;
+  final String? errorEmail;
+  final String? errorPassword;
+  final String? errorShopName;
+  final String? errIndustry;
+  final String? errScale;
 
-  SignUpState({
-    required LoadingStatus loading,
-    dynamic error,
+  const SignUpState({
+    required super.loading,
+    super.error,
     this.showPass = false,
     this.currentPage = 0,
     this.changePageViewStatus,
@@ -27,18 +27,15 @@ class SignUpState extends BaseAppState with EquatableMixin {
     this.errorShopName,
     this.errIndustry,
     this.errScale,
-  }) : super(loading: loading, error: error);
+  });
 
   factory SignUpState.initial() {
-    return SignUpState(
-      loading: LoadingStatus.initial,
-      error: null,
-    );
+    return SignUpState(loading: LoadingStatus.initial, error: null);
   }
 
   SignUpState copyWith({
     LoadingStatus? loading,
-    dynamic error,
+    Object? error,
     bool? showPass,
     int? currentPage,
     ChangePageViewStatus? changePageViewStatus,
@@ -71,18 +68,18 @@ class SignUpState extends BaseAppState with EquatableMixin {
 
   @override
   List<Object?> get props => [
-        loading,
-        error,
-        showPass,
-        currentPage,
-        changePageViewStatus,
-        currentScaleLevel,
-        industries,
-        errorPhone,
-        errorEmail,
-        errorPassword,
-        errorShopName,
-        errIndustry,
-        errScale,
-      ];
+    loading,
+    error,
+    showPass,
+    currentPage,
+    changePageViewStatus,
+    currentScaleLevel,
+    industries,
+    errorPhone,
+    errorEmail,
+    errorPassword,
+    errorShopName,
+    errIndustry,
+    errScale,
+  ];
 }

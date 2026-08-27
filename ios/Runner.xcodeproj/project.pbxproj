@@ -483,9 +483,6 @@
 				MARKETING_VERSION = 2023.05.03;
 				PRODUCT_BUNDLE_IDENTIFIER = com.giaohang247;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "19014798-2766-4cd8-9f28-fd1b77bf9037";
-				PROVISIONING_PROFILE_SPECIFIER = delivery_go_prof_dev;
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = delivery_go_prof_dev;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -624,9 +621,6 @@
 				MARKETING_VERSION = 2023.05.03;
 				PRODUCT_BUNDLE_IDENTIFIER = com.giaohang247;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "19014798-2766-4cd8-9f28-fd1b77bf9037";
-				PROVISIONING_PROFILE_SPECIFIER = delivery_go_prof_dev;
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = delivery_go_prof_dev;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -659,9 +653,6 @@
 				MARKETING_VERSION = 2023.05.03;
 				PRODUCT_BUNDLE_IDENTIFIER = com.giaohang247;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "19014798-2766-4cd8-9f28-fd1b77bf9037";
-				PROVISIONING_PROFILE_SPECIFIER = delivery_go_prof_dev;
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = delivery_go_prof_dev;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -748,9 +739,6 @@
 				MARKETING_VERSION = 2023.05.03;
 				PRODUCT_BUNDLE_IDENTIFIER = com.giaohang247;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "19014798-2766-4cd8-9f28-fd1b77bf9037";
-				PROVISIONING_PROFILE_SPECIFIER = delivery_go_prof_dev;
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = delivery_go_prof_dev;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -835,9 +823,6 @@
 				MARKETING_VERSION = 2023.05.03;
 				PRODUCT_BUNDLE_IDENTIFIER = com.giaohang247;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "19014798-2766-4cd8-9f28-fd1b77bf9037";
-				PROVISIONING_PROFILE_SPECIFIER = delivery_go_prof_dev;
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = delivery_go_prof_dev;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -919,9 +904,6 @@
 				MARKETING_VERSION = 2023.05.03;
 				PRODUCT_BUNDLE_IDENTIFIER = com.giaohang247;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "19014798-2766-4cd8-9f28-fd1b77bf9037";
-				PROVISIONING_PROFILE_SPECIFIER = delivery_go_prof_dev;
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = delivery_go_prof_dev;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1008,9 +990,6 @@
 				MARKETING_VERSION = 2023.05.03;
 				PRODUCT_BUNDLE_IDENTIFIER = com.giaohang247;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "19014798-2766-4cd8-9f28-fd1b77bf9037";
-				PROVISIONING_PROFILE_SPECIFIER = delivery_go_prof_dev;
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = delivery_go_prof_dev;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -1095,9 +1074,6 @@
 				MARKETING_VERSION = 2023.05.03;
 				PRODUCT_BUNDLE_IDENTIFIER = com.giaohang247;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "19014798-2766-4cd8-9f28-fd1b77bf9037";
-				PROVISIONING_PROFILE_SPECIFIER = delivery_go_prof_dev;
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = delivery_go_prof_dev;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1179,9 +1155,6 @@
 				MARKETING_VERSION = 2023.05.03;
 				PRODUCT_BUNDLE_IDENTIFIER = com.giaohang247;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "19014798-2766-4cd8-9f28-fd1b77bf9037";
-				PROVISIONING_PROFILE_SPECIFIER = delivery_go_prof_dev;
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = delivery_go_prof_dev;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";

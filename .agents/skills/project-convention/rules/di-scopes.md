@@ -1,48 +1,27 @@
 # Dependency Injection Scopes
 
-All registration lives in `lib/di/injection.dart` inside class `Injector`.
+DI is configured by `lib/di/injection.dart`, generated in
+`lib/di/injection.config.dart`, and supplemented by runtime providers in
+`lib/di/register_module.dart`.
 
-## Setup phases (call order in `main_*.dart`)
+| Type | Annotation / provider | Lifetime |
+|---|---|---|
+| Feature Cubit/BLoC | `@injectable` | factory per provider |
+| UseCase/stateless service | `@lazySingleton` | lazy app lifetime |
+| Repository implementation | `@LazySingleton(as: Repo)` | lazy app lifetime via interface |
+| DataSource implementation | `@LazySingleton(as: DataSource)` | lazy app lifetime via interface |
+| App coordinator | `@singleton` | app lifetime, explicit only |
+| SharedPreferences/platform SDK | `@module`, optionally `@preResolve` | composition root |
+| `AppConfig` runtime value | explicit runtime module/provider | one bootstrap |
 
-| Method | Registers |
-|--------|-----------|
-| `setupEnvironment` | `AppConfig`, `AppController` |
-| `setupData` | `NetworkChecker`, local/remote data sources, `ApiHandler` |
-| `setupDomain` | Repository impls (as interfaces), **UseCases** |
-| `setupPresentation` | `AppCubit`, feature **Cubits** |
+Constructor injection is mandatory outside composition roots. Resolve from
+`getIt` only while composing a screen/route or integrating the application root.
 
-## Scope table
+After changing annotations or constructors:
 
-| Class type | Registration | Scope |
-|------------|--------------|-------|
-| Cubit | `registerFactory` | New instance per screen/session |
-| UseCase | `registerLazySingleton` | One per app |
-| Repository (interface) | `registerLazySingleton<AuthRepo>(() => AuthRepoImpl(...))` | One per app |
-| DataSource / ApiHandler | `registerLazySingleton` | One per app |
-| AppCubit | `registerLazySingleton` | App-wide |
-| AppConfig / AppController | lazy singleton / factory | Per env |
-
-## Example — adding a new feature Cubit
-
-```dart
-// In Injector.setupPresentation()
-..registerFactory<ProductCubit>(() => ProductCubit());
+```bash
+derry gen
 ```
 
-Register `ProductUseCase` and `ProductRepo` in `setupDomain`, data sources in `setupData`.
-
-## Resolving dependencies
-
-```dart
-import 'package:<app>/di/injection.dart';
-
-final authUseCase = Injector.getIt.get<AuthUseCase>();
-```
-
-Cubits in this base often resolve via `Injector.getIt` in the constructor body (see `SignInCubit`).
-
-## Rules
-
-- **Never** register Cubits as `registerLazySingleton` (shared state across routes).
-- Register **repository interface** type, construct **impl** in the factory closure.
-- After adding registrations, no code-gen step — only `flutter analyze`.
+Never edit generated config, use field injection, hide dependencies in globals,
+or make feature Cubits/BLoCs singletons.

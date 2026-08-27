@@ -1,102 +1,67 @@
 ---
 name: project-convention
 description: >
-  Master reference for this Flutter project's conventions: architecture, naming,
-  lint, import boundaries, DI scopes, code patterns, and anti-patterns.
-  Load this skill when generating, reviewing, or implementing any code.
+  Master reference for architecture, naming, lint, import boundaries, generated
+  DI, Cubit/BLoC, code patterns, UI ownership, and anti-patterns. Load when
+  generating, reviewing, or implementing code in this repository.
 ---
 
 # Project Convention
 
-## Overview
+## Stack
 
-Flutter **Clean Architecture** (presentation → domain → data) with **UseCase** layer and **Cubit** state management.
+| Area | Standard |
+|---|---|
+| Architecture | Clean Architecture: presentation → domain ← data |
+| State | Cubit default, BLoC supported; Equatable immutable state |
+| DI | `get_it + injectable`, constructor injection |
+| HTTP | Dio through `ApiHandler`; REST default |
+| Models | `json_serializable` |
+| Route | `SLIRouting` + `AppPage` |
+| i18n | Flutter gen-l10n / ARB |
+| UI toolkit | `sli_common` public API, Shadcn behind its facade |
 
-| Area | Stack in this base |
-|------|-------------------|
-| State | `flutter_bloc` / `bloc`, `BaseCubit`, `BaseAppState`, `LoadingStatus` |
-| DI | `get_it` — manual registration in `lib/di/injection.dart` (`Injector`) |
-| HTTP | `dio` via `ApiHandler` / `ApiClient` (not Retrofit) |
-| JSON models | `json_serializable` + `json_annotation` (`.g.dart`) |
-| Domain | Abstract **entities** + abstract **repositories** |
-| Navigation | `SLIRouting` + `AppPage` (`core/routing/`, `core/common/route.dart`) |
-| i18n | Flutter **gen-l10n** — `lib/l10n/arb/*.arb`, `context.l10n` |
-| Assets | `flutter_gen` → `lib/generated/` |
+## Dependency flow
 
-Package imports: `package:<name>/...` where `<name>` is `pubspec.yaml` → `name:` (rename when forking this base).
-
----
-
-## Quick Reference
-
-| Topic | File |
-|-------|------|
-| Canonical paths (specs/plans) | [references/canonical-paths.md](references/canonical-paths.md) |
-| Project structure & layer rules | [references/project-structure.md](references/project-structure.md) |
-| Naming conventions | [rules/naming.md](rules/naming.md) |
-| Lint & analysis rules | [rules/lint.md](rules/lint.md) |
-| Import boundaries | [rules/import-boundaries.md](rules/import-boundaries.md) |
-| DI scopes | [rules/di-scopes.md](rules/di-scopes.md) |
-| Code patterns | [references/patterns.md](references/patterns.md) |
-| Packages | [references/packages.md](references/packages.md) |
-| Anti-patterns | [rules/anti-patterns.md](rules/anti-patterns.md) |
-
----
-
-## Architecture Diagram
-
-```
-UI (Screen in presentation/.../view)
-  │  user action → Cubit method
-  ▼
-Cubit (extends BaseCubit<State>)     ← registerFactory in setupPresentation
-  │  validate form fields here
-  │  emit loading → call UseCase
-  ▼
-UseCase (domain/use_case)            ← registerLazySingleton in setupDomain
-  │  business rules, orchestration
-  ▼
-Repository (domain interface)        ← AuthRepo, UserRepo, …
-  ▼
-RepositoryImpl (data/repositories)     ← registerLazySingleton in setupDomain
-  ▼
-RemoteDataSource / LocalDataSource   ← registerLazySingleton in setupData
-  ▼
-ApiHandler (Dio) / SharedPreferences / Firebase
+```text
+Screen → Cubit/BLoC → UseCase → Repository interface
+                              ↑
+DataSource ← RepositoryImpl ──┘
 ```
 
----
+- Domain imports only Dart and domain-owned types.
+- Presentation may import domain/core/DI composition APIs, never data.
+- Data may import domain and infrastructure core, never presentation.
+- Cubit/BLoC, UseCase, repository, and data source receive constructor
+  dependencies and never resolve a service locator internally.
 
-## New Feature — Layer Order
+## Feature order
 
-1. Entity (`domain/entities/`)
-2. Response/request models (`data/model/`) — `implements` entity where applicable
-3. Remote/local data sources (`data/datasource/`)
-4. Repository interface (`domain/repositories/`) + impl (`data/repositories/`)
-5. UseCase (`domain/use_case/`)
-6. Cubit + State (`presentation/<feature>/cubit/`)
-7. Screen (`presentation/<feature>/view/`)
-8. DI (`lib/di/injection.dart` — all three `setup*` methods as needed)
-9. Route (`core/common/route.dart`)
-10. ARB keys (`lib/l10n/arb/`) if new copy is needed
+Entity → Model → DataSource → Repository interface/impl → UseCase → Cubit/BLoC
+→ Screen → Route → ARB → DI generation → tests/docs.
 
----
+Only create layers the requirement actually needs.
 
-## AI Workflow Artifacts
+## Source map
 
-| Artifact | Path |
-|----------|------|
-| Brainstorm | `docs/brainstorm/YYYY-MM-DD-{topic}.md` |
-| Frontend spec | `docs/specs/{NNN}-{name}/fe.md` |
-| Implementation plan | `docs/plan/YYYY-MM-DD-{topic}.md` |
-| Code review | `docs/reviews/YYYY-MM-DD-hh-mm-ss-{topic}.md` |
-| Project context for specs | `docs/prerequisites.md` |
+| Topic | Reference |
+|---|---|
+| Architecture source of truth | `docs/architecture/README.md` |
+| Canonical paths | `references/canonical-paths.md` |
+| Project structure | `references/project-structure.md` |
+| Naming | `rules/naming.md` |
+| Lint | `rules/lint.md` |
+| Import boundaries | `rules/import-boundaries.md` |
+| DI scopes | `rules/di-scopes.md` |
+| Patterns | `references/patterns.md` |
+| Packages | `references/packages.md` |
+| Anti-patterns | `rules/anti-patterns.md` |
 
-See root `ai-process.md` for the full pipeline.
+## Mandatory workflow
 
----
-
-## Resources
-
-- **AI process** → `ai-process.md`
-- **Prerequisites** → `docs/prerequisites.md`
+1. Read the relevant architecture doc/ADR and sibling implementation.
+2. Search app-memory before adding an artifact.
+3. Implement with exact dependency direction and constructor injection.
+4. Run `derry gen` if code generation inputs changed.
+5. Run `derry quality`; distinguish baseline debt from regressions honestly.
+6. Update docs/skills/app-memory when a convention or reusable artifact changes.

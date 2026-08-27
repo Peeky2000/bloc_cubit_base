@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:mOrder/domain/entities/response/base_response.dart';
+import 'package:bloc_cubit_base/domain/entities/response/base_response.dart';
 
 part 'base_response_model.g.dart';
 
@@ -20,8 +20,9 @@ class BaseResponseModel<T> implements BaseResponse<T> {
   final int? code;
 
   factory BaseResponseModel.fromJson(
-          Map<String, dynamic> json, T Function(Object? json) fromJsonT) =>
-      _$BaseResponseModelFromJson(json, fromJsonT);
+    Map<String, dynamic> json,
+    T Function(Object? json) fromJsonT,
+  ) => _$BaseResponseModelFromJson(json, fromJsonT);
 
   Map<String, dynamic> toJson(Object? Function(T value) toJsonT) =>
       _$BaseResponseModelToJson(this, toJsonT);

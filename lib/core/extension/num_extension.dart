@@ -13,56 +13,58 @@ extension NumExtension on num {
      * of digits after comma/point (default is 2)
      */
     var divider = 1024;
-    int _size;
+    int size;
     try {
-      _size = int.parse(toString());
+      size = int.parse(toString());
     } catch (e) {
       throw ArgumentError('Can not parse the size parameter: $e');
     }
 
-    if (_size < divider) {
-      return '$_size B';
+    if (size < divider) {
+      return '$size B';
     }
 
-    if (_size < divider * divider && _size % divider == 0) {
-      return '${(_size / divider).toStringAsFixed(0)} KB';
+    if (size < divider * divider && size % divider == 0) {
+      return '${(size / divider).toStringAsFixed(0)} KB';
     }
 
-    if (_size < divider * divider) {
-      return '${(_size / divider).toStringAsFixed(round)} KB';
+    if (size < divider * divider) {
+      return '${(size / divider).toStringAsFixed(round)} KB';
     }
 
-    if (_size < divider * divider * divider && _size % divider == 0) {
-      return '${(_size / (divider * divider)).toStringAsFixed(0)} MB';
+    if (size < divider * divider * divider && size % divider == 0) {
+      return '${(size / (divider * divider)).toStringAsFixed(0)} MB';
     }
 
-    if (_size < divider * divider * divider) {
-      return '${(_size / divider / divider).toStringAsFixed(round)} MB';
+    if (size < divider * divider * divider) {
+      return '${(size / divider / divider).toStringAsFixed(round)} MB';
     }
 
-    if (_size < divider * divider * divider * divider && _size % divider == 0) {
-      return '${(_size / (divider * divider * divider)).toStringAsFixed(0)} GB';
+    if (size < divider * divider * divider * divider && size % divider == 0) {
+      return '${(size / (divider * divider * divider)).toStringAsFixed(0)} GB';
     }
 
-    if (_size < divider * divider * divider * divider) {
-      return '${(_size / divider / divider / divider).toStringAsFixed(round)} GB';
+    if (size < divider * divider * divider * divider) {
+      return '${(size / divider / divider / divider).toStringAsFixed(round)} GB';
     }
 
-    if (_size < divider * divider * divider * divider * divider && _size % divider == 0) {
-      num r = _size / divider / divider / divider / divider;
+    if (size < divider * divider * divider * divider * divider &&
+        size % divider == 0) {
+      num r = size / divider / divider / divider / divider;
       return '${r.toStringAsFixed(0)} TB';
     }
 
-    if (_size < divider * divider * divider * divider * divider) {
-      num r = _size / divider / divider / divider / divider;
+    if (size < divider * divider * divider * divider * divider) {
+      num r = size / divider / divider / divider / divider;
       return '${r.toStringAsFixed(round)} TB';
     }
 
-    if (_size < divider * divider * divider * divider * divider * divider && _size % divider == 0) {
-      num r = _size / divider / divider / divider / divider / divider;
+    if (size < divider * divider * divider * divider * divider * divider &&
+        size % divider == 0) {
+      num r = size / divider / divider / divider / divider / divider;
       return '${r.toStringAsFixed(0)} PB';
     } else {
-      num r = _size / divider / divider / divider / divider / divider;
+      num r = size / divider / divider / divider / divider / divider;
       return '${r.toStringAsFixed(round)} PB';
     }
   }

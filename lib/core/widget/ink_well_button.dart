@@ -19,7 +19,7 @@ class InkWellButton extends StatelessWidget {
   final double elevation;
 
   const InkWellButton({
-    Key? key,
+    super.key,
     this.title,
     this.labelWidget,
     this.onTap,
@@ -35,11 +35,12 @@ class InkWellButton extends StatelessWidget {
     this.padding,
     this.borderColor,
     this.elevation = 1.0,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
-    Widget child = labelWidget ??
+    Widget child =
+        labelWidget ??
         Text(
           title ?? '',
           style: TextStyle(
@@ -62,7 +63,7 @@ class InkWellButton extends StatelessWidget {
         boxShadow: elevation > 0
             ? [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: elevation,
                   offset: Offset(0, elevation / 2),
                 ),

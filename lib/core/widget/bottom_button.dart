@@ -16,7 +16,7 @@ class BottomButton extends StatelessWidget {
   final double elevation;
 
   const BottomButton({
-    Key? key,
+    super.key,
     this.title,
     this.onTap,
     this.width,
@@ -29,7 +29,7 @@ class BottomButton extends StatelessWidget {
     this.isDisable = false,
     this.isDivider,
     this.elevation = 1.0,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class BottomButton extends StatelessWidget {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: elevation,
             offset: Offset(0, -elevation),
           ),
@@ -63,10 +63,7 @@ class BottomButton extends StatelessWidget {
               ),
               child: Text(
                 title ?? '',
-                style: TextStyle(
-                  fontSize: fontSize.sp,
-                  fontWeight: fontWeight,
-                ),
+                style: TextStyle(fontSize: fontSize.sp, fontWeight: fontWeight),
               ),
             ),
           ),

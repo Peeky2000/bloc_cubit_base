@@ -1,19 +1,19 @@
 part of 'sign_in_cubit.dart';
 
-class SignInState extends BaseAppState with EquatableMixin {
-  bool isRememberLogin;
-  bool showPass;
-  String? errorUsername;
-  String? errorPassword;
+class SignInState extends BaseAppState {
+  final bool isRememberLogin;
+  final bool showPass;
+  final String? errorUsername;
+  final String? errorPassword;
 
-  SignInState({
-    required LoadingStatus loading,
-    dynamic error,
+  const SignInState({
+    required super.loading,
+    super.error,
     required this.isRememberLogin,
     this.errorUsername,
     this.errorPassword,
     this.showPass = false,
-  }) : super(loading: loading, error: error);
+  });
 
   factory SignInState.initial() {
     return SignInState(
@@ -25,7 +25,7 @@ class SignInState extends BaseAppState with EquatableMixin {
 
   SignInState copyWith({
     LoadingStatus? loading,
-    dynamic error,
+    Object? error,
     bool? isRememberLogin,
     bool? showPass,
     String? errorUsername,
@@ -44,11 +44,11 @@ class SignInState extends BaseAppState with EquatableMixin {
 
   @override
   List<Object?> get props => [
-        loading,
-        error,
-        isRememberLogin,
-        showPass,
-        errorUsername,
-        errorPassword,
-      ];
+    loading,
+    error,
+    isRememberLogin,
+    showPass,
+    errorUsername,
+    errorPassword,
+  ];
 }

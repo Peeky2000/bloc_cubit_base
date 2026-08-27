@@ -7,29 +7,33 @@ part of 'user_profile_response_model.dart';
 // **************************************************************************
 
 UserProfileResponseModel _$UserProfileResponseModelFromJson(
-        Map<String, dynamic> json) =>
-    UserProfileResponseModel(
-      id: json['id'] as int?,
-      accountId: json['accountId'] as int?,
-      industry: json['industry'] as String?,
-      shippingScale:
-          $enumDecodeNullable(_$ScaleLevelEnumMap, json['shippingScale']),
-      updatedAt: const TimeIso8601JsonConverter()
-          .fromJson(json['updatedAt'] as String?),
-      createdAt: const TimeIso8601JsonConverter()
-          .fromJson(json['createdAt'] as String?),
-    );
+  Map<String, dynamic> json,
+) => UserProfileResponseModel(
+  id: (json['id'] as num?)?.toInt(),
+  accountId: (json['accountId'] as num?)?.toInt(),
+  industry: json['industry'] as String?,
+  shippingScale: $enumDecodeNullable(
+    _$ScaleLevelEnumMap,
+    json['shippingScale'],
+  ),
+  updatedAt: const TimeIso8601JsonConverter().fromJson(
+    json['updatedAt'] as String?,
+  ),
+  createdAt: const TimeIso8601JsonConverter().fromJson(
+    json['createdAt'] as String?,
+  ),
+);
 
 Map<String, dynamic> _$UserProfileResponseModelToJson(
-        UserProfileResponseModel instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'accountId': instance.accountId,
-      'industry': instance.industry,
-      'shippingScale': _$ScaleLevelEnumMap[instance.shippingScale],
-      'updatedAt': const TimeIso8601JsonConverter().toJson(instance.updatedAt),
-      'createdAt': const TimeIso8601JsonConverter().toJson(instance.createdAt),
-    };
+  UserProfileResponseModel instance,
+) => <String, dynamic>{
+  'id': instance.id,
+  'accountId': instance.accountId,
+  'industry': instance.industry,
+  'shippingScale': _$ScaleLevelEnumMap[instance.shippingScale],
+  'updatedAt': const TimeIso8601JsonConverter().toJson(instance.updatedAt),
+  'createdAt': const TimeIso8601JsonConverter().toJson(instance.createdAt),
+};
 
 const _$ScaleLevelEnumMap = {
   ScaleLevel.KHONG_THUONG_XUYEN: 'KHONG_THUONG_XUYEN',

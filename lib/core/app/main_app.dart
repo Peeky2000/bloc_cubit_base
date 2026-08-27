@@ -1,33 +1,53 @@
-import 'package:mOrder/core/common/constant.dart';
+import 'dart:async';
+
+import 'package:bloc_cubit_base/core/common/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mOrder/core/app/app.dart';
-import 'package:mOrder/core/app/app_controller.dart';
-import 'package:mOrder/core/app/app_cubit/app_cubit.dart';
-import 'package:mOrder/core/common/route.dart';
-import 'package:mOrder/core/helper/network/network_checker.dart';
-import 'package:mOrder/core/routing/route_observer.dart';
-import 'package:mOrder/core/routing/routing.dart';
-import 'package:mOrder/core/routing/sli_page.dart';
-import 'package:mOrder/core/routing/sli_page_route.dart';
-import 'package:mOrder/di/injection.dart';
-import 'package:mOrder/l10n/l10n.dart';
-import 'package:mOrder/core/extension/string_extension.dart';
-import 'package:mOrder/core/widget/dialog_util.dart';
-import 'package:mOrder/core/widget/title_widget.dart';
-import 'package:mOrder/core/widget/money_widget.dart';
-import 'package:mOrder/core/widget/common_text_field.dart';
-import 'package:mOrder/core/widget/common_drop_down.dart';
-import 'package:mOrder/core/widget/base_field.dart';
+import 'package:bloc_cubit_base/core/app/app.dart';
+import 'package:bloc_cubit_base/core/app/app_controller.dart';
+import 'package:bloc_cubit_base/core/app/app_cubit/app_cubit.dart';
+import 'package:bloc_cubit_base/core/common/route.dart';
+import 'package:bloc_cubit_base/core/helper/network/network_checker.dart';
+import 'package:bloc_cubit_base/core/routing/route_observer.dart';
+import 'package:bloc_cubit_base/core/routing/routing.dart';
+import 'package:bloc_cubit_base/core/routing/sli_page_route.dart';
+import 'package:bloc_cubit_base/di/injection.dart';
+import 'package:bloc_cubit_base/l10n/l10n.dart';
+import 'package:bloc_cubit_base/core/widget/dialog_util.dart';
+import 'package:bloc_cubit_base/core/widget/title_widget.dart';
+import 'package:bloc_cubit_base/core/widget/money_widget.dart';
+import 'package:bloc_cubit_base/core/widget/common_text_field.dart';
+import 'package:bloc_cubit_base/core/widget/common_drop_down.dart';
+import 'package:bloc_cubit_base/core/widget/base_field.dart';
+import 'package:sli_common/sli_common.dart' show SliShadcnScope;
 
-class MainApp extends StatelessWidget {
-  const MainApp({Key? key}) : super(key: key);
+Widget buildMainApp() => MainApp(
+  appCubit: Injector.getIt.get<AppCubit>(),
+  appController: Injector.getIt.get<AppController>(),
+  networkChecker: Injector.getIt.get<NetworkChecker>(),
+);
+
+class MainApp extends StatefulWidget {
+  const MainApp({
+    super.key,
+    required this.appCubit,
+    required this.appController,
+    required this.networkChecker,
+  });
+
+  final AppCubit appCubit;
+  final AppController appController;
+  final NetworkChecker networkChecker;
+
+  @override
+  State<MainApp> createState() => _MainAppState();
 
   static SLIPageRoute<T> generator<T>(RouteSettings settings) {
-    SLIPage page =
-        AppPage.pages.firstWhere((element) => element.name == settings.name);
+    final page = AppPage.pages.firstWhere(
+      (element) => element.name == settings.name,
+    );
     return SLIPageRoute<T>(
       page: page.page,
       settings: settings,
@@ -48,22 +68,37 @@ class MainApp extends StatelessWidget {
       gestureWidth: page.gestureWidth,
     );
   }
+}
+
+class _MainAppState extends State<MainApp> {
+  StreamSubscription<bool>? _connectionSubscription;
+  bool _appInitialized = false;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.appCubit.getCurrentLang();
+    _connectionSubscription = widget.networkChecker.connectController.stream
+        .listen(_showConnectionStatus);
+  }
 
   void _initDefault() {
     DialogUtil.defaultTitle =
-        Injector.getIt.get<AppController>().context?.l10n.notification ?? '';
+        widget.appController.context?.l10n.notification ?? '';
     DialogUtil.defaultTitleError =
-        Injector.getIt.get<AppController>().context?.l10n.error ?? '';
+        widget.appController.context?.l10n.error ?? '';
     DialogUtil.confirmStyle = App.appStyle?.medium16?.copyWith(
       color: App.appColor?.secondary1,
     );
     DialogUtil.cancelStyle = App.appStyle?.medium16?.copyWith(
       color: Colors.black,
     );
-    TitleWidget.defaultTitleStyle =
-        App.appStyle?.medium24?.copyWith(color: App.appColor?.textColor);
-    TitleWidget.defaultValueStyle =
-        App.appStyle?.medium14?.copyWith(color: App.appColor?.secondary1);
+    TitleWidget.defaultTitleStyle = App.appStyle?.medium24?.copyWith(
+      color: App.appColor?.textColor,
+    );
+    TitleWidget.defaultValueStyle = App.appStyle?.medium14?.copyWith(
+      color: App.appColor?.secondary1,
+    );
     MoneyWidget.unitDefault = ' đ';
 
     CommonTextField.commonTextFieldStyle = CommonTextFieldStyle(
@@ -90,10 +125,12 @@ class MainApp extends StatelessWidget {
       titlePadding: EdgeInsets.only(bottom: 12.h),
     );
     BaseField.baseFieldStyle = BaseFieldStyle(
-      titleDefaultStyle:
-          App.appStyle?.medium10?.copyWith(color: App.appColor?.textColorLight),
-      valueDefaultStyle:
-          App.appStyle?.medium14?.copyWith(color: App.appColor?.textColor),
+      titleDefaultStyle: App.appStyle?.medium10?.copyWith(
+        color: App.appColor?.textColorLight,
+      ),
+      valueDefaultStyle: App.appStyle?.medium14?.copyWith(
+        color: App.appColor?.textColor,
+      ),
     );
 
     CommonDropDown.commonDropDownStyle = CommonDropDownStyle(
@@ -118,39 +155,28 @@ class MainApp extends StatelessWidget {
     );
   }
 
-  void _setupListen() {
-    Injector.getIt
-        .get<NetworkChecker>()
-        .connectController
-        .stream
-        .listen((value) async {
-      // if (!DialogUtil.isShowingDialog) {
-      if (value) {
-        await DialogUtil.showFlushBar(
-            SLIRouting.key.currentContext!,
-            Injector.getIt
-                    .get<AppController>()
-                    .context
-                    ?.l10n
-                    .connectionRestored ??
-                '',
-            iconFlushBar: const Icon(
-              Icons.wifi_rounded,
-              color: Colors.white,
-            ));
-      } else {
-        await DialogUtil.showFlushBar(
-            SLIRouting.key.currentContext!,
-            Injector.getIt.get<AppController>().context?.l10n.noInternetShort ??
-                '',
-            backgroundColor: Colors.redAccent,
-            iconFlushBar: const Icon(
-              Icons.wifi_off_rounded,
-              color: Colors.white,
-            ));
-      }
-      // }
-    });
+  Future<void> _showConnectionStatus(bool isConnected) async {
+    final context = SLIRouting.key.currentContext;
+    if (!mounted || context == null) {
+      return;
+    }
+    DialogUtil.showFlushBar(
+      context,
+      isConnected
+          ? context.l10n.connectionRestored
+          : context.l10n.noInternetShort,
+      backgroundColor: isConnected ? null : Colors.redAccent,
+      iconFlushBar: Icon(
+        isConnected ? Icons.wifi_rounded : Icons.wifi_off_rounded,
+        color: Colors.white,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    unawaited(_connectionSubscription?.cancel());
+    super.dispose();
   }
 
   @override
@@ -169,34 +195,37 @@ class MainApp extends StatelessWidget {
         splitScreenMode: true,
         useInheritedMediaQuery: true,
         builder: (context, child) {
-          App.init();
-          bool isDarkMode = Injector.getIt.get<AppController>().isDarkMode;
-          return BlocProvider<AppCubit>(
-            create: (context) =>
-                Injector.getIt.get<AppCubit>()..getCurrentLang(),
+          if (!_appInitialized) {
+            App.init();
+            _appInitialized = true;
+          }
+          final isDarkMode = widget.appController.isDarkMode;
+          return BlocProvider<AppCubit>.value(
+            value: widget.appCubit,
             child: BlocBuilder<AppCubit, AppState>(
               builder: (context, state) {
                 return MaterialApp(
                   builder: (context, widget) {
                     _initDefault();
-                    _setupListen();
-                    return MediaQuery(
-                        data: MediaQuery.of(context)
-                            .copyWith(textScaleFactor: 1.0),
-                        child: widget!);
+                    return SliShadcnScope(
+                      child: MediaQuery(
+                        data: MediaQuery.of(
+                          context,
+                        ).copyWith(textScaler: const TextScaler.linear(1)),
+                        child: widget!,
+                      ),
+                    );
                   },
                   debugShowCheckedModeBanner: false,
                   locale: state.locale,
-                  title: 'Giaohang247',
+                  title: 'Flutter Base',
                   theme: App.theme?.lightTheme,
                   darkTheme: App.theme?.darkTheme,
                   themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
-                  initialRoute: AppPage.SPLASH,
-                  onGenerateRoute: (settings) => generator(settings),
+                  initialRoute: AppPage.splash,
+                  onGenerateRoute: (settings) => MainApp.generator(settings),
                   navigatorKey: SLIRouting.key,
-                  navigatorObservers: [
-                    SLIRouteObserver(SLIRouting.routing),
-                  ],
+                  navigatorObservers: [SLIRouteObserver(SLIRouting.routing)],
                   localizationsDelegates: [
                     AppLocalizations.delegate,
                     // ServerMessageLocalization.delegate,

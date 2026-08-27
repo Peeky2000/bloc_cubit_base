@@ -17,7 +17,7 @@
 - [ ] **Type:** Cubit (default) — `BaseCubit<{Feature}State>`
 - [ ] **Name:** `{Feature}Cubit`
 - [ ] **Location:** `lib/presentation/{feature}/cubit/{feature}_cubit.dart`
-- [ ] **State file:** `part` file `{feature}_state.dart` — extends `BaseAppState`, `EquatableMixin`
+- [ ] **State file:** `{feature}_state.dart` — immutable `BaseAppState` + Equatable
 
 ## 2. State
 
@@ -27,14 +27,14 @@
 
 ## 3. Dependencies & methods
 
-- [ ] Injects **`{Feature}UseCase`** via `Injector.getIt` — not Repo
+- [ ] Constructor-injects **`{Feature}UseCase`** — no Repo or service locator
 - [ ] `emit(loading)` before async; `complete` or `error` after
-- [ ] `handleErrorResponse(e, onRetry: ...)` for API errors
+- [ ] Emits recoverable error/failure state; UI listener owns dialogs/navigation
 - [ ] Methods match spec §6.9 user actions
 
 ## 4. DI
 
-- [ ] `registerFactory<{Feature}Cubit>` in `Injector.setupPresentation()`
+- [ ] Annotated `@injectable` (factory) and present in regenerated DI config
 
 ## 5. Tests (if requested)
 

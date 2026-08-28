@@ -22,11 +22,26 @@ before_all do
   ENV["CHANGELOG"] = File.read("../../CHANGELOG.md")
 end
 
+def firebase_groups(options)
+  groups = options[:tester_groups] || ENV["TESTER_GROUPS"]
+  UI.user_error!("Missing Firebase tester group.") if groups.to_s.strip.empty?
+  groups
+end
+
+def push_build_tag_if_requested(options, build_tag)
+  return unless options[:push_tag]
+
+  unless git_tag_exists(tag: build_tag)
+    add_git_tag(tag: build_tag)
+    push_git_tags(tag: build_tag)
+  end
+end
+
 default_platform(:android)
 
 platform :android do
   desc "Build environment=dev and flavor=debug"
-  lane :build_dev_debug do
+  lane :build_dev_debug do |options|
     build_tag = "v" + ENV["VERSION"] + "." + ENV["BUILD_NUMBER"] + "-dev-debug-Android"
     Dir.chdir("../..") do
       sh "fvm flutter clean"
@@ -43,25 +58,17 @@ platform :android do
             release_notes: "#{ENV["VERSION"]} #{ENV["BUILD_NUMBER"]}\nEnvironment: Development\nFlavor: debug\nChange: #{ENV["CHANGELOG"]}",
             apk_path: "../build/app/outputs/apk/dev/release/Giaohang247-dev-debug.apk",
             firebase_cli_token: ENV["FIREBASE_TOKEN"],
-            groups: ENV["TESTER_GROUPS"]
+            groups: firebase_groups(options)
         )
     # slack(
     #   slack_url: ENV["SLACK_URL"],
     #   message: "A new `Android` app version is available on `Firebase`. :fire:  <https://appdistribution.firebase.google.com/testerapps/#{ENV["FIREBASE_APP_ID"]}|Download here>  :fire:\nVersion: `#{ENV["VERSION"]} #{ENV["BUILD_NUMBER"]}`\nEnvironment: `Development`"
     # )
-    tag_existed = git_tag_exists(tag: build_tag)
-    if tag_existed == false
-      add_git_tag(
-        tag: build_tag,
-      )
-      push_git_tags(
-        tag: build_tag
-      )
-    end
+    push_build_tag_if_requested(options, build_tag)
   end
 
   desc "Build environment=staging and flavor=staging"
-  lane :build_staging_staging do
+  lane :build_staging_staging do |options|
     build_tag = "v" + ENV["VERSION"] + "." + ENV["BUILD_NUMBER"] + "-staging-staging-Android"
     Dir.chdir("../..") do
       sh "fvm flutter clean"
@@ -78,25 +85,17 @@ platform :android do
             release_notes: "#{ENV["VERSION"]} #{ENV["BUILD_NUMBER"]}\nEnvironment: Staging\nFlavor: staging\nChange: #{ENV["CHANGELOG"]}",
             apk_path: "../build/app/outputs/apk/staging/release/Giaohang247-staging-staging.apk",
             firebase_cli_token: ENV["FIREBASE_TOKEN"],
-            groups: ENV["TESTER_GROUPS"]
+            groups: firebase_groups(options)
         )
     # slack(
     #   slack_url: ENV["SLACK_URL"],
     #   message: "A new `Android` app version is available on `Firebase`. :fire:  <https://appdistribution.firebase.google.com/testerapps/#{ENV["FIREBASE_APP_ID"]}|Download here>  :fire:\nVersion: `#{ENV["VERSION"]} #{ENV["BUILD_NUMBER"]}`\nEnvironment: `Development`"
     # )
-    tag_existed = git_tag_exists(tag: build_tag)
-    if tag_existed == false
-      add_git_tag(
-        tag: build_tag,
-      )
-      push_git_tags(
-        tag: build_tag
-      )
-    end
+    push_build_tag_if_requested(options, build_tag)
   end
     
   desc "Build environment=prod and flavor=release"
-  lane :build_prod_release do
+  lane :build_prod_release do |options|
     build_tag = "v" + ENV["VERSION"] + "." + ENV["BUILD_NUMBER"] + "-prod-release-Android"
     Dir.chdir("../..") do
       sh "fvm flutter clean"
@@ -105,7 +104,7 @@ platform :android do
     end
     # reanem file
     Dir.chdir("../../build/app/outputs/apk/prod/release") do
-      sh "rm -rf Giaohang247-prod-release.ipa"
+      sh "rm -rf Giaohang247-prod-release.apk"
       sh "mv app-prod-release.apk Giaohang247-prod-release.apk"
     end
     firebase_app_distribution(
@@ -113,25 +112,17 @@ platform :android do
             release_notes: "#{ENV["VERSION"]} #{ENV["BUILD_NUMBER"]}\nEnvironment: Production\nFlavor: release\nChange: #{ENV["CHANGELOG"]}",
             apk_path: "../build/app/outputs/apk/prod/release/Giaohang247-prod-release.apk",
             firebase_cli_token: ENV["FIREBASE_TOKEN"],
-            groups: ENV["TESTER_GROUPS"]
+            groups: firebase_groups(options)
         )
     # slack(
     #   slack_url: ENV["SLACK_URL"],
     #   message: "A new `Android` app version is available on `Firebase`. :fire:  <https://appdistribution.firebase.google.com/testerapps/#{ENV["FIREBASE_APP_ID"]}|Download here>  :fire:\nVersion: `#{ENV["VERSION"]} #{ENV["BUILD_NUMBER"]}`\nEnvironment: `Production`"
     # )
-    tag_existed = git_tag_exists(tag: build_tag)
-    if tag_existed == false
-      add_git_tag(
-        tag: build_tag,
-      )
-      push_git_tags(
-        tag: build_tag
-      )
-    end
+    push_build_tag_if_requested(options, build_tag)
   end
 
   desc "Build and upload store Android"
-  lane :build_store do
+  lane :build_store do |options|
     version_name = flutter_version()["version_name"]
     version_code = flutter_version()["version_code"]
     build_tag = "Release-" + version_name + "(" + version_code + ")"
@@ -161,21 +152,6 @@ platform :android do
     #   slack_url: ENV["SLACK_URL"],
     #   message: "A new `Android` app version is available on `Google Play`. :fire:  Version: `#{version_code}`"
     # )
-    tag_existed = git_tag_exists(tag: build_tag)
-    if tag_existed == false
-      add_git_tag(
-        tag: build_tag,
-      )
-      push_git_tags(
-        tag: build_tag
-      )
-      Dir.chdir("../..") do
-        sh "./update_version.sh #{version_name} #{version_code}"
-        sh "git add ."
-        sh "git commit -m \"update version\""
-        sh "git push -u origin release"
-      end
-    end
+    push_build_tag_if_requested(options, build_tag)
   end
 end
-

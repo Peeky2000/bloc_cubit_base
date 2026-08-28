@@ -1,18 +1,19 @@
 # Networking
 
-REST through Dio is the default transport. `ApiHandler` is the application-facing
-adapter and data sources own response parsing.
+REST qua Dio là transport mặc định. `ApiHandler` là adapter cho phía app sử
+dụng, còn data source sở hữu việc parse response.
 
-## Security and lifecycle
+## Bảo mật và lifecycle
 
-- Interceptors never navigate, show dialogs, or read a `BuildContext`.
-- Authentication adds credentials through a token-store contract.
-- Refresh is single-flight: concurrent 401 responses await one refresh operation.
-- Refresh requests use a dedicated Dio client and never recurse through the session
+- Interceptor không bao giờ navigate, show dialog, hoặc đọc `BuildContext`.
+- Authentication thêm credential qua token-store contract.
+- Refresh là single-flight: nhiều response 401 đồng thời cùng chờ một refresh
+  operation.
+- Request refresh dùng Dio client riêng và không chạy đệ quy qua session
   interceptor.
-- Session expiry is emitted through a session contract and handled in presentation.
-- Request/response logs redact authorization, cookies, tokens, passwords, and common
-  PII fields by default.
-- Alice is available only outside production.
+- Session expiry được emit qua session contract và xử lý ở presentation.
+- Log request/response mặc định redact authorization, cookies, tokens,
+  passwords, và các field PII phổ biến.
+- Alice chỉ khả dụng ngoài production.
 
-GraphQL is an optional capability and must not be added until a product requires it.
+GraphQL là năng lực tùy chọn và không thêm cho tới khi sản phẩm cần.

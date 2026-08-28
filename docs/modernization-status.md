@@ -1,51 +1,54 @@
-# Modernization Status — 2026-08-27
+# Trạng Thái Modernization — 2026-08-27
 
-This document distinguishes completed architecture work from remaining legacy
-cleanup. “Implemented” means code and a relevant gate exist; it does not mean
-all historical analyzer debt has disappeared.
+Tài liệu này tách rõ phần kiến trúc đã hoàn thành và phần cleanup legacy còn
+lại. “Đã implement” nghĩa là đã có code và gate liên quan; không có nghĩa mọi
+analyzer debt lịch sử đều đã biến mất.
 
-## Implemented
+## Đã implement
 
-- Typed local/development/staging/production configuration and centralized
-  bootstrap.
+- Cấu hình local/development/staging/production có kiểu rõ ràng và bootstrap tập
+  trung.
 - FVM/Derry scripts, CI skeleton, code generation, architecture boundary gate,
-  and application tests.
-- `get_it + injectable`, generated graph, runtime module, and constructor
-  injection across the current feature dependency graph.
-- Pure-domain boundary corrections and presentation-to-data import checks.
-- Cubit default plus `BaseBloc` support; immutable Equatable base state.
-- Redacted non-production Alice inspector, secure token storage migration,
-  single-flight session refresh, and no network-layer UI navigation.
-- Real `sli_common` Git submodule with public `Sli*` API, tokens, themes, Shadcn
-  facade, package docs, example, and tests.
-- Architecture index, ADRs, contributor guides, and AI agent/skill alignment.
-- Personal provisioning profiles and hard-coded iOS provisioning identifiers
-  removed; signing material is now ignored and must come from the local machine
-  or CI secrets.
+  test app, và command delivery phân tách rõ build/Firebase/Store.
+- `get_it + injectable`, generated graph, runtime module, và constructor
+  injection trên dependency graph feature hiện tại.
+- Sửa boundary domain thuần và kiểm tra presentation-to-data import.
+- Cubit mặc định kèm hỗ trợ `BaseBloc`; base state immutable bằng Equatable.
+- Alice inspector ngoài production có redaction, migration token storage an
+  toàn, single-flight session refresh, và network layer không điều hướng UI.
+- Git submodule `sli_common` thật với public API `Sli*`, tokens, themes, facade
+  Shadcn, docs package, example, và tests.
+- Index kiến trúc, ADRs, contributor guides, và đồng bộ AI agent/skill.
+- Đã gỡ provisioning profile cá nhân và provisioning identifier hard-coded của
+  iOS; signing material giờ bị ignore và phải lấy từ máy local hoặc CI secrets.
 
-## Verified baseline
+## Baseline đã verify
 
 - Application tests: 11 passing.
 - `sli_common` tests: 3 passing.
-- Architecture boundary script: passing at the time of this migration.
-- New `sli_common` sources/tests/example: analyzer clean.
-- Application analyzer reduced from 162 findings to zero; the full application
-  analyzer gate now passes.
-- Full legacy `sli_common` analyzer still reports historical issues outside the
-  new `lib/src`, test, and example scope.
+- Script kiểm tra architecture boundary: passing tại thời điểm migration.
+- Source/test/example mới của `sli_common`: analyzer clean.
+- Application analyzer giảm từ 162 findings xuống 0; gate analyzer toàn app đã
+  pass.
+- Full legacy analyzer của `sli_common` vẫn còn issue lịch sử ngoài scope mới
+  `lib/src`, test, và example.
 
-## Remaining before a zero-debt template release
+## Việc còn lại trước bản template zero-debt
 
-1. Remove BuildContext/navigation/dialog side effects from legacy feature Cubits
-   and replace the compatibility global handler with explicit UI listeners.
-2. Add tests for concurrent 401 refresh/failure and offline interception.
-3. Migrate duplicated `lib/core/widget` components to `sli_common` using
-   compatibility adapters and a behavior matrix.
-4. Neutralize remaining DeliveryGo/mOrder sample branding, native identifiers,
-   Firebase sample configuration, endpoints, and sample product slices.
-5. Add a safe dry-run app rename/create script and validate a generated clone.
-6. Burn down the remaining legacy `sli_common` analyzer baseline, then expand
-   its scoped clean gate to the complete historical package.
+1. Gỡ side effect `BuildContext`/navigation/dialog khỏi legacy feature Cubit và
+   thay compatibility global handler bằng UI listener tường minh.
+2. Thêm test cho concurrent 401 refresh/failure và offline interception.
+3. Migrate component trùng trong `lib/core/widget` sang `sli_common` bằng
+   compatibility adapter và behavior matrix.
+4. Trung hoà branding DeliveryGo/mOrder còn lại, native identifiers, Firebase
+   sample configuration, endpoints, và sample product slices.
+5. Thêm script create/rename app có dry-run an toàn và validate clone sinh ra.
+6. Burn down analyzer baseline còn lại của legacy `sli_common`, rồi mở rộng clean
+   gate từ public surface sang toàn bộ historical package.
 
-These are tracked in
+Automation delivery đã tái sử dụng `build.sh`/Fastlane qua Derry, có dry-run,
+Store confirmation và Git tag opt-in. Fastlane vẫn còn branding/credential path
+của sample nên chỉ dùng delivery thật sau khi hoàn thành mục 4 và 5.
+
+Các việc này được track trong
 [`docs/plan/2026-08-26-base-modernization.md`](plan/2026-08-26-base-modernization.md).

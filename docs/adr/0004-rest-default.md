@@ -1,14 +1,14 @@
-# ADR 0004: Use REST by Default
+# ADR 0004: Dùng REST Mặc Định
 
-- Status: Accepted
-- Date: 2026-08-26
+- Trạng thái: Accepted
+- Ngày: 2026-08-26
 
-## Decision
+## Quyết định
 
-REST/Dio is the default network stack. GraphQL is an optional removable module added
-only when a real product requires it.
+REST/Dio là network stack mặc định. GraphQL là module tùy chọn, có thể gỡ bỏ,
+chỉ thêm khi sản phẩm thật cần.
 
-## Consequences
+## Hệ quả
 
-The base avoids unused schema/codegen dependencies while retaining a documented
-extension point.
+Base tránh dependency schema/codegen chưa dùng tới nhưng vẫn giữ extension point
+được tài liệu hóa.

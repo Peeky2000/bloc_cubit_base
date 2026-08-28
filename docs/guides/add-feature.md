@@ -1,6 +1,6 @@
-# Add a Feature
+# Thêm Feature
 
-Only add layers that the feature needs, while preserving this dependency order:
+Chỉ thêm layer mà feature thật sự cần, đồng thời giữ đúng thứ tự dependency:
 
 ```text
 Entity → Model → DataSource → Repository → UseCase → Cubit/BLoC → Screen
@@ -8,20 +8,20 @@ Entity → Model → DataSource → Repository → UseCase → Cubit/BLoC → Sc
 
 ## Checklist
 
-1. Search app-memory, `sli_common`, routes, and sibling domain code.
-2. Define pure domain values/contracts; do not expose JSON models.
-3. Add `json_serializable` request/response models in data.
-4. Add an abstract data source and injectable implementation around
-   `ApiHandler` or a local storage abstraction.
-5. Add the domain repository contract and bind `RepoImpl` with
+1. Tìm trong app-memory, `sli_common`, routes, và domain code tương tự.
+2. Định nghĩa domain value/contract thuần; không expose JSON model.
+3. Thêm request/response model bằng `json_serializable` trong data.
+4. Thêm abstract data source và implementation có injectable quanh `ApiHandler`
+   hoặc local storage abstraction.
+5. Thêm domain repository contract và bind `RepoImpl` bằng
    `@LazySingleton(as: Repo)`.
-6. Add a constructor-injected UseCase for orchestration.
-7. Choose Cubit or BLoC using [the decision guide](choose-cubit-or-bloc.md),
-   annotate it `@injectable`, and unit-test transitions.
-8. Build a thin screen. Resolve the state owner once in its builder and localize
-   all user-facing text.
-9. Register `AppPage`/`SLIPage`, update ARB files, and reuse `Sli*` components.
-10. Run `derry gen`, `derry quality`, and update app-memory/docs.
+6. Thêm UseCase inject qua constructor để orchestration.
+7. Chọn Cubit hoặc BLoC theo [guide quyết định](choose-cubit-or-bloc.md), gắn
+   `@injectable`, và unit-test transition.
+8. Tạo một screen mỏng. Resolve owner của state một lần trong builder và
+   localize mọi text hiển thị cho user.
+9. Register `AppPage`/`SLIPage`, cập nhật ARB, và tái sử dụng component `Sli*`.
+10. Chạy `derry gen`, `derry quality`, và cập nhật app-memory/docs.
 
-Do not put BuildContext, navigation, localization, Dio, or service-locator calls
-inside domain/business logic.
+Không đặt `BuildContext`, navigation, localization, Dio, hoặc service-locator
+call trong domain/business logic.

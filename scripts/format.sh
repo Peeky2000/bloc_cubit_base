@@ -8,7 +8,7 @@ cd "$project_root"
 source_files=()
 while IFS= read -r -d '' source_file; do
   source_files+=("$source_file")
-done < <(find lib test \
+done < <(find lib test tool \
   -path 'lib/modules' -prune -o \
   -type f -name '*.dart' -print0)
 

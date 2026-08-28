@@ -1,15 +1,16 @@
-# Optional Capabilities
+# Năng Lực Tùy Chọn
 
-The base stays useful by keeping product-dependent infrastructure optional.
+Base giữ tính hữu dụng bằng cách để infrastructure phụ thuộc sản phẩm ở dạng
+tùy chọn.
 
-| Capability | Status | Adoption gate |
+| Năng lực | Trạng thái | Điều kiện adopt |
 |---|---|---|
-| GraphQL | Deferred | A real API schema and operations require it |
-| Deep links | Deferred | Product routes and ownership rules are known |
-| Firebase Messaging | Deferred | Notification contracts and navigation are known |
-| HydratedBloc | Deferred | A state has an explicit persistence requirement |
-| Freezed state unions | Deferred | Manual state demonstrably harms correctness |
-| Advanced VIPER/AI gates | Later phase | Core base and docs are stable |
+| GraphQL | Hoãn | Có schema và operation thật cần dùng |
+| Deep links | Hoãn | Biết rõ product routes và ownership rules |
+| Firebase Messaging | Hoãn | Biết rõ notification contract và navigation |
+| HydratedBloc | Hoãn | State có yêu cầu persistence tường minh |
+| Freezed state unions | Hoãn | State thủ công chứng minh gây hại correctness |
+| VIPER/AI gates nâng cao | Giai đoạn sau | Core base và docs đã ổn định |
 
-Optional modules must be independently removable and must not weaken the default REST,
-Cubit/BLoC, or Clean Architecture path.
+Module tùy chọn phải gỡ độc lập được và không làm yếu đường mặc định REST,
+Cubit/BLoC, hoặc Clean Architecture.

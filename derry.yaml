@@ -1,67 +1,117 @@
+# Derry là command catalog của project; shell script vẫn sở hữu orchestration.
+#
+# Cài một lần: dart pub global activate derry
+# Xem đầy đủ:  derry ls -d
+# Hướng dẫn:   docs/guides/use-derry-and-build.md
+
+base:
+  help:
+    (description): Xem lệnh Dart Base CLI và nguyên tắc an toàn
+    (scripts):
+      - dart run tool/base_cli.dart --help
+  doctor:
+    (description): Validate identity, native project và sli_common của template
+    (scripts):
+      - dart run tool/base_cli.dart doctor
+
+rename:
+  (description): Dry-run đổi package/bundle/display name; thêm --apply để ghi
+  (scripts):
+    - dart run tool/base_cli.dart rename
+
+create:
+  (description): Dry-run clone app từ base; thêm --apply khi source Git sạch
+  (scripts):
+    - dart run tool/base_cli.dart create
+
 bootstrap:
-  (description): Initialize submodules, dependencies, and generated code
+  (description): Khởi tạo submodule, dependency và generated code cho clone mới
   (scripts):
     - ./scripts/bootstrap.sh
 
 get:
-  (description): Resolve Flutter dependencies
+  (description): Tải và resolve Flutter dependency của app
   (scripts):
     - ./scripts/flutterw.sh pub get
 
 gen:
-  (description): Generate code and format generated/owned Dart sources
+  (description): Chạy build_runner và format source do app sở hữu
   (scripts):
     - ./scripts/generate.sh
 
 format:
-  (description): Format application and test sources
+  (description): Format source app và test, không format submodule
   (scripts):
     - ./scripts/format.sh
 
 analyze:
-  (description): Run static analysis and architecture checks
+  (description): Chạy static analysis và kiểm tra boundary kiến trúc
   (scripts):
     - ./scripts/flutterw.sh analyze
     - ./scripts/check_architecture.sh
 
 test:
-  (description): Run the application test suite
+  (description): Chạy test suite của application
   (scripts):
     - ./scripts/flutterw.sh test
 
 quality:
-  (description): Run format verification, analysis, architecture, and tests
+  (description): Chạy format check, analyzer, architecture gate và test
   (scripts):
     - ./scripts/quality.sh
 
 run:
   local:
-    (description): Run the local environment
+    (description): Chạy config local trên native flavor dev
     (scripts):
-      - ./scripts/flutterw.sh run -t lib/main_local.dart
+      - ./scripts/flutterw.sh run --flavor dev -t lib/main_local.dart
   dev:
-    (description): Run the development environment
+    (description): Chạy môi trường development
     (scripts):
-      - ./scripts/flutterw.sh run -t lib/main_dev.dart
+      - ./scripts/flutterw.sh run --flavor dev -t lib/main_dev.dart
   staging:
-    (description): Run the staging environment
+    (description): Chạy môi trường staging
     (scripts):
-      - ./scripts/flutterw.sh run -t lib/main_staging.dart
+      - ./scripts/flutterw.sh run --flavor staging -t lib/main_staging.dart
   prod:
-    (description): Run the production environment
+    (description): Chạy môi trường production
     (scripts):
-      - ./scripts/flutterw.sh run -t lib/main_prod.dart
+      - ./scripts/flutterw.sh run --flavor prod -t lib/main_prod.dart
 
 build:
   apk:
-    (description): Build a production APK
+    (description): Build APK production local, không upload
     (scripts):
-      - ./scripts/flutterw.sh build apk -t lib/main_prod.dart
+      - ./scripts/flutterw.sh build apk --flavor prod -t lib/main_prod.dart
   appbundle:
-    (description): Build a production Android App Bundle
+    (description): Build Android App Bundle production local, không upload
     (scripts):
-      - ./scripts/flutterw.sh build appbundle -t lib/main_prod.dart
+      - ./scripts/flutterw.sh build appbundle --flavor prod -t lib/main_prod.dart
   ipa:
-    (description): Build a production iOS archive
+    (description): Build IPA production local, không upload
     (scripts):
-      - ./scripts/flutterw.sh build ipa -t lib/main_prod.dart
+      - ./scripts/flutterw.sh build ipa --flavor prod -t lib/main_prod.dart
+
+distribute:
+  android:
+    (description): Build và upload Android lên Firebase App Distribution
+    (scripts):
+      - ./build.sh distribute --platform android
+  ios:
+    (description): Build và upload iOS lên Firebase App Distribution
+    (scripts):
+      - ./build.sh distribute --platform ios
+  all:
+    (description): Build và upload Android rồi iOS lên Firebase App Distribution
+    (scripts):
+      - ./build.sh distribute --platform all
+
+release:
+  android:
+    (description): Upload Android production lên Google Play; cần --confirm-store
+    (scripts):
+      - ./build.sh store --platform android
+  ios:
+    (description): Upload iOS production lên TestFlight; cần --confirm-store
+    (scripts):
+      - ./build.sh store --platform ios

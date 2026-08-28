@@ -1,15 +1,15 @@
-# ADR 0006: Build the UI Toolkit Now and Defer Product Capabilities
+# ADR 0006: Xây UI Toolkit Trước và Hoãn Năng Lực Sản Phẩm
 
-- Status: Accepted
-- Date: 2026-08-26
+- Trạng thái: Accepted
+- Ngày: 2026-08-26
 
-## Decision
+## Quyết định
 
-Integrate `sli_common` as a real submodule and add a Shadcn-backed reusable component
-layer in the current modernization. Defer GraphQL, deep links, FCM, and advanced
-VIPER/AI integration.
+Tích hợp `sli_common` như submodule thật và thêm layer component tái sử dụng có
+Shadcn phía sau trong đợt modernization hiện tại. Hoãn GraphQL, deep links, FCM,
+và tích hợp VIPER/AI nâng cao.
 
-## Consequences
+## Hệ quả
 
-UI reuse and design consistency become part of the base foundation. Product-specific
-capabilities remain outside the critical migration path.
+Tái sử dụng UI và tính nhất quán thiết kế trở thành nền móng của base. Các năng
+lực phụ thuộc sản phẩm nằm ngoài đường migrate trọng yếu.

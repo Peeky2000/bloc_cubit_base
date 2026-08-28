@@ -1,15 +1,15 @@
-# ADR 0002: Use Cubit by Default and Support BLoC
+# ADR 0002: Dùng Cubit Mặc Định và Hỗ Trợ BLoC
 
-- Status: Accepted
-- Date: 2026-08-26
+- Trạng thái: Accepted
+- Ngày: 2026-08-26
 
-## Decision
+## Quyết định
 
-Use Cubit for most screens. Use classic BLoC for meaningful event concurrency,
-debouncing, multiple producers, or auditable event flows. Both depend on use cases and
-are factory-scoped.
+Dùng Cubit cho đa số màn hình. Dùng BLoC cổ điển khi event concurrency,
+debounce, nhiều producer, hoặc luồng event cần audit rõ thật sự cải thiện độ
+đúng. Cả hai đều phụ thuộc vào use case và được đăng ký theo factory scope.
 
-## Consequences
+## Hệ quả
 
-The common path stays compact without removing BLoC capabilities. Guides and templates
-must explain the selection rule and test both patterns.
+Đường đi phổ biến vẫn gọn mà không mất năng lực BLoC. Guide và template phải
+giải thích luật chọn lựa và test cả hai pattern.

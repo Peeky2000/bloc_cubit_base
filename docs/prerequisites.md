@@ -1,18 +1,25 @@
-# Project Prerequisites
+# Điều Kiện Dự Án
 
-Update this file whenever the base is forked or a foundational package changes.
+Cập nhật file này mỗi khi base được fork hoặc package nền tảng thay đổi.
 
 ## Toolchain
 
-- Flutter: pinned by `.fvmrc` (FVM is recommended, not required).
+- Flutter: pin bằng `.fvmrc` (khuyến nghị dùng FVM, không bắt buộc).
 - Dart SDK: `^3.10.0`.
 - Derry: `dart pub global activate derry`.
-- Git submodules: required for `lib/modules/sli_common`.
-- Platforms: Android and iOS.
+- Git submodules: bắt buộc cho `lib/modules/sli_common`.
+- Platforms: Android và iOS.
 
-Bootstrap a clone with `derry bootstrap`.
+Bootstrap một clone mới bằng `derry bootstrap`.
 
-## Structure and dependency direction
+Kiểm tra template identity/submodule trước khi tạo app bằng
+`derry base doctor`. Workflow create/rename luôn dry-run mặc định và được mô tả
+tại [hướng dẫn tạo app](guides/create-app-from-base.md).
+
+Danh mục command và ranh giới giữa build local/Firebase/Store nằm tại
+[hướng dẫn Derry và build](guides/use-derry-and-build.md).
+
+## Cấu trúc và chiều dependency
 
 ```text
 lib/presentation/  UI + Cubit/BLoC
@@ -22,45 +29,45 @@ lib/domain/        entities, repository contracts, use cases
 lib/data/          models, data sources, repository implementations
 
 lib/core/          application/infrastructure primitives
-lib/di/            injectable composition root and generated graph
+lib/di/            injectable composition root và generated graph
 ```
 
-Required flow: `Cubit/BLoC → UseCase → Repository → DataSource`.
-See [dependency rules](architecture/dependency-rules.md).
+Flow bắt buộc: `Cubit/BLoC → UseCase → Repository → DataSource`.
+Xem [quy tắc dependency](architecture/dependency-rules.md).
 
 ## Stack
 
-| Concern | Implementation |
+| Hạng mục | Triển khai |
 |---|---|
 | State | `flutter_bloc`, `BaseCubit`/`BaseBloc`, `BaseAppState`, Equatable |
 | DI | `get_it + injectable`, constructor injection, generated config |
 | HTTP | Dio, `ApiHandler` / `ApiClient` |
 | Models | `json_serializable` + `build_runner` |
-| Local settings | `shared_preferences` through data sources |
-| Secrets/tokens | `flutter_secure_storage` through `TokenProvider` |
+| Local settings | `shared_preferences` qua data sources |
+| Secrets/tokens | `flutter_secure_storage` qua `TokenProvider` |
 | Navigation | `SLIRouting`, `AppPage` |
 | Localization | Flutter gen-l10n, `lib/l10n/arb/` |
-| Network inspection | redacted Alice integration, non-production only |
-| Shared UI | `sli_common` Git submodule, Shadcn adapter |
+| Network inspection | Alice có redaction, chỉ ngoài production |
+| Shared UI | Git submodule `sli_common`, adapter Shadcn |
 
-Intentional defaults: no Freezed requirement, no HydratedBloc requirement, no
-`go_router`, no Retrofit, and REST rather than GraphQL. These can be added to a
-real product only after documenting the need and dependency boundaries.
+Mặc định có chủ ý: không bắt buộc Freezed, không bắt buộc HydratedBloc, không
+dùng `go_router`, không Retrofit, và ưu tiên REST thay vì GraphQL. Các phần này
+chỉ nên thêm vào sản phẩm thật sau khi đã ghi rõ nhu cầu và boundary dependency.
 
-## Runtime configuration
+## Cấu hình runtime
 
-Entrypoints are `lib/main_{local,dev,staging,prod}.dart`. Configuration comes
-from typed `AppConfig` and `--dart-define`, not asset-based `.env` files.
+Entrypoint là `lib/main_{local,dev,staging,prod}.dart`. Cấu hình lấy từ
+`AppConfig` có kiểu và `--dart-define`, không dùng file `.env` dạng asset.
 
-Common values:
+Giá trị thường dùng:
 
 - `API_BASE_URL`
 - `ENABLE_NETWORK_INSPECTOR`
 
-Never commit production credentials, API secrets, signing keys, provisioning
-profiles, or environment files containing secrets.
+Không commit production credential, API secret, signing key, provisioning
+profile, hoặc file môi trường chứa secret.
 
-## Quality commands
+## Lệnh kiểm tra chất lượng
 
 ```bash
 derry get
@@ -70,12 +77,11 @@ derry test
 derry quality
 ```
 
-Architecture boundaries are also enforced by
-`scripts/check_architecture.sh` and CI.
+Boundary kiến trúc còn được kiểm tra bởi `scripts/check_architecture.sh` và CI.
 
-## AI workflow
+## Quy trình AI
 
-Start from `/AGENTS.md` and `/ai-process.md`. Search existing artifacts with:
+Bắt đầu từ `/AGENTS.md` và `/ai-process.md`. Tìm artifact đã có bằng:
 
 ```bash
 python3 .agents/skills/app-memory/scripts/mem_search.py "<keyword>"

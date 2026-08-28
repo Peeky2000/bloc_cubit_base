@@ -1,18 +1,18 @@
-# AI Process — Flutter Base
+# Quy Trình AI — Flutter Base
 
-This repository treats architecture documentation and executable gates as one
-contract. Read [prerequisites](docs/prerequisites.md), the
-[architecture index](docs/architecture/README.md), and `project-convention`
-before planning or implementation.
+Repository này xem tài liệu kiến trúc và các quality gate chạy được như cùng
+một hợp đồng. Trước khi plan hoặc implement, hãy đọc
+[prerequisites](docs/prerequisites.md), [architecture index](docs/architecture/README.md),
+và `project-convention`.
 
-## Delivery flow
+## Luồng bàn giao
 
 ```text
-Brainstorm / Spec → user decision gate → implementation plan → implementation
-→ review → tests and architecture gates → status/docs update
+Brainstorm / Spec → cổng quyết định của user → implementation plan
+→ implementation → review → tests và architecture gates → cập nhật status/docs
 ```
 
-| Artifact | Path |
+| Artifact | Đường dẫn |
 |---|---|
 | Brainstorm | `docs/brainstorm/YYYY-MM-DD-{topic}.md` |
 | Frontend spec | `docs/specs/{NNN}-{name}/fe.md` |
@@ -21,43 +21,42 @@ Brainstorm / Spec → user decision gate → implementation plan → implementat
 | Review | `docs/reviews/YYYY-MM-DD-hh-mm-ss-{topic}.md` |
 | Architecture decision | `docs/adr/NNNN-{decision}.md` |
 
-Every implementation plan must contain exact paths, ownership, objective verify
-conditions, risks, out-of-scope items, and a Definition of Done.
+Mọi implementation plan phải có đường dẫn chính xác, owner, điều kiện verify
+khách quan, rủi ro, phần ngoài phạm vi, và Definition of Done.
 
-## Feature implementation order
+## Thứ tự implement feature
 
 ```text
 Entity → Model → DataSource → Repository interface/impl → UseCase
-→ Cubit or BLoC → Screen → Route → ARB → DI code generation → tests/docs
+→ Cubit hoặc BLoC → Screen → Route → ARB → DI code generation → tests/docs
 ```
 
-The order is dependency-aware, not permission to add layers a feature does not
-need. UI-only changes should remain UI-only.
+Thứ tự này dựa trên dependency, không phải giấy phép để thêm layer không cần
+thiết. Thay đổi chỉ liên quan UI thì giữ đúng phạm vi UI.
 
-## Technology decisions
+## Quyết định công nghệ
 
-| Concern | Standard |
+| Hạng mục | Chuẩn |
 |---|---|
-| State | Cubit default, BLoC supported; `BaseAppState + Equatable + copyWith` |
+| State | Cubit mặc định, hỗ trợ BLoC; `BaseAppState + Equatable + copyWith` |
 | DI | `get_it + injectable`, constructor injection |
-| HTTP | Dio through `ApiHandler`; REST default |
+| HTTP | Dio qua `ApiHandler`; REST mặc định |
 | Route | `SLIRouting`, `AppPage` |
-| i18n | Flutter gen-l10n and ARB |
-| Shared UI | `sli_common` public `Sli*` API; Shadcn behind the facade |
-| Environments | typed `AppEnvironment` + centralized `bootstrap()` |
+| i18n | Flutter gen-l10n và ARB |
+| Shared UI | API public `Sli*` của `sli_common`; Shadcn nằm sau facade |
+| Environments | `AppEnvironment` có kiểu + `bootstrap()` tập trung |
 
-## Implementation rules
+## Quy tắc implement
 
-1. Search app-memory and sibling code before creating artifacts.
-2. Keep domain pure; models and transport details remain in data.
-3. Inject dependencies through constructors. Resolve `getIt` only where an
-   object graph is composed, never inside Cubits, UseCases, repositories, or
-   data sources.
-4. API/data layers propagate typed failures and never navigate or show UI.
-5. Keep one-shot UI actions at the presentation boundary; widgets translate and
-   render user-facing messages.
-6. Add or update tests for behavior changed by the task.
-7. Update architecture, guide, skill, or ADR docs whenever a convention changes.
+1. Tìm trong app-memory và code tương tự trước khi tạo artifact mới.
+2. Giữ domain thuần; model và chi tiết transport nằm ở data.
+3. Inject dependency qua constructor. Chỉ resolve `getIt` tại nơi compose object
+   graph, không resolve trong Cubit, UseCase, repository, hoặc data source.
+4. API/data layer trả lỗi có kiểu và không navigate hoặc hiển thị UI.
+5. One-shot UI action nằm ở presentation boundary; widget chịu trách nhiệm dịch
+   và render message cho user.
+6. Thêm hoặc cập nhật test cho hành vi bị thay đổi.
+7. Cập nhật architecture, guide, skill, hoặc ADR khi convention thay đổi.
 
 ## Quality gates
 
@@ -66,14 +65,13 @@ derry gen
 derry quality
 ```
 
-If the repository already has analyzer debt, a change must introduce no compile
-errors and no new warnings. Record the baseline and remaining debt explicitly;
-never claim a clean gate when it is not clean.
+Nếu repository còn analyzer debt, thay đổi mới không được tạo compile error
+hoặc warning mới. Ghi rõ baseline và debt còn lại; không báo gate sạch nếu thực
+tế chưa sạch.
 
-## Forking the base
+## Fork base
 
-Follow [create-app-from-base](docs/guides/create-app-from-base.md). At minimum,
-change Dart/native identifiers, environment URLs, Firebase files, branding,
-signing configuration, and example product features. Preserve the architecture
-gates, docs, and `sli_common` submodule unless the new project intentionally
-chooses alternatives and records an ADR.
+Làm theo [create-app-from-base](docs/guides/create-app-from-base.md). Tối thiểu
+phải đổi Dart/native identifiers, URL môi trường, file Firebase, branding,
+signing configuration, và feature ví dụ. Giữ architecture gates, docs, và
+submodule `sli_common` trừ khi project mới chủ động chọn hướng khác và ghi ADR.

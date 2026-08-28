@@ -1,14 +1,14 @@
-# Add an Environment
+# Thêm Môi Trường
 
-1. Add a value to `AppEnvironment` only if it has a distinct deployment/config
-   lifecycle—not merely a different developer URL.
-2. Define defaults and validation in `lib/core/app/app_config.dart`.
-3. Add a minimal `lib/main_<environment>.dart` that only selects the environment
-   and calls `bootstrap()`.
-4. Add matching Derry run/build commands and CI/release ownership if applicable.
-5. Add Firebase/native configuration outside source control where secrets or
-   signing material are involved.
-6. Test invalid URL, production HTTPS, and inspector restrictions.
+1. Chỉ thêm value vào `AppEnvironment` nếu nó có lifecycle deploy/config riêng,
+   không chỉ là URL dev khác.
+2. Định nghĩa default và validation trong `lib/core/app/app_config.dart`.
+3. Thêm `lib/main_<environment>.dart` tối giản, chỉ chọn environment và gọi
+   `bootstrap()`.
+4. Thêm lệnh Derry run/build tương ứng và owner CI/release nếu cần.
+5. Đặt cấu hình Firebase/native ngoài source control khi có secret hoặc signing
+   material.
+6. Test URL không hợp lệ, production HTTPS, và ràng buộc inspector.
 
-Use `--dart-define` for runtime values. Do not add asset `.env` files or read
-configuration ad hoc from Widgets, Cubits, repositories, or data sources.
+Dùng `--dart-define` cho giá trị runtime. Không thêm asset `.env` hoặc đọc cấu
+hình tùy tiện từ Widget, Cubit, repository, hoặc data source.

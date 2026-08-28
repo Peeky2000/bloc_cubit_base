@@ -1,21 +1,22 @@
-# Base Modernization Baseline
+# Baseline Trước Modernization
 
-Date: 2026-08-26
+Ngày: 2026-08-26
 
 ## Commands
 
-- `flutter pub get`: passed; lockfile resolved with Flutter 3.44.5 / Dart 3.12.2.
-- `flutter analyze`: failed with 162 issues.
-- `flutter test`: not reached because the chained analyze command failed.
+- `flutter pub get`: pass; lockfile resolve với Flutter 3.44.5 / Dart 3.12.2.
+- `flutter analyze`: fail với 162 issues.
+- `flutter test`: chưa chạy tới vì command analyze trong chuỗi đã fail.
 
-## Main existing issue groups
+## Nhóm issue có sẵn chính
 
-- Invalid legacy package identifier `bloc_cubit_base` and product-specific naming.
-- Missing `.env` asset and mutable string-keyed environment configuration.
-- Deprecated Flutter APIs and legacy naming lints.
-- Manual service-locator access throughout presentation and network interceptors.
-- Domain-to-data and presentation-to-data boundary violations.
-- Empty embedded `lib/modules/sli_common` tree instead of a Git submodule.
+- Package identifier legacy `bloc_cubit_base` không hợp lệ và naming phụ thuộc
+  sản phẩm.
+- Thiếu asset `.env` và cấu hình môi trường mutable dùng string key.
+- Flutter API deprecated và lint naming legacy.
+- Service-locator access thủ công trong presentation và network interceptor.
+- Vi phạm boundary domain-to-data và presentation-to-data.
+- Cây `lib/modules/sli_common` nhúng rỗng thay vì Git submodule.
 
-This file records pre-migration debt. New work must reduce the count and must not hide
-issues through analyzer exclusions or disabled lint rules.
+File này ghi lại debt trước migration. Work mới phải giảm số lượng issue và
+không được che issue bằng analyzer exclusion hoặc tắt lint rule.

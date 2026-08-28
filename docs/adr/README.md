@@ -1,11 +1,13 @@
-# Architecture Decision Records
+# Bản Ghi Quyết Định Kiến Trúc
 
-ADRs capture decisions that affect more than one feature. Records are immutable after
-acceptance; supersede them with a new ADR instead of rewriting history.
+ADR ghi lại các quyết định ảnh hưởng nhiều hơn một feature. Sau khi accepted,
+record được xem là bất biến; nếu cần thay đổi, tạo ADR mới để supersede thay vì
+viết lại lịch sử.
 
-- [0001 — GetIt with Injectable](0001-get-it-injectable.md)
-- [0002 — Cubit by default, BLoC when needed](0002-cubit-default-bloc-supported.md)
-- [0003 — Equatable application state](0003-equatable-state.md)
-- [0004 — REST by default](0004-rest-default.md)
-- [0005 — Keep SLIRouting](0005-keep-sli-routing.md)
-- [0006 — Build the UI toolkit now and defer product capabilities](0006-ui-toolkit-now-defer-product-capabilities.md)
+- [0001 — GetIt với Injectable](0001-get-it-injectable.md)
+- [0002 — Cubit mặc định, BLoC khi cần](0002-cubit-default-bloc-supported.md)
+- [0003 — Application state bằng Equatable](0003-equatable-state.md)
+- [0004 — REST mặc định](0004-rest-default.md)
+- [0005 — Giữ SLIRouting](0005-keep-sli-routing.md)
+- [0006 — Xây UI toolkit trước và hoãn năng lực sản phẩm](0006-ui-toolkit-now-defer-product-capabilities.md)
+- [0007 — Dart Base CLI phía sau Derry facade](0007-dart-base-cli-behind-derry.md)

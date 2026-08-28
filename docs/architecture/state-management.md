@@ -1,24 +1,24 @@
-# State Management
+# Quản Lý State
 
-## Default choice
+## Lựa chọn mặc định
 
-Use Cubit for command-oriented screen state. Use classic BLoC when event identity,
-event concurrency, debounce/restartable behavior, multiple event sources, or an audit
-trail materially improves correctness.
+Dùng Cubit cho screen state theo command. Dùng BLoC cổ điển khi danh tính event,
+event concurrency, debounce/restartable behavior, nhiều nguồn event, hoặc audit
+trail thật sự cải thiện correctness.
 
-Both styles are first-class and use constructor-injected use cases.
+Cả hai style đều là first-class và dùng use case inject qua constructor.
 
-## State shape
+## Hình dạng state
 
-- Keep `BaseAppState + Equatable + copyWith`.
-- State is immutable.
-- Loading and failures are typed; do not use `dynamic` state errors.
-- UI-only one-shot effects must be explicit presentation output, not navigation or
-  dialogs called from a Cubit/BLoC.
-- Do not introduce Freezed or HydratedBloc by default.
+- Giữ `BaseAppState + Equatable + copyWith`.
+- State là immutable.
+- Loading và failure có kiểu rõ; không dùng `dynamic` cho lỗi state.
+- UI-only one-shot effect phải là output tường minh ở presentation, không phải
+  navigation hoặc dialog gọi từ Cubit/BLoC.
+- Không đưa Freezed hoặc HydratedBloc vào mặc định.
 
 ## Lifetime
 
-- Feature Cubits/BLoCs are factories and are closed by `BlocProvider`.
-- App-scope state is allowed only for genuine app-scope concerns such as locale or
+- Feature Cubit/BLoC là factory và được `BlocProvider` close.
+- App-scope state chỉ dùng cho concern thật sự thuộc app-scope như locale hoặc
   session status.

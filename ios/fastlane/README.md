@@ -1,17 +1,17 @@
-fastlane documentation
+Tài liệu fastlane
 ----
 
-# Installation
+# Cài đặt
 
-Make sure you have the latest version of the Xcode command line tools installed:
+Đảm bảo máy đã cài phiên bản mới nhất của Xcode command line tools:
 
 ```sh
 xcode-select --install
 ```
 
-For _fastlane_ installation instructions, see [Installing _fastlane_](https://docs.fastlane.tools/#installing-fastlane)
+Hướng dẫn cài _fastlane_: [Installing _fastlane_](https://docs.fastlane.tools/#installing-fastlane)
 
-# Available Actions
+# Actions có sẵn
 
 ## iOS
 
@@ -21,7 +21,7 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 [bundle exec] fastlane ios build_dev_debug
 ```
 
-Build environment=dev and flavor=debug
+Biên dịch với environment=dev và flavor=debug.
 
 ### ios build_prod_release
 
@@ -29,7 +29,7 @@ Build environment=dev and flavor=debug
 [bundle exec] fastlane ios build_prod_release
 ```
 
-Build environment=prod and flavor=release
+Biên dịch với environment=prod và flavor=release.
 
 ### ios reset
 
@@ -37,7 +37,7 @@ Build environment=prod and flavor=release
 [bundle exec] fastlane ios reset
 ```
 
-Build and upload store IOS
+Biên dịch và upload iOS store.
 
 ### ios build_store
 
@@ -45,12 +45,13 @@ Build and upload store IOS
 [bundle exec] fastlane ios build_store
 ```
 
-Build and upload store IOS
+Biên dịch và upload iOS store.
 
 ----
 
-This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.
+README.md này được auto-generate và sẽ được sinh lại mỗi khi chạy
+[_fastlane_](https://fastlane.tools).
 
-More information about _fastlane_ can be found on [fastlane.tools](https://fastlane.tools).
+Thông tin thêm về _fastlane_ có tại [fastlane.tools](https://fastlane.tools).
 
-The documentation of _fastlane_ can be found on [docs.fastlane.tools](https://docs.fastlane.tools).
+Tài liệu _fastlane_ có tại [docs.fastlane.tools](https://docs.fastlane.tools).

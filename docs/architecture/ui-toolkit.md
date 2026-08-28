@@ -1,20 +1,39 @@
 # UI Toolkit
 
-`sli_common` is the personal reusable UI toolkit and is mounted as the Git submodule
-`lib/modules/sli_common`.
+`sli_common` là UI toolkit cá nhân có thể tái sử dụng và được mount làm Git
+submodule tại `lib/modules/sli_common`.
 
-## Placement
+## Vị trí đặt code
 
-| Scope | Location |
+| Phạm vi | Vị trí |
 |---|---|
-| Cross-application component, utility, or design token | `sli_common` |
-| Application-branded composition | `lib/core/widget` or `lib/widget` |
-| Feature-only widget | `lib/presentation/<feature>/view` |
+| Component, utility, hoặc design token dùng chéo app | `sli_common` |
+| Composition có branding của app | `lib/core/widget` hoặc `lib/widget` |
+| Widget chỉ dùng trong một feature | `lib/presentation/<feature>/view` |
 
-Shadcn Flutter is an implementation detail behind stable `Sli*` wrappers. Application
-code should not spread direct Shadcn imports; a documented escape hatch is acceptable
-for one-off experiments. Public components define variants, loading/disabled/error
-states, semantics, light/dark behavior, and migration compatibility.
+Shadcn Flutter là chi tiết triển khai phía sau wrapper `Sli*` ổn định. App code
+không nên rải direct Shadcn import; escape hatch có tài liệu là chấp nhận được
+cho thử nghiệm một lần. Public component phải định nghĩa variants,
+loading/disabled/error states, semantics, light/dark behavior, và compatibility
+khi migrate.
 
-Legacy components move gradually through adapters and deprecation notices. Never copy
-the same component into both repositories.
+Component legacy được chuyển dần qua adapter và deprecation notice. Không copy
+cùng một component vào cả hai repository.
+
+## Catalog là gate trước migration
+
+Public API được tra từ `sli_common/README.md` và `sli_common/docs/catalog`.
+Mỗi export phải có category và maturity (`stable`, `legacy`, `experimental`,
+`deprecated`). Component stable cần usage, runnable example, behavior/semantics
+test và preview/golden phù hợp.
+
+Migration theo flow:
+
+```text
+inventory → behavior matrix → stable Sli* contract → tests/preview
+          → compatibility adapter → deprecation → migrate caller
+```
+
+`base_flutter_project_v2`, `/Work/commons` và design-system-mobile chỉ là nguồn
+tham khảo anatomy/variant/token. Không copy nguyên product dependency, DI,
+branding hoặc Figma draft vào toolkit.

@@ -1,14 +1,15 @@
-# ADR 0003: Keep Equatable Application State
+# ADR 0003: Giữ State Ứng Dụng Bằng Equatable
 
-- Status: Accepted
-- Date: 2026-08-26
+- Trạng thái: Accepted
+- Ngày: 2026-08-26
 
-## Decision
+## Quyết định
 
-Keep immutable `BaseAppState`, Equatable, and manual `copyWith`. Do not migrate default
-state classes to Freezed or HydratedBloc.
+Giữ `BaseAppState` immutable, Equatable, và `copyWith` thủ công. Không migrate
+state mặc định sang Freezed hoặc HydratedBloc.
 
-## Consequences
+## Hệ quả
 
-State remains explicit and generator-light. Review and tests must enforce immutable
-fields, complete `props`, and unambiguous `copyWith` nullable-field behavior.
+State vẫn tường minh và ít phụ thuộc generator. Review và test phải đảm bảo
+field immutable, `props` đầy đủ, và hành vi `copyWith` với nullable field không
+mơ hồ.

@@ -1,20 +1,20 @@
-# Architecture
+# Kiến Trúc
 
-`bloc_cubit_base` is a reusable Flutter application base built around Clean
-Architecture. This directory is the source of truth for structural decisions; code,
-tests, automation, and `.agents` instructions must agree with it.
+`bloc_cubit_base` là base Flutter tái sử dụng, xây quanh Clean Architecture.
+Thư mục này là source of truth cho các quyết định cấu trúc; code, tests,
+automation, và hướng dẫn `.agents` phải thống nhất với nó.
 
-## Core decisions
+## Quyết định lõi
 
-- [Dependency rules](dependency-rules.md)
+- [Quy tắc dependency](dependency-rules.md)
 - [Dependency injection](dependency-injection.md)
-- [State management](state-management.md)
-- [Environment and bootstrap](environment-bootstrap.md)
+- [Quản lý state](state-management.md)
+- [Môi trường và bootstrap](environment-bootstrap.md)
 - [Networking](networking.md)
 - [UI toolkit](ui-toolkit.md)
-- [Optional capabilities](optional-capabilities.md)
+- [Năng lực tùy chọn](optional-capabilities.md)
 
-## Dependency flow
+## Chiều dependency
 
 ```text
 presentation -> domain <- data
@@ -22,11 +22,12 @@ presentation -> domain <- data
       +---------- core -----+
 ```
 
-Feature flow is `UI -> Cubit/BLoC -> UseCase -> Repository -> DataSource`.
-Composition happens only in `lib/di`. Runtime infrastructure may depend on `core`
-contracts, but domain code never imports data or presentation code.
+Flow feature là `UI -> Cubit/BLoC -> UseCase -> Repository -> DataSource`.
+Composition chỉ diễn ra trong `lib/di`. Runtime infrastructure có thể phụ thuộc
+contract trong `core`, nhưng domain code không bao giờ import data hoặc
+presentation code.
 
-## Decision records
+## Bản ghi quyết định
 
-See [`docs/adr`](../adr/README.md). A behavior-changing architecture decision requires
-an ADR before implementation.
+Xem [`docs/adr`](../adr/README.md). Quyết định kiến trúc làm thay đổi hành vi
+cần có ADR trước khi implement.

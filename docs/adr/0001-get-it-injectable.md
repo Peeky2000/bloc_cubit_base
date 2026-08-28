@@ -1,15 +1,17 @@
-# ADR 0001: Use GetIt with Injectable
+# ADR 0001: Dùng GetIt với Injectable
 
-- Status: Accepted
-- Date: 2026-08-26
+- Trạng thái: Accepted
+- Ngày: 2026-08-26
 
-## Decision
+## Quyết định
 
-Use GetIt as the container and Injectable to generate owned-class registrations.
-Runtime environment selection and external SDK providers remain explicit at the
-composition root. All feature dependencies use constructor injection.
+Dùng GetIt làm container runtime và Injectable để sinh registration cho các class
+thuộc quyền sở hữu của app. Việc chọn runtime environment và provider SDK bên
+ngoài vẫn khai báo tường minh tại composition root. Mọi dependency của feature
+được inject qua constructor.
 
-## Consequences
+## Hệ quả
 
-Registration drift and large manual setup methods are removed. Generated code becomes
-part of the build pipeline, so code generation and graph-resolution tests are required.
+Loại bỏ registration drift và các hàm setup thủ công quá lớn. Generated code
+trở thành một phần của build pipeline, nên cần code generation và test giải
+quyết object graph.

@@ -1,24 +1,25 @@
-# Dependency Rules
+# Quy Tắc Dependency
 
 ## Layers
 
-| Layer | Owns | May import |
+| Layer | Sở hữu | Được import |
 |---|---|---|
-| `domain` | entities, repository contracts, use cases, domain failures | Dart and domain only |
-| `data` | JSON models, data sources, repository implementations | domain, infrastructure-safe core |
-| `presentation` | screens, Cubits/BLoCs, UI effects | domain, presentation-safe core |
-| `core` | cross-cutting contracts and framework adapters | no feature implementation |
-| `di` | composition root | every layer |
+| `domain` | entities, repository contracts, use cases, domain failures | Chỉ Dart và domain |
+| `data` | JSON models, data sources, repository implementations | domain, core an toàn cho infrastructure |
+| `presentation` | screens, Cubits/BLoCs, UI effects | domain, core an toàn cho presentation |
+| `core` | contract dùng chung và adapter framework | không chứa feature implementation |
+| `di` | composition root | mọi layer |
 
-## Mandatory rules
+## Quy tắc bắt buộc
 
-1. Widgets never call APIs, repositories, or data sources.
-2. Cubits and BLoCs call use cases, not repositories or data sources.
-3. Domain never imports `data`, Flutter widgets, Dio, Firebase, or GetIt.
-4. Presentation never imports concrete data models when a domain type can express the
+1. Widget không bao giờ gọi API, repository, hoặc data source.
+2. Cubit và BLoC gọi use case, không gọi repository hoặc data source.
+3. Domain không bao giờ import `data`, Flutter widget, Dio, Firebase, hoặc GetIt.
+4. Presentation không import data model cụ thể khi domain type đã diễn đạt được
    contract.
-5. Classes receive dependencies through constructors. `getIt` is allowed only in the
-   composition root and route/widget provider factories.
-6. External package setup belongs in Injectable modules, not feature classes.
+5. Class nhận dependency qua constructor. `getIt` chỉ được dùng ở composition
+   root và factory tạo route/widget provider.
+6. Setup external package nằm trong Injectable module, không nằm trong feature
+   class.
 
-These rules are enforced by review and `scripts/check_architecture.sh`.
+Các quy tắc này được enforce bằng review và `scripts/check_architecture.sh`.

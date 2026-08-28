@@ -1,19 +1,19 @@
-# Choose Cubit or BLoC
+# Chọn Cubit Hay BLoC
 
-Use the smallest state machine that makes behavior explicit.
+Dùng state machine nhỏ nhất nhưng vẫn làm hành vi đủ tường minh.
 
-| Signal | Cubit | Classic BLoC |
+| Tín hiệu | Cubit | BLoC cổ điển |
 |---|---:|---:|
-| Button/form methods and linear async flow | ✓ | |
-| A few commands from one screen | ✓ | |
-| Named events from several producers | | ✓ |
+| Method cho button/form và async flow tuyến tính | ✓ | |
+| Một vài command từ một màn hình | ✓ | |
+| Named event từ nhiều producer | | ✓ |
 | Debounce, restartable, droppable, sequential semantics | | ✓ |
-| Audit/replay vocabulary matters | | ✓ |
-| Simple CRUD screen | ✓ | |
+| Audit/replay vocabulary quan trọng | | ✓ |
+| Màn hình CRUD đơn giản | ✓ | |
 
-Both extend the base primitives, receive UseCases through constructors, emit
-immutable Equatable state, and remain independent of BuildContext/navigation.
+Cả hai đều extend base primitive, nhận UseCase qua constructor, emit state
+Equatable immutable, và độc lập với BuildContext/navigation.
 
-Do not choose BLoC because it looks more “enterprise,” and do not force Cubit
-when concurrent events would otherwise require fragile flags. Record the reason
-in the feature spec or a short code comment when it is not obvious.
+Không chọn BLoC chỉ vì trông “enterprise” hơn, và không ép dùng Cubit khi event
+concurrent sẽ buộc phải dùng flag mong manh. Ghi lý do trong feature spec hoặc
+comment ngắn trong code khi lựa chọn không hiển nhiên.

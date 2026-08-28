@@ -1,19 +1,20 @@
 # Dependency Injection
 
-The base uses `get_it` as the runtime container and `injectable` as the registration
-generator.
+Base dùng `get_it` làm container runtime và `injectable` làm generator cho
+registration.
 
-## Rules
+## Quy tắc
 
-- Add `@injectable`, `@lazySingleton`, or `@singleton` to owned classes.
-- Bind repository/data-source implementations to their abstract contract with
+- Thêm `@injectable`, `@lazySingleton`, hoặc `@singleton` cho class do app sở
+  hữu.
+- Bind repository/data-source implementation vào abstract contract bằng
   `@LazySingleton(as: Contract)`.
-- Cubits and BLoCs are factories (`@injectable`) unless application lifetime is an
-  explicit ADR decision.
-- Use `@module` for SDK classes, plugins, async initialization, and factories that need
+- Cubit và BLoC là factory (`@injectable`) trừ khi application lifetime được
+  quyết định rõ bằng ADR.
+- Dùng `@module` cho SDK class, plugin, async initialization, và factory cần
   runtime configuration.
-- A feature class must never call `Injector.getIt`.
-- Entry points may pass the selected environment to the composition root. This is the
-  only intentional runtime registration.
+- Feature class không được gọi `Injector.getIt`.
+- Entry point có thể truyền environment được chọn vào composition root. Đây là
+  runtime registration có chủ ý duy nhất.
 
-Generate registrations with `derry gen` or `dart run build_runner build`.
+Sinh registration bằng `derry gen` hoặc `dart run build_runner build`.

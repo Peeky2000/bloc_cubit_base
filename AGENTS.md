@@ -1,8 +1,8 @@
 # AI Agents — Flutter Base Template
 
-## Start
+## Bắt đầu
 
-Read these sources in order before changing code:
+Đọc các nguồn sau theo đúng thứ tự trước khi thay đổi code:
 
 1. [ai-process.md](ai-process.md)
 2. [docs/prerequisites.md](docs/prerequisites.md)
@@ -18,25 +18,25 @@ Read these sources in order before changing code:
 | Reviewer | `@.agents/agents/reviewer.md` |
 | Quick fix | `@.agents/agents/flutter-engineer.md` |
 
-Search indexed project artifacts before creating a duplicate:
+Tìm artifact đã được index trước khi tạo bản trùng:
 
 ```bash
 python3 .agents/skills/app-memory/scripts/mem_search.py "auth"
 ```
 
-## Non-negotiable rules
+## Quy tắc không thoả hiệp
 
-- Layer order: Entity → Model → DataSource → Repository → UseCase → Cubit/BLoC
+- Thứ tự layer: Entity → Model → DataSource → Repository → UseCase → Cubit/BLoC
   → Screen → Route → l10n → generated DI.
-- Dependency direction: presentation → domain ← data. Domain has no Flutter,
-  data, presentation, service-locator, or UI dependencies.
-- Classes receive dependencies through constructors. Only composition roots
-  resolve from `getIt` (`bootstrap`, route/screen builders, DI modules).
-- Use `@injectable` for feature Cubits/BLoCs, `@lazySingleton` for stateless
-  services, and interface bindings such as `@LazySingleton(as: AuthRepo)`.
-- Never edit `lib/di/injection.config.dart`; run `derry gen`.
-- Cubit is the default. Choose BLoC only when named events, event transformers,
-  or concurrency semantics provide concrete value.
-- Reuse `sli_common` before adding app-local reusable widgets. Import its stable
-  API; do not spread direct `shadcn_flutter` imports through the app.
-- Run `derry quality` and report pre-existing debt separately from regressions.
+- Chiều dependency: presentation → domain ← data. Domain không phụ thuộc
+  Flutter, data, presentation, service locator, hoặc UI.
+- Class nhận dependency qua constructor. Chỉ composition root mới resolve từ
+  `getIt` (`bootstrap`, route/screen builder, DI module).
+- Dùng `@injectable` cho feature Cubit/BLoC, `@lazySingleton` cho service không
+  giữ state, và binding interface như `@LazySingleton(as: AuthRepo)`.
+- Không sửa `lib/di/injection.config.dart`; chạy `derry gen`.
+- Cubit là mặc định. Chỉ chọn BLoC khi named event, event transformer, hoặc
+  concurrency semantic mang lại giá trị cụ thể.
+- Tái sử dụng `sli_common` trước khi thêm reusable widget trong app. Import API
+  ổn định của nó; không rải direct `shadcn_flutter` import khắp app.
+- Chạy `derry quality` và báo debt có sẵn tách biệt với regression mới.

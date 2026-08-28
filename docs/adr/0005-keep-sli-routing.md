@@ -1,14 +1,15 @@
-# ADR 0005: Keep SLIRouting
+# ADR 0005: Giữ SLIRouting
 
-- Status: Accepted
-- Date: 2026-08-26
+- Trạng thái: Accepted
+- Ngày: 2026-08-26
 
-## Decision
+## Quyết định
 
-Keep the existing `SLIRouting`, `AppPage`, and `SLIPage` navigation stack during this
-modernization.
+Giữ stack navigation hiện có gồm `SLIRouting`, `AppPage`, và `SLIPage` trong
+đợt modernization này.
 
-## Consequences
+## Hệ quả
 
-Navigation migration is not coupled to architecture cleanup. State managers still must
-not navigate directly; presentation consumes explicit effects and invokes routing.
+Việc migrate navigation không bị trộn vào cleanup kiến trúc. State manager vẫn
+không được navigate trực tiếp; presentation nhận effect tường minh và gọi
+routing.

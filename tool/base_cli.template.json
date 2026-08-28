@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "dartPackage": "bloc_cubit_base",
+  "androidApplicationId": "com.giaohang247",
+  "iosBundleId": "com.giaohang247",
+  "displayName": "Giaohang247",
+  "legacyBrandTokens": [
+    "Giao Hàng 247",
+    "DeliveryGo",
+    "mOrder"
+  ]
+}

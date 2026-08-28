@@ -90,14 +90,9 @@ class ApiClient implements ApiHandler {
   }
 
   void init() {
-    _dio = Dio(
-      BaseOptions(
-        followRedirects: false,
-        baseUrl: baseUrlWithFormat,
-        connectTimeout: const Duration(seconds: 30),
-        receiveTimeout: const Duration(seconds: 30),
-        sendTimeout: const Duration(seconds: 30),
-      ),
+    _dio = Dio(_baseOptions());
+    final sessionClient = Dio(
+      _baseOptions(headers: const {'Content-Type': 'application/json'}),
     );
     _dio.interceptors.addAll([
       NetworkInterceptor(networkChecker),
@@ -106,9 +101,21 @@ class ApiClient implements ApiHandler {
         baseUrl: baseUrlWithFormat,
         tokenProvider: tokenProvider,
         onSessionExpired: tokenProvider.clearToken,
+        sessionClient: sessionClient,
       ),
       ?networkInspector.interceptor,
     ]);
+  }
+
+  BaseOptions _baseOptions({Map<String, dynamic>? headers}) {
+    return BaseOptions(
+      followRedirects: false,
+      baseUrl: baseUrlWithFormat,
+      connectTimeout: const Duration(seconds: 30),
+      receiveTimeout: const Duration(seconds: 30),
+      sendTimeout: const Duration(seconds: 30),
+      headers: headers,
+    );
   }
 
   @override

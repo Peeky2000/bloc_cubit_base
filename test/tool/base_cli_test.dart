@@ -103,6 +103,13 @@ void main() {
     );
     expect(
       File(
+        '${fixture.path}/ios/Runner.xcodeproj/project.pbxproj',
+      ).readAsStringSync(),
+      contains('APP_DISPLAY_NAME = "Example App";'),
+      reason: 'PBX values containing spaces must always stay quoted.',
+    );
+    expect(
+      File(
         '${fixture.path}/lib/modules/sli_common/pubspec.yaml',
       ).readAsStringSync(),
       contains('package:old_app/'),
@@ -118,6 +125,11 @@ void main() {
         File('${fixture.path}/scripts/executable.sh').statSync().mode & 0x49,
         isNot(0),
         reason: 'Atomic replacement must preserve executable permission bits.',
+      );
+      expect(
+        File('${sandbox.path}/outside/outside.dart').readAsStringSync(),
+        contains('package:old_app/'),
+        reason: 'Scanner must never follow a symlink outside the repository.',
       );
     }
   });
@@ -231,9 +243,14 @@ android {
   write('scripts/executable.sh', '#!/bin/sh\n# package:old_app/example.dart\n');
   if (!Platform.isWindows) {
     Process.runSync('chmod', ['755', '$root/scripts/executable.sh']);
+    final outside = File('${Directory(root).parent.path}/outside/outside.dart');
+    outside.parent.createSync(recursive: true);
+    outside.writeAsStringSync('// package:old_app/outside.dart\n');
+    Link('$root/lib/external_link').createSync(outside.parent.path);
   }
   write('ios/Runner.xcodeproj/project.pbxproj', '''
 APP_DISPLAY_NAME = "Old App Dev";
+APP_DISPLAY_NAME = Old App;
 PRODUCT_BUNDLE_IDENTIFIER = com.old.app;
 ''');
   write(

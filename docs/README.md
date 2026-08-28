@@ -21,7 +21,7 @@ không cần đọc tất cả ngay; hãy chọn đúng mục tiêu trong bảng
 | Phân phối Firebase hoặc Store | [Derry/build/Fastlane](guides/use-derry-and-build.md) → [Android Fastlane](../android/fastlane/README.md) / [iOS Fastlane](../ios/fastlane/README.md) |
 | Xem vì sao chọn công nghệ hiện tại | [Danh sách ADR](adr/README.md) |
 | Xem việc đã làm và việc còn lại | [Trạng thái modernization](modernization-status.md) → [roadmap](plan/2026-08-26-base-modernization.md) |
-| Xem bằng chứng review/quality gate | [Review mới nhất](reviews/2026-08-27-base-modernization-review.md) |
+| Xem bằng chứng review/quality gate | [Review mới nhất](reviews/2026-08-28-component-catalog-base-cli-review.md) |
 | Làm việc cùng AI agent | [Quy trình AI](../ai-process.md) → [AGENTS.md](../AGENTS.md) |
 
 ## Lộ trình onboarding khuyến nghị
@@ -102,6 +102,7 @@ trong cùng thay đổi.
 | Chọn Cubit hay BLoC | [choose-cubit-or-bloc.md](guides/choose-cubit-or-bloc.md) |
 | Thêm environment/flavor | [add-environment.md](guides/add-environment.md) |
 | Dùng UI toolkit cá nhân | [use-sli-common.md](guides/use-sli-common.md) |
+| Tra hình/API/maturity của component | [`sli_common` catalog](../lib/modules/sli_common/docs/catalog/README.md) |
 | Dùng Derry, build và delivery | [use-derry-and-build.md](guides/use-derry-and-build.md) |
 
 ## Mục lục quyết định kiến trúc
@@ -123,6 +124,7 @@ trong cùng thay đổi.
 | [Baseline review](reviews/2026-08-26-base-modernization-baseline.md) | Trạng thái trước modernization |
 | [Roadmap modernization](plan/2026-08-26-base-modernization.md) | Checklist tổng và Definition of Done |
 | [Review modernization mới nhất](reviews/2026-08-27-base-modernization-review.md) | Evidence, quality gate và follow-up đã xác minh |
+| [Review catalog + Base CLI](reviews/2026-08-28-component-catalog-base-cli-review.md) | Evidence inventory, safety gates và create smoke test |
 | [Trạng thái modernization](modernization-status.md) | Bản tóm tắt sống về phần đã xong/chưa xong |
 | [Brainstorm Derry/build](brainstorm/2026-08-27-derry-build-automation.md) | Lý do tách build, distribute và release |
 | [Brainstorm component catalog](brainstorm/2026-08-28-ui-component-catalog-and-migration.md) | Inventory baseline và lý do phải catalog trước khi migrate widget |

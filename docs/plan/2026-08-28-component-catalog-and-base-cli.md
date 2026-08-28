@@ -58,51 +58,51 @@ validation trước mutation.
 
 ## Phase 1 — Chính thức hóa và inventory
 
-- [ ] **[docs/plan]** *(coder)* — Đưa catalog-before-migration và Dart Base
+- [x] **[docs/plan]** *(coder)* — Đưa catalog-before-migration và Dart Base
   CLI/Derry/dry-run/validation vào roadmap chính. **Verify:** roadmap, ADR,
   status và mục lục link qua lại, không còn task create/rename mơ hồ.
-- [ ] **[sli_common/docs/catalog]** *(coder)* — Lập inventory cho toàn bộ public
+- [x] **[sli_common/docs/catalog]** *(coder)* — Lập inventory cho toàn bộ public
   export theo category và maturity, chỉ rõ stable surface với legacy surface.
   **Verify:** mọi export trong `lib/sli_common.dart` xuất hiện trong inventory.
 
 ## Phase 2 — Catalog skeleton và BottomSheet pilot
 
-- [ ] **[sli_common/README.md]** *(coder)* — Biến README thành quick-start và
+- [x] **[sli_common/README.md]** *(coder)* — Biến README thành quick-start và
   quick gallery có status, ảnh và link usage. **Verify:** người mới tìm được
   button, surface và bottom sheet mà không đọc source.
-- [ ] **[sli_common/docs/catalog]** *(coder)* — Thêm template component cùng
+- [x] **[sli_common/docs/catalog]** *(coder)* — Thêm template component cùng
   tài liệu cho `SliButton`, `SliSurface` và legacy `BottomSheetWidget`.
   **Verify:** mỗi trang có when-to-use, API, example, status, source và test.
-- [ ] **[sli_common/example]** *(coder)* — Mở rộng example thành showroom tối
+- [x] **[sli_common/example]** *(coder)* — Mở rộng example thành showroom tối
   thiểu cho ba component pilot. **Verify:** example analyze và render được.
-- [ ] **[sli_common/test]** *(coder)* — Thêm preview/golden hoặc widget coverage
+- [x] **[sli_common/test]** *(coder)* — Thêm preview/golden hoặc widget coverage
   tái tạo ảnh catalog. **Verify:** test pass; ảnh preview được tạo từ code thật.
 
 ## Phase 3 — Dart Base CLI và Derry facade
 
-- [ ] **[tool/base_cli.dart]** *(coder)* — Implement parser/validator/planner cho
+- [x] **[tool/base_cli.dart]** *(coder)* — Implement parser/validator/planner cho
   `doctor`, `rename`, `create`; giữ dry-run mặc định và chỉ mutate với `--apply`.
   **Verify:** invalid identifiers, destination collision và incomplete template
   fail trước mutation.
-- [ ] **[derry.yaml]** *(coder)* — Expose `derry base`, `derry create` và
+- [x] **[derry.yaml]** *(coder)* — Expose `derry base`, `derry create` và
   `derry rename` như facade mỏng. **Verify:** help/dry-run forward đầy đủ
   argument và không duplicate replacement logic.
-- [ ] **[test/tool]** *(coder)* — Test validator, dry-run, apply trên fixture và
+- [x] **[test/tool]** *(coder)* — Test validator, dry-run, apply trên fixture và
   guard destination. **Verify:** test chứng minh dry-run không đổi filesystem và
   invalid input không tạo partial result.
-- [ ] **[docs/guides]** *(coder)* — Viết workflow create/rename/doctor, phần nào
+- [x] **[docs/guides]** *(coder)* — Viết workflow create/rename/doctor, phần nào
   tự động và phần Firebase/signing phải làm tay. **Verify:** guide command khớp
   `--help` và Derry catalog.
 
 ## Phase 4 — Đồng bộ và verification
 
-- [ ] **[docs]** *(coder)* — Cập nhật `docs/README.md`, modernization status,
+- [x] **[docs]** *(coder)* — Cập nhật `docs/README.md`, modernization status,
   roadmap, review và changelog. **Verify:** toàn bộ artifact được truy vết từ
   mục lục trung tâm.
-- [ ] **[sli_common]** *(coder)* — Chạy analyzer/test/example gate, commit và
+- [x] **[sli_common]** *(coder)* — Chạy analyzer/test/example gate, commit và
   cập nhật submodule revision. **Verify:** submodule sạch ở revision có thể
   clone được.
-- [ ] **[root]** *(reviewer)* — Chạy `derry quality`, CLI tests và create smoke
+- [x] **[root]** *(reviewer)* — Chạy `derry quality`, CLI tests và create smoke
   test vào temporary directory. **Verify:** generated clone `pub get` và analyze
   pass hoặc debt/giới hạn được ghi bằng evidence thật.
 
@@ -121,12 +121,12 @@ validation trước mutation.
 
 ## Definition of Done
 
-- [ ] Roadmap/ADR/status/guide/catalog cùng mô tả một workflow.
-- [ ] Mọi public export `sli_common` có inventory và maturity status.
-- [ ] Ba component pilot có docs, runnable demo và preview/test phù hợp.
-- [ ] `create`/`rename` dry-run mặc định; `--apply` validate trước mutation.
-- [ ] `derry quality` pass và generated DI hiện hành.
-- [ ] Architecture boundary gate pass.
-- [ ] Analyzer/test/example gate của `sli_common` pass.
-- [ ] Smoke clone/create có submodule đúng và không chứa signing secret mới.
-- [ ] Docs/changelog/review ghi đúng bằng chứng, không che giấu debt còn lại.
+- [x] Roadmap/ADR/status/guide/catalog cùng mô tả một workflow.
+- [x] Mọi public export `sli_common` có inventory và maturity status.
+- [x] Ba component pilot có docs, runnable demo và preview/test phù hợp.
+- [x] `create`/`rename` dry-run mặc định; `--apply` validate trước mutation.
+- [x] `derry quality` pass và generated DI hiện hành.
+- [x] Architecture boundary gate pass.
+- [x] Analyzer/test/example gate của `sli_common` pass.
+- [x] Smoke clone/create có submodule đúng và không chứa signing secret mới.
+- [x] Docs/changelog/review ghi đúng bằng chứng, không che giấu debt còn lại.

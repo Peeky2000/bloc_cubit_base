@@ -331,6 +331,26 @@ class BaseCliEngine {
       );
     }
 
+    void transformFile(
+      File file,
+      String reason,
+      String Function(String content) transform,
+    ) {
+      if (!file.existsSync()) {
+        return;
+      }
+      final current = drafts[file.path]?.updated ?? file.readAsStringSync();
+      final updated = transform(current);
+      if (current == updated) {
+        return;
+      }
+      drafts[file.path] = _EditDraft(
+        original: drafts[file.path]?.original ?? file.readAsStringSync(),
+        updated: updated,
+        reasons: {...?drafts[file.path]?.reasons, reason},
+      );
+    }
+
     if (config.dartPackage != request.dartPackage) {
       final pubspec = File('$root/pubspec.yaml');
       replaceInFile(
@@ -370,18 +390,46 @@ class BaseCliEngine {
       }
     }
 
-    replaceInFile(
-      File('$root/android/app/build.gradle'),
-      config.displayName,
-      request.displayName,
-      'Android display names',
-    );
-    replaceInFile(
-      File('$root/ios/Runner.xcodeproj/project.pbxproj'),
-      config.displayName,
-      request.displayName,
-      'iOS display names',
-    );
+    if (config.displayName != request.displayName) {
+      final oldName = RegExp.escape(config.displayName);
+      final androidDisplayPattern = RegExp(
+        '(resValue\\s+"string",\\s+"app_name",\\s+")'
+        '$oldName((?: Dev| Staging)?)(")',
+      );
+      final androidGradle = File('$root/android/app/build.gradle');
+      if (!androidDisplayPattern.hasMatch(androidGradle.readAsStringSync())) {
+        throw BaseCliException(
+          'Không tìm thấy Android display-name pattern cần đổi.',
+        );
+      }
+      transformFile(androidGradle, 'Android display names', (content) {
+        return content.replaceAllMapped(androidDisplayPattern, (match) {
+          final value = _escapeGradleString(
+            '${request.displayName}${match.group(2)!}',
+          );
+          return '${match.group(1)}$value${match.group(3)}';
+        });
+      });
+
+      final iosDisplayPattern = RegExp(
+        '(APP_DISPLAY_NAME\\s*=\\s*)"?'
+        '$oldName((?: Dev| Staging)?)"?;',
+      );
+      final iosProject = File('$root/ios/Runner.xcodeproj/project.pbxproj');
+      if (!iosDisplayPattern.hasMatch(iosProject.readAsStringSync())) {
+        throw BaseCliException(
+          'Không tìm thấy iOS display-name pattern cần đổi.',
+        );
+      }
+      transformFile(iosProject, 'iOS display names', (content) {
+        return content.replaceAllMapped(iosDisplayPattern, (match) {
+          final value = _escapePbxString(
+            '${request.displayName}${match.group(2)!}',
+          );
+          return '${match.group(1)}"$value";';
+        });
+      });
+    }
 
     final configFile = File('$root/$_configRelativePath');
     final encodedConfig =
@@ -540,7 +588,8 @@ class RenameRequest {
     final normalizedName = displayName.trim();
     if (normalizedName.isEmpty ||
         normalizedName.length > 50 ||
-        normalizedName.contains(RegExp(r'[\r\n]'))) {
+        normalizedName.contains(RegExp(r'[\r\n]')) ||
+        normalizedName.contains(r'$')) {
       throw BaseCliException('Display name phải có 1-50 ký tự trên một dòng.');
     }
   }
@@ -827,35 +876,51 @@ Iterable<File> _textFiles(String root) sync* {
     '.symlinks',
   };
 
-  for (final entity in Directory(root).listSync(recursive: true)) {
-    if (entity is! File || entity.statSync().size > 2 * 1024 * 1024) {
-      continue;
-    }
-    final relative = _relative(root, entity.path);
-    final segments = relative.split(Platform.pathSeparator);
-    if (segments.any(excludedSegments.contains) ||
-        relative.startsWith(
-          'lib${Platform.pathSeparator}modules${Platform.pathSeparator}sli_common',
-        )) {
-      continue;
-    }
-    final dot = entity.path.lastIndexOf('.');
-    final extension = dot == -1 ? '' : entity.path.substring(dot);
-    if (!extensions.contains(extension) &&
-        !const {
-          'pubspec.yaml',
-          'derry.yaml',
-          'Appfile',
-          'Fastfile',
-          'Gemfile',
-        }.contains(segments.last)) {
-      continue;
-    }
-    try {
-      utf8.decode(entity.readAsBytesSync());
-      yield entity;
-    } on FormatException {
-      continue;
+  final pending = <Directory>[Directory(root)];
+  while (pending.isNotEmpty) {
+    final directory = pending.removeLast();
+    for (final entity in directory.listSync(followLinks: false)) {
+      if (entity is Link) {
+        continue;
+      }
+      final relative = _relative(root, entity.path);
+      final segments = relative.split(Platform.pathSeparator);
+      if (entity is Directory) {
+        if (segments.any(excludedSegments.contains) ||
+            relative ==
+                'lib${Platform.pathSeparator}modules${Platform.pathSeparator}sli_common' ||
+            relative.startsWith(
+              'lib${Platform.pathSeparator}modules${Platform.pathSeparator}sli_common${Platform.pathSeparator}',
+            )) {
+          continue;
+        }
+        pending.add(entity);
+        continue;
+      }
+      if (entity is! File || entity.statSync().size > 2 * 1024 * 1024) {
+        continue;
+      }
+      if (segments.any(excludedSegments.contains)) {
+        continue;
+      }
+      final dot = entity.path.lastIndexOf('.');
+      final extension = dot == -1 ? '' : entity.path.substring(dot);
+      if (!extensions.contains(extension) &&
+          !const {
+            'pubspec.yaml',
+            'derry.yaml',
+            'Appfile',
+            'Fastfile',
+            'Gemfile',
+          }.contains(segments.last)) {
+        continue;
+      }
+      try {
+        utf8.decode(entity.readAsBytesSync());
+        yield entity;
+      } on FormatException {
+        continue;
+      }
     }
   }
 }
@@ -881,6 +946,12 @@ List<File> _findMainActivities(String root) =>
 
 String _mainActivityPath(String root, String bundleId) =>
     '$root/android/app/src/main/kotlin/${bundleId.replaceAll('.', '/')}/MainActivity.kt';
+
+String _escapeGradleString(String value) =>
+    value.replaceAll(r'\', r'\\').replaceAll('"', r'\"');
+
+String _escapePbxString(String value) =>
+    value.replaceAll(r'\', r'\\').replaceAll('"', r'\"');
 
 void _writeAtomically(String path, String content) {
   final file = File(path);

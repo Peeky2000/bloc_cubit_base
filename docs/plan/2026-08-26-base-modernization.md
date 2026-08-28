@@ -124,7 +124,7 @@ thật, và design layer có Shadcn phía sau. Documentation và AI instructions
 - [x] **[lib/modules]** *(coder)* — Thay embedded tree rỗng bằng Git submodule
   thật và thêm path dependency từ app. **Verify:** fresh recursive clone resolve
   `sli_common` và build không cần copied widget imports.
-- [ ] **[sli_common/docs/catalog]** *(coder)* — Inventory toàn bộ public export,
+- [x] **[sli_common/docs/catalog]** *(coder)* — Inventory toàn bộ public export,
   gắn maturity status và xây quick gallery + per-component docs + runnable
   showroom; dùng BottomSheet làm pilot. **Verify:** mọi export được catalog và
   component pilot có preview/usage/source/test truy được từ README.
@@ -138,7 +138,7 @@ thật, và design layer có Shadcn phía sau. Documentation và AI instructions
 - [ ] **[app]** *(coder)* — Gỡ hoặc parameterize branding mOrder/Giaohang247,
   signing artifact, credential, endpoint ví dụ, và residue sinh mã. **Verify:**
   secret scan sạch và rename smoke test pass.
-- [ ] **[tool + scripts]** *(coder)* — Cung cấp Dart Base CLI làm source of
+- [x] **[tool + scripts]** *(coder)* — Cung cấp Dart Base CLI làm source of
   truth cho `doctor/create/rename`; expose qua Derry facade, dry-run mặc định và
   validate toàn plan trước `--apply`. **Verify:** invalid input không mutation;
   app tạm được generate pass `flutter pub get` và analyze.

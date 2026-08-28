@@ -18,7 +18,7 @@ Fastlane artifact/key path được track làm follow-up có chủ ý.
 | Repository | Revision | Trạng thái |
 |---|---|---|
 | `sli_common` | `3604efd` | Commit trên branch `dev`, đã push origin |
-| `bloc_cubit_base` | `f72c259` | Checkpoint implementation local |
+| `bloc_cubit_base` | `a3d7c24` | Checkpoint implementation + native hardening local |
 
 ## Catalog evidence
 
@@ -44,8 +44,10 @@ từ component thật, không dùng ảnh mock chụp tay làm source of truth.
 - Apply recheck content của mọi file và destination của mọi move trước write.
 - Atomic write giữ executable permission; lỗi giữa apply có rollback file edit
   và move đã hoàn thành.
-- Scanner bỏ qua `.git`, build output, Pods và toàn Git submodule
-  `lib/modules/sli_common`.
+- Scanner không follow symlink; bỏ qua `.git`, build output, Pods và toàn Git
+  submodule `lib/modules/sli_common`.
+- Native display name được thay theo cấu trúc field; PBX value luôn được quote
+  và escape thay vì search-replace mù.
 - Create chặn source Git dirty và destination tồn tại/nằm trong source.
 - Derry chỉ forward command; logic rename không bị duplicate trong YAML/shell.
 - Parser đã được smoke với display name có khoảng trắng qua Derry 1.5.
@@ -76,8 +78,11 @@ Kết quả:
 - `derry base doctor` trong generated app pass, không còn warning MainActivity;
 - `derry quality` trong generated app pass với 18 tests;
 - `sli_common` checkout revision `3604efd` và sạch;
-- không còn `package:bloc_cubit_base/` hoặc `com.giaohang247` ngoài submodule;
+- không còn Dart package cũ trong import code hoặc application ID cũ trong
+  native/runtime config;
 - Android/iOS display names thành `Catalog Smoke` theo flavor;
+- `xcodebuild -list -project ios/Runner.xcodeproj` pass và liệt kê đủ 9 build
+  configurations cùng 3 schemes;
 - thư mục smoke đã được chuyển vào Trash sau khi thu evidence, có thể recover.
 
 ## Debt còn lại, không che giấu

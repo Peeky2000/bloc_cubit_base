@@ -40,7 +40,9 @@ implement” nghĩa là có code cùng gate liên quan; không có nghĩa sample
     name đồng bộ;
   - generated app quality pass với 18 tests;
   - submodule pin đúng revision `3604efd`;
-  - không còn `package:bloc_cubit_base/` hoặc `com.giaohang247` ngoài submodule.
+  - không còn Dart package cũ trong import code hoặc application ID cũ trong
+    native/runtime config;
+  - `xcodebuild -list` đọc được project và đủ 9 build configurations/3 schemes.
 
 Evidence chi tiết nằm tại
 [review 2026-08-28](reviews/2026-08-28-component-catalog-base-cli-review.md).

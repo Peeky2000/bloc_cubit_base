@@ -20,13 +20,18 @@ dụng, còn data source sở hữu việc parse response.
   vẫn 401 là terminal. Timeout/connection/5xx và retry 500 là transient, không
   được clear một session còn hợp lệ.
 - Terminal expiry được coalesce tối đa một callback cho mỗi access-token
-  generation. Callback hiện sở hữu credential cleanup; typed app-level event
-  để presentation xử lý là follow-up, interceptor vẫn không điều hướng UI.
+  generation. `SessionExpiryCoordinator` clear credential rồi phát typed event;
+  `AppCubit` chuyển event thành state revision và `MainApp` phản ứng bằng
+  `BlocListener`. Interceptor vẫn không điều hướng hoặc truy cập UI.
 - Retry dùng request copy; `FormData` được clone và body dạng stream không được
   tự động replay.
 - `NetworkInterceptor` chỉ reject khi `isConnected == false`, bằng
   `DioExceptionType.connectionError` chứa `NetworkIssueException`. Trạng thái
   `null` hoặc `true` được đi tiếp để transport quyết định.
+- `NetworkChecker` là DI singleton có dispose callback. Repeated `init()` thay
+  subscription cũ, `dispose()` idempotent và object đã dispose không được init
+  lại; connectivity/reachability monitor có seam riêng để unit test không cần
+  platform channel hoặc socket.
 - Log request/response mặc định redact authorization, cookies, tokens,
   passwords, và các field PII phổ biến.
 - Alice chỉ khả dụng ngoài production.

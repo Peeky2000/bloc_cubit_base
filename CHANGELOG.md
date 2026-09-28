@@ -21,6 +21,9 @@
   cross-origin bearer protection, safe replay và coalesced terminal expiry.
 - Thêm test network/session/token cho terminal và transient refresh failure,
   account race, multipart replay, retry 401/500, 403 và offline contract; full
-  application suite hiện có 36 tests.
+  application suite hiện có 44 tests.
+- Thêm typed session-expired flow từ data coordinator → AppCubit →
+  `BlocListener`, cùng lifecycle-safe `NetworkChecker` có monitor seam và
+  generated singleton disposal.
 - Ghi future scope Version Health gồm Analytics, Crashlytics, Firebase
   Performance và Remote Config; không đưa VIPER vào base architecture.

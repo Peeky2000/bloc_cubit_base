@@ -85,4 +85,5 @@ Concurrent 401, refresh failure, token/account race, cross-origin protection và
 offline interceptor contract đã được đóng bằng implementation + tests tại
 [review session/network](2026-09-28-session-network-review.md). Bảng phía trên
 được giữ nguyên vì là snapshot đúng tại revision ngày 2026-08-27. Typed
-session-expired event và lifecycle `NetworkChecker` vẫn là follow-up.
+session-expired event và lifecycle `NetworkChecker` sau đó đã hoàn tất tại
+revision `d9f855e` và được ghi trong cùng review mới.

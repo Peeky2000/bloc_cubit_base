@@ -126,7 +126,7 @@ trong cùng thay đổi.
 | [Roadmap modernization](plan/2026-08-26-base-modernization.md) | Checklist tổng và Definition of Done |
 | [Review modernization mới nhất](reviews/2026-08-27-base-modernization-review.md) | Evidence, quality gate và follow-up đã xác minh |
 | [Review catalog + Base CLI](reviews/2026-08-28-component-catalog-base-cli-review.md) | Evidence inventory, safety gates và create smoke test |
-| [Review session + network](reviews/2026-09-28-session-network-review.md) | Evidence concurrent 401, token race, cross-origin, offline và 36-test quality gate |
+| [Review session + network](reviews/2026-09-28-session-network-review.md) | Evidence concurrent 401, typed expiry, lifecycle, offline và 44-test quality gate |
 | [Trạng thái modernization](modernization-status.md) | Bản tóm tắt sống về phần đã xong/chưa xong |
 | [Brainstorm Derry/build](brainstorm/2026-08-27-derry-build-automation.md) | Lý do tách build, distribute và release |
 | [Brainstorm component catalog](brainstorm/2026-08-28-ui-component-catalog-and-migration.md) | Inventory baseline và lý do phải catalog trước khi migrate widget |

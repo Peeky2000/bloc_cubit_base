@@ -7,15 +7,16 @@ request 401 cùng token chỉ tạo một refresh operation; request được re
 token mới mà không làm rò Bearer token sang cross-origin host. Terminal failure
 được coalesce, còn lỗi transient/403/retry 500 không làm logout oan.
 
-Review này **không** tuyên bố app đã có typed session-expired event hoặc
-`NetworkChecker` đã được test toàn bộ lifecycle init/dispose. Hai phần đó vẫn
-được track riêng trong roadmap.
+Typed session-expired event và lifecycle `NetworkChecker` cũng đã được nối và
+test trong follow-up cùng ngày. UI side effect thuộc `MainApp` qua
+`BlocListener`; network/data không import hoặc gọi navigation.
 
 ## Revision được review
 
 | Repository | Revision | Phạm vi |
 |---|---|---|
 | `bloc_cubit_base` | `9b7e990` | Session refresh hardening, token revision và network/session tests |
+| `bloc_cubit_base` | `d9f855e` | Typed session event, AppCubit listener contract và NetworkChecker lifecycle |
 
 ## Thay đổi chính
 
@@ -33,6 +34,10 @@ Review này **không** tuyên bố app đã có typed session-expired event ho�
   compare-and-set cho refresh commit.
 - Network offline contract được test qua in-memory Dio adapter, không dùng socket
   hoặc timer thật.
+- `SessionExpiryCoordinator` sở hữu cleanup + publish; `AppCubit` nhận typed
+  event; presentation điều hướng và thông báo qua `BlocListener`.
+- Connectivity và internet reachability được bọc bằng monitor interface;
+  repeated init/dispose được test mà không gọi platform channel.
 
 ## Evidence matrix
 
@@ -53,34 +58,36 @@ Review này **không** tuyên bố app đã có typed session-expired event ho�
 | Offline `false` | Reject trước transport bằng connection error có `NetworkIssueException` |
 | Connectivity `null/true` | Cho request đi tiếp tới transport |
 | Token storage race | Secure-storage operation chạy tuần tự, stale revision không được persist |
+| Typed terminal expiry | Cleanup chạy trước publish; event vẫn phát nếu secure delete báo lỗi |
+| App session listener | Mỗi typed event tăng đúng một app-state revision; Cubit hủy subscription khi close |
+| NetworkChecker lifecycle | Repeated init chỉ giữ một listener; transition dedupe; dispose idempotent và chặn re-init |
 
 ## Quality gates
 
 | Gate | Kết quả |
 |---|---|
-| `./scripts/format.sh --check` | Pass; 174 Dart files, 0 changed |
+| `./scripts/format.sh --check` | Pass; 181 Dart files, 0 changed |
 | `flutter analyze` | Pass; 0 finding |
 | `./scripts/check_architecture.sh` | Pass |
-| `flutter test` | Pass; 36 tests |
-| Focused session/network/token tests | Pass; 18 tests |
+| `flutter test` | Pass; 44 tests |
+| Focused session/network/token/lifecycle tests | Pass; 23 tests |
 | `git diff --check` | Pass |
 
-Full gate được chạy bằng `./scripts/quality.sh`; focused test dùng ba file:
+Full gate được chạy bằng `./scripts/quality.sh`; focused test dùng bảy file:
 
 - `test/data/datasource/remote/interceptor/session_interceptor_test.dart`
 - `test/data/datasource/remote/interceptor/network_interceptor_test.dart`
 - `test/data/datasource/local/token_provider_test.dart`
+- `test/data/datasource/local/session_expiry_coordinator_test.dart`
+- `test/core/session/session_event_test.dart`
+- `test/core/app/app_cubit_test.dart`
+- `test/core/network/network_checker_test.dart`
 
 ## Debt còn lại
 
-1. `ApiClient` hiện truyền `tokenProvider.clearToken` làm terminal callback.
-   Cần một typed session coordinator để vừa cleanup credential vừa phát đúng
-   một app-level event cho presentation listener.
-2. `NetworkChecker` chưa có seam để test repeated init/dispose và transition
-   giữa connectivity signal với internet reachability.
-3. Auth endpoint policy hiện skip login/signup/refresh cùng explicit request
+1. Auth endpoint policy hiện skip login/signup/refresh cùng explicit request
    flag; product mới phải khai báo rõ endpoint công khai khác nếu có.
-4. Performance/network observability qua Firebase được hoãn tới future scope,
+2. Performance/network observability qua Firebase được hoãn tới future scope,
    sau khi core base và neutral template hoàn tất.
 
 Roadmap và trạng thái sống được cập nhật tại

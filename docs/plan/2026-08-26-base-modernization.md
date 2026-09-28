@@ -104,11 +104,11 @@ thật, và design layer có Shadcn phía sau. Documentation và agent instructi
 - [x] **[lib/data]** *(coder)* — Refactor Dio/session interceptor để tránh
   navigation hoặc dialog, serialize token refresh, và retry request an toàn.
   **Verify:** test cover concurrent 401, refresh failure, và offline behavior.
-- [ ] **[lib/core/session]** *(coder)* — Nối typed session-expired event tại app
+- [x] **[lib/core/session]** *(coder)* — Nối typed session-expired event tại app
   boundary để presentation phản ứng bằng listener thay vì coupling vào network.
   **Verify:** terminal expiry clear credential và phát đúng một event cho mỗi
   token generation; navigation vẫn thuộc presentation.
-- [ ] **[lib/core/network]** *(coder)* — Khóa lifecycle `NetworkChecker` cho
+- [x] **[lib/core/network]** *(coder)* — Khóa lifecycle `NetworkChecker` cho
   repeated init/dispose và transition connectivity/internet reachability.
   **Verify:** test không leak subscription/controller và không emit trùng.
 - [x] **[lib/core/network]** *(coder)* — Thêm Alice inspection ngoài production

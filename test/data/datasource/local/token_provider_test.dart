@@ -44,12 +44,14 @@ void main() {
     expect(stalePersist, isFalse);
     expect(provider.revision, 1);
     expect(provider.token.accessToken, 'access');
-    final captured = verify(
-      () => storage.write(
-        key: 'token',
-        value: captureAny(named: 'value'),
-      ),
-    ).captured.single as String;
+    final captured =
+        verify(
+              () => storage.write(
+                key: 'token',
+                value: captureAny(named: 'value'),
+              ),
+            ).captured.single
+            as String;
     expect(jsonDecode(captured), {
       'accessToken': 'access',
       'refreshToken': 'refresh',
@@ -85,9 +87,7 @@ void main() {
       writeStarted.complete();
       return releaseWrite.future;
     });
-    when(
-      () => storage.delete(key: any(named: 'key')),
-    ).thenAnswer((_) async {});
+    when(() => storage.delete(key: any(named: 'key'))).thenAnswer((_) async {});
 
     final setFuture = provider.setToken(
       TokenResponseModel(accessToken: 'temporary', refreshToken: 'refresh'),

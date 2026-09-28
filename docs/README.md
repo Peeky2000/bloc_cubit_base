@@ -21,7 +21,7 @@ không cần đọc tất cả ngay; hãy chọn đúng mục tiêu trong bảng
 | Phân phối Firebase hoặc Store | [Derry/build/Fastlane](guides/use-derry-and-build.md) → [Android Fastlane](../android/fastlane/README.md) / [iOS Fastlane](../ios/fastlane/README.md) |
 | Xem vì sao chọn công nghệ hiện tại | [Danh sách ADR](adr/README.md) |
 | Xem việc đã làm và việc còn lại | [Trạng thái modernization](modernization-status.md) → [roadmap](plan/2026-08-26-base-modernization.md) |
-| Xem bằng chứng review/quality gate | [Review mới nhất](reviews/2026-08-28-component-catalog-base-cli-review.md) |
+| Xem bằng chứng review/quality gate | [Review mới nhất](reviews/2026-09-28-session-network-review.md) |
 | Làm việc cùng AI agent | [Quy trình AI](../ai-process.md) → [AGENTS.md](../AGENTS.md) |
 
 ## Lộ trình onboarding khuyến nghị
@@ -116,6 +116,7 @@ trong cùng thay đổi.
 | Giữ SLIRouting/AppPage | [ADR-0005](adr/0005-keep-sli-routing.md) |
 | Xây UI toolkit trước, capability sản phẩm thêm sau | [ADR-0006](adr/0006-ui-toolkit-now-defer-product-capabilities.md) |
 | Dart Base CLI phía sau Derry facade | [ADR-0007](adr/0007-dart-base-cli-behind-derry.md) |
+| Skill tập trung Flutter/mobile, không adopt VIPER | [ADR-0008](adr/0008-mobile-engineering-skills-no-viper.md) |
 
 ## Truy vết modernization hiện tại
 
@@ -125,9 +126,11 @@ trong cùng thay đổi.
 | [Roadmap modernization](plan/2026-08-26-base-modernization.md) | Checklist tổng và Definition of Done |
 | [Review modernization mới nhất](reviews/2026-08-27-base-modernization-review.md) | Evidence, quality gate và follow-up đã xác minh |
 | [Review catalog + Base CLI](reviews/2026-08-28-component-catalog-base-cli-review.md) | Evidence inventory, safety gates và create smoke test |
+| [Review session + network](reviews/2026-09-28-session-network-review.md) | Evidence concurrent 401, token race, cross-origin, offline và 36-test quality gate |
 | [Trạng thái modernization](modernization-status.md) | Bản tóm tắt sống về phần đã xong/chưa xong |
 | [Brainstorm Derry/build](brainstorm/2026-08-27-derry-build-automation.md) | Lý do tách build, distribute và release |
 | [Brainstorm component catalog](brainstorm/2026-08-28-ui-component-catalog-and-migration.md) | Inventory baseline và lý do phải catalog trước khi migrate widget |
+| [Brainstorm Flutter/mobile skills](brainstorm/2026-09-28-flutter-mobile-engineering-skills.md) | Phạm vi skill convention, review, performance, testing và mobile quality |
 | [Plan catalog + Base CLI](plan/2026-08-28-component-catalog-and-base-cli.md) | Checklist triển khai đã duyệt cho toolbox docs và create/rename workflow |
 
 ## Quy tắc duy trì mục lục

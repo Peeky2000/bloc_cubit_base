@@ -33,20 +33,23 @@ void main() {
     });
 
     for (final state in <bool?>[null, true]) {
-      test('allows ${state ?? 'unknown'} connectivity state to transport', () async {
-        final checker = _NetworkCheckerStub(state);
-        final adapter = _CountingAdapter();
-        final dio = _createDio(checker, adapter);
-        addTearDown(() async {
-          dio.close(force: true);
-          await checker.dispose();
-        });
+      test(
+        'allows ${state ?? 'unknown'} connectivity state to transport',
+        () async {
+          final checker = _NetworkCheckerStub(state);
+          final adapter = _CountingAdapter();
+          final dio = _createDio(checker, adapter);
+          addTearDown(() async {
+            dio.close(force: true);
+            await checker.dispose();
+          });
 
-        final response = await dio.get<dynamic>('/protected');
+          final response = await dio.get<dynamic>('/protected');
 
-        expect(response.statusCode, 200);
-        expect(adapter.requestCount, 1);
-      });
+          expect(response.statusCode, 200);
+          expect(adapter.requestCount, 1);
+        },
+      );
     }
   });
 }
@@ -74,9 +77,13 @@ class _CountingAdapter implements HttpClientAdapter {
     Future<void>? cancelFuture,
   ) async {
     requestCount++;
-    return ResponseBody.fromString('{}', 200, headers: {
-      Headers.contentTypeHeader: [Headers.jsonContentType],
-    });
+    return ResponseBody.fromString(
+      '{}',
+      200,
+      headers: {
+        Headers.contentTypeHeader: [Headers.jsonContentType],
+      },
+    );
   }
 
   @override

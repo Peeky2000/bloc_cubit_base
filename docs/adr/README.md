@@ -11,3 +11,4 @@ viết lại lịch sử.
 - [0005 — Giữ SLIRouting](0005-keep-sli-routing.md)
 - [0006 — Xây UI toolkit trước và hoãn năng lực sản phẩm](0006-ui-toolkit-now-defer-product-capabilities.md)
 - [0007 — Dart Base CLI phía sau Derry facade](0007-dart-base-cli-behind-derry.md)
+- [0008 — Skill tập trung Flutter/mobile, không adopt VIPER](0008-mobile-engineering-skills-no-viper.md)

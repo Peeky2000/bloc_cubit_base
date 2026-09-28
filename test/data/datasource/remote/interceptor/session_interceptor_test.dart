@@ -454,10 +454,7 @@ ResponseBody _refreshResponse({
   String? refreshToken,
 }) {
   return _jsonResponse(200, {
-    'data': {
-      'accessToken': accessToken,
-      if (refreshToken != null) 'refreshToken': refreshToken,
-    },
+    'data': {'accessToken': accessToken, 'refreshToken': ?refreshToken},
     'message': '',
     'code': 200,
   });

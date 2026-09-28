@@ -19,7 +19,7 @@ sản phẩm hoặc technical debt đã biết của chúng.
 BLoC cổ điển là lựa chọn được hỗ trợ, và `BaseAppState + Equatable + copyWith`.
 Base bổ sung typed environments, bootstrap deterministic, `get_it + injectable`,
 automation, network inspection bắt buộc redaction, Git submodule `sli_common`
-thật, và design layer có Shadcn phía sau. Documentation và AI instructions phải
+thật, và design layer có Shadcn phía sau. Documentation và agent instructions phải
 được version cùng mọi thay đổi kiến trúc.
 
 ## Ngoài phạm vi
@@ -101,9 +101,16 @@ thật, và design layer có Shadcn phía sau. Documentation và AI instructions
 
 ## Phase 6 — REST, session security, và network inspection
 
-- [ ] **[lib/data]** *(coder)* — Refactor Dio/session interceptor để tránh
+- [x] **[lib/data]** *(coder)* — Refactor Dio/session interceptor để tránh
   navigation hoặc dialog, serialize token refresh, và retry request an toàn.
   **Verify:** test cover concurrent 401, refresh failure, và offline behavior.
+- [ ] **[lib/core/session]** *(coder)* — Nối typed session-expired event tại app
+  boundary để presentation phản ứng bằng listener thay vì coupling vào network.
+  **Verify:** terminal expiry clear credential và phát đúng một event cho mỗi
+  token generation; navigation vẫn thuộc presentation.
+- [ ] **[lib/core/network]** *(coder)* — Khóa lifecycle `NetworkChecker` cho
+  repeated init/dispose và transition connectivity/internet reachability.
+  **Verify:** test không leak subscription/controller và không emit trùng.
 - [x] **[lib/core/network]** *(coder)* — Thêm Alice inspection ngoài production
   với redaction mặc định cho authorization, cookies, tokens, passwords, và PII
   phổ biến. **Verify:** production config không thể bật inspector và redaction
@@ -143,7 +150,7 @@ thật, và design layer có Shadcn phía sau. Documentation và AI instructions
   validate toàn plan trước `--apply`. **Verify:** invalid input không mutation;
   app tạm được generate pass `flutter pub get` và analyze.
 
-## Phase 9 — Đồng bộ tài liệu và hướng dẫn AI
+## Phase 9 — Đồng bộ tài liệu và hướng dẫn agent
 
 - [x] **[docs]** *(coder)* — Cập nhật README, prerequisites, architecture, DI,
   state, networking, UI toolkit, environment, và contributor guides. **Verify:**
@@ -152,6 +159,25 @@ thật, và design layer có Shadcn phía sau. Documentation và AI instructions
   metadata để khớp Injectable, constructor injection, chọn Cubit/BLoC, và vị trí
   `sli_common`. **Verify:** search toàn repo không còn yêu cầu manual DI mâu
   thuẫn.
+
+## Future scope — Version Health / Firebase Observability
+
+Phần này được ghi để không thất lạc nhưng **không thuộc Definition of Done của
+đợt modernization hiện tại**. Chỉ bắt đầu sau khi core base, state/UI effect,
+`sli_common` migration và neutral branding đã hoàn tất.
+
+- [ ] **[analytics]** — Theo dõi adoption theo app version/platform/OS/device
+  bằng Firebase Analytics, với event taxonomy và privacy consent rõ ràng.
+- [ ] **[stability]** — Tích hợp Crashlytics và dashboard crash-free
+  users/sessions, issue severity và version/device/OS dimensions.
+- [ ] **[performance]** — Đo cold/warm startup, screen rendering, network/API,
+  payload/error rate theo version/device/OS bằng Firebase Performance và trace
+  có chủ đích.
+- [ ] **[remote-config]** — Dùng Remote Config cho feature flag, staged rollout
+  và emergency kill switch; có typed defaults, validation, cache và fail-safe.
+- [ ] **[version-health]** — Tổng hợp adoption + stability + performance thành
+  tiêu chí continue rollout/hotfix. **Không** tự động rollout/hotfix nếu chưa có
+  threshold, owner và rollback policy được duyệt.
 
 ## Rủi ro & giảm thiểu
 

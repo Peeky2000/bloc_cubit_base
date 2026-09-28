@@ -17,3 +17,10 @@
   định, validation trước mutation và test cho plan/apply guard.
 - Thêm catalog `sli_common` với inventory 45/45 export, maturity status,
   showroom, BottomSheet pilot và golden preview có thể tái tạo.
+- Gia cố session refresh: single-flight concurrent 401, token revision guard,
+  cross-origin bearer protection, safe replay và coalesced terminal expiry.
+- Thêm test network/session/token cho terminal và transient refresh failure,
+  account race, multipart replay, retry 401/500, 403 và offline contract; full
+  application suite hiện có 36 tests.
+- Ghi future scope Version Health gồm Analytics, Crashlytics, Firebase
+  Performance và Remote Config; không đưa VIPER vào base architecture.

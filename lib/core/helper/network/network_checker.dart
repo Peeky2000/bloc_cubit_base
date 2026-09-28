@@ -1,82 +1,99 @@
 import 'dart:async';
-import 'dart:io';
 
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:bloc_cubit_base/core/helper/lib/data_connection_checker.dart';
+import 'package:bloc_cubit_base/core/helper/network/network_monitor.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 class NetworkChecker {
-  NetworkChecker();
+  NetworkChecker({
+    ConnectivityMonitor? connectivityMonitor,
+    InternetReachabilityMonitor? internetMonitor,
+  }) : _connectivityMonitor = connectivityMonitor ?? ConnectivityPlusMonitor(),
+       _internetMonitor =
+           internetMonitor ?? DataConnectionReachabilityMonitor();
+
+  final ConnectivityMonitor _connectivityMonitor;
+  final InternetReachabilityMonitor _internetMonitor;
+  final StreamController<bool> _connectionController =
+      StreamController<bool>.broadcast();
 
   StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
   StreamSubscription<DataConnectionStatus>? _statusSubscription;
-  final StreamController<bool> connectController =
-      StreamController<bool>.broadcast();
-  final DataConnectionChecker _checker = DataConnectionChecker();
+  Future<void> _transition = Future<void>.value();
+  int _generation = 0;
+  bool _disposed = false;
+
+  Stream<bool> get connectionChanges => _connectionController.stream;
   bool? isConnected;
 
   Future<void> init() async {
+    if (_disposed) {
+      throw StateError('A disposed NetworkChecker cannot be initialized.');
+    }
+
+    final generation = ++_generation;
     await _connectivitySubscription?.cancel();
     await _statusSubscription?.cancel();
-    _checker.addresses = [
-      AddressCheckOptions(
-        InternetAddress('1.1.1.1'),
-        port: 53,
-        timeout: const Duration(seconds: 10),
-      ),
-      AddressCheckOptions(
-        InternetAddress('1.0.0.1'),
-        port: 53,
-        timeout: const Duration(seconds: 10),
-      ),
-      AddressCheckOptions(
-        InternetAddress('8.8.8.8'),
-        port: 53,
-        timeout: const Duration(seconds: 10),
-      ),
-      AddressCheckOptions(
-        InternetAddress('8.8.4.4'),
-        port: 53,
-        timeout: const Duration(seconds: 10),
-      ),
-      AddressCheckOptions(
-        InternetAddress('208.67.222.222'),
-        port: 53,
-        timeout: const Duration(seconds: 10),
-      ),
-      AddressCheckOptions(
-        InternetAddress('208.67.220.220'),
-        port: 53,
-        timeout: const Duration(seconds: 10),
-      ),
-    ];
-    _checker.checkInterval = const Duration(seconds: 15);
-    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((
-      List<ConnectivityResult> result,
-    ) async {
-      if (!result.contains(ConnectivityResult.none)) {
-        await _statusSubscription?.cancel();
-        _statusSubscription = _checker.onStatusChange.listen((status) {
-          _emit(status == DataConnectionStatus.connected);
-        });
-      } else {
-        await _statusSubscription?.cancel();
-        _statusSubscription = null;
-        _emit(false);
+    _statusSubscription = null;
+
+    _connectivitySubscription = _connectivityMonitor.changes.listen(
+      (results) => _queueConnectivityTransition(results, generation),
+    );
+  }
+
+  void _queueConnectivityTransition(
+    List<ConnectivityResult> results,
+    int generation,
+  ) {
+    _transition = _transition
+        .then((_) => _applyConnectivityTransition(results, generation))
+        .catchError((Object _, StackTrace _) {});
+  }
+
+  Future<void> _applyConnectivityTransition(
+    List<ConnectivityResult> results,
+    int generation,
+  ) async {
+    if (_disposed || generation != _generation) {
+      return;
+    }
+
+    await _statusSubscription?.cancel();
+    _statusSubscription = null;
+    if (_disposed || generation != _generation) {
+      return;
+    }
+
+    if (results.contains(ConnectivityResult.none)) {
+      _emit(false);
+      return;
+    }
+
+    _statusSubscription = _internetMonitor.changes.listen((status) {
+      if (!_disposed && generation == _generation) {
+        _emit(status == DataConnectionStatus.connected);
       }
     });
   }
 
   void _emit(bool value) {
-    if (isConnected == value) {
+    if (_disposed || isConnected == value) {
       return;
     }
     isConnected = value;
-    connectController.add(value);
+    _connectionController.add(value);
   }
 
   Future<void> dispose() async {
+    if (_disposed) {
+      return;
+    }
+
+    _disposed = true;
+    _generation++;
     await _connectivitySubscription?.cancel();
     await _statusSubscription?.cancel();
-    await connectController.close();
+    await _transition;
+    await _connectionController.close();
   }
 }

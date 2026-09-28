@@ -3,6 +3,7 @@ import 'package:bloc_cubit_base/core/helper/network/network_checker.dart';
 import 'package:bloc_cubit_base/core/network/network_inspector.dart';
 import 'package:bloc_cubit_base/core/routing/routing.dart';
 import 'package:bloc_cubit_base/data/datasource/local/token_provider.dart';
+import 'package:bloc_cubit_base/data/datasource/local/session_expiry_coordinator.dart';
 import 'package:bloc_cubit_base/data/datasource/remote/api_client.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -40,6 +41,7 @@ abstract class RegisterModule {
   );
 
   @preResolve
+  @Singleton(dispose: disposeNetworkChecker)
   Future<NetworkChecker> networkChecker() async {
     final checker = NetworkChecker();
     await checker.init();
@@ -52,10 +54,14 @@ abstract class RegisterModule {
     TokenProvider tokenProvider,
     NetworkChecker networkChecker,
     NetworkInspector networkInspector,
+    SessionExpiryCoordinator sessionExpiryCoordinator,
   ) => ApiClient(
     baseUrl: config.baseUrl,
     tokenProvider: tokenProvider,
     networkChecker: networkChecker,
     networkInspector: networkInspector,
+    sessionExpiryCoordinator: sessionExpiryCoordinator,
   );
 }
+
+Future<void> disposeNetworkChecker(NetworkChecker checker) => checker.dispose();

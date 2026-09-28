@@ -26,10 +26,7 @@ class NoInternetScreen extends StatelessWidget {
               Assets.images.imgDisconnect.svg(),
               SizedBox(height: 16.0.h),
               StreamBuilder<bool>(
-                stream: Injector.getIt
-                    .get<NetworkChecker>()
-                    .connectController
-                    .stream,
+                stream: Injector.getIt.get<NetworkChecker>().connectionChanges,
                 builder: (context, snapshot) {
                   return Text(
                     snapshot.data == true
@@ -44,10 +41,7 @@ class NoInternetScreen extends StatelessWidget {
               ),
               SizedBox(height: 32.0.h),
               StreamBuilder<bool>(
-                stream: Injector.getIt
-                    .get<NetworkChecker>()
-                    .connectController
-                    .stream,
+                stream: Injector.getIt.get<NetworkChecker>().connectionChanges,
                 builder: (context, snapshot) {
                   return InkWellButton(
                     title: context.l10n.retry,

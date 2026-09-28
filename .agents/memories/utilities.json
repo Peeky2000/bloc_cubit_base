@@ -4,20 +4,56 @@
     "name": "Injector",
     "description": "get_it service locator setup",
     "location": "lib/di/injection.dart",
-    "keywords": ["di", "get_it", "injection"]
+    "keywords": [
+      "di",
+      "get_it",
+      "injection"
+    ]
   },
   {
     "type": "utility",
     "name": "handleErrorResponse",
     "description": "Global API error dialog handler",
     "location": "lib/presentation/global_handler.dart",
-    "keywords": ["error", "handler", "dialog"]
+    "keywords": [
+      "error",
+      "handler",
+      "dialog"
+    ]
   },
   {
     "type": "utility",
     "name": "ErrorMapper",
     "description": "Maps exceptions to display strings",
     "location": "lib/core/error/error_to_string_mapper.dart",
-    "keywords": ["error", "mapper", "message"]
+    "keywords": [
+      "error",
+      "mapper",
+      "message"
+    ]
+  },
+  {
+    "type": "utility",
+    "name": "SessionEventController",
+    "description": "Typed app-level session event source consumed by AppCubit and published after credential cleanup",
+    "location": "lib/core/session/session_event.dart",
+    "keywords": [
+      "session",
+      "expired",
+      "event",
+      "auth"
+    ]
+  },
+  {
+    "type": "utility",
+    "name": "NetworkChecker",
+    "description": "Lifecycle-safe connectivity and internet reachability state with injectable monitors",
+    "location": "lib/core/helper/network/network_checker.dart",
+    "keywords": [
+      "network",
+      "connectivity",
+      "offline",
+      "lifecycle"
+    ]
   }
 ]

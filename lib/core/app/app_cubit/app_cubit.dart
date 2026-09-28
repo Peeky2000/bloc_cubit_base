@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
+import 'package:bloc_cubit_base/core/session/session_event.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:bloc_cubit_base/domain/entities/common/app_enums.dart';
@@ -10,8 +13,23 @@ part 'app_state.dart';
 @singleton
 class AppCubit extends Cubit<AppState> {
   final AppUseCase _appUseCase;
+  late final StreamSubscription<SessionEvent> _sessionSubscription;
 
-  AppCubit(this._appUseCase) : super(AppState.initState());
+  AppCubit(this._appUseCase, SessionEventController sessionEvents)
+    : super(AppState.initState()) {
+    _sessionSubscription = sessionEvents.events.listen(_onSessionEvent);
+  }
+
+  void _onSessionEvent(SessionEvent event) {
+    switch (event) {
+      case SessionExpiredEvent():
+        emit(
+          state.copyWith(
+            sessionExpiryRevision: state.sessionExpiryRevision + 1,
+          ),
+        );
+    }
+  }
 
   void getCurrentLang() {
     final language = _appUseCase.getSavedAppLanguage();
@@ -32,4 +50,11 @@ class AppCubit extends Cubit<AppState> {
     AppLanguage.vi => const Locale('vi', 'VN'),
     AppLanguage.en => const Locale('en', 'US'),
   };
+
+  @override
+  @disposeMethod
+  Future<void> close() async {
+    await _sessionSubscription.cancel();
+    return super.close();
+  }
 }

@@ -20,7 +20,9 @@ import '../core/app/app_controller.dart' as _i77;
 import '../core/app/app_cubit/app_cubit.dart' as _i688;
 import '../core/helper/network/network_checker.dart' as _i484;
 import '../core/network/network_inspector.dart' as _i556;
+import '../core/session/session_event.dart' as _i924;
 import '../data/datasource/local/app_local_data_source.dart' as _i641;
+import '../data/datasource/local/session_expiry_coordinator.dart' as _i55;
 import '../data/datasource/local/token_provider.dart' as _i508;
 import '../data/datasource/local/user_local_data_source.dart' as _i278;
 import '../data/datasource/remote/api_client.dart' as _i44;
@@ -58,14 +60,19 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i59.FirebaseAuth>(() => registerModule.firebaseAuth);
     gh.factory<_i558.FlutterSecureStorage>(() => registerModule.secureStorage);
-    await gh.factoryAsync<_i484.NetworkChecker>(
-      () => registerModule.networkChecker(),
-      preResolve: true,
-    );
     gh.factory<_i927.HomePageCubit>(() => _i927.HomePageCubit());
     gh.factory<_i1002.TestCubit>(() => _i1002.TestCubit());
     gh.singleton<_i77.AppController>(() => _i77.AppController());
+    gh.singleton<_i924.SessionEventController>(
+      () => _i924.SessionEventController(),
+      dispose: (i) => i.dispose(),
+    );
     gh.singleton<_i806.AppConfig>(() => registerModule.appConfig);
+    await gh.singletonAsync<_i484.NetworkChecker>(
+      () => registerModule.networkChecker(),
+      preResolve: true,
+      dispose: _i291.disposeNetworkChecker,
+    );
     gh.lazySingleton<_i278.UserLocalDataSource>(
       () => _i278.UserLocalDataSourceImpl(gh<_i460.SharedPreferences>()),
     );
@@ -88,21 +95,34 @@ extension GetItInjectableX on _i174.GetIt {
       ),
       preResolve: true,
     );
+    gh.lazySingleton<_i55.SessionExpiryCoordinator>(
+      () => _i55.SessionExpiryCoordinator(
+        gh<_i508.TokenProvider>(),
+        gh<_i924.SessionEventController>(),
+      ),
+    );
+    gh.lazySingleton<_i1036.AppUseCase>(
+      () => _i1036.AppUseCase(gh<_i546.AppRepo>()),
+    );
     gh.lazySingleton<_i44.ApiHandler>(
       () => registerModule.apiHandler(
         gh<_i806.AppConfig>(),
         gh<_i508.TokenProvider>(),
         gh<_i484.NetworkChecker>(),
         gh<_i556.NetworkInspector>(),
+        gh<_i55.SessionExpiryCoordinator>(),
       ),
-    );
-    gh.lazySingleton<_i1036.AppUseCase>(
-      () => _i1036.AppUseCase(gh<_i546.AppRepo>()),
     );
     gh.lazySingleton<_i519.AuthRemoteDataSource>(
       () => _i519.AuthRemoteDataSourceImpl(gh<_i44.ApiHandler>()),
     );
-    gh.singleton<_i688.AppCubit>(() => _i688.AppCubit(gh<_i1036.AppUseCase>()));
+    gh.singleton<_i688.AppCubit>(
+      () => _i688.AppCubit(
+        gh<_i1036.AppUseCase>(),
+        gh<_i924.SessionEventController>(),
+      ),
+      dispose: (i) => i.close(),
+    );
     gh.lazySingleton<_i218.AuthRepo>(
       () => _i743.AuthRepoImpl(
         gh<_i519.AuthRemoteDataSource>(),

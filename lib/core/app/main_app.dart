@@ -78,8 +78,9 @@ class _MainAppState extends State<MainApp> {
   void initState() {
     super.initState();
     widget.appCubit.getCurrentLang();
-    _connectionSubscription = widget.networkChecker.connectController.stream
-        .listen(_showConnectionStatus);
+    _connectionSubscription = widget.networkChecker.connectionChanges.listen(
+      _showConnectionStatus,
+    );
   }
 
   void _initDefault() {
@@ -202,7 +203,11 @@ class _MainAppState extends State<MainApp> {
           final isDarkMode = widget.appController.isDarkMode;
           return BlocProvider<AppCubit>.value(
             value: widget.appCubit,
-            child: BlocBuilder<AppCubit, AppState>(
+            child: BlocConsumer<AppCubit, AppState>(
+              listenWhen: (previous, current) =>
+                  previous.sessionExpiryRevision !=
+                  current.sessionExpiryRevision,
+              listener: _onSessionExpired,
               builder: (context, state) {
                 return MaterialApp(
                   builder: (context, widget) {
@@ -240,5 +245,21 @@ class _MainAppState extends State<MainApp> {
         },
       ),
     );
+  }
+
+  void _onSessionExpired(BuildContext context, AppState state) {
+    SLIRouting.offAllNamed(AppPage.signIn);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final routeContext = SLIRouting.key.currentContext;
+      if (!mounted || routeContext == null) {
+        return;
+      }
+      DialogUtil.showFlushBar(
+        routeContext,
+        routeContext.l10n.sessionExpired,
+        backgroundColor: Colors.redAccent,
+        iconFlushBar: const Icon(Icons.lock_clock, color: Colors.white),
+      );
+    });
   }
 }

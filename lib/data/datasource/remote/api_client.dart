@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:bloc_cubit_base/core/helper/network/network_checker.dart';
 import 'package:bloc_cubit_base/core/network/network_inspector.dart';
+import 'package:bloc_cubit_base/data/datasource/local/session_expiry_coordinator.dart';
 import 'package:dio/dio.dart';
 import 'package:bloc_cubit_base/core/error/exception.dart';
 import 'package:bloc_cubit_base/data/datasource/local/token_provider.dart';
@@ -72,6 +73,7 @@ class ApiClient implements ApiHandler {
   final TokenProvider tokenProvider;
   final NetworkChecker networkChecker;
   final NetworkInspector networkInspector;
+  final SessionExpiryCoordinator sessionExpiryCoordinator;
   final String baseUrl;
   String get baseUrlWithFormat {
     if (baseUrl.contains('localhost') && Platform.isAndroid) {
@@ -85,6 +87,7 @@ class ApiClient implements ApiHandler {
     required this.tokenProvider,
     required this.networkChecker,
     required this.networkInspector,
+    required this.sessionExpiryCoordinator,
   }) {
     init();
   }
@@ -100,7 +103,7 @@ class ApiClient implements ApiHandler {
       SessionInterceptor(
         baseUrl: baseUrlWithFormat,
         tokenProvider: tokenProvider,
-        onSessionExpired: tokenProvider.clearToken,
+        onSessionExpired: sessionExpiryCoordinator.expire,
         sessionClient: sessionClient,
       ),
       ?networkInspector.interceptor,

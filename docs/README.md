@@ -13,7 +13,7 @@ không cần đọc tất cả ngay; hãy chọn đúng mục tiêu trong bảng
 | Tạo app mới từ base | [Tạo app từ base](guides/create-app-from-base.md) → [trạng thái hiện tại](modernization-status.md) |
 | Thêm feature mới | [Thêm feature](guides/add-feature.md) → [quy tắc dependency](architecture/dependency-rules.md) → [chọn Cubit/BLoC](guides/choose-cubit-or-bloc.md) |
 | Thêm hoặc sửa DI | [Kiến trúc DI](architecture/dependency-injection.md) → [ADR Injectable](adr/0001-get-it-injectable.md) |
-| Làm Cubit/BLoC hoặc state | [Quản lý state](architecture/state-management.md) → [chọn Cubit/BLoC](guides/choose-cubit-or-bloc.md) |
+| Làm Cubit/BLoC hoặc state | [Quản lý state](architecture/state-management.md) → [chọn Cubit/BLoC](guides/choose-cubit-or-bloc.md) → [xử lý UI effect](guides/handle-ui-effects.md) |
 | Làm API, Dio hoặc token | [Networking](architecture/networking.md) → [quy tắc dependency](architecture/dependency-rules.md) |
 | Làm widget/design system | [UI toolkit](architecture/ui-toolkit.md) → [dùng sli_common](guides/use-sli-common.md) |
 | Thêm môi trường/flavor | [Environment và bootstrap](architecture/environment-bootstrap.md) → [thêm môi trường](guides/add-environment.md) |
@@ -21,7 +21,7 @@ không cần đọc tất cả ngay; hãy chọn đúng mục tiêu trong bảng
 | Phân phối Firebase hoặc Store | [Derry/build/Fastlane](guides/use-derry-and-build.md) → [Android Fastlane](../android/fastlane/README.md) / [iOS Fastlane](../ios/fastlane/README.md) |
 | Xem vì sao chọn công nghệ hiện tại | [Danh sách ADR](adr/README.md) |
 | Xem việc đã làm và việc còn lại | [Trạng thái modernization](modernization-status.md) → [roadmap](plan/2026-08-26-base-modernization.md) |
-| Xem bằng chứng review/quality gate | [Review mới nhất](reviews/2026-09-28-session-network-review.md) |
+| Xem bằng chứng review/quality gate | [Review mới nhất](reviews/2026-09-28-pure-cubit-ui-effects-review.md) |
 | Làm việc cùng AI agent | [Quy trình AI](../ai-process.md) → [AGENTS.md](../AGENTS.md) |
 
 ## Lộ trình onboarding khuyến nghị
@@ -100,6 +100,7 @@ trong cùng thay đổi.
 | Tạo application từ base | [create-app-from-base.md](guides/create-app-from-base.md) |
 | Thêm feature Clean Architecture | [add-feature.md](guides/add-feature.md) |
 | Chọn Cubit hay BLoC | [choose-cubit-or-bloc.md](guides/choose-cubit-or-bloc.md) |
+| Xử lý navigation/dialog/error từ state manager | [handle-ui-effects.md](guides/handle-ui-effects.md) |
 | Thêm environment/flavor | [add-environment.md](guides/add-environment.md) |
 | Dùng UI toolkit cá nhân | [use-sli-common.md](guides/use-sli-common.md) |
 | Tra hình/API/maturity của component | [`sli_common` catalog](../lib/modules/sli_common/docs/catalog/README.md) |
@@ -117,6 +118,7 @@ trong cùng thay đổi.
 | Xây UI toolkit trước, capability sản phẩm thêm sau | [ADR-0006](adr/0006-ui-toolkit-now-defer-product-capabilities.md) |
 | Dart Base CLI phía sau Derry facade | [ADR-0007](adr/0007-dart-base-cli-behind-derry.md) |
 | Skill tập trung Flutter/mobile, không adopt VIPER | [ADR-0008](adr/0008-mobile-engineering-skills-no-viper.md) |
+| Typed UI effect tại presentation boundary | [ADR-0009](adr/0009-typed-ui-effects-at-presentation-boundary.md) |
 
 ## Truy vết modernization hiện tại
 
@@ -127,6 +129,8 @@ trong cùng thay đổi.
 | [Review modernization mới nhất](reviews/2026-08-27-base-modernization-review.md) | Evidence, quality gate và follow-up đã xác minh |
 | [Review catalog + Base CLI](reviews/2026-08-28-component-catalog-base-cli-review.md) | Evidence inventory, safety gates và create smoke test |
 | [Review session + network](reviews/2026-09-28-session-network-review.md) | Evidence concurrent 401, typed expiry, lifecycle, offline và 44-test quality gate |
+| [Review pure Cubit + UI effect](reviews/2026-09-28-pure-cubit-ui-effects-review.md) | Evidence tách UI coupling, typed validation/effect, OTP lifecycle và 54-test quality gate |
+| [Review state + DI completion](reviews/2026-09-30-state-di-completion-review.md) | Evidence typed failure, Cubit/BLoC lifecycle và resettable DI graph |
 | [Trạng thái modernization](modernization-status.md) | Bản tóm tắt sống về phần đã xong/chưa xong |
 | [Brainstorm Derry/build](brainstorm/2026-08-27-derry-build-automation.md) | Lý do tách build, distribute và release |
 | [Brainstorm component catalog](brainstorm/2026-08-28-ui-component-catalog-and-migration.md) | Inventory baseline và lý do phải catalog trước khi migrate widget |

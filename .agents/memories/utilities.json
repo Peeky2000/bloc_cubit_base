@@ -2,12 +2,15 @@
   {
     "type": "utility",
     "name": "Injector",
-    "description": "get_it service locator setup",
+    "description": "GetIt + Injectable composition root with resettable graph and test initializer seam",
     "location": "lib/di/injection.dart",
     "keywords": [
       "di",
       "get_it",
-      "injection"
+      "injectable",
+      "composition-root",
+      "reset",
+      "test"
     ]
   },
   {
@@ -54,6 +57,34 @@
       "connectivity",
       "offline",
       "lifecycle"
+    ]
+  },
+  {
+    "type": "utility",
+    "name": "UiEffect",
+    "description": "Revisioned one-shot presentation intent emitted by BaseCubit/BaseBloc and handled by UI listeners",
+    "location": "lib/core/base_component/ui_effect.dart",
+    "keywords": [
+      "effect",
+      "navigation",
+      "dialog",
+      "listener",
+      "one-shot",
+      "state"
+    ]
+  },
+  {
+    "type": "utility",
+    "name": "BaseAppState",
+    "description": "Immutable Equatable base state with LoadingStatus and generic typed failure support",
+    "location": "lib/core/base_component/base_app_state.dart",
+    "keywords": [
+      "state",
+      "equatable",
+      "loading",
+      "failure",
+      "cubit",
+      "bloc"
     ]
   }
 ]

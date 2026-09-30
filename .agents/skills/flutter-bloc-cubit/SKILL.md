@@ -23,6 +23,8 @@ description: >
 - Model async lifecycle with `LoadingStatus` while preserving feature data.
 - Put recoverable errors in state. One-shot navigation/dialog effects stay at
   the presentation boundary and must not be executed by data/domain layers.
+- Represent one-shot intent as `UiEffect<T>` created by `createEffect`; define
+  `T` as a sealed feature effect and include the wrapper in `props`.
 
 ## State owner rules
 
@@ -33,14 +35,21 @@ description: >
   from reusable business logic.
 - Validate business/input shape in testable Dart code; UI translates typed
   validation results.
+- Cancel timers/subscriptions in `close()` and ignore delayed SDK callbacks
+  after `isClosed`.
 
 ## DI and UI
 
 Annotate feature Cubits/BLoCs with `@injectable`. Resolve them once in a route or
 screen builder and provide with `BlocProvider`. Never resolve from `build()`.
 
+Screen listeners must filter `previous.effect != current.effect` before
+handling route/dialog/snackbar intent. Localization and raw-error presentation
+belong in that listener, not in state manager code.
+
 Test state transitions with `bloc_test`, including success, failure, retry, and
 concurrency behavior for classic BLoC.
 
 See `docs/architecture/state-management.md` and
-`docs/guides/choose-cubit-or-bloc.md`.
+`docs/guides/choose-cubit-or-bloc.md`. For implementation shape, read
+`docs/guides/handle-ui-effects.md`.

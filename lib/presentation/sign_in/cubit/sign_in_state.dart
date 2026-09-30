@@ -1,17 +1,19 @@
 part of 'sign_in_cubit.dart';
 
-class SignInState extends BaseAppState {
+class SignInState extends BaseAppState<Object> {
   final bool isRememberLogin;
   final bool showPass;
-  final String? errorUsername;
-  final String? errorPassword;
+  final EmailOrPhoneInputError? usernameError;
+  final PasswordInputError? passwordError;
+  final UiEffect<SignInEffect>? effect;
 
   const SignInState({
     required super.loading,
     super.error,
     required this.isRememberLogin,
-    this.errorUsername,
-    this.errorPassword,
+    this.usernameError,
+    this.passwordError,
+    this.effect,
     this.showPass = false,
   });
 
@@ -28,17 +30,19 @@ class SignInState extends BaseAppState {
     Object? error,
     bool? isRememberLogin,
     bool? showPass,
-    String? errorUsername,
-    String? errorPassword,
-    bool forceUpdateError = false,
+    EmailOrPhoneInputError? usernameError,
+    PasswordInputError? passwordError,
+    UiEffect<SignInEffect>? effect,
+    bool forceUpdateValidation = false,
   }) {
     return SignInState(
       loading: loading ?? this.loading,
       error: error,
       showPass: showPass ?? this.showPass,
       isRememberLogin: isRememberLogin ?? this.isRememberLogin,
-      errorUsername: forceUpdateError ? errorUsername : this.errorUsername,
-      errorPassword: forceUpdateError ? errorPassword : this.errorPassword,
+      usernameError: forceUpdateValidation ? usernameError : this.usernameError,
+      passwordError: forceUpdateValidation ? passwordError : this.passwordError,
+      effect: effect ?? this.effect,
     );
   }
 
@@ -48,7 +52,8 @@ class SignInState extends BaseAppState {
     error,
     isRememberLogin,
     showPass,
-    errorUsername,
-    errorPassword,
+    usernameError,
+    passwordError,
+    effect,
   ];
 }

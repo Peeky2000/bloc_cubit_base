@@ -1,32 +1,32 @@
 part of 'sign_up_cubit.dart';
 
-class SignUpState extends BaseAppState {
+class SignUpState extends BaseAppState<Object> {
   final bool showPass;
   final int currentPage;
-  final ChangePageViewStatus? changePageViewStatus;
   final ScaleLevel? currentScaleLevel;
   final List<IndustryType>? industries;
-  final String? errorPhone;
-  final String? errorEmail;
-  final String? errorPassword;
-  final String? errorShopName;
-  final String? errIndustry;
-  final String? errScale;
+  final PhoneInputError? phoneError;
+  final EmailInputError? emailError;
+  final PasswordInputError? passwordError;
+  final RequiredInputError? shopNameError;
+  final RequiredInputError? industryError;
+  final RequiredInputError? scaleError;
+  final UiEffect<SignUpEffect>? effect;
 
   const SignUpState({
     required super.loading,
     super.error,
     this.showPass = false,
     this.currentPage = 0,
-    this.changePageViewStatus,
     this.currentScaleLevel,
     this.industries,
-    this.errorPhone,
-    this.errorEmail,
-    this.errorPassword,
-    this.errorShopName,
-    this.errIndustry,
-    this.errScale,
+    this.phoneError,
+    this.emailError,
+    this.passwordError,
+    this.shopNameError,
+    this.industryError,
+    this.scaleError,
+    this.effect,
   });
 
   factory SignUpState.initial() {
@@ -38,31 +38,31 @@ class SignUpState extends BaseAppState {
     Object? error,
     bool? showPass,
     int? currentPage,
-    ChangePageViewStatus? changePageViewStatus,
     ScaleLevel? currentScaleLevel,
     List<IndustryType>? industries,
-    String? errorPhone,
-    String? errorEmail,
-    String? errorPassword,
-    String? errorShopName,
-    String? errIndustry,
-    String? errScale,
-    bool forceUpdateError = false,
+    PhoneInputError? phoneError,
+    EmailInputError? emailError,
+    PasswordInputError? passwordError,
+    RequiredInputError? shopNameError,
+    RequiredInputError? industryError,
+    RequiredInputError? scaleError,
+    UiEffect<SignUpEffect>? effect,
+    bool forceUpdateValidation = false,
   }) {
     return SignUpState(
       loading: loading ?? this.loading,
       error: error,
       showPass: showPass ?? this.showPass,
       currentPage: currentPage ?? this.currentPage,
-      changePageViewStatus: changePageViewStatus,
       currentScaleLevel: currentScaleLevel ?? this.currentScaleLevel,
       industries: industries ?? this.industries,
-      errorPhone: forceUpdateError ? errorPhone : this.errorPhone,
-      errorEmail: forceUpdateError ? errorEmail : this.errorEmail,
-      errorPassword: forceUpdateError ? errorPassword : this.errorPassword,
-      errorShopName: forceUpdateError ? errorShopName : this.errorShopName,
-      errIndustry: forceUpdateError ? errIndustry : this.errIndustry,
-      errScale: forceUpdateError ? errScale : this.errScale,
+      phoneError: forceUpdateValidation ? phoneError : this.phoneError,
+      emailError: forceUpdateValidation ? emailError : this.emailError,
+      passwordError: forceUpdateValidation ? passwordError : this.passwordError,
+      shopNameError: forceUpdateValidation ? shopNameError : this.shopNameError,
+      industryError: forceUpdateValidation ? industryError : this.industryError,
+      scaleError: forceUpdateValidation ? scaleError : this.scaleError,
+      effect: effect ?? this.effect,
     );
   }
 
@@ -72,14 +72,14 @@ class SignUpState extends BaseAppState {
     error,
     showPass,
     currentPage,
-    changePageViewStatus,
     currentScaleLevel,
     industries,
-    errorPhone,
-    errorEmail,
-    errorPassword,
-    errorShopName,
-    errIndustry,
-    errScale,
+    phoneError,
+    emailError,
+    passwordError,
+    shopNameError,
+    industryError,
+    scaleError,
+    effect,
   ];
 }

@@ -1,20 +1,20 @@
 import 'package:bloc_cubit_base/core/app/app.dart';
 import 'package:bloc_cubit_base/core/common/route.dart';
 import 'package:bloc_cubit_base/core/routing/routing.dart';
+import 'package:bloc_cubit_base/core/validation/auth_validation_error.dart';
 import 'package:bloc_cubit_base/generated/assets.gen.dart';
 import 'package:bloc_cubit_base/l10n/l10n.dart';
 import 'package:bloc_cubit_base/widget/delivery_go_button.dart';
 import 'package:bloc_cubit_base/widget/loading_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bloc_cubit_base/core/mixin/after_layout.dart';
 import 'package:bloc_cubit_base/di/injection.dart';
 import 'package:bloc_cubit_base/presentation/sign_in/cubit/sign_in_cubit.dart';
+import 'package:bloc_cubit_base/presentation/global_handler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:bloc_cubit_base/core/widget/common_text_field.dart';
-import 'package:bloc_cubit_base/core/widget/dialog_util.dart';
 
 Widget signInScreenBuilder() => BlocProvider<SignInCubit>(
   create: (_) => Injector.getIt.get<SignInCubit>(),
@@ -122,7 +122,7 @@ class _SignInScreenState extends State<SignInScreen> with AfterLayoutMixin {
                 title: '${context.l10n.email}/${context.l10n.phoneNumber}',
                 hint: '${context.l10n.email}/${context.l10n.phoneNumber}',
                 keyboardType: TextInputType.emailAddress,
-                error: state.errorUsername,
+                error: _usernameError(context, state.usernameError),
               );
             },
           ),
@@ -134,7 +134,7 @@ class _SignInScreenState extends State<SignInScreen> with AfterLayoutMixin {
                 title: context.l10n.password,
                 hint: context.l10n.password,
                 keyboardType: TextInputType.visiblePassword,
-                error: state.errorPassword,
+                error: _passwordError(context, state.passwordError),
                 obscureText: !(_signInCubit?.state.showPass ?? false),
                 suffixConstraints: BoxConstraints.tightFor(
                   width: 44.w,
@@ -195,17 +195,34 @@ class _SignInScreenState extends State<SignInScreen> with AfterLayoutMixin {
   @override
   Widget build(BuildContext context) {
     return LoadingScreen<SignInCubit, SignInState>(
+      listenWhen: (previous, current) => previous.effect != current.effect,
       listener: (context, state) {
-        if (state.error != null && state.error is FirebaseAuthException) {
-          DialogUtil.error(
-            context,
-            title: context.l10n.error,
-            content: (state.error as FirebaseAuthException).message ?? '',
-            closeText: context.l10n.close,
-            retryText: context.l10n.retry,
-            isShowRetry: true,
-            onTapRetry: () => _signInCubit?.sendCodeVerify(),
-          );
+        final effect = state.effect?.value;
+        switch (effect) {
+          case SignInNavigateHomeEffect():
+            SLIRouting.offAllNamed(AppPage.home);
+          case SignInNavigateForgotPasswordEffect():
+            SLIRouting.toNamed(AppPage.resetPassword);
+          case SignInNavigatePhoneVerificationEffect(:final phone):
+            SLIRouting.offAllNamed(
+              AppPage.confirmInfo,
+              arguments: {'phone': phone, 'page_success': AppPage.home},
+            );
+          case SignInShowErrorEffect(:final error, :final retryAction):
+            handleErrorResponse(
+              context,
+              error,
+              onRetry: () => switch (retryAction) {
+                SignInRetryAction.signIn => _signInCubit!.onTapSignIn(
+                  username: _usernameTextController.text.trim(),
+                  pass: _passTextController.text.trim(),
+                ),
+                SignInRetryAction.sendVerificationCode =>
+                  _signInCubit!.sendCodeVerify(),
+              },
+            );
+          case null:
+            break;
         }
       },
       builder: (context, state) => Scaffold(
@@ -223,4 +240,19 @@ class _SignInScreenState extends State<SignInScreen> with AfterLayoutMixin {
       ),
     );
   }
+
+  String? _usernameError(BuildContext context, EmailOrPhoneInputError? error) =>
+      switch (error) {
+        EmailOrPhoneInputError.required => context.l10n.emailPhoneIsRequired,
+        EmailOrPhoneInputError.invalid => context.l10n.emailPhoneIsInvalid,
+        null => null,
+      };
+
+  String? _passwordError(BuildContext context, PasswordInputError? error) =>
+      switch (error) {
+        PasswordInputError.required => context.l10n.passIsRequired,
+        PasswordInputError.invalid => context.l10n.passIsInvalid,
+        PasswordInputError.mismatch => context.l10n.confirmPassIsNotMath,
+        null => null,
+      };
 }

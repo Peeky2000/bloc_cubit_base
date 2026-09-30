@@ -1,16 +1,14 @@
 import 'package:bloc_cubit_base/core/app/app.dart';
-import 'package:bloc_cubit_base/core/app/app_controller.dart';
-import 'package:bloc_cubit_base/core/common/enum.dart';
 import 'package:bloc_cubit_base/core/common/route.dart';
 import 'package:bloc_cubit_base/domain/entities/common/app_enums.dart';
 import 'package:bloc_cubit_base/core/extension/list_extension.dart';
 import 'package:bloc_cubit_base/core/routing/routing.dart';
+import 'package:bloc_cubit_base/core/validation/auth_validation_error.dart';
 import 'package:bloc_cubit_base/generated/assets.gen.dart';
 import 'package:bloc_cubit_base/l10n/l10n.dart';
 import 'package:bloc_cubit_base/widget/delivery_go_button.dart';
 import 'package:bloc_cubit_base/widget/loading_screen.dart';
 import 'package:bloc_cubit_base/widget/selection_bottom_sheet.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
@@ -18,10 +16,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bloc_cubit_base/core/mixin/after_layout.dart';
 import 'package:bloc_cubit_base/di/injection.dart';
 import 'package:bloc_cubit_base/presentation/sign_up/cubit/sign_up_cubit.dart';
+import 'package:bloc_cubit_base/presentation/global_handler.dart';
 import 'package:bloc_cubit_base/core/widget/common_text_field.dart';
 import 'package:bloc_cubit_base/core/widget/common_drop_down.dart';
-import 'package:bloc_cubit_base/core/widget/dialog_util.dart';
-import 'package:bloc_cubit_base/core/helper/log.dart';
 
 Widget signUpScreenBuilder() => BlocProvider<SignUpCubit>(
   create: (_) => Injector.getIt.get<SignUpCubit>(),
@@ -46,103 +43,103 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
   List<SelectionItemModel<ScaleLevel>> itemsScaleLevel = [];
   List<SelectionItemModel<IndustryType>> itemsIndustry = [];
 
-  BuildContext? appContext = Injector.getIt.get<AppController>().context;
-
   @override
   void initState() {
     super.initState();
     _signUpCubit = context.read<SignUpCubit>();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     itemsScaleLevel = [
       SelectionItemModel(
         value: ScaleLevel.KHONG_THUONG_XUYEN,
-        title: appContext?.l10n.scaleL1 ?? '',
+        title: context.l10n.scaleL1,
       ),
       SelectionItemModel(
         value: ScaleLevel.DUOI_150_THANG,
-        title: appContext?.l10n.scaleL2 ?? '',
+        title: context.l10n.scaleL2,
       ),
       SelectionItemModel(
         value: ScaleLevel.DUOI_900_THANG,
-        title: appContext?.l10n.scaleL3 ?? '',
+        title: context.l10n.scaleL3,
       ),
       SelectionItemModel(
         value: ScaleLevel.DUOI_3000_THANG,
-        title: appContext?.l10n.scaleL4 ?? '',
+        title: context.l10n.scaleL4,
       ),
       SelectionItemModel(
         value: ScaleLevel.DUOI_6000_THANG,
-        title: appContext?.l10n.scaleL5 ?? '',
+        title: context.l10n.scaleL5,
       ),
       SelectionItemModel(
         value: ScaleLevel.TREN_6000_THANG,
-        title: appContext?.l10n.scaleL6 ?? '',
+        title: context.l10n.scaleL6,
       ),
     ];
     itemsIndustry = [
       SelectionItemModel(
         value: IndustryType.THOI_TRANG,
-        title: appContext?.l10n.fashion ?? '',
+        title: context.l10n.fashion,
       ),
       SelectionItemModel(
         value: IndustryType.MY_PHAM,
-        title: appContext?.l10n.cosmetics ?? '',
+        title: context.l10n.cosmetics,
       ),
       SelectionItemModel(
         value: IndustryType.NOI_THAT,
-        title: appContext?.l10n.industry ?? '',
+        title: context.l10n.industry,
       ),
       SelectionItemModel(
         value: IndustryType.ME_VA_BE,
-        title: appContext?.l10n.motherAndBaby ?? '',
+        title: context.l10n.motherAndBaby,
       ),
       SelectionItemModel(
         value: IndustryType.MAY_TINH,
-        title: appContext?.l10n.computers ?? '',
+        title: context.l10n.computers,
       ),
       SelectionItemModel(
         value: IndustryType.HANG_HOA_DE_VO,
-        title: appContext?.l10n.fragileGoods ?? '',
+        title: context.l10n.fragileGoods,
       ),
       SelectionItemModel(
         value: IndustryType.TIVI_VA_THIET_BI_GIA_DUNG,
-        title: appContext?.l10n.householdElectrical ?? '',
+        title: context.l10n.householdElectrical,
       ),
       SelectionItemModel(
         value: IndustryType.GIA_DUNG,
-        title: appContext?.l10n.houseware ?? '',
+        title: context.l10n.houseware,
       ),
       SelectionItemModel(
         value: IndustryType.XE_MAY_VA_PHUONG_TIEN,
-        title: appContext?.l10n.motorcycles ?? '',
+        title: context.l10n.motorcycles,
       ),
       SelectionItemModel(
         value: IndustryType.CAY_TRONG_VA_NONG_NGHIEP,
-        title: appContext?.l10n.drums ?? '',
+        title: context.l10n.drums,
       ),
       SelectionItemModel(
         value: IndustryType.THUC_PHAM_VA_NONG_SAN,
-        title: appContext?.l10n.food ?? '',
+        title: context.l10n.food,
       ),
       SelectionItemModel(
         value: IndustryType.DUNG_CU_VA_PHU_KIEN,
-        title: appContext?.l10n.sports ?? '',
+        title: context.l10n.sports,
       ),
       SelectionItemModel(
         value: IndustryType.TRANG_SUC_VA_PHU_KIEN,
-        title: appContext?.l10n.jewelry ?? '',
+        title: context.l10n.jewelry,
       ),
       SelectionItemModel(
         value: IndustryType.HANG_TIEU_DUNG,
-        title: appContext?.l10n.consumables ?? '',
+        title: context.l10n.consumables,
       ),
       SelectionItemModel(
         value: IndustryType.SACH_VA_VAN_PHONG_PHAM,
-        title: appContext?.l10n.books ?? '',
+        title: context.l10n.books,
       ),
-      SelectionItemModel(
-        value: IndustryType.KHAC,
-        title: appContext?.l10n.other ?? '',
-      ),
+      SelectionItemModel(value: IndustryType.KHAC, title: context.l10n.other),
     ];
   }
 
@@ -195,7 +192,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
                 title: context.l10n.phoneNumber,
                 hint: context.l10n.phoneNumber,
                 keyboardType: TextInputType.phone,
-                error: state.errorPhone,
+                error: _phoneError(context, state.phoneError),
               );
             },
           ),
@@ -207,7 +204,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
                 title: context.l10n.email,
                 hint: context.l10n.email,
                 keyboardType: TextInputType.emailAddress,
-                error: state.errorEmail,
+                error: _emailError(context, state.emailError),
               );
             },
           ),
@@ -219,7 +216,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
                 title: context.l10n.password,
                 hint: context.l10n.password,
                 keyboardType: TextInputType.visiblePassword,
-                error: state.errorPassword,
+                error: _passwordError(context, state.passwordError),
                 obscureText: !(_signUpCubit?.state.showPass ?? false),
                 suffixConstraints: BoxConstraints.tightFor(
                   width: 44.w,
@@ -348,7 +345,9 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
                     title: context.l10n.shopName,
                     hint: context.l10n.shopName,
                     keyboardType: TextInputType.name,
-                    error: state.errorShopName,
+                    error: state.shopNameError == null
+                        ? null
+                        : context.l10n.shopNameIsRequired,
                   );
                 },
               ),
@@ -370,7 +369,9 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
                     value: names.join(', '),
                     onTap: () => _showSelectionIndustry(),
                     maxLine: 2,
-                    error: state.errIndustry,
+                    error: state.industryError == null
+                        ? null
+                        : context.l10n.industryIsRequired,
                   );
                 },
               ),
@@ -387,7 +388,9 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
                     hint: context.l10n.shippingScale,
                     onTap: () => _showSelectionScale(),
                     value: title,
-                    error: state.errScale,
+                    error: state.scaleError == null
+                        ? null
+                        : context.l10n.scaleLevelIsRequired,
                   );
                 },
               ),
@@ -402,10 +405,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
                         color: App.appColor?.textColor,
                         decoration: TextDecoration.underline,
                       ),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          Log.t(message: 'dasdasd');
-                        },
+                      recognizer: TapGestureRecognizer()..onTap = () {},
                     ),
                     TextSpan(text: ' ${context.l10n.and} '),
                     TextSpan(
@@ -414,10 +414,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
                         color: App.appColor?.textColor,
                         decoration: TextDecoration.underline,
                       ),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          Log.t(message: 'dasdasd');
-                        },
+                      recognizer: TapGestureRecognizer()..onTap = () {},
                     ),
                     TextSpan(text: ' ${context.l10n.tos4}'),
                   ],
@@ -461,29 +458,31 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
   @override
   Widget build(BuildContext context) {
     return LoadingScreen<SignUpCubit, SignUpState>(
+      listenWhen: (previous, current) => previous.effect != current.effect,
       listener: (context, state) {
-        switch (state.changePageViewStatus) {
-          case ChangePageViewStatus.next:
-            int newPage = state.currentPage + 1;
-            animateToPage(newPage);
+        final effect = state.effect?.value;
+        switch (effect) {
+          case SignUpChangePageEffect(:final delta):
+            animateToPage(state.currentPage + delta);
+          case SignUpNavigatePhoneVerificationEffect(:final phone):
+            SLIRouting.toNamed(
+              AppPage.confirmInfo,
+              arguments: {'phone': phone, 'page_success': AppPage.signIn},
+            );
+          case SignUpShowErrorEffect(:final error, :final retryAction):
+            handleErrorResponse(
+              context,
+              error,
+              onRetry: () => switch (retryAction) {
+                SignUpRetryAction.signUp => _signUpCubit!.onTapConfirmInfo(
+                  shopName: _shopNameEditingController.text.trim(),
+                ),
+                SignUpRetryAction.sendVerificationCode =>
+                  _signUpCubit!.sendCodeVerify(),
+              },
+            );
+          case null:
             break;
-          case ChangePageViewStatus.previous:
-            int newPage = state.currentPage - 1;
-            animateToPage(newPage);
-            break;
-          default:
-            break;
-        }
-        if (state.error != null && state.error is FirebaseAuthException) {
-          DialogUtil.error(
-            context,
-            title: context.l10n.error,
-            content: (state.error as FirebaseAuthException).message ?? '',
-            closeText: context.l10n.close,
-            retryText: context.l10n.retry,
-            isShowRetry: true,
-            onTapRetry: () => _signUpCubit?.sendCodeVerify(),
-          );
         }
       },
       builder: (context, state) => Scaffold(
@@ -516,4 +515,26 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
       ),
     );
   }
+
+  String? _phoneError(BuildContext context, PhoneInputError? error) =>
+      switch (error) {
+        PhoneInputError.required => context.l10n.phoneIsRequired,
+        PhoneInputError.invalid => context.l10n.phoneIsInvalid,
+        null => null,
+      };
+
+  String? _emailError(BuildContext context, EmailInputError? error) =>
+      switch (error) {
+        EmailInputError.required => context.l10n.emailIsRequired,
+        EmailInputError.invalid => context.l10n.emailIsInvalid,
+        null => null,
+      };
+
+  String? _passwordError(BuildContext context, PasswordInputError? error) =>
+      switch (error) {
+        PasswordInputError.required => context.l10n.passIsRequired,
+        PasswordInputError.invalid => context.l10n.passIsInvalid,
+        PasswordInputError.mismatch => context.l10n.confirmPassIsNotMath,
+        null => null,
+      };
 }

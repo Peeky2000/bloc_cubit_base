@@ -137,24 +137,16 @@ extension GetItInjectableX on _i174.GetIt {
       ),
     );
     gh.factory<_i453.ConfirmInformationCubit>(
-      () => _i453.ConfirmInformationCubit(
-        gh<_i358.AuthUseCase>(),
-        gh<_i77.AppController>(),
-      ),
+      () => _i453.ConfirmInformationCubit(gh<_i358.AuthUseCase>()),
     );
     gh.factory<_i955.ResetPasswordCubit>(
-      () => _i955.ResetPasswordCubit(
-        gh<_i358.AuthUseCase>(),
-        gh<_i77.AppController>(),
-      ),
+      () => _i955.ResetPasswordCubit(gh<_i358.AuthUseCase>()),
     );
     gh.factory<_i805.SignInCubit>(
-      () =>
-          _i805.SignInCubit(gh<_i358.AuthUseCase>(), gh<_i77.AppController>()),
+      () => _i805.SignInCubit(gh<_i358.AuthUseCase>()),
     );
     gh.factory<_i800.SignUpCubit>(
-      () =>
-          _i800.SignUpCubit(gh<_i358.AuthUseCase>(), gh<_i77.AppController>()),
+      () => _i800.SignUpCubit(gh<_i358.AuthUseCase>()),
     );
     gh.factory<_i565.SplashCubit>(
       () => _i565.SplashCubit(gh<_i358.AuthUseCase>()),

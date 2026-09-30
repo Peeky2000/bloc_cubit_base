@@ -27,3 +27,9 @@
   generated singleton disposal.
 - Ghi future scope Version Health gồm Analytics, Crashlytics, Firebase
   Performance và Remote Config; không đưa VIPER vào base architecture.
+- Tách năm Cubit auth/startup khỏi `BuildContext`, AppController, routing,
+  dialog và l10n bằng typed `UiEffect`; thêm typed validation, pure error mapper,
+  OTP lifecycle guard, architecture rule và nâng application suite lên 54 test.
+- Hoàn tất Phase 3/4 với DI graph reset/dispose testable, generic typed failure
+  trên `BaseAppState`, representative Cubit/BLoC lifecycle tests và nâng full
+  application suite lên 62 test.

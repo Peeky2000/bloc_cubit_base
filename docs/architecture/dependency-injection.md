@@ -18,3 +18,10 @@ registration.
   runtime registration có chủ ý duy nhất.
 
 Sinh registration bằng `derry gen` hoặc `dart run build_runner build`.
+
+## Reset trong test
+
+`configureDependencies(config, reset: true)` dispose registration hiện tại
+trước khi init graph mới. Unit test có thể truyền `initializeGraph` để đăng ký
+test double thuần Dart mà không khởi tạo Firebase, secure storage hoặc platform
+channel. Production không truyền tham số này và luôn dùng generated graph.

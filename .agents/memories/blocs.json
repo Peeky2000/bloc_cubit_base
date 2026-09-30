@@ -2,29 +2,84 @@
   {
     "type": "bloc",
     "name": "SignInCubit",
-    "description": "Sign-in form validation and login via AuthUseCase",
+    "description": "UI-free sign-in validation and authentication; emits typed SignInEffect intents for screen navigation and errors",
     "location": "lib/presentation/sign_in/cubit/sign_in_cubit.dart",
-    "keywords": ["sign in", "login", "auth", "cubit"]
+    "keywords": [
+      "sign-in",
+      "login",
+      "auth",
+      "cubit",
+      "ui-effect",
+      "validation"
+    ]
   },
   {
     "type": "bloc",
     "name": "SignUpCubit",
-    "description": "User registration flow",
+    "description": "UI-free registration flow with typed validation and SignUpEffect intents",
     "location": "lib/presentation/sign_up/cubit/sign_up_cubit.dart",
-    "keywords": ["sign up", "register", "cubit"]
+    "keywords": [
+      "sign-up",
+      "register",
+      "cubit",
+      "ui-effect",
+      "validation"
+    ]
   },
   {
     "type": "bloc",
     "name": "SplashCubit",
-    "description": "App startup and initial routing",
+    "description": "UI-free startup orchestration; emits typed SplashEffect navigation and retry intents",
     "location": "lib/presentation/splash/cubit/splash_cubit.dart",
-    "keywords": ["splash", "startup", "cubit"]
+    "keywords": [
+      "splash",
+      "startup",
+      "cubit",
+      "ui-effect",
+      "navigation"
+    ]
   },
   {
     "type": "bloc",
     "name": "AppCubit",
     "description": "App-wide state",
     "location": "lib/core/app/app_cubit/app_cubit.dart",
-    "keywords": ["app", "global", "cubit"]
+    "keywords": [
+      "app",
+      "global",
+      "cubit"
+    ]
+  },
+  {
+    "type": "bloc",
+    "name": "ResetPasswordCubit",
+    "description": "UI-free phone OTP and reset-password flow with typed validation, timer lifecycle, and retryable UI effects",
+    "location": "lib/presentation/reset_password/cubit/reset_password_cubit.dart",
+    "keywords": [
+      "auth",
+      "otp",
+      "password",
+      "cubit",
+      "ui-effect",
+      "timer"
+    ],
+    "bloc_type": "cubit",
+    "feature": "reset-password"
+  },
+  {
+    "type": "bloc",
+    "name": "ConfirmInformationCubit",
+    "description": "UI-free phone verification flow with safe OTP timer and typed verification/error effects",
+    "location": "lib/presentation/confirm_information/cubit/confirm_information_cubit.dart",
+    "keywords": [
+      "auth",
+      "otp",
+      "verification",
+      "cubit",
+      "ui-effect",
+      "timer"
+    ],
+    "bloc_type": "cubit",
+    "feature": "confirm-information"
   }
 ]

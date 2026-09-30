@@ -87,3 +87,10 @@ offline interceptor contract đã được đóng bằng implementation + tests 
 được giữ nguyên vì là snapshot đúng tại revision ngày 2026-08-27. Typed
 session-expired event và lifecycle `NetworkChecker` sau đó đã hoàn tất tại
 revision `d9f855e` và được ghi trong cùng review mới.
+
+## Addendum pure Cubit 2026-09-28
+
+Follow-up “Cubit độc lập UI” đã hoàn tất cho cả năm flow được audit. Evidence,
+architecture gate và test nằm tại
+[review pure Cubit/UI effect](2026-09-28-pure-cubit-ui-effects-review.md). Bảng
+follow-up phía trên vẫn được giữ nguyên như snapshot lịch sử ngày 2026-08-27.

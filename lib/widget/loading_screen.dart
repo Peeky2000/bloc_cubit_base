@@ -4,13 +4,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bloc_cubit_base/core/base_component/base_app_state.dart';
 import 'package:bloc_cubit_base/core/common/enum.dart';
 
-class LoadingScreen<B extends StateStreamable<S>, S extends BaseAppState>
+class LoadingScreen<
+  B extends StateStreamable<S>,
+  S extends BaseAppState<Object>
+>
     extends StatelessWidget {
   final Widget Function(BuildContext, S) builder;
   final bool dismissible;
   final double opacity;
   final Color color;
   final BlocBuilderCondition<S>? buildWhen;
+  final BlocListenerCondition<S>? listenWhen;
   final Function(BuildContext, S)? listener;
 
   const LoadingScreen({
@@ -20,12 +24,14 @@ class LoadingScreen<B extends StateStreamable<S>, S extends BaseAppState>
     this.color = Colors.black,
     this.dismissible = false,
     this.buildWhen,
+    this.listenWhen,
     this.listener,
   });
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<B, S>(
+      listenWhen: listenWhen,
       listener: (context, state) {
         if (listener != null) {
           listener!(context, state);

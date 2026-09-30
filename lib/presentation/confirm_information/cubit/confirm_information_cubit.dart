@@ -1,102 +1,126 @@
 import 'dart:async';
 
-import 'package:bloc_cubit_base/core/app/app_controller.dart';
-import 'package:bloc_cubit_base/core/common/constant.dart';
-import 'package:bloc_cubit_base/core/common/route.dart';
-import 'package:bloc_cubit_base/core/error/exception.dart';
-import 'package:bloc_cubit_base/core/routing/routing.dart';
-import 'package:bloc_cubit_base/domain/use_case/auth_use_case.dart';
-import 'package:bloc_cubit_base/l10n/l10n.dart';
-import 'package:bloc_cubit_base/presentation/global_handler.dart';
-import 'package:bloc_cubit_base/presentation/success/success_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:injectable/injectable.dart';
 import 'package:bloc_cubit_base/core/base_component/base_app_state.dart';
 import 'package:bloc_cubit_base/core/base_component/base_cubit.dart';
+import 'package:bloc_cubit_base/core/base_component/ui_effect.dart';
+import 'package:bloc_cubit_base/core/common/constant.dart';
 import 'package:bloc_cubit_base/core/common/enum.dart';
+import 'package:bloc_cubit_base/domain/use_case/auth_use_case.dart';
+import 'package:injectable/injectable.dart';
 
+part 'confirm_information_effect.dart';
 part 'confirm_information_state.dart';
 
 @injectable
 class ConfirmInformationCubit extends BaseCubit<ConfirmInformationState> {
-  String phone = '';
-  String pageSuccess = AppPage.home;
-  Timer? _timer;
-  int counter = Constant.timePeriodOTP;
-  final AppController _appController;
+  ConfirmInformationCubit(this._authUseCase)
+    : super(ConfirmInformationState.initial());
+
   final AuthUseCase _authUseCase;
+  Timer? _timer;
+  String _phone = '';
+  int _counter = Constant.timePeriodOTP;
 
-  ConfirmInformationCubit(this._authUseCase, this._appController)
-    : super(ConfirmInformationState.initial()) {
-    dynamic data = SLIRouting.routing.args;
-    if (data is Map<String, dynamic> && data.containsKey('phone')) {
-      phone = data['phone'];
+  void initialize({required String phone}) {
+    if (_phone.isNotEmpty) {
+      return;
     }
-    if (data is Map<String, dynamic> && data.containsKey('page_success')) {
-      pageSuccess = data['page_success'];
-    }
+    _phone = phone;
+    _counter = Constant.timePeriodOTP;
+    emit(state.copyWith(phone: phone, counter: _counter));
+    _startTimer();
   }
-
-  BuildContext? get _context => _appController.context;
 
   @override
   Future<void> close() {
-    _timer?.cancel();
-    _timer = null;
+    _stopTimer();
     return super.close();
   }
 
   Future<void> sendCodeVerify() async {
+    if (_phone.isEmpty || state.isVerifying) {
+      return;
+    }
     emit(state.copyWith(loading: LoadingStatus.loading));
-    await _authUseCase.sendCodeVerify(
-      phone: phone,
-      onComplete: () {},
-      onError: (e) {
-        emit(state.copyWith(error: e));
-      },
-    );
-    counter = Constant.timePeriodOTP;
-    emit(
-      state.copyWith(
-        loading: LoadingStatus.complete,
-        counter: counter,
-        isVerifying: false,
-      ),
-    );
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (!state.isVerifying && counter > 0) {
-        counter--;
-        emit(state.copyWith(counter: counter));
-      }
-    });
+    try {
+      await _authUseCase.sendCodeVerify(
+        phone: _phone,
+        onComplete: () {
+          if (isClosed) {
+            return;
+          }
+          _counter = Constant.timePeriodOTP;
+          emit(
+            state.copyWith(
+              loading: LoadingStatus.complete,
+              counter: _counter,
+              isVerifying: false,
+            ),
+          );
+          _startTimer();
+        },
+        onError: _handleSendCodeError,
+      );
+    } catch (error) {
+      _handleSendCodeError(error);
+    }
+  }
+
+  void _handleSendCodeError(Object error) {
+    if (isClosed) {
+      return;
+    }
+    emit(state.copyWith(loading: LoadingStatus.error, error: error));
+    _emitEffect(ConfirmInformationShowErrorEffect(error: error));
   }
 
   Future<void> verifyOtp(String otp) async {
     try {
       emit(state.copyWith(isVerifying: true));
-      String? idToken = await _authUseCase.verifyOTP(otp: otp);
-      emit(state.copyWith(isVerifying: false));
-      if (idToken != null) {
-        await _authUseCase.verifyPhone(idToken: idToken);
-        SLIRouting.to(
-          SuccessScreen(
-            title: _context?.l10n.verifyPhoneSuccess.toUpperCase(),
-            subtitle: _context?.l10n.noteSignupSuccess,
-          ),
-        );
-        Future.delayed(
-          const Duration(milliseconds: 1400),
-          () => SLIRouting.offAllNamed(pageSuccess),
-        );
+      final idToken = await _authUseCase.verifyOTP(otp: otp);
+      if (isClosed) {
+        return;
       }
-    } catch (e) {
-      emit(state.copyWith(isVerifying: false));
-      if (e is FirebaseAuthException) {
-        handleErrorResponse(GeneralException(messages: _context?.l10n.failOTP));
-      } else {
-        handleErrorResponse(e);
+      if (idToken == null) {
+        emit(state.copyWith(isVerifying: false));
+        _emitEffect(const ConfirmInformationInvalidOtpEffect());
+        return;
       }
+      await _authUseCase.verifyPhone(idToken: idToken);
+      if (isClosed) {
+        return;
+      }
+      _stopTimer();
+      emit(state.copyWith(isVerifying: false, counter: 0));
+      _emitEffect(const ConfirmInformationVerifiedEffect());
+    } catch (_) {
+      if (isClosed) {
+        return;
+      }
+      emit(state.copyWith(isVerifying: false));
+      _emitEffect(const ConfirmInformationInvalidOtpEffect());
     }
+  }
+
+  void _startTimer() {
+    _stopTimer();
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (!state.isVerifying && _counter > 0) {
+        _counter--;
+        emit(state.copyWith(counter: _counter));
+      }
+      if (_counter == 0) {
+        _stopTimer();
+      }
+    });
+  }
+
+  void _stopTimer() {
+    _timer?.cancel();
+    _timer = null;
+  }
+
+  void _emitEffect(ConfirmInformationEffect effect) {
+    emit(state.copyWith(effect: createEffect(effect)));
   }
 }

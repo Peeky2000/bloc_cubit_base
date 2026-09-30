@@ -1,48 +1,29 @@
-import 'package:dio/dio.dart' as dio;
-import 'package:bloc_cubit_base/core/app/app_controller.dart';
 import 'package:bloc_cubit_base/core/error/exception.dart';
-import 'package:bloc_cubit_base/data/model/response/base_response_model.dart';
-import 'package:bloc_cubit_base/di/injection.dart';
-import 'package:bloc_cubit_base/l10n/l10n.dart';
+import 'package:dio/dio.dart' as dio;
 
-part 'error_mapper_item.dart';
-
-class ErrorMapper {
-  ErrorMapper._(this._items);
-
-  // Singleton
-  static final ErrorMapper instance = ErrorMapper._([
-    NoNetworkMapperItem(),
-    HttpErrorResponseMapperItem(),
-    GeneralErrorMapperItem(),
-  ]);
-
-  final List<ErrorToStringMapperItem> _items;
-
-  String _map(dynamic error, [List<ErrorToStringMapperItem>? customItems]) {
-    final item = _findItem(error, customItems);
-    return item.getDisplay(error);
-  }
-
+abstract final class ErrorMapper {
   static String parse(
-    dynamic error, [
-    List<ErrorToStringMapperItem>? customItems,
-  ]) {
-    return instance._map(error, customItems);
-  }
-
-  ErrorToStringMapperItem _findItem(
-    dynamic exception,
-    List<ErrorToStringMapperItem>? customItems,
-  ) {
-    if (customItems != null && customItems.isNotEmpty) {
-      final index = customItems.indexWhere(
-        (element) => element.isMatch(exception),
-      );
-      if (index >= 0) {
-        return customItems[index];
+    Object error, {
+    required String fallbackMessage,
+    required String noNetworkMessage,
+  }) {
+    if (error is NetworkIssueException) {
+      return noNetworkMessage;
+    }
+    if (error is GeneralException) {
+      final message = error.messages?.trim();
+      return message == null || message.isEmpty ? fallbackMessage : message;
+    }
+    if (error is ServerException && error.hasError) {
+      final response = (error.error as dio.DioException).response;
+      final data = response?.data;
+      if (data is Map) {
+        final message = data['message'];
+        if (message is String && message.trim().isNotEmpty) {
+          return message.trim();
+        }
       }
     }
-    return _items.firstWhere((element) => element.isMatch(exception));
+    return fallbackMessage;
   }
 }

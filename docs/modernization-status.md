@@ -12,8 +12,15 @@ implement” nghĩa là có code cùng gate liên quan; không có nghĩa sample
   test app, và command delivery phân tách build/Firebase/Store.
 - `get_it + injectable`, generated graph, runtime module, và constructor
   injection trên dependency graph feature hiện tại.
+- DI reset/dispose lifecycle có test seam; repeated setup không leak
+  registration.
 - Sửa boundary domain thuần và kiểm tra presentation-to-data import.
 - Cubit mặc định kèm hỗ trợ `BaseBloc`; base state immutable bằng Equatable.
+- `BaseAppState` hỗ trợ generic typed failure; Cubit và BLoC đại diện đã cover
+  initial/loading/success/failure.
+- Năm legacy auth/startup Cubit đã độc lập widget tree: validation có kiểu,
+  one-shot `UiEffect` revisioned, route/dialog/l10n thuộc Screen và pure-Cubit
+  rule được khóa trong architecture gate.
 - Alice inspector ngoài production có redaction; token storage serialize write
   và dùng revision guard; session refresh single-flight, retry an toàn và network
   layer không điều hướng UI.
@@ -37,8 +44,8 @@ implement” nghĩa là có code cùng gate liên quan; không có nghĩa sample
 
 ## Baseline đã verify
 
-- Application quality: format 181 file, analyzer 0 finding, architecture gate
-  pass và 44 tests pass.
+- Application quality: format 193 file, analyzer 0 finding, architecture gate
+  pass và 62 tests pass.
 - `sli_common`: scoped analyzer sạch và 5 tests pass.
 - Catalog inventory gate xác nhận 45/45 public export có maturity entry.
 - Derry facade forward được display name có khoảng trắng.
@@ -54,21 +61,23 @@ implement” nghĩa là có code cùng gate liên quan; không có nghĩa sample
   - `xcodebuild -list` đọc được project và đủ 9 build configurations/3 schemes.
 
 Evidence mới nhất nằm tại
+[review state/DI completion 2026-09-30](reviews/2026-09-30-state-di-completion-review.md).
+Pure Cubit/UI effect có snapshot riêng tại
+[review pure Cubit/UI effect 2026-09-28](reviews/2026-09-28-pure-cubit-ui-effects-review.md).
+Session/network có snapshot riêng tại
 [review session/network 2026-09-28](reviews/2026-09-28-session-network-review.md).
 Catalog và Base CLI vẫn có snapshot riêng tại
 [review 2026-08-28](reviews/2026-08-28-component-catalog-base-cli-review.md).
 
 ## Việc còn lại trước template zero-debt
 
-1. Gỡ side effect `BuildContext`/navigation/dialog khỏi legacy feature Cubit và
-   thay compatibility global handler bằng UI listener tường minh.
-2. Từ BottomSheet pilot, chốt stable presenter/frame contract và behavior
+1. Từ BottomSheet pilot, chốt stable presenter/frame contract và behavior
    matrix; sau đó mới migrate widget trùng trong `lib/core/widget` qua adapter.
-3. Trung hòa product slice còn lại: `DeliveryGo`, copy/l10n `Giao Hàng 247`,
+2. Trung hòa product slice còn lại: `DeliveryGo`, copy/l10n `Giao Hàng 247`,
    Fastlane artifact/key path, icon/splash, Firebase client config và endpoint.
-4. Burn down analyzer baseline của toàn bộ legacy `sli_common`, rồi mở rộng gate
+3. Burn down analyzer baseline của toàn bộ legacy `sli_common`, rồi mở rộng gate
    từ stable surface sang toàn historical package.
-5. Hoàn thiện hệ skill phục vụ Flutter/mobile engineering: code review,
+4. Hoàn thiện hệ skill phục vụ Flutter/mobile engineering: code review,
    performance, testing, security/privacy, platform lifecycle và release
    readiness; không adopt framework VIPER.
 

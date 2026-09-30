@@ -17,7 +17,8 @@ Entity → Model → DataSource → Repository → UseCase → Cubit/BLoC → Sc
    `@LazySingleton(as: Repo)`.
 6. Thêm UseCase inject qua constructor để orchestration.
 7. Chọn Cubit hoặc BLoC theo [guide quyết định](choose-cubit-or-bloc.md), gắn
-   `@injectable`, và unit-test transition.
+   `@injectable`, unit-test transition, và dùng
+   [typed UI effect](handle-ui-effects.md) nếu cần route/dialog/snackbar.
 8. Tạo một screen mỏng. Resolve owner của state một lần trong builder và
    localize mọi text hiển thị cho user.
 9. Register `AppPage`/`SLIPage`, cập nhật ARB, và tái sử dụng component `Sli*`.

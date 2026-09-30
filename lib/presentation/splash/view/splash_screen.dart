@@ -1,6 +1,7 @@
 import 'package:bloc_cubit_base/core/app/app.dart';
 import 'package:bloc_cubit_base/core/common/route.dart';
 import 'package:bloc_cubit_base/core/routing/routing.dart';
+import 'package:bloc_cubit_base/presentation/global_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -36,19 +37,26 @@ class _SplashScreenState extends State<SplashScreen> with AfterLayoutMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocListener<SplashCubit, SplashState>(
+        listenWhen: (previous, current) => previous.effect != current.effect,
         listener: (_, state) {
-          switch (state.isLogin) {
-            case true:
-              if (state.isPhoneVerified) {
-                SLIRouting.offAllNamed(AppPage.home);
-              } else {
-                _splashCubit?.sendCodeVerify();
-              }
-              break;
-            case false:
+          final effect = state.effect?.value;
+          switch (effect) {
+            case SplashNavigateSignInEffect():
               SLIRouting.offAllNamed(AppPage.signIn);
-              break;
-            default:
+            case SplashNavigateHomeEffect():
+              SLIRouting.offAllNamed(AppPage.home);
+            case SplashNavigatePhoneVerificationEffect(:final phone):
+              SLIRouting.offAllNamed(
+                AppPage.confirmInfo,
+                arguments: {'phone': phone, 'page_success': AppPage.home},
+              );
+            case SplashShowErrorEffect(:final error):
+              handleErrorResponse(
+                context,
+                error,
+                onRetry: () => _splashCubit!.sendCodeVerify(),
+              );
+            case null:
               break;
           }
         },

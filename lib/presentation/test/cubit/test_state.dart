@@ -1,6 +1,6 @@
 part of 'test_cubit.dart';
 
-class TestState extends BaseAppState {
+class TestState extends BaseAppState<Object> {
   const TestState({required super.loading, super.error});
 
   factory TestState.initial() {

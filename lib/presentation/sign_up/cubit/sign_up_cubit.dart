@@ -1,36 +1,28 @@
-import 'package:bloc_cubit_base/core/app/app_controller.dart';
+import 'package:bloc_cubit_base/core/base_component/base_app_state.dart';
+import 'package:bloc_cubit_base/core/base_component/base_cubit.dart';
+import 'package:bloc_cubit_base/core/base_component/ui_effect.dart';
 import 'package:bloc_cubit_base/core/common/constant.dart';
-import 'package:bloc_cubit_base/core/common/route.dart';
-import 'package:bloc_cubit_base/core/routing/routing.dart';
+import 'package:bloc_cubit_base/core/common/enum.dart';
+import 'package:bloc_cubit_base/core/validation/auth_validation_error.dart';
 import 'package:bloc_cubit_base/domain/entities/auth/sign_up_params.dart';
 import 'package:bloc_cubit_base/domain/entities/common/app_enums.dart';
 import 'package:bloc_cubit_base/domain/use_case/auth_use_case.dart';
-import 'package:bloc_cubit_base/l10n/l10n.dart';
-import 'package:bloc_cubit_base/presentation/global_handler.dart';
-import 'package:bloc_cubit_base/core/base_component/base_app_state.dart';
-import 'package:bloc_cubit_base/core/base_component/base_cubit.dart';
-import 'package:bloc_cubit_base/core/common/enum.dart';
-import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 
+part 'sign_up_effect.dart';
 part 'sign_up_state.dart';
 
 @injectable
 class SignUpCubit extends BaseCubit<SignUpState> {
-  final AppController _appController;
-  final AuthUseCase _authUseCase;
+  SignUpCubit(this._authUseCase) : super(SignUpState.initial());
 
+  final AuthUseCase _authUseCase;
   String _email = '';
   String _phone = '';
   String _password = '';
   String _shopName = '';
   final List<String> _industry = [];
   ScaleLevel _level = ScaleLevel.KHONG_THUONG_XUYEN;
-
-  SignUpCubit(this._authUseCase, this._appController)
-    : super(SignUpState.initial());
-
-  BuildContext? get _context => _appController.context;
 
   void onChangeShowPass() {
     emit(state.copyWith(showPass: !state.showPass));
@@ -41,17 +33,11 @@ class SignUpCubit extends BaseCubit<SignUpState> {
   }
 
   void onNextPage() {
-    if (state.changePageViewStatus == ChangePageViewStatus.next) {
-      emit(state.copyWith(changePageViewStatus: null));
-    }
-    emit(state.copyWith(changePageViewStatus: ChangePageViewStatus.next));
+    _emitEffect(const SignUpChangePageEffect(delta: 1));
   }
 
   void previousPage() {
-    if (state.changePageViewStatus == ChangePageViewStatus.previous) {
-      emit(state.copyWith(changePageViewStatus: null));
-    }
-    emit(state.copyWith(changePageViewStatus: ChangePageViewStatus.previous));
+    _emitEffect(const SignUpChangePageEffect(delta: -1));
   }
 
   void onChangeScaleLevel(ScaleLevel level) {
@@ -60,11 +46,18 @@ class SignUpCubit extends BaseCubit<SignUpState> {
   }
 
   void onChangeSelectedIndustry(IndustryType type, String name, bool selected) {
-    List<IndustryType> industries = (state.industries ?? [])
-        .map((e) => e)
-        .toList();
-    selected ? industries.add(type) : industries.remove(type);
-    selected ? _industry.add(name) : _industry.remove(name);
+    final industries = [...?state.industries];
+    if (selected) {
+      if (!industries.contains(type)) {
+        industries.add(type);
+      }
+      if (!_industry.contains(name)) {
+        _industry.add(name);
+      }
+    } else {
+      industries.remove(type);
+      _industry.remove(name);
+    }
     emit(state.copyWith(industries: industries));
   }
 
@@ -73,79 +66,73 @@ class SignUpCubit extends BaseCubit<SignUpState> {
     required String email,
     required String pass,
   }) {
-    String? errorPhone;
-    String? errorEmail;
-    String? errorPass;
-    bool isValid = true;
-    if (phone.isEmpty) {
-      errorPhone = _context?.l10n.phoneIsRequired;
-      isValid = false;
-    } else if (!Constant.phoneRegexp.hasMatch(phone)) {
-      errorPhone = _context?.l10n.phoneIsInvalid;
-      isValid = false;
-    }
-    if (email.isEmpty) {
-      errorEmail = _context?.l10n.emailIsRequired;
-      isValid = false;
-    } else if (!Constant.emailRegexp.hasMatch(email)) {
-      errorEmail = _context?.l10n.emailIsInvalid;
-      isValid = false;
-    }
-    if (pass.isEmpty) {
-      errorPass = _context?.l10n.passIsRequired;
-      isValid = false;
-    } else if (!Constant.passwordRegexp.hasMatch(pass)) {
-      errorPass = _context?.l10n.passIsInvalid;
-      isValid = false;
-    }
+    final phoneError = _validatePhone(phone);
+    final emailError = _validateEmail(email);
+    final passwordError = _validatePassword(pass);
     emit(
       state.copyWith(
-        errorPhone: errorPhone,
-        errorEmail: errorEmail,
-        errorPassword: errorPass,
-        forceUpdateError: true,
+        phoneError: phoneError,
+        emailError: emailError,
+        passwordError: passwordError,
+        forceUpdateValidation: true,
       ),
     );
-    if (isValid) {
-      if (phone[0] == '0') {
-        _phone = '+84${phone.substring(1)}';
-      } else {
-        _phone = phone;
-      }
-      _email = email;
-      _password = pass;
-      onNextPage();
+    if (phoneError != null || emailError != null || passwordError != null) {
+      return;
     }
+
+    _phone = phone.startsWith('0') ? '+84${phone.substring(1)}' : phone;
+    _email = email;
+    _password = pass;
+    onNextPage();
   }
 
-  void onTapConfirmInfo({required String shopName}) {
-    String? errorShopName;
-    String? errIndustry;
-    String? errScale;
-    bool isValid = true;
-    if (shopName.isEmpty) {
-      errorShopName = _context?.l10n.shopNameIsRequired;
-      isValid = false;
+  PhoneInputError? _validatePhone(String phone) {
+    if (phone.isEmpty) {
+      return PhoneInputError.required;
     }
-    if (state.industries == null || state.industries!.isEmpty) {
-      errIndustry = _context?.l10n.industryIsRequired;
-      isValid = false;
+    return Constant.phoneRegexp.hasMatch(phone)
+        ? null
+        : PhoneInputError.invalid;
+  }
+
+  EmailInputError? _validateEmail(String email) {
+    if (email.isEmpty) {
+      return EmailInputError.required;
     }
-    if (state.currentScaleLevel == null) {
-      errScale = _context?.l10n.scaleLevelIsRequired;
-      isValid = false;
+    return Constant.emailRegexp.hasMatch(email)
+        ? null
+        : EmailInputError.invalid;
+  }
+
+  PasswordInputError? _validatePassword(String password) {
+    if (password.isEmpty) {
+      return PasswordInputError.required;
     }
+    return Constant.passwordRegexp.hasMatch(password)
+        ? null
+        : PasswordInputError.invalid;
+  }
+
+  Future<void> onTapConfirmInfo({required String shopName}) async {
+    final shopNameError = shopName.isEmpty ? RequiredInputError.required : null;
+    final industryError = state.industries?.isNotEmpty == true
+        ? null
+        : RequiredInputError.required;
+    final scaleError = state.currentScaleLevel == null
+        ? RequiredInputError.required
+        : null;
     emit(
       state.copyWith(
-        errorShopName: errorShopName,
-        errScale: errScale,
-        errIndustry: errIndustry,
-        forceUpdateError: true,
+        shopNameError: shopNameError,
+        industryError: industryError,
+        scaleError: scaleError,
+        forceUpdateValidation: true,
       ),
     );
-    if (isValid) {
+    if (shopNameError == null && industryError == null && scaleError == null) {
       _shopName = shopName;
-      _signUp();
+      await _signUp();
     }
   }
 
@@ -161,26 +148,56 @@ class SignUpCubit extends BaseCubit<SignUpState> {
         shopName: _shopName,
       );
       await _authUseCase.userSignUp(request: request);
+      if (isClosed) {
+        return;
+      }
       emit(state.copyWith(loading: LoadingStatus.complete));
       await sendCodeVerify();
-    } catch (e) {
-      emit(state.copyWith(loading: LoadingStatus.error));
-      handleErrorResponse(e, onRetry: () => _signUp());
+    } catch (error) {
+      if (isClosed) {
+        return;
+      }
+      emit(state.copyWith(loading: LoadingStatus.error, error: error));
+      _emitEffect(
+        SignUpShowErrorEffect(
+          error: error,
+          retryAction: SignUpRetryAction.signUp,
+        ),
+      );
     }
   }
 
   Future<void> sendCodeVerify() async {
-    await _authUseCase.sendCodeVerify(
-      phone: _phone,
-      onComplete: () {
-        SLIRouting.toNamed(
-          AppPage.confirmInfo,
-          arguments: {'phone': _phone, 'page_success': AppPage.signIn},
-        );
-      },
-      onError: (e) {
-        emit(state.copyWith(error: e));
-      },
+    try {
+      await _authUseCase.sendCodeVerify(
+        phone: _phone,
+        onComplete: () {
+          if (isClosed) {
+            return;
+          }
+          _emitEffect(SignUpNavigatePhoneVerificationEffect(phone: _phone));
+        },
+        onError: _handleSendCodeError,
+      );
+    } catch (error) {
+      _handleSendCodeError(error);
+    }
+  }
+
+  void _handleSendCodeError(Object error) {
+    if (isClosed) {
+      return;
+    }
+    emit(state.copyWith(error: error));
+    _emitEffect(
+      SignUpShowErrorEffect(
+        error: error,
+        retryAction: SignUpRetryAction.sendVerificationCode,
+      ),
     );
+  }
+
+  void _emitEffect(SignUpEffect effect) {
+    emit(state.copyWith(effect: createEffect(effect)));
   }
 }

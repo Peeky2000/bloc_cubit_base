@@ -1,6 +1,6 @@
 part of 'home_page_cubit.dart';
 
-class HomePageState extends BaseAppState {
+class HomePageState extends BaseAppState<Object> {
   const HomePageState({required super.loading, super.error});
 
   factory HomePageState.initial() {

@@ -77,19 +77,25 @@ thật, và design layer có Shadcn phía sau. Documentation và agent instructi
 - [x] **[lib]** *(coder)* — Annotate dependency app và chuyển Cubit/BLoC, use
   case, repository, data source sang constructor injection. **Verify:** không
   có constructor business-layer nào đọc `Injector.getIt`.
-- [ ] **[tests]** *(coder)* — Thêm test DI/bootstrap resettable. **Verify:**
-  repeated test setup không leak registration.
+- [x] **[tests]** *(coder)* — Thêm test DI/bootstrap resettable. **Verify:**
+  repeated test setup không leak registration. **Evidence:** graph cũ được
+  dispose trước graph mới và composition root identity được test; xem
+  [review 2026-09-30](../reviews/2026-09-30-state-di-completion-review.md).
 
 ## Phase 4 — Convention Cubit/BLoC và state
 
-- [ ] **[lib/core/base_component]** *(coder)* — Gia cố `BaseAppState`
+- [x] **[lib/core/base_component]** *(coder)* — Gia cố `BaseAppState`
   immutable, failure data có kiểu, và convention Cubit/BLoC mà không đưa Freezed
   hoặc HydratedBloc vào. **Verify:** test Cubit và BLoC đại diện cover
-  initial/loading/success/failure.
-- [ ] **[lib/presentation]** *(coder)* — Gỡ `BuildContext` và service-locator
+  initial/loading/success/failure. **Evidence:** generic failure contract và
+  representative state-owner tests tại
+  [review 2026-09-30](../reviews/2026-09-30-state-di-completion-review.md).
+- [x] **[lib/presentation]** *(coder)* — Gỡ `BuildContext` và service-locator
   access khỏi feature state manager; expose UI effect bằng state hoặc
   presentation event. **Verify:** presentation logic unit-test được mà không cần
-  widget tree.
+  widget tree. **Evidence:** năm auth/startup Cubit dùng typed `UiEffect`, pure
+  validation/error mapping, architecture gate và 10 focused tests; xem
+  [review 2026-09-28](../reviews/2026-09-28-pure-cubit-ui-effects-review.md).
 
 ## Phase 5 — Sửa boundary Clean Architecture
 

@@ -1,173 +1,216 @@
 import 'dart:async';
 
-import 'package:bloc_cubit_base/core/app/app_controller.dart';
-import 'package:bloc_cubit_base/core/common/constant.dart';
-import 'package:bloc_cubit_base/core/common/route.dart';
-import 'package:bloc_cubit_base/core/error/exception.dart';
-import 'package:bloc_cubit_base/core/routing/routing.dart';
-import 'package:bloc_cubit_base/domain/use_case/auth_use_case.dart';
-import 'package:bloc_cubit_base/l10n/l10n.dart';
-import 'package:bloc_cubit_base/core/extension/string_extension.dart';
-import 'package:bloc_cubit_base/core/widget/dialog_util.dart';
-import 'package:bloc_cubit_base/presentation/global_handler.dart';
 import 'package:bloc_cubit_base/core/base_component/base_app_state.dart';
 import 'package:bloc_cubit_base/core/base_component/base_cubit.dart';
+import 'package:bloc_cubit_base/core/base_component/ui_effect.dart';
+import 'package:bloc_cubit_base/core/common/constant.dart';
 import 'package:bloc_cubit_base/core/common/enum.dart';
-import 'package:flutter/material.dart';
+import 'package:bloc_cubit_base/core/validation/auth_validation_error.dart';
+import 'package:bloc_cubit_base/domain/use_case/auth_use_case.dart';
 import 'package:injectable/injectable.dart';
 
+part 'reset_password_effect.dart';
 part 'reset_password_state.dart';
 
 @injectable
 class ResetPasswordCubit extends BaseCubit<ResetPasswordState> {
-  Timer? _timer;
-  final AppController _appController;
+  ResetPasswordCubit(this._authUseCase) : super(ResetPasswordState.initial());
+
   final AuthUseCase _authUseCase;
+  Timer? _timer;
   String? _idToken;
-  int counter = Constant.timePeriodOTP;
-
-  ResetPasswordCubit(this._authUseCase, this._appController)
-    : super(ResetPasswordState.initial());
-
-  BuildContext? get _context => _appController.context;
+  String _phone = '';
+  String _newPassword = '';
+  int _counter = Constant.timePeriodOTP;
 
   @override
   Future<void> close() {
-    _timer?.cancel();
-    _timer = null;
+    _stopTimer();
     return super.close();
   }
 
-  void onTapSendRequestLogin(String phone) {
-    String? errPhone;
-    bool isValid = true;
-    if (phone.isEmpty || !Constant.phoneRegexp.hasMatch(phone)) {
-      errPhone = _context?.l10n.phoneIsInvalid;
-      isValid = false;
+  Future<void> onTapSendRequestLogin(String phone) async {
+    final phoneError = _validatePhone(phone);
+    emit(state.copyWith(phoneError: phoneError, forceUpdateValidation: true));
+    if (phoneError != null) {
+      return;
     }
-    emit(state.copyWith(errorPhone: errPhone));
-    if (isValid) {
-      emit(state.copyWith(loading: LoadingStatus.loading));
-      _authUseCase.sendCodeVerify(
-        phone: phone,
+
+    _phone = phone;
+    emit(state.copyWith(loading: LoadingStatus.loading));
+    await _sendCode();
+  }
+
+  Future<void> resendCode() async {
+    if (_phone.isEmpty || state.isVerifying) {
+      return;
+    }
+    emit(state.copyWith(loading: LoadingStatus.loading));
+    await _sendCode();
+  }
+
+  Future<void> _sendCode() async {
+    try {
+      await _authUseCase.sendCodeVerify(
+        phone: _phone,
         onComplete: () {
-          counter = Constant.timePeriodOTP;
+          if (isClosed) {
+            return;
+          }
+          final shouldAdvance = state.phone.isEmpty;
+          _counter = Constant.timePeriodOTP;
           emit(
             state.copyWith(
               loading: LoadingStatus.complete,
-              changePageStatus: ChangePageViewStatus.next,
-              counter: counter,
-              phone: phone,
+              counter: _counter,
+              phone: _phone,
               isVerifying: false,
             ),
           );
-          _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-            if (!state.isVerifying && counter > 0) {
-              counter--;
-              emit(state.copyWith(counter: counter));
-            }
-          });
+          if (shouldAdvance) {
+            _emitEffect(const ResetPasswordChangePageEffect(delta: 1));
+          }
+          _startTimer();
         },
-        onError: (e) {
-          emit(state.copyWith(error: e));
-        },
+        onError: _handleSendCodeError,
       );
+    } catch (error) {
+      _handleSendCodeError(error);
     }
   }
 
-  void onTapBackPage() {
-    if (state.changePageStatus == ChangePageViewStatus.previous) {
-      emit(state.copyWith(changePageStatus: null));
+  void _handleSendCodeError(Object error) {
+    if (isClosed) {
+      return;
     }
-    emit(state.copyWith(changePageStatus: ChangePageViewStatus.previous));
+    emit(state.copyWith(loading: LoadingStatus.error, error: error));
+    _emitEffect(
+      ResetPasswordShowErrorEffect(
+        error: error,
+        retryAction: ResetPasswordRetryAction.sendVerificationCode,
+      ),
+    );
+  }
+
+  void _startTimer() {
+    _stopTimer();
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (!state.isVerifying && _counter > 0) {
+        _counter--;
+        emit(state.copyWith(counter: _counter));
+      }
+      if (_counter == 0) {
+        _stopTimer();
+      }
+    });
+  }
+
+  void _stopTimer() {
+    _timer?.cancel();
+    _timer = null;
+  }
+
+  void onTapBackPage() {
+    _emitEffect(const ResetPasswordChangePageEffect(delta: -1));
   }
 
   Future<void> onTapResetPassword({
     required String newPassword,
     required String confirmPassword,
   }) async {
-    String? errNewPass;
-    String? errConfirmPass;
-    bool isValid = true;
-    if (newPassword.isEmpty) {
-      errNewPass = _context?.l10n.passIsRequired;
-      isValid = false;
-    }
-    if (confirmPassword.isEmpty || newPassword != confirmPassword) {
-      errConfirmPass = _context?.l10n.confirmPassIsNotMath;
-      isValid = false;
-    }
+    final newPasswordError = newPassword.isEmpty
+        ? PasswordInputError.required
+        : null;
+    final confirmPasswordError = confirmPassword.isEmpty
+        ? PasswordInputError.required
+        : newPassword != confirmPassword
+        ? PasswordInputError.mismatch
+        : null;
     emit(
       state.copyWith(
-        errorNewPass: errNewPass,
-        errorConfirmPass: errConfirmPass,
+        newPasswordError: newPasswordError,
+        confirmPasswordError: confirmPasswordError,
+        forceUpdateValidation: true,
       ),
     );
-    if (isValid && _idToken.isNotNullOrEmpty) {
-      try {
-        emit(state.copyWith(loading: LoadingStatus.loading));
-        await _authUseCase.resetPasswordPhone(
-          idToken: _idToken!,
-          newPassword: newPassword,
-        );
-        emit(state.copyWith(loading: LoadingStatus.complete));
-        DialogUtil.alert(
-          _context!,
-          title: _context?.l10n.notification,
-          content: _context?.l10n.resetPassSuccess ?? '',
-          submit: _context?.l10n.signIn,
-          onSubmit: () => SLIRouting.offAllNamed(AppPage.signIn),
-        );
-      } catch (e) {
-        emit(state.copyWith(loading: LoadingStatus.error));
-        handleErrorResponse(e);
+    if (newPasswordError != null ||
+        confirmPasswordError != null ||
+        _idToken == null) {
+      return;
+    }
+
+    _newPassword = newPassword;
+    try {
+      emit(state.copyWith(loading: LoadingStatus.loading));
+      await _authUseCase.resetPasswordPhone(
+        idToken: _idToken!,
+        newPassword: _newPassword,
+      );
+      if (isClosed) {
+        return;
       }
+      emit(state.copyWith(loading: LoadingStatus.complete));
+      _emitEffect(const ResetPasswordSucceededEffect());
+    } catch (error) {
+      if (isClosed) {
+        return;
+      }
+      emit(state.copyWith(loading: LoadingStatus.error, error: error));
+      _emitEffect(
+        ResetPasswordShowErrorEffect(
+          error: error,
+          retryAction: ResetPasswordRetryAction.resetPassword,
+        ),
+      );
     }
   }
 
   void onTapShowNewPass() {
-    emit(
-      state.copyWith(
-        showNewPass: !state.showNewPass,
-        errorNewPass: state.errorNewPass,
-        errorConfirmPass: state.errorConfirmPass,
-      ),
-    );
+    emit(state.copyWith(showNewPass: !state.showNewPass));
   }
 
   void onTapShowConfirmPass() {
-    emit(
-      state.copyWith(
-        showConfirmPass: !state.showConfirmPass,
-        errorNewPass: state.errorNewPass,
-        errorConfirmPass: state.errorConfirmPass,
-      ),
-    );
+    emit(state.copyWith(showConfirmPass: !state.showConfirmPass));
   }
 
   Future<void> onCompleteOTP(String otp) async {
     try {
       emit(state.copyWith(isVerifying: true));
       _idToken = await _authUseCase.verifyOTP(otp: otp);
+      if (isClosed) {
+        return;
+      }
       emit(state.copyWith(isVerifying: false));
       if (_idToken != null) {
-        emit(
-          state.copyWith(
-            changePageStatus: ChangePageViewStatus.next,
-            counter: 0,
-          ),
-        );
+        _stopTimer();
+        emit(state.copyWith(counter: 0));
+        _emitEffect(const ResetPasswordChangePageEffect(delta: 1));
       }
-    } catch (e) {
+    } catch (_) {
+      if (isClosed) {
+        return;
+      }
       emit(state.copyWith(isVerifying: false));
-      handleErrorResponse(GeneralException(messages: _context?.l10n.failOTP));
+      _emitEffect(const ResetPasswordInvalidOtpEffect());
     }
   }
 
   void onChangePage(int page) {
     if (page != 1) {
-      _timer?.cancel();
-      _timer = null;
+      _stopTimer();
     }
+  }
+
+  PhoneInputError? _validatePhone(String phone) {
+    if (phone.isEmpty) {
+      return PhoneInputError.required;
+    }
+    return Constant.phoneRegexp.hasMatch(phone)
+        ? null
+        : PhoneInputError.invalid;
+  }
+
+  void _emitEffect(ResetPasswordEffect effect) {
+    emit(state.copyWith(effect: createEffect(effect)));
   }
 }

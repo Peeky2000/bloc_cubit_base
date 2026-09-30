@@ -1,11 +1,12 @@
 import 'package:bloc_cubit_base/core/app/app.dart';
-import 'package:bloc_cubit_base/core/common/enum.dart';
+import 'package:bloc_cubit_base/core/common/route.dart';
+import 'package:bloc_cubit_base/core/error/exception.dart';
 import 'package:bloc_cubit_base/core/routing/routing.dart';
+import 'package:bloc_cubit_base/core/validation/auth_validation_error.dart';
 import 'package:bloc_cubit_base/generated/assets.gen.dart';
 import 'package:bloc_cubit_base/l10n/l10n.dart';
 import 'package:bloc_cubit_base/widget/delivery_go_button.dart';
 import 'package:bloc_cubit_base/widget/loading_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:bloc_cubit_base/core/extension/int_extension.dart';
 import 'package:bloc_cubit_base/core/widget/common_text_field.dart';
 import 'package:bloc_cubit_base/core/widget/dialog_util.dart';
@@ -16,6 +17,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bloc_cubit_base/core/mixin/after_layout.dart';
 import 'package:bloc_cubit_base/di/injection.dart';
 import 'package:bloc_cubit_base/presentation/reset_password/cubit/reset_password_cubit.dart';
+import 'package:bloc_cubit_base/presentation/global_handler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 Widget resetPasswordScreenBuilder() => BlocProvider<ResetPasswordCubit>(
@@ -94,7 +96,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
                     title: context.l10n.phoneNumber,
                     hint: context.l10n.phoneNumber,
                     keyboardType: TextInputType.phone,
-                    error: state.errorPhone,
+                    error: _phoneError(context, state.phoneError),
                     maxLength: 15,
                   );
                 },
@@ -207,7 +209,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
                                     decoration: TextDecoration.underline,
                                   ),
                                   recognizer: TapGestureRecognizer()
-                                    ..onTap = () {},
+                                    ..onTap = () =>
+                                        _resetPasswordCubit?.resendCode(),
                                 ),
                               ],
                               style: App.appStyle?.medium14?.copyWith(
@@ -264,7 +267,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
                     title: context.l10n.newPassword,
                     hint: context.l10n.newPassword,
                     keyboardType: TextInputType.visiblePassword,
-                    error: state.errorNewPass,
+                    error: _passwordError(context, state.newPasswordError),
                     obscureText: !state.showNewPass,
                     suffix: GestureDetector(
                       onTap: () => _resetPasswordCubit?.onTapShowNewPass(),
@@ -286,7 +289,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
                     title: context.l10n.retypePassword,
                     hint: context.l10n.retypePassword,
                     keyboardType: TextInputType.visiblePassword,
-                    error: state.errorConfirmPass,
+                    error: _passwordError(context, state.confirmPasswordError),
                     obscureText: !state.showConfirmPass,
                     suffix: GestureDetector(
                       onTap: () => _resetPasswordCubit?.onTapShowConfirmPass(),
@@ -322,34 +325,50 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
   @override
   Widget build(BuildContext context) {
     return LoadingScreen<ResetPasswordCubit, ResetPasswordState>(
+      listenWhen: (previous, current) => previous.effect != current.effect,
       listener: (context, state) {
-        if (state.error != null && state.error is FirebaseAuthException) {
-          DialogUtil.error(
-            context,
-            title: context.l10n.error,
-            content: (state.error as FirebaseAuthException).message ?? '',
-            closeText: context.l10n.close,
-            retryText: context.l10n.retry,
-            isShowRetry: true,
-            onTapRetry: () => _resetPasswordCubit?.onTapSendRequestLogin(
-              _phoneController.text.trim(),
-            ),
-          );
-        }
-        switch (state.changePageStatus) {
-          case ChangePageViewStatus.next:
-            _pageController.nextPage(
-              duration: const Duration(milliseconds: 450),
-              curve: Curves.easeInOut,
+        final effect = state.effect?.value;
+        switch (effect) {
+          case ResetPasswordChangePageEffect(:final delta):
+            if (delta > 0) {
+              _pageController.nextPage(
+                duration: const Duration(milliseconds: 450),
+                curve: Curves.easeInOut,
+              );
+            } else {
+              _pageController.previousPage(
+                duration: const Duration(milliseconds: 450),
+                curve: Curves.easeInOut,
+              );
+            }
+          case ResetPasswordShowErrorEffect(:final error, :final retryAction):
+            handleErrorResponse(
+              context,
+              error,
+              onRetry: () => switch (retryAction) {
+                ResetPasswordRetryAction.sendVerificationCode =>
+                  _resetPasswordCubit!.resendCode(),
+                ResetPasswordRetryAction.resetPassword =>
+                  _resetPasswordCubit!.onTapResetPassword(
+                    newPassword: _newPasswordController.text.trim(),
+                    confirmPassword: _confirmPasswordController.text.trim(),
+                  ),
+              },
             );
-            break;
-          case ChangePageViewStatus.previous:
-            _pageController.previousPage(
-              duration: const Duration(milliseconds: 450),
-              curve: Curves.easeInOut,
+          case ResetPasswordInvalidOtpEffect():
+            handleErrorResponse(
+              context,
+              GeneralException(messages: context.l10n.failOTP),
             );
-            break;
-          default:
+          case ResetPasswordSucceededEffect():
+            DialogUtil.alert(
+              context,
+              title: context.l10n.notification,
+              content: context.l10n.resetPassSuccess,
+              submit: context.l10n.signIn,
+              onSubmit: () => SLIRouting.offAllNamed(AppPage.signIn),
+            );
+          case null:
             break;
         }
       },
@@ -367,4 +386,19 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
       ),
     );
   }
+
+  String? _phoneError(BuildContext context, PhoneInputError? error) =>
+      switch (error) {
+        PhoneInputError.required => context.l10n.phoneIsRequired,
+        PhoneInputError.invalid => context.l10n.phoneIsInvalid,
+        null => null,
+      };
+
+  String? _passwordError(BuildContext context, PasswordInputError? error) =>
+      switch (error) {
+        PasswordInputError.required => context.l10n.passIsRequired,
+        PasswordInputError.invalid => context.l10n.passIsInvalid,
+        PasswordInputError.mismatch => context.l10n.confirmPassIsNotMath,
+        null => null,
+      };
 }

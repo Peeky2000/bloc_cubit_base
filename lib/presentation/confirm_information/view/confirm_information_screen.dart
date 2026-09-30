@@ -1,17 +1,19 @@
 import 'package:bloc_cubit_base/core/app/app.dart';
+import 'package:bloc_cubit_base/core/common/route.dart';
+import 'package:bloc_cubit_base/core/error/exception.dart';
 import 'package:bloc_cubit_base/core/routing/routing.dart';
 import 'package:bloc_cubit_base/generated/assets.gen.dart';
 import 'package:bloc_cubit_base/l10n/l10n.dart';
 import 'package:bloc_cubit_base/widget/loading_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:bloc_cubit_base/core/extension/int_extension.dart';
-import 'package:bloc_cubit_base/core/widget/dialog_util.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bloc_cubit_base/core/mixin/after_layout.dart';
 import 'package:bloc_cubit_base/di/injection.dart';
 import 'package:bloc_cubit_base/presentation/confirm_information/cubit/confirm_information_cubit.dart';
+import 'package:bloc_cubit_base/presentation/global_handler.dart';
+import 'package:bloc_cubit_base/presentation/success/success_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
@@ -32,11 +34,33 @@ class ConfirmInformationScreen extends StatefulWidget {
 class _ConfirmInformationScreenState extends State<ConfirmInformationScreen>
     with AfterLayoutMixin {
   ConfirmInformationCubit? _confirmInformationCubit;
+  bool _initialized = false;
+  String _pageSuccess = AppPage.home;
 
   @override
   void initState() {
     super.initState();
     _confirmInformationCubit = context.read<ConfirmInformationCubit>();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_initialized) {
+      return;
+    }
+    _initialized = true;
+    final arguments = ModalRoute.of(context)?.settings.arguments;
+    if (arguments is Map<String, dynamic>) {
+      final phone = arguments['phone'];
+      final pageSuccess = arguments['page_success'];
+      if (phone is String) {
+        _confirmInformationCubit?.initialize(phone: phone);
+      }
+      if (pageSuccess is String) {
+        _pageSuccess = pageSuccess;
+      }
+    }
   }
 
   @override
@@ -55,9 +79,7 @@ class _ConfirmInformationScreenState extends State<ConfirmInformationScreen>
           BlocBuilder<ConfirmInformationCubit, ConfirmInformationState>(
             builder: (context, state) {
               return Text(
-                context.l10n.confirmOTP(
-                  '${_confirmInformationCubit?.phone.substring(0, _confirmInformationCubit!.phone.length - 3)}***',
-                ),
+                context.l10n.confirmOTP(_maskedPhone(state.phone)),
                 style: App.appStyle?.semiBold18?.copyWith(
                   color: App.appColor?.textColor,
                 ),
@@ -141,17 +163,25 @@ class _ConfirmInformationScreenState extends State<ConfirmInformationScreen>
   @override
   Widget build(BuildContext context) {
     return LoadingScreen<ConfirmInformationCubit, ConfirmInformationState>(
+      listenWhen: (previous, current) => previous.effect != current.effect,
       listener: (context, state) {
-        if (state.error != null && state.error is FirebaseAuthException) {
-          DialogUtil.error(
-            context,
-            title: context.l10n.error,
-            content: (state.error as FirebaseAuthException).message ?? '',
-            closeText: context.l10n.close,
-            retryText: context.l10n.retry,
-            isShowRetry: true,
-            onTapRetry: () => _confirmInformationCubit?.sendCodeVerify(),
-          );
+        final effect = state.effect?.value;
+        switch (effect) {
+          case ConfirmInformationShowErrorEffect(:final error):
+            handleErrorResponse(
+              context,
+              error,
+              onRetry: () => _confirmInformationCubit!.sendCodeVerify(),
+            );
+          case ConfirmInformationInvalidOtpEffect():
+            handleErrorResponse(
+              context,
+              GeneralException(messages: context.l10n.failOTP),
+            );
+          case ConfirmInformationVerifiedEffect():
+            _handleVerified();
+          case null:
+            break;
         }
       },
       builder: (context, state) => Scaffold(
@@ -171,5 +201,26 @@ class _ConfirmInformationScreenState extends State<ConfirmInformationScreen>
         body: _buildBody(),
       ),
     );
+  }
+
+  String _maskedPhone(String phone) {
+    if (phone.length <= 3) {
+      return '***';
+    }
+    return '${phone.substring(0, phone.length - 3)}***';
+  }
+
+  Future<void> _handleVerified() async {
+    SLIRouting.to(
+      SuccessScreen(
+        title: context.l10n.verifyPhoneSuccess.toUpperCase(),
+        subtitle: context.l10n.noteSignupSuccess,
+      ),
+    );
+    await Future<void>.delayed(const Duration(milliseconds: 1400));
+    if (!mounted) {
+      return;
+    }
+    SLIRouting.offAllNamed(_pageSuccess);
   }
 }

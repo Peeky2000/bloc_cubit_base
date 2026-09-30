@@ -1,59 +1,64 @@
 part of 'reset_password_cubit.dart';
 
-class ResetPasswordState extends BaseAppState {
-  final ChangePageViewStatus? changePageStatus;
-  final String? errorPhone;
-  final String? errorNewPass;
-  final String? errorConfirmPass;
-  final int counter;
-  final bool showNewPass;
-  final bool showConfirmPass;
-  final bool isVerifying;
-  final String phone;
-
+class ResetPasswordState extends BaseAppState<Object> {
   const ResetPasswordState({
     required super.loading,
     super.error,
-    this.changePageStatus,
-    this.errorPhone,
-    this.errorNewPass,
-    this.errorConfirmPass,
+    this.phoneError,
+    this.newPasswordError,
+    this.confirmPasswordError,
     this.counter = 0,
     this.showNewPass = false,
     this.showConfirmPass = false,
     this.isVerifying = false,
     this.phone = '',
+    this.effect,
   });
 
+  final PhoneInputError? phoneError;
+  final PasswordInputError? newPasswordError;
+  final PasswordInputError? confirmPasswordError;
+  final int counter;
+  final bool showNewPass;
+  final bool showConfirmPass;
+  final bool isVerifying;
+  final String phone;
+  final UiEffect<ResetPasswordEffect>? effect;
+
   factory ResetPasswordState.initial() {
-    return ResetPasswordState(loading: LoadingStatus.initial, error: null);
+    return const ResetPasswordState(loading: LoadingStatus.initial);
   }
 
   ResetPasswordState copyWith({
     LoadingStatus? loading,
     Object? error,
-    ChangePageViewStatus? changePageStatus,
-    String? errorPhone,
-    String? errorNewPass,
-    String? errorConfirmPass,
+    PhoneInputError? phoneError,
+    PasswordInputError? newPasswordError,
+    PasswordInputError? confirmPasswordError,
     int? counter,
     bool? showNewPass,
     bool? showConfirmPass,
     bool? isVerifying,
     String? phone,
+    UiEffect<ResetPasswordEffect>? effect,
+    bool forceUpdateValidation = false,
   }) {
     return ResetPasswordState(
       loading: loading ?? this.loading,
       error: error,
-      changePageStatus: changePageStatus,
-      errorPhone: errorPhone,
-      errorNewPass: errorNewPass,
-      errorConfirmPass: errorConfirmPass,
+      phoneError: forceUpdateValidation ? phoneError : this.phoneError,
+      newPasswordError: forceUpdateValidation
+          ? newPasswordError
+          : this.newPasswordError,
+      confirmPasswordError: forceUpdateValidation
+          ? confirmPasswordError
+          : this.confirmPasswordError,
       counter: counter ?? this.counter,
       showNewPass: showNewPass ?? this.showNewPass,
       showConfirmPass: showConfirmPass ?? this.showConfirmPass,
       isVerifying: isVerifying ?? this.isVerifying,
       phone: phone ?? this.phone,
+      effect: effect ?? this.effect,
     );
   }
 
@@ -61,14 +66,14 @@ class ResetPasswordState extends BaseAppState {
   List<Object?> get props => [
     loading,
     error,
-    changePageStatus,
-    errorPhone,
-    errorNewPass,
-    errorConfirmPass,
+    phoneError,
+    newPasswordError,
+    confirmPasswordError,
     counter,
     showNewPass,
     showConfirmPass,
     isVerifying,
     phone,
+    effect,
   ];
 }

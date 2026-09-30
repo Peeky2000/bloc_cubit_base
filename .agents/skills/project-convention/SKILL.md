@@ -14,6 +14,7 @@ description: >
 |---|---|
 | Architecture | Clean Architecture: presentation → domain ← data |
 | State | Cubit default, BLoC supported; Equatable immutable state |
+| UI effects | Typed `UiEffect<T>`; Screen owns route/dialog/l10n |
 | DI | `get_it + injectable`, constructor injection |
 | HTTP | Dio through `ApiHandler`; REST default |
 | Models | `json_serializable` |

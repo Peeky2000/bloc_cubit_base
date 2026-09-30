@@ -22,4 +22,11 @@ if rg -n "Injector\.getIt|GetIt\.instance" lib/domain lib/data \
   failed=1
 fi
 
+if rg -n \
+  "package:flutter/|/l10n/|core/routing/|core/widget/|app_controller\.dart|presentation/global_handler\.dart|BuildContext|SLIRouting|DialogUtil" \
+  lib/presentation --glob '**/cubit/*.dart'; then
+  echo "Cubit/BLoC files must not depend on UI, routing, localization, or BuildContext." >&2
+  failed=1
+fi
+
 exit "$failed"

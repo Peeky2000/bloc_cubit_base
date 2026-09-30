@@ -44,6 +44,8 @@ Skip layers the requirement does not need.
   `@lazySingleton`, and bind interfaces on implementations.
 - Cubit is default; use BLoC only for a documented event/concurrency need.
 - State is immutable Equatable + copyWith and contains recoverable errors.
+- Navigation/dialog/snackbar/l10n stays in Screen listeners; Cubit/BLoC emits
+  revisioned typed `UiEffect` and has no `BuildContext`.
 - Data/network code has no UI side effects and logs only redacted diagnostics.
 - Reuse `sli_common` public APIs; Shadcn imports stay inside its adapter.
 - Never edit generated output. Run `derry gen`.

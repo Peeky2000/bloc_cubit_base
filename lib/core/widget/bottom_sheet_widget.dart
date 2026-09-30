@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:sli_common/sli_common.dart' as sli;
 
+@Deprecated(
+  'Use SliBottomSheetFrame and showSliBottomSheet from '
+  'package:sli_common/sli_common.dart.',
+)
 class BottomSheetWidget extends StatelessWidget {
   final String? title;
   final Widget? child;
@@ -17,38 +22,20 @@ class BottomSheetWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget content = child ?? SizedBox.shrink();
-
-    if (title != null && title!.isNotEmpty) {
-      content = Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.all(16.w),
-            child: Text(
-              title!,
-              style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
-            ),
-          ),
-          content,
-        ],
-      );
-    }
-
-    return Container(
+    final hasTitle = title != null && title!.isNotEmpty;
+    return sli.SliBottomSheetFrame(
+      title: hasTitle ? title : null,
+      showCloseButton: false,
+      showDivider: false,
+      titleTextAlign: TextAlign.start,
+      titleStyle: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
+      headerPadding: EdgeInsets.all(16.w),
       height: isIntrinsicHeight ? null : (height ?? 400.h),
-      constraints: isIntrinsicHeight
-          ? BoxConstraints(maxHeight: height ?? 400.h)
-          : null,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(16),
-          topRight: Radius.circular(16),
-        ),
-      ),
-      child: content,
+      maxHeight: isIntrinsicHeight ? (height ?? 400.h) : null,
+      safeAreaBottom: false,
+      backgroundColor: Colors.white,
+      borderRadius: 16,
+      child: child ?? const SizedBox.shrink(),
     );
   }
 }

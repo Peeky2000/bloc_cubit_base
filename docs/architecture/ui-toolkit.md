@@ -20,6 +20,10 @@ khi migrate.
 Component legacy được chuyển dần qua adapter và deprecation notice. Không copy
 cùng một component vào cả hai repository.
 
+Stable surface hiện có `SliButton`, `SliSurface` và BottomSheet tách đôi:
+`showSliBottomSheet<T>` điều phối modal/keyboard, còn `SliBottomSheetFrame`
+render anatomy. App-local BottomSheet cũ chỉ là compatibility adapter.
+
 ## Catalog là gate trước migration
 
 Public API được tra từ `sli_common/README.md` và `sli_common/docs/catalog`.

@@ -1,7 +1,7 @@
 import 'package:bloc_cubit_base/core/app/app.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:bloc_cubit_base/core/widget/bottom_sheet_widget.dart';
+import 'package:sli_common/sli_common.dart' as sli;
 
 class SelectionItemModel<T> {
   final T value;
@@ -47,7 +47,7 @@ class _SelectionBottomSheetState extends State<SelectionBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return BottomSheetWidget(
+    return _SelectionSheetFrame(
       title: widget.title,
       isIntrinsicHeight: widget.isIntrinsicHeight,
       height: widget.height,
@@ -179,7 +179,7 @@ class _MultiSelectionBottomSheetState extends State<MultiSelectionBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return BottomSheetWidget(
+    return _SelectionSheetFrame(
       title: widget.title,
       isIntrinsicHeight: widget.isIntrinsicHeight,
       height: widget.height,
@@ -190,4 +190,34 @@ class _MultiSelectionBottomSheetState extends State<MultiSelectionBottomSheet> {
       ),
     );
   }
+}
+
+class _SelectionSheetFrame extends StatelessWidget {
+  const _SelectionSheetFrame({
+    required this.title,
+    required this.isIntrinsicHeight,
+    required this.child,
+    this.height,
+  });
+
+  final String title;
+  final bool isIntrinsicHeight;
+  final Widget child;
+  final double? height;
+
+  @override
+  Widget build(BuildContext context) => sli.SliBottomSheetFrame(
+    title: title.isEmpty ? null : title,
+    showCloseButton: false,
+    showDivider: false,
+    titleTextAlign: TextAlign.start,
+    titleStyle: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
+    headerPadding: EdgeInsets.all(16.w),
+    height: isIntrinsicHeight ? null : (height ?? 400.h),
+    maxHeight: isIntrinsicHeight ? (height ?? 400.h) : null,
+    safeAreaBottom: false,
+    backgroundColor: Colors.white,
+    borderRadius: 16,
+    child: child,
+  );
 }

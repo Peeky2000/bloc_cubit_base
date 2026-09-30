@@ -33,9 +33,11 @@ implement” nghĩa là có code cùng gate liên quan; không có nghĩa sample
 - `NetworkChecker` có monitor seam, repeated-init guard, idempotent dispose và
   singleton disposal qua generated DI.
 - Git submodule `sli_common` thật với public API `Sli*`, tokens, themes và facade
-  Shadcn.
-- Component catalog cho 45/45 public export, maturity status, quick gallery,
-  runnable showroom, BottomSheet pilot và golden preview tái tạo được.
+  Shadcn đã khóa variant/size, touch target, semantics và golden light/dark.
+- Component catalog cho 46/46 public export, maturity status, quick gallery và
+  runnable showroom. BottomSheet đã đi từ pilot thành stable typed
+  presenter/frame contract; selection callers dùng API shared trực tiếp và
+  app-local API cũ là adapter deprecated.
 - Dart Base CLI là source of truth cho `doctor/create/rename`, expose qua Derry,
   dry-run mặc định và validation trước mutation.
 - Index kiến trúc, ADRs, contributor guides và agent/skill Flutter đã đồng bộ.
@@ -44,10 +46,12 @@ implement” nghĩa là có code cùng gate liên quan; không có nghĩa sample
 
 ## Baseline đã verify
 
-- Application quality: format 193 file, analyzer 0 finding, architecture gate
-  pass và 62 tests pass.
-- `sli_common`: scoped analyzer sạch và 5 tests pass.
-- Catalog inventory gate xác nhận 45/45 public export có maturity entry.
+- Application quality: format 194 file, analyzer 0 finding, architecture gate
+  pass và 64 tests pass.
+- `sli_common`: scoped analyzer sạch và 16 tests pass.
+- Catalog inventory gate xác nhận 46/46 public export có maturity entry.
+- Full historical analyzer của `sli_common`: 241 warning/info; được track làm
+  legacy burn-down, không bị ẩn bằng exclude.
 - Derry facade forward được display name có khoảng trắng.
 - Create smoke test với `catalog_smoke`:
   - recursive clone và bootstrap pass;
@@ -61,6 +65,8 @@ implement” nghĩa là có code cùng gate liên quan; không có nghĩa sample
   - `xcodebuild -list` đọc được project và đủ 9 build configurations/3 schemes.
 
 Evidence mới nhất nằm tại
+[review Shadcn/BottomSheet 2026-09-30](reviews/2026-09-30-shadcn-bottom-sheet-review.md).
+State/DI completion có snapshot riêng tại
 [review state/DI completion 2026-09-30](reviews/2026-09-30-state-di-completion-review.md).
 Pure Cubit/UI effect có snapshot riêng tại
 [review pure Cubit/UI effect 2026-09-28](reviews/2026-09-28-pure-cubit-ui-effects-review.md).
@@ -71,11 +77,11 @@ Catalog và Base CLI vẫn có snapshot riêng tại
 
 ## Việc còn lại trước template zero-debt
 
-1. Từ BottomSheet pilot, chốt stable presenter/frame contract và behavior
-   matrix; sau đó mới migrate widget trùng trong `lib/core/widget` qua adapter.
+1. Tiếp tục migration theo family cho 10 file trùng còn lại: dialog, form/input,
+   button/action và display; mỗi family cần matrix + parity test + adapter.
 2. Trung hòa product slice còn lại: `DeliveryGo`, copy/l10n `Giao Hàng 247`,
    Fastlane artifact/key path, icon/splash, Firebase client config và endpoint.
-3. Burn down analyzer baseline của toàn bộ legacy `sli_common`, rồi mở rộng gate
+3. Burn down 241 analyzer findings của toàn bộ legacy `sli_common`, rồi mở rộng gate
    từ stable surface sang toàn historical package.
 4. Hoàn thiện hệ skill phục vụ Flutter/mobile engineering: code review,
    performance, testing, security/privacy, platform lifecycle và release

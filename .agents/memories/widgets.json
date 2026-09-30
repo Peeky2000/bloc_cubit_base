@@ -4,20 +4,56 @@
     "name": "DialogUtil",
     "description": "Error and confirm dialogs",
     "location": "lib/core/widget/dialog_util.dart",
-    "keywords": ["dialog", "error", "modal"]
+    "keywords": [
+      "dialog",
+      "error",
+      "modal"
+    ]
   },
   {
     "type": "widget",
     "name": "BottomButton",
     "description": "Primary bottom action button",
     "location": "lib/core/widget/bottom_button.dart",
-    "keywords": ["button", "bottom", "cta"]
+    "keywords": [
+      "button",
+      "bottom",
+      "cta"
+    ]
   },
   {
     "type": "widget",
     "name": "CommonDropDown",
     "description": "Dropdown field widget",
     "location": "lib/core/widget/common_drop_down.dart",
-    "keywords": ["dropdown", "select", "form"]
+    "keywords": [
+      "dropdown",
+      "select",
+      "form"
+    ]
+  },
+  {
+    "type": "widget",
+    "name": "SliBottomSheetFrame",
+    "description": "Stable shared bottom sheet frame; pair with showSliBottomSheet for modal presentation and keyboard handling",
+    "location": "lib/modules/sli_common/lib/src/components/sli_bottom_sheet.dart",
+    "keywords": [
+      "bottom-sheet",
+      "modal",
+      "overlay",
+      "keyboard",
+      "sli-common"
+    ],
+    "props": [
+      "child",
+      "title",
+      "subtitle",
+      "leading",
+      "trailing",
+      "height",
+      "maxHeight"
+    ],
+    "group": "overlays",
+    "scope": "shared"
   }
 ]

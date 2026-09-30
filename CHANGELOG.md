@@ -17,6 +17,10 @@
   định, validation trước mutation và test cho plan/apply guard.
 - Thêm catalog `sli_common` với inventory 45/45 export, maturity status,
   showroom, BottomSheet pilot và golden preview có thể tái tạo.
+- Hoàn tất Shadcn facade contract bằng semantics/touch-target tests và golden
+  light/dark; nâng catalog lên 46/46 export.
+- Thêm stable `showSliBottomSheet<T>` + `SliBottomSheetFrame`, migrate selection
+  callers và giữ app-local API cũ dưới dạng adapter deprecated có parity test.
 - Gia cố session refresh: single-flight concurrent 401, token revision guard,
   cross-origin bearer protection, safe replay và coalesced terminal expiry.
 - Thêm test network/session/token cho terminal và transient refresh failure,

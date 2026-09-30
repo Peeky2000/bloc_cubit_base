@@ -131,9 +131,12 @@ thật, và design layer có Shadcn phía sau. Documentation và agent instructi
   layout, semantic design tokens, light/dark theme extension, license,
   changelog, và docs. **Verify:** consumer chỉ import public barrel và package
   analysis pass.
-- [ ] **[sli_common]** *(coder)* — Thêm Shadcn như chi tiết triển khai phía sau
+- [x] **[sli_common]** *(coder)* — Thêm Shadcn như chi tiết triển khai phía sau
   wrapper `Sli*` ổn định, gồm accessibility và variant contract. **Verify:**
   example, widget tests, và golden tests cover component lõi và cả hai theme.
+  **Evidence:** 5 button variant × 3 size, semantics/touch target, surface test
+  và golden light/dark tại
+  [review 2026-09-30](../reviews/2026-09-30-shadcn-bottom-sheet-review.md).
 - [x] **[lib/modules]** *(coder)* — Thay embedded tree rỗng bằng Git submodule
   thật và thêm path dependency từ app. **Verify:** fresh recursive clone resolve
   `sli_common` và build không cần copied widget imports.
@@ -145,6 +148,9 @@ thật, và design layer có Shadcn phía sau. Documentation và agent instructi
   adapter/deprecation, chỉ bắt đầu sau catalog và behavior matrix. **Verify:**
   không bulk migration gây vỡ behavior và drift được track bằng compatibility
   matrix.
+  - [x] BottomSheet: stable presenter/frame, matrix, 16 package tests,
+    app adapter deprecated và selection callers đã migrate.
+  - [ ] Dialog, form/input, button/action và display families còn lại.
 
 ## Phase 8 — Cleanup template tái sử dụng
 

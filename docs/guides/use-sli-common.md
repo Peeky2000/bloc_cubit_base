@@ -53,5 +53,21 @@ Không migrate widget trong `lib/core/widget` chỉ vì trùng tên với export
 4. thêm story/test/preview cho stable replacement;
 5. adapter + `@Deprecated`, rồi migrate caller theo component family.
 
-BottomSheet đang là pilot: `BottomSheetWidget` của package vẫn ở trạng thái
-legacy/candidate và chưa được coi là replacement tự động cho bản app.
+BottomSheet đã stable:
+
+```dart
+final accepted = await showSliBottomSheet<bool>(
+  context: context,
+  builder: (sheetContext) => SliBottomSheetFrame(
+    title: 'Xác nhận',
+    child: SliButton(
+      label: 'Đồng ý',
+      onPressed: () => Navigator.pop(sheetContext, true),
+    ),
+  ),
+);
+```
+
+`BottomSheetWidget` cũ chỉ còn để tương thích và đã deprecated. Code mới dùng
+`showSliBottomSheet<T>` + `SliBottomSheetFrame`; xem behavior matrix và evidence
+tại [review 2026-09-30](../reviews/2026-09-30-shadcn-bottom-sheet-review.md).

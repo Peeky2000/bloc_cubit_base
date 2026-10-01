@@ -144,6 +144,9 @@ thật, và design layer có Shadcn phía sau. Documentation và agent instructi
   gắn maturity status và xây quick gallery + per-component docs + runnable
   showroom; dùng BottomSheet làm pilot. **Verify:** mọi export được catalog và
   component pilot có preview/usage/source/test truy được từ README.
+- [x] **[sli_common + CI]** *(coder)* — Burn down analyzer toàn bộ legacy
+  package và đưa full-package gate vào Derry/CI. **Verify:** analyzer 0,
+  package tests pass; [review 2026-10-01](../reviews/2026-10-01-sli-common-full-analyzer-review.md).
 - [ ] **[lib/core/widget]** *(coder)* — Migrate widget trùng qua compatibility
   adapter/deprecation, chỉ bắt đầu sau catalog và behavior matrix. **Verify:**
   không bulk migration gây vỡ behavior và drift được track bằng compatibility

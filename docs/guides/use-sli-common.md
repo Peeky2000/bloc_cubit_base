@@ -32,9 +32,13 @@ và verify trong repo độc lập `sli_common` trước:
 
 ```bash
 cd lib/modules/sli_common
-flutter analyze lib/src test example/lib
+flutter analyze
 flutter test
 ```
+
+Từ root có thể chạy `derry toolkit quality` để kiểm tra riêng package hoặc
+`derry quality` để kiểm tra cả app lẫn package. Gate phân tích toàn bộ legacy,
+không chỉ `lib/src`.
 
 Commit và push thay đổi package, rồi quay lại base và commit submodule pointer
 mới. Ghi breaking change và migration trong CHANGELOG/docs của toolkit.

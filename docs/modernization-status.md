@@ -1,4 +1,4 @@
-# Trạng Thái Modernization — 2026-09-28
+# Trạng Thái Modernization — 2026-10-01
 
 Tài liệu này tách rõ foundation đã hoàn thành và cleanup legacy còn lại. “Đã
 implement” nghĩa là có code cùng gate liên quan; không có nghĩa sample product
@@ -38,6 +38,8 @@ implement” nghĩa là có code cùng gate liên quan; không có nghĩa sample
   runnable showroom. BottomSheet đã đi từ pilot thành stable typed
   presenter/frame contract; selection callers dùng API shared trực tiếp và
   app-local API cũ là adapter deprecated.
+- Analyzer toàn bộ historical `sli_common` đã sạch; Derry quality và CI kiểm
+  tra cả package, không còn gate chỉ giới hạn ở stable surface.
 - Dart Base CLI là source of truth cho `doctor/create/rename`, expose qua Derry,
   dry-run mặc định và validation trước mutation.
 - Index kiến trúc, ADRs, contributor guides và agent/skill Flutter đã đồng bộ.
@@ -48,10 +50,10 @@ implement” nghĩa là có code cùng gate liên quan; không có nghĩa sample
 
 - Application quality: format 194 file, analyzer 0 finding, architecture gate
   pass và 64 tests pass.
-- `sli_common`: scoped analyzer sạch và 16 tests pass.
+- `sli_common`: full-package analyzer 0 finding và 18 tests pass.
 - Catalog inventory gate xác nhận 46/46 public export có maturity entry.
-- Full historical analyzer của `sli_common`: 241 warning/info; được track làm
-  legacy burn-down, không bị ẩn bằng exclude.
+- Baseline 241 analyzer finding lịch sử đã được xử lý. Tên enum và async back
+  API legacy được giữ bằng ngoại lệ lint có chú thích tại source.
 - Derry facade forward được display name có khoảng trắng.
 - Create smoke test với `catalog_smoke`:
   - recursive clone và bootstrap pass;
@@ -65,6 +67,8 @@ implement” nghĩa là có code cùng gate liên quan; không có nghĩa sample
   - `xcodebuild -list` đọc được project và đủ 9 build configurations/3 schemes.
 
 Evidence mới nhất nằm tại
+[review full analyzer 2026-10-01](reviews/2026-10-01-sli-common-full-analyzer-review.md).
+Shadcn/BottomSheet có snapshot riêng tại
 [review Shadcn/BottomSheet 2026-09-30](reviews/2026-09-30-shadcn-bottom-sheet-review.md).
 State/DI completion có snapshot riêng tại
 [review state/DI completion 2026-09-30](reviews/2026-09-30-state-di-completion-review.md).
@@ -81,9 +85,7 @@ Catalog và Base CLI vẫn có snapshot riêng tại
    button/action và display; mỗi family cần matrix + parity test + adapter.
 2. Trung hòa product slice còn lại: `DeliveryGo`, copy/l10n `Giao Hàng 247`,
    Fastlane artifact/key path, icon/splash, Firebase client config và endpoint.
-3. Burn down 241 analyzer findings của toàn bộ legacy `sli_common`, rồi mở rộng gate
-   từ stable surface sang toàn historical package.
-4. Hoàn thiện hệ skill phục vụ Flutter/mobile engineering: code review,
+3. Hoàn thiện hệ skill phục vụ Flutter/mobile engineering: code review,
    performance, testing, security/privacy, platform lifecycle và release
    readiness; không adopt framework VIPER.
 

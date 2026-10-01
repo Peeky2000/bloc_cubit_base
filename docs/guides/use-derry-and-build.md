@@ -40,6 +40,7 @@ derry ls -d
 | Cập nhật package | `derry get` | Không, ngoài tải dependency |
 | Sinh code | `derry gen` | Không |
 | Kiểm tra trước commit/PR | `derry quality` | Không |
+| Kiểm tra riêng UI toolkit | `derry toolkit quality` | Không |
 | Chạy app | `derry run <env>` | Không |
 | Tạo artifact production local | `derry build <type>` | Không |
 | Gửi bản dev/staging/prod cho tester | `derry distribute <platform>` | Có, Firebase và tùy chọn Git tag |
@@ -78,10 +79,12 @@ derry format
 derry analyze
 derry test
 derry quality
+derry toolkit quality
 ```
 
-`quality` chạy format check, analyzer, architecture boundary và test. `gen`
-chạy build_runner rồi format source do app sở hữu.
+`quality` chạy format check, analyzer, architecture boundary và test cho **cả
+app lẫn `sli_common`**. `toolkit quality` chạy riêng full-package analyzer và
+test của thư viện. `gen` chạy build_runner rồi format source do app sở hữu.
 
 ## Chạy từng môi trường
 

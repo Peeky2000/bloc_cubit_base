@@ -56,9 +56,15 @@ test:
     - ./scripts/flutterw.sh test
 
 quality:
-  (description): Chạy format check, analyzer, architecture gate và test
+  (description): Chạy format, analyzer, architecture gate và test cho app lẫn sli_common
   (scripts):
     - ./scripts/quality.sh
+
+toolkit:
+  quality:
+    (description): Chạy riêng format, analyzer toàn package và test sli_common
+    (scripts):
+      - ./scripts/quality_sli_common.sh
 
 run:
   local:

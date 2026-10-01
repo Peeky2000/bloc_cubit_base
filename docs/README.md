@@ -132,6 +132,7 @@ trong cùng thay đổi.
 | [Review pure Cubit + UI effect](reviews/2026-09-28-pure-cubit-ui-effects-review.md) | Evidence tách UI coupling, typed validation/effect, OTP lifecycle và 54-test quality gate |
 | [Review state + DI completion](reviews/2026-09-30-state-di-completion-review.md) | Evidence typed failure, Cubit/BLoC lifecycle và resettable DI graph |
 | [Review Shadcn + BottomSheet](reviews/2026-09-30-shadcn-bottom-sheet-review.md) | Evidence facade accessibility/light-dark và migration family BottomSheet |
+| [Review full analyzer `sli_common`](reviews/2026-10-01-sli-common-full-analyzer-review.md) | Evidence 241 finding về 0 và gate toàn package trong Derry/CI |
 | [Trạng thái modernization](modernization-status.md) | Bản tóm tắt sống về phần đã xong/chưa xong |
 | [Brainstorm Derry/build](brainstorm/2026-08-27-derry-build-automation.md) | Lý do tách build, distribute và release |
 | [Brainstorm component catalog](brainstorm/2026-08-28-ui-component-catalog-and-migration.md) | Inventory baseline và lý do phải catalog trước khi migrate widget |

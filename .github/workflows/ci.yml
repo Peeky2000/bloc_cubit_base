@@ -42,9 +42,9 @@ jobs:
       - name: Test application
         run: flutter test
 
-      - name: Analyze UI toolkit public surface
+      - name: Analyze complete UI toolkit
         working-directory: lib/modules/sli_common
-        run: flutter analyze lib/src test example/lib
+        run: flutter analyze
 
       - name: Test UI toolkit
         working-directory: lib/modules/sli_common

@@ -21,6 +21,8 @@
   light/dark; nâng catalog lên 46/46 export.
 - Thêm stable `showSliBottomSheet<T>` + `SliBottomSheetFrame`, migrate selection
   callers và giữ app-local API cũ dưới dạng adapter deprecated có parity test.
+- Dọn 241 analyzer findings của toàn bộ `sli_common` và đưa full-package
+  analyzer/test vào `derry quality` cùng CI; thêm lệnh `derry toolkit quality`.
 - Gia cố session refresh: single-flight concurrent 401, token revision guard,
   cross-origin bearer protection, safe replay và coalesced terminal expiry.
 - Thêm test network/session/token cho terminal và transient refresh failure,

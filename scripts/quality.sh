@@ -8,3 +8,4 @@ cd "$project_root"
 ./scripts/flutterw.sh analyze
 ./scripts/check_architecture.sh
 ./scripts/flutterw.sh test
+./scripts/quality_sli_common.sh

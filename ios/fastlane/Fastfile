@@ -28,6 +28,18 @@ def firebase_groups(options)
   groups
 end
 
+def required_release_env(name)
+  value = ENV[name]
+  UI.user_error!("Missing required release setting: #{name}.") if value.to_s.strip.empty?
+  value
+end
+
+def required_release_file_env(name)
+  path = required_release_env(name)
+  UI.user_error!("Release file not found for #{name}.") unless File.file?(path)
+  path
+end
+
 def push_build_tag_if_requested(options, build_tag)
   return unless options[:push_tag]
 
@@ -107,17 +119,17 @@ platform :ios do
     end
     Dir.chdir("../../build/ios/iphoneos") do
       sh "rm -rf Payload"
-      sh "rm -rf Giaohang247-dev-debug.ipa"
+      sh "rm -f app-dev-release.ipa"
       sh "mkdir Payload"
       sh "mv Runner.app Payload"
       sh "zip -r Payload Payload"
-      sh "mv Payload.zip Giaohang247-dev-debug.ipa"
+      sh "mv Payload.zip app-dev-release.ipa"
     end
     build_tag = "v" + ENV["VERSION"] + "." + ENV["BUILD_NUMBER"] + "-staging-staging-IOS"
     firebase_app_distribution(
             app: ENV["FIREBASE_APP_ID"],
             release_notes: "#{ENV["VERSION"]} #{ENV["BUILD_NUMBER"]}\nEnvironment: Development\nFlavor: debug\nChange: #{ENV["CHANGELOG"]}",
-            ipa_path: "../build/ios/iphoneos/Giaohang247-dev-debug.ipa",
+            ipa_path: "../build/ios/iphoneos/app-dev-release.ipa",
             firebase_cli_token: ENV["FIREBASE_TOKEN"],
             groups: firebase_groups(options)
         )
@@ -149,17 +161,17 @@ platform :ios do
     end
     Dir.chdir("../../build/ios/iphoneos") do
       sh "rm -rf Payload"
-      sh "rm -rf Giaohang247-staging-staging.ipa"
+      sh "rm -f app-staging-release.ipa"
       sh "mkdir Payload"
       sh "mv Runner.app Payload"
       sh "zip -r Payload Payload"
-      sh "mv Payload.zip Giaohang247-staging-staging.ipa"
+      sh "mv Payload.zip app-staging-release.ipa"
     end
     build_tag = "v" + ENV["VERSION"] + "." + ENV["BUILD_NUMBER"] + "-dev-debug-IOS"
     firebase_app_distribution(
             app: ENV["FIREBASE_APP_ID"],
             release_notes: "#{ENV["VERSION"]} #{ENV["BUILD_NUMBER"]}\nEnvironment: Staging\nFlavor: staging\nChange: #{ENV["CHANGELOG"]}",
-            ipa_path: "../build/ios/iphoneos/Giaohang247-staging-staging.ipa",
+            ipa_path: "../build/ios/iphoneos/app-staging-release.ipa",
             firebase_cli_token: ENV["FIREBASE_TOKEN"],
             groups: firebase_groups(options)
         )
@@ -191,17 +203,17 @@ platform :ios do
     end
     Dir.chdir("../../build/ios/iphoneos") do
       sh "rm -rf Payload"
-      sh "rm -rf Giaohang247-prod-release.ipa"
+      sh "rm -f app-prod-release.ipa"
       sh "mkdir Payload"
       sh "mv Runner.app Payload"
       sh "zip -r Payload Payload"
-      sh "mv Payload.zip Giaohang247-prod-release.ipa"
+      sh "mv Payload.zip app-prod-release.ipa"
     end
     build_tag = "v" + ENV["VERSION"] + "." + ENV["BUILD_NUMBER"] + "-prod-release-IOS"
     firebase_app_distribution(
             app: ENV["FIREBASE_APP_ID"],
             release_notes: "#{ENV["VERSION"]} #{ENV["BUILD_NUMBER"]}\nEnvironment: Production\nFlavor: release\nChange: #{ENV["CHANGELOG"]}",
-            ipa_path: "../build/ios/iphoneos/Giaohang247-prod-release.ipa",
+            ipa_path: "../build/ios/iphoneos/app-prod-release.ipa",
             firebase_cli_token: ENV["FIREBASE_TOKEN"],
             groups: firebase_groups(options)
         )
@@ -220,6 +232,7 @@ platform :ios do
 
   desc "Build and upload store IOS"
   lane :build_store do |options|
+    api_key_path = required_release_file_env("APP_STORE_CONNECT_API_KEY_PATH")
     version_name = flutter_version()["version_name"]
     version_code = flutter_version()["version_code"]
     Dir.chdir("../..") do
@@ -270,7 +283,7 @@ platform :ios do
       })
 
     upload_to_testflight(
-        api_key_path: "./fastlane/Giaohang247-deploy-key-ios.json",
+        api_key_path: api_key_path,
         team_id: ENV["TEAM_ID"],
         skip_waiting_for_build_processing: true,
         apple_id: ENV["APPLE_ID"],

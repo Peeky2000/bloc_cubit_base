@@ -50,6 +50,8 @@ implement” nghĩa là có code cùng gate liên quan; không có nghĩa sample
   agent độc lập về tỉ lệ trigger, nên không tuyên bố đã tối ưu trigger.
 - Đã gỡ provisioning profile cá nhân và provisioning identifier hard-coded của
   iOS; signing material bị ignore và phải lấy từ local/CI secrets.
+- Fastlane không còn dùng tên artifact/key path `Giaohang247`; Store lane yêu
+  cầu package/key qua environment và kiểm tra key file tồn tại.
 
 ## Baseline đã verify
 
@@ -92,7 +94,8 @@ Catalog và Base CLI vẫn có snapshot riêng tại
    button/action và display; matrix hiện tại đã chỉ ra khác biệt và gate của
    từng loại tại [widget family matrix](plan/2026-10-01-widget-family-migration-matrix.md).
 2. Trung hòa product slice còn lại: `DeliveryGo`, copy/l10n `Giao Hàng 247`,
-   Fastlane artifact/key path, icon/splash, Firebase client config và endpoint.
+   native identity, icon/splash, Firebase client config và endpoint. Fastlane
+   artifact/key path đã tách khỏi sample.
 3. Chạy eval độc lập cho skill Flutter/mobile trên task thật để đánh giá
    trigger/output và tinh chỉnh nếu cần; sáu skill cùng guide đã có thể dùng.
 

@@ -163,6 +163,10 @@ thật, và design layer có Shadcn phía sau. Documentation và agent instructi
 - [ ] **[app]** *(coder)* — Gỡ hoặc parameterize branding mOrder/Giaohang247,
   signing artifact, credential, endpoint ví dụ, và residue sinh mã. **Verify:**
   secret scan sạch và rename smoke test pass.
+  - [x] Fastlane bỏ artifact/key path hard-code của sample; Store yêu cầu
+    package/key qua environment. [Review 2026-10-01](../reviews/2026-10-01-fastlane-neutralization-review.md).
+  - [ ] Native identity, Firebase client, icon/splash, copy/l10n và product
+    wrappers còn cần chuyển thành template trung lập.
 - [x] **[tool + scripts]** *(coder)* — Cung cấp Dart Base CLI làm source of
   truth cho `doctor/create/rename`; expose qua Derry facade, dry-run mặc định và
   validate toàn plan trước `--apply`. **Verify:** invalid input không mutation;

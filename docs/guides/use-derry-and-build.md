@@ -172,10 +172,25 @@ Dry-run không cần credential và không upload:
 derry release android -- --confirm-store --dry-run
 ```
 
+Fastlane không còn hard-code tên artifact hay đường dẫn key `Giaohang247`.
+Android distribution dùng file APK mặc định do Flutter sinh ra; iOS đóng gói
+thành `app-<environment>-release.ipa`. Store lane yêu cầu cấu hình tường minh:
+
+| Platform | Biến môi trường bắt buộc cho Store |
+|---|---|
+| Android | `ANDROID_PACKAGE_NAME`, `GOOGLE_PLAY_JSON_KEY_PATH` |
+| iOS | `APP_STORE_CONNECT_API_KEY_PATH` cùng các biến signing/team hiện có trong `.env.secret.ios` |
+
+Đường dẫn key nên là đường dẫn tuyệt đối tới secret nằm ngoài repo hoặc được
+CI cung cấp; Fastlane kiểm tra file tồn tại trước khi upload. Không đặt key vào
+template hay commit `.env.secret.*`. `--dry-run` của `build.sh` chỉ kiểm tra
+định tuyến lane, **không** kiểm chứng credential, signing, Firebase config hoặc
+khả năng upload thật.
+
 Chỉ chạy release thật sau khi app đã thay toàn bộ branding, bundle/application
-identifier, Firebase config, signing và store credential. Base hiện vẫn giữ
-Fastlane sample `Giaohang247`, vì vậy đây là capability để tái sử dụng sau khi
-fork, không phải lệnh release an toàn cho mọi clone ngay lập tức.
+identifier, Firebase config, signing và store credential. Base vẫn còn native
+identity, icon/splash, product copy và Firebase client của sample; capability
+release chưa phải chứng nhận một fork bất kỳ đã sẵn sàng phát hành.
 
 ## Gọi build.sh trực tiếp
 
@@ -203,8 +218,8 @@ Trước khi bỏ `--dry-run`:
 
 1. Chạy `bundle install` trong `android/` và `ios/`.
 2. Tạo `.env.secret.android` / `.env.secret.ios` từ secret local hoặc CI.
-3. Thay key path, application identifier, scheme, provisioning và Firebase app
-   ID của sample.
+3. Cấp key path qua biến môi trường ở bảng trên; thay application identifier,
+   scheme, provisioning và Firebase app ID của sample.
 4. Kiểm tra working tree, branch và release notes.
 5. Chạy distribution cho một platform/môi trường trước khi chọn `all`.
 

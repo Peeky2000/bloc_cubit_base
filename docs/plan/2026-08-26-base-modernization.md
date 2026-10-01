@@ -81,6 +81,10 @@ thật, và design layer có Shadcn phía sau. Documentation và agent instructi
   repeated test setup không leak registration. **Evidence:** graph cũ được
   dispose trước graph mới và composition root identity được test; xem
   [review 2026-09-30](../reviews/2026-09-30-state-di-completion-review.md).
+- [x] **[domain/data/di]** *(coder)* — Đưa Firebase Phone Auth ra khỏi
+  `AuthUseCase` qua domain port, bind adapter trong generated DI và chặn SDK/DI
+  import trở lại domain. **Verify:** callback/failure/stale request tests, full
+  quality gate; [review 2026-10-01](../reviews/2026-10-01-phone-verification-boundary-review.md).
 
 ## Phase 4 — Convention Cubit/BLoC và state
 

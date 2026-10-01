@@ -5,14 +5,16 @@ registration.
 
 ## Quy tắc
 
-- Thêm `@injectable`, `@lazySingleton`, hoặc `@singleton` cho class do app sở
-  hữu.
+- Thêm `@injectable`, `@lazySingleton`, hoặc `@singleton` cho class ở
+  presentation/data/core khi đúng lifetime. Domain class thuần không mang
+  annotation; đăng ký UseCase bằng provider `@lazySingleton` trong
+  `lib/di/register_module.dart`.
 - Bind repository/data-source implementation vào abstract contract bằng
   `@LazySingleton(as: Contract)`.
 - Cubit và BLoC là factory (`@injectable`) trừ khi application lifetime được
   quyết định rõ bằng ADR.
 - Dùng `@module` cho SDK class, plugin, async initialization, và factory cần
-  runtime configuration.
+  runtime configuration; đây cũng là nơi bind domain UseCase thuần.
 - Feature class không được gọi `Injector.getIt`.
 - Entry point có thể truyền environment được chọn vào composition root. Đây là
   runtime registration có chủ ý duy nhất.

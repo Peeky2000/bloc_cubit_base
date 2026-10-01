@@ -120,6 +120,7 @@ trong cùng thay đổi.
 | Dart Base CLI phía sau Derry facade | [ADR-0007](adr/0007-dart-base-cli-behind-derry.md) |
 | Skill tập trung Flutter/mobile, không adopt VIPER | [ADR-0008](adr/0008-mobile-engineering-skills-no-viper.md) |
 | Typed UI effect tại presentation boundary | [ADR-0009](adr/0009-typed-ui-effects-at-presentation-boundary.md) |
+| Firebase Phone Auth sau domain port | [ADR-0010](adr/0010-platform-auth-behind-domain-port.md) |
 
 ## Truy vết modernization hiện tại
 
@@ -137,6 +138,7 @@ trong cùng thay đổi.
 | [Review Flutter/mobile skills](reviews/2026-10-01-mobile-skills-review.md) | Evidence skill đã tạo, route vào agent và giới hạn eval hiện tại |
 | [Review ExpandedWidget migration](reviews/2026-10-01-expanded-widget-migration-review.md) | Evidence parity hai trục, app adapter và caller migration |
 | [Review Fastlane neutralization](reviews/2026-10-01-fastlane-neutralization-review.md) | Evidence bỏ artifact/key path sample và release config bắt buộc |
+| [Review phone verification boundary](reviews/2026-10-01-phone-verification-boundary-review.md) | Evidence Firebase adapter rời domain, DI và tests |
 | [Trạng thái modernization](modernization-status.md) | Bản tóm tắt sống về phần đã xong/chưa xong |
 | [Brainstorm Derry/build](brainstorm/2026-08-27-derry-build-automation.md) | Lý do tách build, distribute và release |
 | [Brainstorm component catalog](brainstorm/2026-08-28-ui-component-catalog-and-migration.md) | Inventory baseline và lý do phải catalog trước khi migrate widget |

@@ -13,3 +13,4 @@ viết lại lịch sử.
 - [0007 — Dart Base CLI phía sau Derry facade](0007-dart-base-cli-behind-derry.md)
 - [0008 — Skill tập trung Flutter/mobile, không adopt VIPER](0008-mobile-engineering-skills-no-viper.md)
 - [0009 — Typed UI effect tại presentation boundary](0009-typed-ui-effects-at-presentation-boundary.md)
+- [0010 — Firebase Phone Auth sau domain port](0010-platform-auth-behind-domain-port.md)

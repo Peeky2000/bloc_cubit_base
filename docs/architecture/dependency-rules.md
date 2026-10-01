@@ -14,7 +14,8 @@
 
 1. Widget không bao giờ gọi API, repository, hoặc data source.
 2. Cubit và BLoC gọi use case, không gọi repository hoặc data source.
-3. Domain không bao giờ import `data`, Flutter widget, Dio, Firebase, hoặc GetIt.
+3. Domain không bao giờ import `data`, Flutter widget, Dio, Firebase, GetIt
+   hoặc Injectable. DI registration cho domain nằm ở composition root.
 4. Presentation không import data model cụ thể khi domain type đã diễn đạt được
    contract.
 5. Class nhận dependency qua constructor. `getIt` chỉ được dùng ở composition

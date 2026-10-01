@@ -29,9 +29,11 @@ import '../data/datasource/remote/api_client.dart' as _i44;
 import '../data/datasource/remote/auth_remote_data_source.dart' as _i519;
 import '../data/repositories/app_repo_impl.dart' as _i482;
 import '../data/repositories/auth_repo_impl.dart' as _i743;
+import '../data/repositories/firebase_phone_verification_repo.dart' as _i51;
 import '../data/repositories/user_repo_impl.dart' as _i114;
 import '../domain/repositories/app_repo.dart' as _i546;
 import '../domain/repositories/auth_repo.dart' as _i218;
+import '../domain/repositories/phone_verification_repo.dart' as _i168;
 import '../domain/repositories/user_repo.dart' as _i1042;
 import '../domain/use_case/app_use_case.dart' as _i1036;
 import '../domain/use_case/auth_use_case.dart' as _i358;
@@ -82,6 +84,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i641.AppLocalDataSource>(
       () => _i641.AppLocalDataSource(gh<_i460.SharedPreferences>()),
     );
+    gh.lazySingleton<_i168.PhoneVerificationRepo>(
+      () => _i51.FirebasePhoneVerificationRepo(gh<_i59.FirebaseAuth>()),
+    );
     gh.lazySingleton<_i1042.UserRepo>(
       () => _i114.UserRepoImpl(gh<_i278.UserLocalDataSource>()),
     );
@@ -95,14 +100,21 @@ extension GetItInjectableX on _i174.GetIt {
       ),
       preResolve: true,
     );
+    gh.lazySingleton<_i1036.AppUseCase>(
+      () => registerModule.appUseCase(gh<_i546.AppRepo>()),
+    );
+    gh.singleton<_i688.AppCubit>(
+      () => _i688.AppCubit(
+        gh<_i1036.AppUseCase>(),
+        gh<_i924.SessionEventController>(),
+      ),
+      dispose: (i) => i.close(),
+    );
     gh.lazySingleton<_i55.SessionExpiryCoordinator>(
       () => _i55.SessionExpiryCoordinator(
         gh<_i508.TokenProvider>(),
         gh<_i924.SessionEventController>(),
       ),
-    );
-    gh.lazySingleton<_i1036.AppUseCase>(
-      () => _i1036.AppUseCase(gh<_i546.AppRepo>()),
     );
     gh.lazySingleton<_i44.ApiHandler>(
       () => registerModule.apiHandler(
@@ -116,13 +128,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i519.AuthRemoteDataSource>(
       () => _i519.AuthRemoteDataSourceImpl(gh<_i44.ApiHandler>()),
     );
-    gh.singleton<_i688.AppCubit>(
-      () => _i688.AppCubit(
-        gh<_i1036.AppUseCase>(),
-        gh<_i924.SessionEventController>(),
-      ),
-      dispose: (i) => i.close(),
-    );
     gh.lazySingleton<_i218.AuthRepo>(
       () => _i743.AuthRepoImpl(
         gh<_i519.AuthRemoteDataSource>(),
@@ -130,10 +135,10 @@ extension GetItInjectableX on _i174.GetIt {
       ),
     );
     gh.lazySingleton<_i358.AuthUseCase>(
-      () => _i358.AuthUseCase(
+      () => registerModule.authUseCase(
         gh<_i218.AuthRepo>(),
         gh<_i1042.UserRepo>(),
-        gh<_i59.FirebaseAuth>(),
+        gh<_i168.PhoneVerificationRepo>(),
       ),
     );
     gh.factory<_i453.ConfirmInformationCubit>(

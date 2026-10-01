@@ -22,7 +22,8 @@ description: >
 | Type | Annotation |
 |---|---|
 | Screen-scoped Cubit/BLoC | `@injectable` (factory) |
-| Stateless UseCase/service | `@lazySingleton` |
+| Domain UseCase | provider `@lazySingleton` trong `lib/di/register_module.dart` |
+| Stateless service ngoài domain | `@lazySingleton` trên class |
 | Repository binding | `@LazySingleton(as: XxxRepo)` on implementation |
 | DataSource binding | `@LazySingleton(as: XxxDataSource)` on implementation |
 | App-lifetime coordinator | `@singleton`, only with an explicit lifetime reason |
@@ -55,6 +56,7 @@ commit the regenerated config.
 - Resolution is allowed only in composition roots: bootstrap, route/screen
   builders, and explicit integration adapters.
 - Depend on domain interfaces, not data implementations.
+- Domain không import Injectable; provider ở DI module đăng ký UseCase thuần.
 - Prefer constructor injection; do not add field injection or hidden globals.
 - Cubits/BLoCs are factories unless an app-lifetime state owner is explicitly
   documented and provided with `BlocProvider.value`.

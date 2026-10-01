@@ -37,3 +37,9 @@ dụng, còn data source sở hữu việc parse response.
 - Alice chỉ khả dụng ngoài production.
 
 GraphQL là năng lực tùy chọn và không thêm cho tới khi sản phẩm cần.
+
+Firebase Phone Auth của sample đi qua domain-owned `PhoneVerificationRepo`.
+`FirebasePhoneVerificationRepo` ở data layer giữ SDK callback/verification ID,
+map SDK exception thành `PhoneVerificationFailure` và bỏ qua callback của lần
+request cũ. Domain UseCase không import Firebase SDK; việc tách Firebase Auth
+thành optional product capability vẫn là quyết định riêng của Phase 8.

@@ -15,7 +15,9 @@ Entity → Model → DataSource → Repository → UseCase → Cubit/BLoC → Sc
    hoặc local storage abstraction.
 5. Thêm domain repository contract và bind `RepoImpl` bằng
    `@LazySingleton(as: Repo)`.
-6. Thêm UseCase inject qua constructor để orchestration.
+6. Thêm UseCase thuần inject qua constructor để orchestration; đăng ký lifetime
+   của UseCase trong `lib/di/register_module.dart`, không import Injectable
+   vào domain.
 7. Chọn Cubit hoặc BLoC theo [guide quyết định](choose-cubit-or-bloc.md), gắn
    `@injectable`, unit-test transition, và dùng
    [typed UI effect](handle-ui-effects.md) nếu cần route/dialog/snackbar.

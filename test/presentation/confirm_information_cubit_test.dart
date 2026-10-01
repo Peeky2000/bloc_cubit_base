@@ -1,8 +1,8 @@
 import 'package:bloc_cubit_base/core/common/constant.dart';
 import 'package:bloc_cubit_base/core/common/enum.dart';
 import 'package:bloc_cubit_base/domain/use_case/auth_use_case.dart';
+import 'package:bloc_cubit_base/domain/repositories/phone_verification_repo.dart';
 import 'package:bloc_cubit_base/presentation/confirm_information/cubit/confirm_information_cubit.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -42,7 +42,7 @@ void main() {
   });
 
   test('publishes an error effect when sending the code fails', () async {
-    final error = FirebaseAuthException(code: 'quota-exceeded');
+    const error = PhoneVerificationFailure('quota-exceeded');
     when(
       () => authUseCase.sendCodeVerify(
         phone: any(named: 'phone'),
@@ -52,7 +52,7 @@ void main() {
     ).thenAnswer((invocation) async {
       final onError =
           invocation.namedArguments[#onError]
-              as Function(FirebaseAuthException)?;
+              as void Function(PhoneVerificationFailure)?;
       onError?.call(error);
     });
 
@@ -82,7 +82,7 @@ void main() {
     expect((effect! as ConfirmInformationShowErrorEffect).error, same(error));
   });
 
-  test('ignores delayed Firebase callbacks after close', () async {
+  test('ignores delayed phone verification callbacks after close', () async {
     Function()? delayedCallback;
     when(
       () => authUseCase.sendCodeVerify(

@@ -7,7 +7,8 @@ DI is configured by `lib/di/injection.dart`, generated in
 | Type | Annotation / provider | Lifetime |
 |---|---|---|
 | Feature Cubit/BLoC | `@injectable` | factory per provider |
-| UseCase/stateless service | `@lazySingleton` | lazy app lifetime |
+| Domain UseCase | `@lazySingleton` provider trong DI module | lazy app lifetime |
+| Stateless service ngoài domain | `@lazySingleton` trên class | lazy app lifetime |
 | Repository implementation | `@LazySingleton(as: Repo)` | lazy app lifetime via interface |
 | DataSource implementation | `@LazySingleton(as: DataSource)` | lazy app lifetime via interface |
 | App coordinator | `@singleton` | app lifetime, explicit only |
@@ -16,6 +17,7 @@ DI is configured by `lib/di/injection.dart`, generated in
 
 Constructor injection is mandatory outside composition roots. Resolve from
 `getIt` only while composing a screen/route or integrating the application root.
+Domain source không import Injectable; registration của UseCase thuộc DI module.
 
 After changing annotations or constructors:
 

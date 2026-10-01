@@ -5,6 +5,12 @@ import 'package:bloc_cubit_base/core/routing/routing.dart';
 import 'package:bloc_cubit_base/data/datasource/local/token_provider.dart';
 import 'package:bloc_cubit_base/data/datasource/local/session_expiry_coordinator.dart';
 import 'package:bloc_cubit_base/data/datasource/remote/api_client.dart';
+import 'package:bloc_cubit_base/domain/repositories/app_repo.dart';
+import 'package:bloc_cubit_base/domain/repositories/auth_repo.dart';
+import 'package:bloc_cubit_base/domain/repositories/phone_verification_repo.dart';
+import 'package:bloc_cubit_base/domain/repositories/user_repo.dart';
+import 'package:bloc_cubit_base/domain/use_case/app_use_case.dart';
+import 'package:bloc_cubit_base/domain/use_case/auth_use_case.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
@@ -25,6 +31,16 @@ abstract class RegisterModule {
   Future<SharedPreferences> get preferences => SharedPreferences.getInstance();
 
   FirebaseAuth get firebaseAuth => FirebaseAuth.instance;
+
+  @lazySingleton
+  AppUseCase appUseCase(AppRepo appRepo) => AppUseCase(appRepo);
+
+  @lazySingleton
+  AuthUseCase authUseCase(
+    AuthRepo authRepo,
+    UserRepo userRepo,
+    PhoneVerificationRepo phoneVerificationRepo,
+  ) => AuthUseCase(authRepo, userRepo, phoneVerificationRepo);
 
   FlutterSecureStorage get secureStorage => const FlutterSecureStorage();
 

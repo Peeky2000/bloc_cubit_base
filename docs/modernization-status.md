@@ -14,7 +14,9 @@ implement” nghĩa là có code cùng gate liên quan; không có nghĩa sample
   injection trên dependency graph feature hiện tại.
 - DI reset/dispose lifecycle có test seam; repeated setup không leak
   registration.
-- Sửa boundary domain thuần và kiểm tra presentation-to-data import.
+- Domain thuần Dart/domain: Firebase Phone Auth đi qua domain port
+  `PhoneVerificationRepo`, SDK adapter nằm ở data và UseCase được đăng ký tại
+  DI module. Architecture gate chặn platform/HTTP/DI import trong domain.
 - Cubit mặc định kèm hỗ trợ `BaseBloc`; base state immutable bằng Equatable.
 - `BaseAppState` hỗ trợ generic typed failure; Cubit và BLoC đại diện đã cover
   initial/loading/success/failure.
@@ -55,8 +57,8 @@ implement” nghĩa là có code cùng gate liên quan; không có nghĩa sample
 
 ## Baseline đã verify
 
-- Application quality: format 195 file, analyzer 0 finding, architecture gate
-  pass và 65 tests pass.
+- Application quality: format 199 file, analyzer 0 finding, architecture gate
+  pass và 73 tests pass.
 - `sli_common`: full-package analyzer 0 finding và 20 tests pass.
 - Catalog inventory gate xác nhận 46/46 public export có maturity entry.
 - Baseline 241 analyzer finding lịch sử đã được xử lý. Tên enum và async back
@@ -74,6 +76,7 @@ implement” nghĩa là có code cùng gate liên quan; không có nghĩa sample
   - `xcodebuild -list` đọc được project và đủ 9 build configurations/3 schemes.
 
 Evidence mới nhất nằm tại
+[review phone verification boundary 2026-10-01](reviews/2026-10-01-phone-verification-boundary-review.md),
 [review ExpandedWidget migration 2026-10-01](reviews/2026-10-01-expanded-widget-migration-review.md)
 và
 [review full analyzer 2026-10-01](reviews/2026-10-01-sli-common-full-analyzer-review.md).
@@ -95,7 +98,8 @@ Catalog và Base CLI vẫn có snapshot riêng tại
    từng loại tại [widget family matrix](plan/2026-10-01-widget-family-migration-matrix.md).
 2. Trung hòa product slice còn lại: `DeliveryGo`, copy/l10n `Giao Hàng 247`,
    native identity, icon/splash, Firebase client config và endpoint. Fastlane
-   artifact/key path đã tách khỏi sample.
+   artifact/key path đã tách khỏi sample. Firebase Auth đã được cô lập khỏi
+   domain nhưng bootstrap và sample auth flow vẫn cần Firebase client config.
 3. Chạy eval độc lập cho skill Flutter/mobile trên task thật để đánh giá
    trigger/output và tinh chỉnh nếu cần; sáu skill cùng guide đã có thể dùng.
 

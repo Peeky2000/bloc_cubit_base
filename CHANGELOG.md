@@ -25,6 +25,9 @@
   khóa behavior mở/đóng hai trục và ghi matrix cho chín widget trùng còn lại.
 - Bỏ tên artifact/key path `Giaohang247` khỏi Fastlane; Store lane dùng package
   và key path từ environment, fail sớm nếu thiếu key file.
+- Đưa Firebase Phone Auth ra khỏi domain qua `PhoneVerificationRepo` và data
+  adapter; chuyển DI annotation UseCase sang provider, thêm domain import gate
+  và 8 regression tests cho callback/failure/stale request.
 - Dọn 241 analyzer findings của toàn bộ `sli_common` và đưa full-package
   analyzer/test vào `derry quality` cùng CI; thêm lệnh `derry toolkit quality`.
 - Thêm sáu skill quality Flutter/mobile cho review, performance, testing,

@@ -45,8 +45,9 @@ Skip layers the requirement does not need.
 - Domain stays pure and presentation never imports data.
 - Every class receives dependencies through constructors. Never resolve a
   service locator inside Cubit/BLoC, UseCase, repository, or data source.
-- Annotate feature state owners `@injectable`, stateless services
-  `@lazySingleton`, and bind interfaces on implementations.
+- Annotate feature state owners `@injectable`, stateless services ngoài domain
+  `@lazySingleton`, and bind interfaces on implementations. Register pure
+  domain UseCases with `@lazySingleton` providers in the DI module.
 - Cubit is default; use BLoC only for a documented event/concurrency need.
 - State is immutable Equatable + copyWith and contains recoverable errors.
 - Navigation/dialog/snackbar/l10n stays in Screen listeners; Cubit/BLoC emits

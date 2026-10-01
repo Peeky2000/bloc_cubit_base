@@ -4,19 +4,16 @@ import 'package:bloc_cubit_base/domain/entities/auth/sign_up_params.dart';
 import 'package:bloc_cubit_base/domain/entities/profile/account.dart';
 import 'package:bloc_cubit_base/domain/entities/profile/update_account.dart';
 import 'package:bloc_cubit_base/domain/repositories/auth_repo.dart';
+import 'package:bloc_cubit_base/domain/repositories/phone_verification_repo.dart';
 import 'package:bloc_cubit_base/domain/repositories/user_repo.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:injectable/injectable.dart';
 
-@lazySingleton
 class AuthUseCase {
   final AuthRepo _authRepo;
   final UserRepo _userRepo;
 
-  final FirebaseAuth _auth;
-  String _verificationId = '';
+  final PhoneVerificationRepo _phoneVerificationRepo;
 
-  AuthUseCase(this._authRepo, this._userRepo, this._auth);
+  AuthUseCase(this._authRepo, this._userRepo, this._phoneVerificationRepo);
 
   bool isAppLogin() {
     return _authRepo.isAppLogin();
@@ -43,52 +40,20 @@ class AuthUseCase {
 
   Future<void> sendCodeVerify({
     required String phone,
-    Function(bool)? verificationCompleted,
-    Function()? onComplete,
-    Function(FirebaseAuthException)? onError,
+    void Function(bool)? verificationCompleted,
+    void Function()? onComplete,
+    void Function(PhoneVerificationFailure)? onError,
   }) async {
-    String phoneNumber = '';
-    if (phone[0] == '0') {
-      phoneNumber = '+84${phone.substring(1)}';
-    } else {
-      phoneNumber = phone;
-    }
-    await _auth.verifyPhoneNumber(
-      phoneNumber: phoneNumber,
-      verificationCompleted: (credential) async {
-        UserCredential userCredential = await _auth.signInWithCredential(
-          credential,
-        );
-        if (verificationCompleted != null) {
-          verificationCompleted(userCredential.user != null);
-        }
-      },
-      verificationFailed: (e) {
-        if (onError != null) {
-          onError(e);
-        }
-      },
-      codeSent: (verificationId, resendToken) {
-        _verificationId = verificationId;
-        if (onComplete != null) {
-          onComplete();
-        }
-      },
-      codeAutoRetrievalTimeout: (String verificationId) {
-        _verificationId = verificationId;
-      },
+    await _phoneVerificationRepo.sendCode(
+      phoneNumber: phone.startsWith('0') ? '+84${phone.substring(1)}' : phone,
+      onVerificationCompleted: verificationCompleted,
+      onCodeSent: onComplete,
+      onError: onError,
     );
   }
 
-  Future<String?> verifyOTP({required String otp}) async {
-    UserCredential credential = await _auth.signInWithCredential(
-      PhoneAuthProvider.credential(
-        verificationId: _verificationId,
-        smsCode: otp,
-      ),
-    );
-    return credential.user?.getIdToken();
-  }
+  Future<String?> verifyOTP({required String otp}) =>
+      _phoneVerificationRepo.verifyOtp(otp: otp);
 
   Future<void> verifyPhone({required String idToken}) async {
     UpdateAccount? infoUpdate = await _authRepo.verifyPhone(idToken: idToken);

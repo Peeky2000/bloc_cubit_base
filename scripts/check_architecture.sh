@@ -11,6 +11,11 @@ if rg -n "package:bloc_cubit_base/(data|presentation)/" lib/domain --glob '*.dar
   failed=1
 fi
 
+if rg -n "package:(firebase_[^/]+|flutter/|dio/|get_it/|injectable/)" lib/domain --glob '*.dart'; then
+  echo "Domain must not import platform, HTTP, or dependency-injection packages." >&2
+  failed=1
+fi
+
 if rg -n "package:bloc_cubit_base/data/" lib/presentation --glob '*.dart'; then
   echo "Presentation must not import the data layer." >&2
   failed=1

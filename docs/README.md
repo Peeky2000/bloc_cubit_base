@@ -21,8 +21,8 @@ không cần đọc tất cả ngay; hãy chọn đúng mục tiêu trong bảng
 | Phân phối Firebase hoặc Store | [Derry/build/Fastlane](guides/use-derry-and-build.md) → [Android Fastlane](../android/fastlane/README.md) / [iOS Fastlane](../ios/fastlane/README.md) |
 | Xem vì sao chọn công nghệ hiện tại | [Danh sách ADR](adr/README.md) |
 | Xem việc đã làm và việc còn lại | [Trạng thái modernization](modernization-status.md) → [roadmap](plan/2026-08-26-base-modernization.md) |
-| Xem bằng chứng review/quality gate | [Review mới nhất](reviews/2026-09-28-pure-cubit-ui-effects-review.md) |
-| Làm việc cùng AI agent | [Quy trình AI](../ai-process.md) → [AGENTS.md](../AGENTS.md) |
+| Xem bằng chứng review/quality gate | [Review full analyzer](reviews/2026-10-01-sli-common-full-analyzer-review.md) → [review skill](reviews/2026-10-01-mobile-skills-review.md) |
+| Làm việc cùng AI agent | [Quy trình AI](../ai-process.md) → [AGENTS.md](../AGENTS.md) → [chọn skill Flutter/mobile](guides/mobile-engineering-skills.md) |
 
 ## Lộ trình onboarding khuyến nghị
 
@@ -105,6 +105,7 @@ trong cùng thay đổi.
 | Dùng UI toolkit cá nhân | [use-sli-common.md](guides/use-sli-common.md) |
 | Tra hình/API/maturity của component | [`sli_common` catalog](../lib/modules/sli_common/docs/catalog/README.md) |
 | Dùng Derry, build và delivery | [use-derry-and-build.md](guides/use-derry-and-build.md) |
+| Chọn skill review/performance/testing/mobile | [mobile-engineering-skills.md](guides/mobile-engineering-skills.md) |
 
 ## Mục lục quyết định kiến trúc
 
@@ -133,6 +134,7 @@ trong cùng thay đổi.
 | [Review state + DI completion](reviews/2026-09-30-state-di-completion-review.md) | Evidence typed failure, Cubit/BLoC lifecycle và resettable DI graph |
 | [Review Shadcn + BottomSheet](reviews/2026-09-30-shadcn-bottom-sheet-review.md) | Evidence facade accessibility/light-dark và migration family BottomSheet |
 | [Review full analyzer `sli_common`](reviews/2026-10-01-sli-common-full-analyzer-review.md) | Evidence 241 finding về 0 và gate toàn package trong Derry/CI |
+| [Review Flutter/mobile skills](reviews/2026-10-01-mobile-skills-review.md) | Evidence skill đã tạo, route vào agent và giới hạn eval hiện tại |
 | [Trạng thái modernization](modernization-status.md) | Bản tóm tắt sống về phần đã xong/chưa xong |
 | [Brainstorm Derry/build](brainstorm/2026-08-27-derry-build-automation.md) | Lý do tách build, distribute và release |
 | [Brainstorm component catalog](brainstorm/2026-08-28-ui-component-catalog-and-migration.md) | Inventory baseline và lý do phải catalog trước khi migrate widget |

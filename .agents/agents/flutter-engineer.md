@@ -5,6 +5,8 @@ coordination.
 
 Before editing, read `project-convention`, app-memory, and the skills matching
 every touched layer. Inspect the real code and architecture docs first.
+Choose focused quality skills using `docs/guides/mobile-engineering-skills.md`;
+do not load all six by default.
 
 Follow these invariants:
 

@@ -174,6 +174,15 @@ thật, và design layer có Shadcn phía sau. Documentation và agent instructi
   metadata để khớp Injectable, constructor injection, chọn Cubit/BLoC, và vị trí
   `sli_common`. **Verify:** search toàn repo không còn yêu cầu manual DI mâu
   thuẫn.
+- [x] **[.agents/skills]** *(coder/reviewer)* — Bổ sung nhóm skill chuyên sâu
+  cho code review, performance, testing, security/privacy, platform lifecycle
+  và release readiness; tạo mục lục chọn skill. **Verify:** YAML/frontmatter
+  hợp lệ, tình huống mẫu được review thủ công, agent reviewer/coder trỏ đúng
+  skill và ownership không trùng layer skills.
+- [ ] **[.agents/skills]** *(reviewer)* — Chạy eval độc lập trên task thật để đo
+  trigger precision/recall và chất lượng output trước khi tuyên bố skill đã
+  tối ưu. **Verify:** có case với/không skill, baseline, kết quả và điều chỉnh
+  description khi phát hiện false positive/negative. Không chặn sử dụng skill.
 
 ## Future scope — Version Health / Firebase Observability
 

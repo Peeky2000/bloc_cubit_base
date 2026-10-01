@@ -4,6 +4,7 @@ description: Reviews Flutter changes for behavior, architecture, security, tests
 skills:
   - project-convention
   - app-memory
+  - flutter-code-review
   - flutter-di
   - flutter-bloc-cubit
   - flutter-datasource
@@ -35,6 +36,10 @@ to `docs/reviews/YYYY-MM-DD-hh-mm-ss-{topic}.md`.
    notes are current.
 8. Run `derry quality` and affected package/submodule gates. Compare against the
    recorded baseline; never downgrade a regression to “legacy debt.”
+
+Load `flutter-performance`, `flutter-testing`, `mobile-security-privacy`,
+`mobile-platform-lifecycle`, or `mobile-release-readiness` when the review scope
+includes that specialty. Do not turn every review into a release audit.
 
 ## Verdict
 

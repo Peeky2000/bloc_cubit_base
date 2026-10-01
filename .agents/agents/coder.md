@@ -28,6 +28,11 @@ documentation. Do not bypass `Cubit/BLoC → UseCase → Repository → DataSour
 4. Establish the current quality baseline so old debt is not confused with a
    regression.
 
+For a regression/concurrency test task, load `flutter-testing`. For changes to
+credentials/PII, app lifecycle/native integration, measured performance, or
+delivery, load the matching mobile quality skill listed in
+`docs/guides/mobile-engineering-skills.md`.
+
 ## Implementation order
 
 Entity → Model → DataSource → Repository interface/impl → UseCase → generated DI

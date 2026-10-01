@@ -43,6 +43,9 @@ implement” nghĩa là có code cùng gate liên quan; không có nghĩa sample
 - Dart Base CLI là source of truth cho `doctor/create/rename`, expose qua Derry,
   dry-run mặc định và validation trước mutation.
 - Index kiến trúc, ADRs, contributor guides và agent/skill Flutter đã đồng bộ.
+- Sáu skill quality Flutter/mobile đã có workflow evidence-first và bản đồ chọn
+  skill cho người mới; frontmatter được kiểm tra bằng YAML parser. Chưa có eval
+  agent độc lập về tỉ lệ trigger, nên không tuyên bố đã tối ưu trigger.
 - Đã gỡ provisioning profile cá nhân và provisioning identifier hard-coded của
   iOS; signing material bị ignore và phải lấy từ local/CI secrets.
 
@@ -85,9 +88,8 @@ Catalog và Base CLI vẫn có snapshot riêng tại
    button/action và display; mỗi family cần matrix + parity test + adapter.
 2. Trung hòa product slice còn lại: `DeliveryGo`, copy/l10n `Giao Hàng 247`,
    Fastlane artifact/key path, icon/splash, Firebase client config và endpoint.
-3. Hoàn thiện hệ skill phục vụ Flutter/mobile engineering: code review,
-   performance, testing, security/privacy, platform lifecycle và release
-   readiness; không adopt framework VIPER.
+3. Chạy eval độc lập cho skill Flutter/mobile trên task thật để đánh giá
+   trigger/output và tinh chỉnh nếu cần; sáu skill cùng guide đã có thể dùng.
 
 Base CLI đã xử lý deterministic identity, nhưng cố ý không đoán cách đổi class,
 l10n key, Firebase project, signing hoặc Store credential. Vì vậy Phase 8
@@ -95,7 +97,7 @@ create/rename đã hoàn tất; Phase 8 neutral branding vẫn đang mở.
 
 Automation delivery đã tái sử dụng `build.sh`/Fastlane qua Derry, có dry-run,
 Store confirmation và Git tag opt-in. Chỉ dùng delivery thật sau khi hoàn thành
-neutral branding/Firebase/signing ở mục 3.
+neutral branding/Firebase/signing ở mục 2.
 
 Version Health dựa trên Analytics, Crashlytics, Firebase Performance và Remote
 Config được giữ ở future scope. Phần này chỉ bắt đầu sau các mục zero-debt bên

@@ -23,6 +23,9 @@
   callers và giữ app-local API cũ dưới dạng adapter deprecated có parity test.
 - Dọn 241 analyzer findings của toàn bộ `sli_common` và đưa full-package
   analyzer/test vào `derry quality` cùng CI; thêm lệnh `derry toolkit quality`.
+- Thêm sáu skill quality Flutter/mobile cho review, performance, testing,
+  security/privacy, lifecycle và release; bổ sung guide chọn skill cho agent
+  và contributor, giữ eval trigger độc lập là follow-up rõ ràng.
 - Gia cố session refresh: single-flight concurrent 401, token revision guard,
   cross-origin bearer protection, safe replay và coalesced terminal expiry.
 - Thêm test network/session/token cho terminal và transient refresh failure,

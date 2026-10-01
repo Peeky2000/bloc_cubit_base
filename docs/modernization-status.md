@@ -38,6 +38,8 @@ implement” nghĩa là có code cùng gate liên quan; không có nghĩa sample
   runnable showroom. BottomSheet đã đi từ pilot thành stable typed
   presenter/frame contract; selection callers dùng API shared trực tiếp và
   app-local API cũ là adapter deprecated.
+- `ExpandedWidget` đã đồng bộ behavior hai trục, có test mở/đóng trong toolkit,
+  app-local API là adapter deprecated và caller nội bộ dùng public shared API.
 - Analyzer toàn bộ historical `sli_common` đã sạch; Derry quality và CI kiểm
   tra cả package, không còn gate chỉ giới hạn ở stable surface.
 - Dart Base CLI là source of truth cho `doctor/create/rename`, expose qua Derry,
@@ -51,9 +53,9 @@ implement” nghĩa là có code cùng gate liên quan; không có nghĩa sample
 
 ## Baseline đã verify
 
-- Application quality: format 194 file, analyzer 0 finding, architecture gate
-  pass và 64 tests pass.
-- `sli_common`: full-package analyzer 0 finding và 18 tests pass.
+- Application quality: format 195 file, analyzer 0 finding, architecture gate
+  pass và 65 tests pass.
+- `sli_common`: full-package analyzer 0 finding và 20 tests pass.
 - Catalog inventory gate xác nhận 46/46 public export có maturity entry.
 - Baseline 241 analyzer finding lịch sử đã được xử lý. Tên enum và async back
   API legacy được giữ bằng ngoại lệ lint có chú thích tại source.
@@ -70,6 +72,8 @@ implement” nghĩa là có code cùng gate liên quan; không có nghĩa sample
   - `xcodebuild -list` đọc được project và đủ 9 build configurations/3 schemes.
 
 Evidence mới nhất nằm tại
+[review ExpandedWidget migration 2026-10-01](reviews/2026-10-01-expanded-widget-migration-review.md)
+và
 [review full analyzer 2026-10-01](reviews/2026-10-01-sli-common-full-analyzer-review.md).
 Shadcn/BottomSheet có snapshot riêng tại
 [review Shadcn/BottomSheet 2026-09-30](reviews/2026-09-30-shadcn-bottom-sheet-review.md).
@@ -84,8 +88,9 @@ Catalog và Base CLI vẫn có snapshot riêng tại
 
 ## Việc còn lại trước template zero-debt
 
-1. Tiếp tục migration theo family cho 10 file trùng còn lại: dialog, form/input,
-   button/action và display; mỗi family cần matrix + parity test + adapter.
+1. Tiếp tục migration theo family cho 9 file trùng còn lại: dialog, form/input,
+   button/action và display; matrix hiện tại đã chỉ ra khác biệt và gate của
+   từng loại tại [widget family matrix](plan/2026-10-01-widget-family-migration-matrix.md).
 2. Trung hòa product slice còn lại: `DeliveryGo`, copy/l10n `Giao Hàng 247`,
    Fastlane artifact/key path, icon/splash, Firebase client config và endpoint.
 3. Chạy eval độc lập cho skill Flutter/mobile trên task thật để đánh giá

@@ -75,3 +75,8 @@ final accepted = await showSliBottomSheet<bool>(
 `BottomSheetWidget` cũ chỉ còn để tương thích và đã deprecated. Code mới dùng
 `showSliBottomSheet<T>` + `SliBottomSheetFrame`; xem behavior matrix và evidence
 tại [review 2026-09-30](../reviews/2026-09-30-shadcn-bottom-sheet-review.md).
+
+`ExpandedWidget` cũng đã có shared public export và app-local adapter deprecated.
+Đây vẫn là API legacy; xem [contract/giới hạn](../../lib/modules/sli_common/docs/catalog/expanded-widget.md)
+và [behavior matrix](../plan/2026-10-01-widget-family-migration-matrix.md)
+trước khi dùng cho code mới.

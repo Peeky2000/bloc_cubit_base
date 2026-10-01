@@ -21,6 +21,8 @@
   light/dark; nâng catalog lên 46/46 export.
 - Thêm stable `showSliBottomSheet<T>` + `SliBottomSheetFrame`, migrate selection
   callers và giữ app-local API cũ dưới dạng adapter deprecated có parity test.
+- Migrate `ExpandedWidget` app sang public `sli_common` qua adapter deprecated;
+  khóa behavior mở/đóng hai trục và ghi matrix cho chín widget trùng còn lại.
 - Dọn 241 analyzer findings của toàn bộ `sli_common` và đưa full-package
   analyzer/test vào `derry quality` cùng CI; thêm lệnh `derry toolkit quality`.
 - Thêm sáu skill quality Flutter/mobile cho review, performance, testing,

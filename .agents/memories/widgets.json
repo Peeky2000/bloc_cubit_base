@@ -55,5 +55,26 @@
     ],
     "group": "overlays",
     "scope": "shared"
+  },
+  {
+    "type": "widget",
+    "name": "ExpandedWidget",
+    "description": "Shared legacy expand/collapse transition; app-local class is deprecated adapter. Use public sli_common export for new callers.",
+    "location": "lib/modules/sli_common/lib/expanded_widget.dart",
+    "keywords": [
+      "expand",
+      "collapse",
+      "animation",
+      "transition"
+    ],
+    "props": [
+      "expand",
+      "child",
+      "axis",
+      "curve",
+      "duration"
+    ],
+    "group": "display",
+    "scope": "shared"
   }
 ]

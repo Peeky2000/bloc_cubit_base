@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:sli_common/sli_common.dart' as sli;
 
-class ExpandedWidget extends StatefulWidget {
+@Deprecated('Use ExpandedWidget from package:sli_common/sli_common.dart.')
+class ExpandedWidget extends StatelessWidget {
   final Widget? child;
   final bool expand;
   final Curve curve;
@@ -17,59 +19,11 @@ class ExpandedWidget extends StatefulWidget {
   });
 
   @override
-  State<ExpandedWidget> createState() => _ExpandedWidgetState();
-}
-
-class _ExpandedWidgetState extends State<ExpandedWidget>
-    with SingleTickerProviderStateMixin {
-  late AnimationController expandController;
-  late Animation<double> animation;
-
-  @override
-  void initState() {
-    super.initState();
-    prepareAnimations();
-    _runExpandCheck();
-  }
-
-  ///Setting up the animation
-  void prepareAnimations() {
-    expandController = AnimationController(
-      vsync: this,
-      duration: widget.duration,
-    );
-    animation = CurvedAnimation(parent: expandController, curve: widget.curve);
-  }
-
-  void _runExpandCheck() {
-    if (widget.expand) {
-      expandController.forward();
-    } else {
-      expandController.reverse();
-    }
-  }
-
-  @override
-  void didUpdateWidget(ExpandedWidget oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    _runExpandCheck();
-  }
-
-  @override
-  void dispose() {
-    expandController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SizeTransition(
-      alignment: widget.axis == Axis.vertical
-          ? Alignment.bottomCenter
-          : Alignment.centerRight,
-      sizeFactor: animation,
-      axis: widget.axis,
-      child: widget.child,
-    );
-  }
+  Widget build(BuildContext context) => sli.ExpandedWidget(
+    expand: expand,
+    curve: curve,
+    axis: axis,
+    duration: duration,
+    child: child,
+  );
 }

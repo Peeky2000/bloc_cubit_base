@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:bloc_cubit_base/core/extension/string_extension.dart';
-import 'package:bloc_cubit_base/core/widget/expanded_widget.dart';
+import 'package:sli_common/sli_common.dart' show ExpandedWidget;
 
 class CommonTextField extends StatelessWidget {
   static CommonTextFieldStyle commonTextFieldStyle =

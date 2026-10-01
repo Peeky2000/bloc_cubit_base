@@ -135,11 +135,13 @@ trong cùng thay đổi.
 | [Review Shadcn + BottomSheet](reviews/2026-09-30-shadcn-bottom-sheet-review.md) | Evidence facade accessibility/light-dark và migration family BottomSheet |
 | [Review full analyzer `sli_common`](reviews/2026-10-01-sli-common-full-analyzer-review.md) | Evidence 241 finding về 0 và gate toàn package trong Derry/CI |
 | [Review Flutter/mobile skills](reviews/2026-10-01-mobile-skills-review.md) | Evidence skill đã tạo, route vào agent và giới hạn eval hiện tại |
+| [Review ExpandedWidget migration](reviews/2026-10-01-expanded-widget-migration-review.md) | Evidence parity hai trục, app adapter và caller migration |
 | [Trạng thái modernization](modernization-status.md) | Bản tóm tắt sống về phần đã xong/chưa xong |
 | [Brainstorm Derry/build](brainstorm/2026-08-27-derry-build-automation.md) | Lý do tách build, distribute và release |
 | [Brainstorm component catalog](brainstorm/2026-08-28-ui-component-catalog-and-migration.md) | Inventory baseline và lý do phải catalog trước khi migrate widget |
 | [Brainstorm Flutter/mobile skills](brainstorm/2026-09-28-flutter-mobile-engineering-skills.md) | Phạm vi skill convention, review, performance, testing và mobile quality |
 | [Plan catalog + Base CLI](plan/2026-08-28-component-catalog-and-base-cli.md) | Checklist triển khai đã duyệt cho toolbox docs và create/rename workflow |
+| [Widget family migration matrix](plan/2026-10-01-widget-family-migration-matrix.md) | Khác biệt 10 widget trùng, caller và gate trước từng migration |
 
 ## Quy tắc duy trì mục lục
 

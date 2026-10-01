@@ -153,7 +153,10 @@ thật, và design layer có Shadcn phía sau. Documentation và agent instructi
   matrix.
   - [x] BottomSheet: stable presenter/frame, matrix, 16 package tests,
     app adapter deprecated và selection callers đã migrate.
-  - [ ] Dialog, form/input, button/action và display families còn lại.
+  - [x] `ExpandedWidget`: matrix, parity hai trục, shared caller và app adapter
+    deprecated; [review 2026-10-01](../reviews/2026-10-01-expanded-widget-migration-review.md).
+  - [ ] Chín file còn lại: dialog, form/input, button/action và display;
+    [matrix family](2026-10-01-widget-family-migration-matrix.md).
 
 ## Phase 8 — Cleanup template tái sử dụng
 

@@ -1,0 +1,197 @@
+{
+  "_source": "Rule matching idea adapted from alibaba/open-code-review (Apache-2.0). Rules are this repo's own conventions.",
+  "exclude": [
+    {
+      "glob": "**/*.g.dart",
+      "reason": "generated (json_serializable)"
+    },
+    {
+      "glob": "**/*.freezed.dart",
+      "reason": "generated"
+    },
+    {
+      "glob": "**/*.gen.dart",
+      "reason": "generated (flutter_gen)"
+    },
+    {
+      "glob": "lib/di/injection.config.dart",
+      "reason": "generated DI; review its inputs instead"
+    },
+    {
+      "glob": "lib/generated/**",
+      "reason": "generated"
+    },
+    {
+      "glob": "lib/l10n/gen/**",
+      "reason": "generated l10n"
+    },
+    {
+      "glob": "**/pubspec.lock",
+      "reason": "lockfile; review pubspec.yaml"
+    },
+    {
+      "glob": "ios/Podfile.lock",
+      "reason": "lockfile"
+    },
+    {
+      "glob": "**/*.png",
+      "reason": "binary asset"
+    },
+    {
+      "glob": "**/*.jpg",
+      "reason": "binary asset"
+    },
+    {
+      "glob": "**/*.ttf",
+      "reason": "binary asset"
+    },
+    {
+      "glob": "lib/modules/**",
+      "reason": "sli_common submodule; review in its own repo"
+    }
+  ],
+  "rules": [
+    {
+      "id": "domain",
+      "glob": "lib/domain/**.dart",
+      "skills": [
+        "project-convention",
+        "flutter-model-entity",
+        "flutter-repository"
+      ],
+      "checks": [
+        "Imports only Dart and domain types: no Flutter, data, presentation, core, get_it, injectable, dio or firebase.",
+        "Repository interfaces are abstract and return domain entities, never models.",
+        "Use cases receive repositories through the constructor and hold no UI state."
+      ]
+    },
+    {
+      "id": "data",
+      "glob": "lib/data/**.dart",
+      "skills": [
+        "project-convention",
+        "flutter-datasource",
+        "flutter-repository",
+        "flutter-error-handling"
+      ],
+      "checks": [
+        "Never imports presentation.",
+        "Data sources only transport or store; they never navigate, show UI or read BuildContext.",
+        "Errors are typed and mapped; secrets and PII are redacted before logging.",
+        "Repository implementations are bound with @LazySingleton(as: Interface)."
+      ]
+    },
+    {
+      "id": "state",
+      "glob": "lib/presentation/**/{cubit,bloc}/**.dart",
+      "skills": [
+        "project-convention",
+        "flutter-bloc-cubit"
+      ],
+      "checks": [
+        "Annotated @injectable and receives use cases through the constructor; no getIt lookups.",
+        "State is immutable Equatable with copyWith and carries recoverable errors.",
+        "One-shot actions are revisioned typed UiEffect values; no BuildContext, navigation or l10n.",
+        "Every await is followed by an isClosed check before emit.",
+        "BLoC is used only for documented event or concurrency needs."
+      ]
+    },
+    {
+      "id": "screen",
+      "glob": "lib/presentation/**.dart",
+      "skills": [
+        "project-convention",
+        "flutter-atomic-design",
+        "flutter-router",
+        "flutter-translations",
+        "flutter-performance"
+      ],
+      "checks": [
+        "Never imports data.",
+        "Navigation, dialogs, snackbars and l10n live in listeners, driven by UiEffect.",
+        "Uses sli_common public APIs, not direct shadcn_flutter imports.",
+        "User-facing text comes from ARB, not string literals.",
+        "BlocBuilder scope is narrow (buildWhen or BlocSelector) and long lists use builders."
+      ]
+    },
+    {
+      "id": "di",
+      "glob": "lib/di/**.dart",
+      "skills": [
+        "flutter-di"
+      ],
+      "checks": [
+        "Scopes follow di-scopes: @injectable for state owners, @lazySingleton for stateless services.",
+        "Only composition roots resolve getIt."
+      ]
+    },
+    {
+      "id": "core",
+      "glob": "lib/core/**.dart",
+      "skills": [
+        "project-convention",
+        "mobile-security-privacy"
+      ],
+      "checks": [
+        "Never imports presentation, data or domain.",
+        "Network inspectors and verbose logging cannot run in production.",
+        "Tokens and PII never reach logs, Alice or crash reports."
+      ]
+    },
+    {
+      "id": "arb",
+      "glob": "lib/l10n/**.arb",
+      "skills": [
+        "flutter-translations"
+      ],
+      "checks": [
+        "Every key exists in every locale with matching placeholders."
+      ]
+    },
+    {
+      "id": "test",
+      "glob": "{test,integration_test,test_driver}/**",
+      "skills": [
+        "flutter-testing"
+      ],
+      "checks": [
+        "Tests prove behavior, including failure and concurrency paths, not implementation details.",
+        "No real network or secrets in unit and widget tests; performance scenarios use the test account from the environment only."
+      ]
+    },
+    {
+      "id": "native",
+      "glob": "{android,ios}/**",
+      "skills": [
+        "mobile-platform-lifecycle",
+        "mobile-security-privacy",
+        "mobile-release-readiness"
+      ],
+      "checks": [
+        "Exported components, deep links and URL schemes are intended and protected.",
+        "No secrets, signing material or production keys are committed.",
+        "Permission declarations match runtime use; minSdk and deployment targets change only on purpose."
+      ]
+    },
+    {
+      "id": "build",
+      "glob": "{pubspec.yaml,derry.yaml,analysis_options.yaml,.gitignore,scripts/**,tool/**}",
+      "skills": [
+        "mobile-release-readiness"
+      ],
+      "checks": [
+        "New dependencies are justified, maintained and placed under the right section.",
+        "Scripts never print secrets and fail loudly."
+      ]
+    },
+    {
+      "id": "docs",
+      "glob": "{docs/**,*.md,.agents/**,.claude/**}",
+      "skills": [],
+      "checks": [
+        "Docs, skills and agents match the code and commands that actually exist.",
+        "Links resolve and conventions do not contradict project-convention."
+      ]
+    }
+  ]
+}

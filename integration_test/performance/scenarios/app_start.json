@@ -1,0 +1,7 @@
+{
+  "id": "app_start",
+  "description": "Real bootstrap, splash, session restore or test-account login, and the first real screen with live backend data",
+  "routes": ["/", "/sign_in", "/home"],
+  "test": "integration_test/performance/app_start_test.dart",
+  "enabled": true
+}

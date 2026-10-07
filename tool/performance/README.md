@@ -3,69 +3,98 @@
 The base owns the profile-mode runner, metric collection, report format and
 regression checks. Each product owns its measured flows and stable test data.
 
-1. Create an integration test under `integration_test/performance/`.
-2. Use `measureScenario(tester, binding, () async { ... })` around real app UI
-   interactions. Start the app through `bootstrap` so DI, theme and
-   localization match production, and keep the steps and data stable between
-   releases.
-3. Add one JSON descriptor under `integration_test/performance/scenarios/`:
+## Real data
+
+Scenarios run against the real backend of the configured flavor with a real
+test account, so numbers include real payload sizes, real latency and real
+rendering of production-like content. This shows what users actually feel.
+
+Set the account once on the measuring machine. Values stay out of the repo,
+are passed to the app with `--dart-define`, and are masked as `***` in every
+log and report.
+
+```bash
+export PERF_USERNAME=0900000000
+export PERF_PASSWORD='...'
+```
+
+Use a dedicated account on `dev` or `staging` whose data nobody edits by
+hand. Real data changes over time, so a regression can come from the data
+rather than the code. Every report records request count, response size and
+per-endpoint timing so the two can be told apart: if `network_response_kb`
+doubled, the data grew. Network failures fail the run, because a scenario
+that hit an error page does not measure the real screen.
+
+## Add a scenario
+
+1. Create `integration_test/performance/<name>_test.dart`.
+2. Start the real app with `pumpLoggedInApp` from `support/perf_app.dart`. It
+   runs `bootstrap` and logs in with the test account when no session exists.
+3. Navigate like a user, wait for real data with `pumpUntilFound`, and wrap the
+   measured interaction in `measureScenario`. Produce at least 20 frames, for
+   example with `scrollSteps` or `pumpFor`.
+4. Add a descriptor under `integration_test/performance/scenarios/`.
+
+```dart
+testWidgets('orders list scroll', (tester) async {
+  await pumpLoggedInApp(tester);
+  await tester.tap(find.text('Đơn hàng'));
+  await measureScenario(tester, binding, () async {
+    await pumpUntilFound(tester, find.byType(OrderTile));
+    await scrollSteps(tester, find.byType(ListView));
+  });
+});
+```
 
 ```json
 {
   "id": "orders_list",
-  "description": "Open orders, scroll, open one order, return",
+  "description": "Open orders with real data and scroll ten screens down",
   "routes": ["/orders"],
   "test": "integration_test/performance/orders_list_test.dart",
   "enabled": true
 }
 ```
 
-`derry perf run` (or `dart run tool/perf.dart` from the project root) discovers
-all enabled descriptors and runs each one separately with
-`flutter drive --profile --flavor <flavor>`. The flavor comes from
+`app_start` is the included default scenario. It measures bootstrap, splash,
+session restore or login, and the first real screen. The disabled
+`template_home` pumps a screen directly and is kept only as a minimal code
+sample.
+
+## How the runner works
+
+`derry perf run` discovers enabled descriptors and runs each one with
+`flutter drive --profile --flavor <flavor> --no-dds`. The flavor comes from
 `tool/performance/config.json` because this project defines `dev`, `staging`
-and `prod` Android product flavors and iOS schemes; a drive without a flavor is
-rejected. On Android the runner builds the profile APK once per scenario and
-passes it to every drive with `--use-application-binary`. On iOS a reusable
-binary must be a signed IPA, so each drive still builds.
+and `prod` Android product flavors and iOS schemes. `--no-dds` lets the
+scenario read heap usage from the VM service. On Android the profile APK is
+built once per target and passed to every drive with
+`--use-application-binary`; on iOS a reusable binary must be a signed IPA, so
+each drive still builds.
 
-Reports are written under `performance/reports/<scenario>/`; approved baselines
-are stored under `performance/baselines/<scenario>/<device>.json`. The runner
-prints routes in `AppPage.pages` that are not covered by enabled scenarios.
-Route coverage is a source-level check for the current `SLIPage(name: ...)`
-syntax; it does not infer taps, login state, route arguments or test data.
+The `startup` target in the config runs `flutter run --profile
+--trace-startup` on `lib/main_dev.dart` and reads `start_up_info.json`.
 
-The included `template_home` descriptor is disabled because this template's
-Home screen is empty and the example pumps the screen directly without
-`bootstrap`, DI, theme or localization. It also renders too few frames to pass
-`min_frame_count`. Use it only as a code sample. Add product scenarios for
-meaningful performance regression tracking. With no enabled scenario, the
-runner exits with a configuration error and generates no fake measurement.
-
-Run only when requested:
-
-```bash
-derry perf run
-```
-
-Select a device using `FLUTTER_PERF_DEVICE`; when exactly one Android/iOS
-device is connected, the runner selects it automatically. A successful initial
-run has no baseline comparison. After reviewing its report, explicitly approve
-a baseline with `derry perf approve`. This repeats the measurement, compares it
-with any existing baseline from the same device, flavor and Flutter version,
-and updates baseline files only when every scenario passes the hard limits and
-the regression gate. JSON reports and history are ignored by Git; commit
-approved baseline files if the team wants shared regression tracking.
+The runner prints routes in `AppPage.pages` that no enabled scenario covers.
+This is a source-level check for the `SLIPage(name: ...)` syntax; it does not
+infer taps, login state, route arguments or test data.
 
 ## Metric notes
 
-- Frame p50/p95/p99, build p95, raster p95 and jank use Flutter engine
-  `FrameTiming` samples in profile mode. Percentiles use the nearest-rank
-  method. With few frames, p95/p99 collapse to the slowest frame, so a run
-  below `min_frame_count` fails instead of reporting a misleading percentile.
-- Relative regression is undefined when a baseline metric is 0, which is common
-  for jank. `zero_baseline_regression_delta` then sets the allowed absolute
+- Percentiles use the nearest-rank method. With few frames, p95/p99 collapse
+  to the slowest frame, so a run below `min_frame_count` fails.
+- Relative regression is undefined when a baseline metric is 0, which is
+  common for jank. `zero_baseline_regression_delta` sets the allowed absolute
   increase per gated metric.
-- Scenario duration starts before the first test pump and ends after the
-  declared interaction; it is not process cold startup.
-- Startup, CPU and memory are unsupported in the default collector.
+- Scenario duration starts before the first measured pump and ends after the
+  interaction. It is not process cold startup; the `startup` target is.
+- Heap metrics are taken after a forced GC before and after the scenario. They
+  catch leaks such as heap growing on every scroll, and are not gated.
+- Network metrics come from the Dart VM HTTP profiler for requests made with
+  `dart:io`, which includes Dio. Query strings are removed and numeric ids are
+  collapsed to `:id`. Request and response bodies are never read.
+- The diagnosis pass enables `debugProfileBuildsEnabled`,
+  `debugProfileLayoutsEnabled` and `debugProfilePaintsEnabled` in profile
+  mode. Profile builds cannot limit tracing to app widgets, so framework
+  widgets appear too. Rank by self time and read the app code that creates
+  the top entries.

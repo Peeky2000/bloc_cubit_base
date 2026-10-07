@@ -12,7 +12,7 @@
 Ảnh đề xuất theo dõi sức khỏe từng app version qua adoption, stability và
 performance, rồi dùng Remote Config để can thiệp khi cần. Base hiện chỉ có
 `firebase_core` và `firebase_auth`; Version Health được ghi là future scope trong
-`docs/architecture/optional-capabilities.md`. Benchmark `dart run perf` là phép
+`docs/architecture/optional-capabilities.md`. Benchmark `derry perf run` là phép
 đo profile trên thiết bị theo yêu cầu, không thay thế telemetry từ người dùng
 thật và không cung cấp adoption/crash-free.
 
@@ -114,7 +114,7 @@ publish Remote Config. Không coi Remote Config là nơi giữ secret.
 ### Key Insight
 
 Ảnh mô tả hệ thống observability và điều hành rollout trên người dùng thật.
-Benchmark `dart run perf` vừa thêm là công cụ profile opt-in dành cho developer;
+Benchmark `derry perf run` vừa thêm là công cụ profile opt-in dành cho developer;
 hai nguồn dữ liệu phục vụ mục đích khác nhau. Firebase Performance không tự đo
 render từng Flutter screen.
 

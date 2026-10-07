@@ -45,7 +45,8 @@ an implementation.
 ## Opt-in benchmark harness
 
 For an explicit benchmark/measurement request, follow `PERFORMANCE.md` and run
-`dart run perf` only after product scenarios are registered. The runner discovers
+`derry perf run` (`dart run tool/perf.dart`) only after product scenarios are
+registered. The runner discovers
 enabled descriptors under `integration_test/performance/scenarios/` and lists
 routes without coverage. A new route needs a deterministic scenario and data;
 never infer arbitrary interactions or approve a baseline automatically. A

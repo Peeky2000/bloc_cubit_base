@@ -1,5 +1,5 @@
 {
-  "command": "dart run perf",
+  "flavor": "dev",
   "scenario_directory": "integration_test/performance/scenarios",
   "routes_file": "lib/core/common/route.dart",
   "runs": 5,
@@ -12,6 +12,13 @@
     "max_frame_p95_ms": 20.0,
     "max_frame_p99_ms": 32.0,
     "max_scenario_ms": 5000.0,
-    "max_regression_percent": 5.0
+    "max_regression_percent": 5.0,
+    "min_frame_count": 20,
+    "zero_baseline_regression_delta": {
+      "jank_percent": 0.5,
+      "frame_p95_ms": 1.0,
+      "frame_p99_ms": 2.0,
+      "scenario_ms": 50.0
+    }
   }
 }

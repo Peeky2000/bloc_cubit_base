@@ -111,6 +111,7 @@ Xem [dùng sli_common](docs/guides/use-sli-common.md) và
 - [Chọn Cubit hay BLoC](docs/guides/choose-cubit-or-bloc.md)
 - [Thêm môi trường](docs/guides/add-environment.md)
 - [Dùng Derry, build.sh và Fastlane](docs/guides/use-derry-and-build.md)
+- [Đo hiệu năng app](docs/guides/measure-performance.md)
 - [Trạng thái modernization hiện tại](docs/modernization-status.md)
 
 AI agent phải bắt đầu từ [AGENTS.md](AGENTS.md). Package/application identifier

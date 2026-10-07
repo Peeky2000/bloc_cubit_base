@@ -15,20 +15,33 @@ workflow and finding quality, not the implementation rules of each layer.
 
 ## Workflow
 
-1. Establish the requested review scope and baseline revision. Inspect the diff,
-   callers, tests and relevant docs. Use app-memory/catalog when a reusable API
-   is involved.
-2. Trace behavior through UI → state owner → use case → repository → data
+1. **Plan the files deterministically.** Run
+   `dart run tool/review/plan.dart` for workspace changes, or
+   `dart run tool/review/plan.dart --from=<base> --to=<head>` for a branch.
+   It lists every reviewable file, every excluded file with its reason, and
+   the rule group (checks and skills) for each file. Make a checklist from
+   `reviewable_files`; never pick files by hand.
+2. Review group by group. Load only the skills of that group and apply its
+   checks to each file's diff (`git diff <base>...<head> -- <path>`; read
+   untracked files whole). Inspect callers, tests and docs as needed. Use
+   app-memory/catalog when a reusable API is involved.
+3. Trace behavior through UI → state owner → use case → repository → data
    source. For changed async code, inspect cancellation, stale callbacks,
    concurrent requests, retry and disposal paths.
-3. Check user visible states: empty/loading/success/error, back/navigation,
+4. Check user visible states: empty/loading/success/error, back/navigation,
    locale, light/dark, accessibility and small screens. Do not report a style
    preference as a correctness failure.
-4. Check secrets, tokens, logs, network inspection, storage and production
+5. Check secrets, tokens, logs, network inspection, storage and production
    config only where the change touches them. Use `mobile-security-privacy` for
    a dedicated threat review.
-5. Run focused tests and `derry quality` when feasible. State exactly what was
+6. **Try to refute each finding before reporting it.** Re-read the cited
+   lines, look for the guard or test that would make it a non-issue, and drop
+   it if one exists. When the platform supports subagents, give each
+   high-priority finding to a fresh verifier that did not write it.
+7. Run focused tests and `derry quality` when feasible. State exactly what was
    executed and what remains unverified.
+8. **Report coverage:** reviewed files / reviewable files, and every skipped
+   file with a concrete reason. A review with unexplained gaps is incomplete.
 
 ## Finding standard
 
@@ -54,3 +67,12 @@ edits; implement only if the user also asks for a fix.
 - Screens do not call Dio/data sources; domain does not import Flutter/data/UI.
 - App UI uses stable `sli_common` APIs and does not spread direct Shadcn imports.
 - Generated DI, ARB, app-memory, migration notes and catalog stay in sync.
+
+## Rules
+
+Rule groups live in `tool/review/rules.json`, ordered from most to least
+specific. Add or tighten a rule there when a convention changes, and add a
+case to `test/tool/review/review_plan_test.dart`. The deterministic file
+selection and rule matching approach is adapted from
+[alibaba/open-code-review](https://github.com/alibaba/open-code-review)
+(Apache-2.0); no OCR code or CLI is used.

@@ -44,10 +44,19 @@ an implementation.
 
 ## Opt-in benchmark harness
 
-For an explicit benchmark/measurement request, follow `PERFORMANCE.md` and run
-`derry perf run` (`dart run tool/perf.dart`) only after product scenarios are
-registered. The runner discovers
-enabled descriptors under `integration_test/performance/scenarios/` and lists
-routes without coverage. A new route needs a deterministic scenario and data;
-never infer arbitrary interactions or approve a baseline automatically. A
-normal code edit does not trigger the benchmark.
+For an explicit benchmark/measurement request, follow `PERFORMANCE.md`.
+
+- `derry perf run` measures app startup and every enabled scenario on one
+  connected real device, then writes `performance/latest/summary.json` and
+  `summary.md`. Read those files instead of parsing console output.
+- `derry perf run` options: `dart run tool/perf.dart --scenario=<id>` limits
+  the run; `--diagnose` adds one instrumented pass that ranks the slowest
+  widgets. Diagnosis timings are inflated; use them only to rank causes.
+- New scenarios start the real app with `pumpLoggedInApp` from
+  `integration_test/performance/support/perf_app.dart` against the real backend
+  and a dedicated test account (`PERF_USERNAME`/`PERF_PASSWORD`). Never fake
+  repositories for a benchmark.
+- The agent loop in `docs/performance/agent-loop.md` assigns measurement to
+  `perf-tester` and fixes to `perf-engineer`. Never approve a baseline or
+  loosen a threshold without the PM's explicit approval. A normal code edit
+  does not trigger the benchmark.

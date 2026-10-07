@@ -71,6 +71,7 @@ dev_dependencies:
     sdk: flutter
   integration_test:
     sdk: flutter
+  vm_service: ^14.2.5
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -101,6 +102,11 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   generate: true
+
+  # firebase_core 3.6 predates Swift Package Manager support, so iOS keeps
+  # using the committed CocoaPods setup (ios/Podfile.lock).
+  config:
+    enable-swift-package-manager: false
 
   # To add assets to your application, add an assets section, like this:
   assets:

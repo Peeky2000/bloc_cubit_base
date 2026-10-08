@@ -4,7 +4,7 @@ import 'package:bloc_cubit_base/core/routing/routing.dart';
 import 'package:bloc_cubit_base/core/validation/auth_validation_error.dart';
 import 'package:bloc_cubit_base/generated/assets.gen.dart';
 import 'package:bloc_cubit_base/l10n/l10n.dart';
-import 'package:bloc_cubit_base/widget/delivery_go_button.dart';
+import 'package:bloc_cubit_base/widget/app_primary_button.dart';
 import 'package:bloc_cubit_base/widget/loading_screen.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -109,7 +109,7 @@ class _SignInScreenState extends State<SignInScreen> with AfterLayoutMixin {
           Padding(
             padding: EdgeInsets.only(top: 16.h, bottom: 32.h),
             child: Text(
-              context.l10n.welcomeToGiaohang247,
+              context.l10n.welcomeTitle,
               style: App.appStyle?.medium14?.copyWith(
                 color: App.appColor?.textColor,
               ),
@@ -155,7 +155,7 @@ class _SignInScreenState extends State<SignInScreen> with AfterLayoutMixin {
           SizedBox(height: 32.h),
           _buildOption(),
           SizedBox(height: 32.h),
-          DeliveryGoButton(
+          AppPrimaryButton(
             title: context.l10n.signInNowPerWord,
             onTap: () {
               String username = _usernameTextController.text.trim();

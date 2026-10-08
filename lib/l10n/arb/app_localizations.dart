@@ -428,11 +428,11 @@ abstract class AppLocalizations {
   /// **'Khác'**
   String get other;
 
-  /// No description provided for @welcomeToGiaohang247.
+  /// No description provided for @welcomeTitle.
   ///
   /// In en, this message translates to:
-  /// **'Chào mừng bạn đến với Giao Hàng 247'**
-  String get welcomeToGiaohang247;
+  /// **'Welcome'**
+  String get welcomeTitle;
 
   /// No description provided for @phoneNumber.
   ///
@@ -476,11 +476,11 @@ abstract class AppLocalizations {
   /// **'Thông tin cửa hàng'**
   String get shopInfo;
 
-  /// No description provided for @giaohang247DuetYou.
+  /// No description provided for @brandTagline.
   ///
   /// In en, this message translates to:
-  /// **'Giao Hàng 247 luôn đồng hành cùng bạn'**
-  String get giaohang247DuetYou;
+  /// **'Always by your side'**
+  String get brandTagline;
 
   /// No description provided for @shopName.
   ///
@@ -701,7 +701,7 @@ abstract class AppLocalizations {
   /// No description provided for @noteSignupSuccess.
   ///
   /// In en, this message translates to:
-  /// **'GIAOHANG247 luôn đồng hành cùng bạn'**
+  /// **'Your account is ready'**
   String get noteSignupSuccess;
 
   /// No description provided for @verifyPhoneSuccess.

@@ -33,9 +33,9 @@ class SLIRouteObserver extends NavigatorObserver {
     final newRoute = _RouteData.ofRoute(previousRoute);
 
     if (currentRoute.isBottomSheet) {
-      log('CLOSE ${currentRoute.name}', name: 'Giaohang247');
+      log('CLOSE ${currentRoute.name}', name: 'Route');
     } else if (currentRoute.isGetPageRoute) {
-      log('CLOSE TO ROUTE ${currentRoute.name}', name: 'Giaohang247');
+      log('CLOSE TO ROUTE ${currentRoute.name}', name: 'Route');
     }
 
     _routeSend?.update((value) {
@@ -61,9 +61,9 @@ class SLIRouteObserver extends NavigatorObserver {
     final newRoute = _RouteData.ofRoute(route);
 
     if (newRoute.isBottomSheet) {
-      log('OPEN ${newRoute.name}', name: 'Giaohang247');
+      log('OPEN ${newRoute.name}', name: 'Route');
     } else if (newRoute.isGetPageRoute) {
-      log('GOING TO ROUTE ${newRoute.name}', name: 'Giaohang247');
+      log('GOING TO ROUTE ${newRoute.name}', name: 'Route');
     }
 
     _routeSend?.update((value) {
@@ -91,7 +91,7 @@ class SLIRouteObserver extends NavigatorObserver {
     final routeName = _extractRouteName(route);
     final currentRoute = _RouteData.ofRoute(route);
 
-    log('REMOVING ROUTE $routeName', name: 'Giaohang247');
+    log('REMOVING ROUTE $routeName', name: 'Route');
 
     _routeSend?.update((value) {
       value.route = previousRoute;
@@ -111,8 +111,8 @@ class SLIRouteObserver extends NavigatorObserver {
     final oldName = _extractRouteName(oldRoute);
     final currentRoute = _RouteData.ofRoute(oldRoute);
 
-    log('REPLACE ROUTE $oldName', name: 'Giaohang247');
-    log('NEW ROUTE $newName', name: 'Giaohang247');
+    log('REPLACE ROUTE $oldName', name: 'Route');
+    log('NEW ROUTE $newName', name: 'Route');
 
     _routeSend?.update((value) {
       if (newRoute is PageRoute) {

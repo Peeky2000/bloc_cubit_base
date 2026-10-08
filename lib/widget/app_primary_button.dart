@@ -4,7 +4,7 @@ import 'package:bloc_cubit_base/core/app/app.dart';
 import 'package:bloc_cubit_base/core/common/constant.dart';
 import 'package:bloc_cubit_base/core/widget/ink_well_button.dart';
 
-class DeliveryGoButton extends StatelessWidget {
+class AppPrimaryButton extends StatelessWidget {
   final String? title;
   final double? width;
   final double? height;
@@ -17,7 +17,7 @@ class DeliveryGoButton extends StatelessWidget {
   final bool isWrapContentChild;
   final EdgeInsetsGeometry? padding;
 
-  const DeliveryGoButton({
+  const AppPrimaryButton({
     super.key,
     required this.title,
     this.width,

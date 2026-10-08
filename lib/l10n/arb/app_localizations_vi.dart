@@ -175,7 +175,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get other => 'Khác';
 
   @override
-  String get welcomeToGiaohang247 => 'Chào mừng bạn đến với Giao Hàng 247';
+  String get welcomeTitle => 'Chào mừng bạn';
 
   @override
   String get phoneNumber => 'Số điện thoại';
@@ -199,7 +199,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get shopInfo => 'Thông tin cửa hàng';
 
   @override
-  String get giaohang247DuetYou => 'Giao Hàng 247 luôn đồng hành cùng bạn';
+  String get brandTagline => 'Luôn đồng hành cùng bạn';
 
   @override
   String get shopName => 'Tên cửa hàng';
@@ -314,7 +314,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get scaleLevelIsRequired => 'Quy mô vận chuyển không được bỏ trống';
 
   @override
-  String get noteSignupSuccess => 'GIAOHANG247 luôn đồng hành cùng bạn';
+  String get noteSignupSuccess => 'Tài khoản của bạn đã sẵn sàng';
 
   @override
   String get verifyPhoneSuccess => 'Xác thực số điện thoại thành công';

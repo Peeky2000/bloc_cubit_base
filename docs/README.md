@@ -23,7 +23,7 @@ không cần đọc tất cả ngay; hãy chọn đúng mục tiêu trong bảng
 | Xem vì sao chọn công nghệ hiện tại | [Danh sách ADR](adr/README.md) |
 | Xem việc đã làm và việc còn lại | [Trạng thái modernization](modernization-status.md) → [roadmap](plan/2026-08-26-base-modernization.md) |
 | Xem bằng chứng review/quality gate | [Review full analyzer](reviews/2026-10-01-sli-common-full-analyzer-review.md) → [review skill](reviews/2026-10-01-mobile-skills-review.md) |
-| Làm việc cùng AI agent | [Quy trình AI](../ai-process.md) → [AGENTS.md](../AGENTS.md) → [chọn skill Flutter/mobile](guides/mobile-engineering-skills.md) |
+| Làm việc cùng AI agent | [Bộ công cụ AI](guides/ai-toolbox.md) → [Quy trình AI](../ai-process.md) → [AGENTS.md](../AGENTS.md) → [chọn skill Flutter/mobile](guides/mobile-engineering-skills.md) |
 
 ## Lộ trình onboarding khuyến nghị
 

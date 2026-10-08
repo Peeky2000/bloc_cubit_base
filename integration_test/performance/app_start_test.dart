@@ -9,9 +9,9 @@ import 'support/perf_app.dart';
 /// Real app start against the real backend of the configured flavor:
 /// bootstrap, splash, session restore and the first real screen.
 ///
-/// With PERF_USERNAME/PERF_PASSWORD set, the test account logs in when no
-/// session exists, so the measurement ends on Home with real data. Without
-/// credentials it ends on the sign-in screen.
+/// When no session exists, the test account from PERF_USERNAME/PERF_PASSWORD
+/// logs in, so the measurement always ends on Home with real data. Missing
+/// credentials fail the run instead of measuring the sign-in screen.
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
@@ -22,8 +22,9 @@ void main() {
         tester,
         find.byWidgetPredicate((w) => w is SignInScreen || w is HomePageScreen),
       );
-      final onSignIn = find.byType(SignInScreen).evaluate().isNotEmpty;
-      if (onSignIn && perfUsername.isNotEmpty) {
+      if (find.byType(SignInScreen).evaluate().isNotEmpty) {
+        // Fails with a clear message when PERF_USERNAME/PERF_PASSWORD are
+        // missing, instead of silently measuring the sign-in screen.
         await logInWithTestAccount(tester);
       }
       // Keep producing frames while the first screen loads real data.

@@ -73,7 +73,7 @@ FailureVerdict classifyFailure({
     return const FailureVerdict(
       FailureOwner.backend,
       RetryAdvice.later,
-      'Rate limited (429). RetryAdvice after the RetryAdvice-After window; if the app '
+      'Rate limited (429). Retry after the Retry-After window; if the app '
       'sends a burst of identical calls, that is a mobile finding too.',
     );
   }

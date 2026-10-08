@@ -8,8 +8,8 @@ import 'review_plan.dart';
 ///
 /// Usage:
 ///   dart run tool/review/plan.dart                 # workspace changes
-///   dart run tool/review/plan.dart --from main     # main...HEAD
-///   dart run tool/review/plan.dart --from a --to b
+///   dart run tool/review/plan.dart --from=main     # main...HEAD
+///   dart run tool/review/plan.dart --from=a --to=b
 Future<void> main(List<String> args) async {
   String? from;
   var to = 'HEAD';

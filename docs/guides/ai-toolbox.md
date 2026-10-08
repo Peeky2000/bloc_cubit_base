@@ -4,6 +4,9 @@ Trang này tổng hợp mọi lệnh, agent và skill dành cho AI có trong rep
 cách gọi. Khi thêm hoặc đổi một công cụ, cập nhật trang này trong cùng thay
 đổi.
 
+Muốn biết gọi lệnh nào theo thứ tự nào khi làm dự án thật, và việc nào còn mở,
+xem [sổ tay dự án thật](start-real-project.md).
+
 ## Cách gọi nhanh
 
 Có ba cách gọi công cụ AI. Không cần nhớ hết; chọn một cách là đủ.

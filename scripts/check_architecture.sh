@@ -6,6 +6,12 @@ cd "$project_root"
 
 failed=0
 
+# The gate must never pass silently because the search tool is missing.
+if ! command -v rg >/dev/null 2>&1 || ! rg --version >/dev/null 2>&1; then
+  echo "ripgrep (rg) is required for the architecture gate. Install it: brew install ripgrep" >&2
+  exit 2
+fi
+
 if rg -n "package:bloc_cubit_base/(data|presentation)/" lib/domain --glob '*.dart'; then
   echo "Domain must not import data or presentation layers." >&2
   failed=1

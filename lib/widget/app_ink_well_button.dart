@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class InkWellButton extends StatelessWidget {
+/// Container-based tap target behind `AppPrimaryButton`. It keeps the
+/// sample geometry (fixed height, flat colors); sli_common's InkWellButton is
+/// an ElevatedButton with different sizing, so the two are not swapped.
+class AppInkWellButton extends StatelessWidget {
   final String? title;
   final Widget? labelWidget;
   final VoidCallback? onTap;
@@ -18,7 +21,7 @@ class InkWellButton extends StatelessWidget {
   final Color? borderColor;
   final double elevation;
 
-  const InkWellButton({
+  const AppInkWellButton({
     super.key,
     this.title,
     this.labelWidget,

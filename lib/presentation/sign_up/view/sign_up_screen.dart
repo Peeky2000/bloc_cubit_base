@@ -1,3 +1,5 @@
+import 'package:sli_common/sli_common.dart'
+    show CommonDropDown, CommonTextField;
 import 'package:bloc_cubit_base/core/app/app.dart';
 import 'package:bloc_cubit_base/core/common/route.dart';
 import 'package:bloc_cubit_base/domain/entities/common/app_enums.dart';
@@ -17,8 +19,6 @@ import 'package:bloc_cubit_base/core/mixin/after_layout.dart';
 import 'package:bloc_cubit_base/di/injection.dart';
 import 'package:bloc_cubit_base/presentation/sign_up/cubit/sign_up_cubit.dart';
 import 'package:bloc_cubit_base/presentation/global_handler.dart';
-import 'package:bloc_cubit_base/core/widget/common_text_field.dart';
-import 'package:bloc_cubit_base/core/widget/common_drop_down.dart';
 
 Widget signUpScreenBuilder() => BlocProvider<SignUpCubit>(
   create: (_) => getIt<SignUpCubit>(),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:bloc_cubit_base/core/app/app.dart';
 import 'package:bloc_cubit_base/core/common/constant.dart';
-import 'package:bloc_cubit_base/core/widget/ink_well_button.dart';
+import 'package:bloc_cubit_base/widget/app_ink_well_button.dart';
 
 class AppPrimaryButton extends StatelessWidget {
   final String? title;
@@ -60,7 +60,7 @@ class AppPrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWellButton(
+    return AppInkWellButton(
       title: icon == null ? title : null,
       labelWidget: icon == null ? null : _buildLabel(),
       buttonColor: colorButton ?? App.appColor?.primaryColor,

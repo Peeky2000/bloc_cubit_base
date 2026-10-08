@@ -1,3 +1,4 @@
+import 'package:sli_common/sli_common.dart' show CommonTextField;
 import 'package:bloc_cubit_base/core/app/app.dart';
 import 'package:bloc_cubit_base/core/common/route.dart';
 import 'package:bloc_cubit_base/core/routing/routing.dart';
@@ -14,7 +15,6 @@ import 'package:bloc_cubit_base/di/injection.dart';
 import 'package:bloc_cubit_base/presentation/sign_in/cubit/sign_in_cubit.dart';
 import 'package:bloc_cubit_base/presentation/global_handler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:bloc_cubit_base/core/widget/common_text_field.dart';
 
 Widget signInScreenBuilder() => BlocProvider<SignInCubit>(
   create: (_) => getIt<SignInCubit>(),

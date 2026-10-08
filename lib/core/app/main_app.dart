@@ -16,13 +16,19 @@ import 'package:bloc_cubit_base/core/routing/routing.dart';
 import 'package:bloc_cubit_base/core/routing/sli_page_route.dart';
 import 'package:bloc_cubit_base/di/injection.dart';
 import 'package:bloc_cubit_base/l10n/l10n.dart';
-import 'package:bloc_cubit_base/core/widget/dialog_util.dart';
-import 'package:bloc_cubit_base/core/widget/title_widget.dart';
-import 'package:bloc_cubit_base/core/widget/money_widget.dart';
-import 'package:bloc_cubit_base/core/widget/common_text_field.dart';
-import 'package:bloc_cubit_base/core/widget/common_drop_down.dart';
-import 'package:bloc_cubit_base/core/widget/base_field.dart';
-import 'package:sli_common/sli_common.dart' show SliShadcnScope;
+import 'package:sli_common/l10n/arb/app_localizations.dart' as sli_l10n;
+import 'package:sli_common/sli_common.dart'
+    show
+        BaseField,
+        BaseFieldStyle,
+        CommonDropDown,
+        CommonDropDownStyle,
+        CommonTextField,
+        CommonTextFieldStyle,
+        DialogUtil,
+        MoneyWidget,
+        SliShadcnScope,
+        TitleWidget;
 
 Widget buildMainApp() => MainApp(
   appCubit: getIt<AppCubit>(),
@@ -244,6 +250,8 @@ class _MainAppState extends State<MainApp> {
                   ],
                   localizationsDelegates: [
                     AppLocalizations.delegate,
+                    // Labels used by shared sli_common widgets such as DialogUtil.
+                    sli_l10n.AppLocalizations.delegate,
                     GlobalMaterialLocalizations.delegate,
                     GlobalCupertinoLocalizations.delegate,
                   ],

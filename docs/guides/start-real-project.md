@@ -8,7 +8,7 @@ theo thứ tự nào, và những việc đã cố ý để dành tới lúc có
 
 | Việc | Lệnh hoặc nơi làm | Ghi chú |
 |---|---|---|
-| Tạo app từ base | `derry create -- --destination ../my_app --display-name "My App" --package-name my_app --bundle-id com.company.my_app` | Chạy không có `--apply` để xem trước. Xem [tạo app từ base](create-app-from-base.md) |
+| Tạo app từ base | `derry new -- --destination ../my_app --display-name "My App" --package-name my_app --bundle-id com.company.my_app` | Chạy không có `--apply` để xem trước. App mới có một commit đầu tiên. Xem [tạo app từ base](create-app-from-base.md) |
 | Cài dependency và sinh code | `derry bootstrap` | |
 | Kiểm tra máy | `derry base doctor`, `derry quality` | Phải xanh trước khi làm gì tiếp |
 | Đổi địa chỉ server | `lib/core/app/app_config.dart` hoặc `--dart-define=API_BASE_URL=...` | Địa chỉ mẫu `api.dev.example.com` không chạy được |
@@ -83,34 +83,44 @@ thật. Làm chúng ở tuần đầu của dự án thật, rồi đánh dấu 
 
 Không chặn dự án thật nhưng nên xử lý khi có thời gian.
 
-- [ ] **Hai golden test của `sli_common` fail trên CI Linux** (catalog-pilot
-  light và dark, lệch khoảng 1,3%). Cần tạo lại ảnh golden trên Linux trong
-  repo `sli_common`. Đây là lý do CI của mọi PR đang đỏ.
-- [ ] **Review kiến trúc mục 4:** bỏ lớp `Injector`, truyền dependency qua
-  constructor cho `AppColor` và `NoInternetScreen`. Chưa duyệt.
-- [ ] **Review kiến trúc mục 5:** gộp use case chỉ chuyển tiếp. Trái với thứ tự
-  tầng template đang dạy, chỉ ghi nhận. Xem
+- [x] **Hai golden test của `sli_common` fail trên CI Linux.** Đã thêm bộ so
+  sánh chấp nhận lệch tối đa 2% do khác cách khử răng cưa giữa macOS và
+  Linux; thay đổi thật vẫn bị bắt. `sli_common` PR #1, 2026-10-08.
+- [x] **Review kiến trúc mục 4:** đã bỏ lớp `Injector`; route builder và
+  `MainApp` dùng `getIt`, `AppColor` nhận chế độ tối qua tham số. 2026-10-08.
+- [ ] **Review kiến trúc mục 5:** gộp use case chỉ chuyển tiếp. Cố ý không làm
+  vì trái với thứ tự tầng template đang dạy. Xem
   [báo cáo review](../reviews/2026-10-08-09-00-00-matt-code-review-and-architecture.md).
-- [ ] **Dọn danh sách ngoại lệ convention** trong
-  `tool/convention/baseline.txt`: viết test cho Cubit `reset_password`,
-  `sign_up`, `splash`, `test`, và chuyển `presentation/success` vào `view/`.
-- [ ] **Lệnh tạo base mới.** Chưa chọn hướng: tạo app mới sạch từ base (bỏ màn
-  mẫu, bỏ lịch sử git) hay tạo một base khác hẳn. `derry create` hiện có giữ
-  nguyên màn mẫu và lịch sử git.
-- [ ] **Migrate 9 widget trùng giữa app và `sli_common`** theo family: dialog,
-  form/input, button/action, display. Xem
-  [widget family matrix](../plan/2026-10-01-widget-family-migration-matrix.md).
-- [ ] **Gỡ branding mẫu** còn sót: `DeliveryGo`, chữ `Giao Hàng 247` trong l10n,
-  icon, splash, Firebase client config và endpoint. Làm cùng lúc với bước đổi
-  identity ở mục 1 khi tạo app thật.
-- [ ] **Chạy eval cho các skill** trên task thật để chỉnh mô tả và cách kích
-  hoạt. Có thể gộp với lần chạy thử vòng agent ở mục 4.
-- [ ] **Version Health** (Analytics, Crashlytics, Firebase Performance, Remote
-  Config) để theo dõi app trên máy người dùng. Kế hoạch ở
-  [brainstorm](../brainstorm/2026-10-06-version-health-firebase-observability.md).
-- [ ] **Thêm mẫu kỹ thuật vào kho skill** khi dự án cần: phân trang, form và
-  validate, cache offline, upload ảnh, realtime, deep link, push notification,
-  quyền hệ thống. Mỗi mẫu đi kèm code tham khảo có test và một quyết định trong
-  sổ.
+- [x] **Dọn danh sách ngoại lệ convention.** `tool/convention/baseline.txt` đã
+  trống: thêm 42 test cho Cubit `reset_password`, `sign_up`, `splash`; xoá màn
+  `test` không dùng; `SuccessScreen` chuyển vào `lib/widget/`. 2026-10-08.
+- [x] **Lệnh tạo app mới.** `derry new -- --destination ../my_app ...` tạo app
+  với một commit đầu tiên, giữ `sli_common` là submodule. Xem
+  [tạo app từ base](create-app-from-base.md). 2026-10-08.
+- [x] **Migrate widget trùng với `sli_common`.** Sáu widget giống hệt chuyển
+  sang `sli_common`, hai widget không còn ai dùng đã xoá, `InkWellButton` khác
+  layout nên giữ thành `AppInkWellButton`. Xem
+  [widget family matrix](../plan/2026-10-01-widget-family-migration-matrix.md). 2026-10-08.
+- [x] **Gỡ branding mẫu trong code.** `DeliveryGoButton` thành
+  `AppPrimaryButton`, chữ hiển thị trung tính, log route không còn tên mẫu.
+  Bundle id, tên app native và file Firebase cố ý giữ lại vì `derry new` hoặc
+  `derry rename` đổi theo từng app; icon, splash và endpoint đổi khi tạo app
+  thật. 2026-10-08.
+- [x] **Eval định tuyến skill.** 90 câu hỏi, đúng tăng từ 93,8% lên 99,5%.
+  Xem [báo cáo eval](../reviews/2026-10-08-skill-routing-eval.md). Eval trên
+  task thật vẫn nên làm cùng lần chạy thử vòng agent ở mục 4. 2026-10-08.
+- [x] **Version Health, phần khung.** Có sẵn giao diện báo lỗi, analytics, đo
+  hiệu năng, feature flag, mặc định tắt. Bật Firebase theo
+  [hướng dẫn](enable-version-health.md) khi có dự án thật. 2026-10-08.
+- [x] **Mẫu kỹ thuật trong kho skill.** Phân trang, form và validate, cache
+  offline, upload ảnh, realtime, deep link, push notification, quyền hệ thống:
+  skill `flutter-patterns`, code mẫu có test trong `test/patterns/`, quyết
+  định D-0001 đến D-0008 đang chờ duyệt. 2026-10-08.
+- [ ] **Duyệt các quyết định D-0001 đến D-0008** trong
+  [sổ quyết định](../decisions/README.md): đổi trạng thái sang `accepted` hoặc
+  chỉnh nội dung. Các mẫu dùng plugin (push, deep link, quyền, chọn ảnh) mới
+  chỉ chốt hình dạng cổng và tên plugin đề xuất.
+- [ ] **Bật Version Health với Firebase thật** khi dự án có Firebase project
+  cho từng flavor.
 
 Khi xong một mục, đánh dấu `[x]` và ghi ngày hoặc link PR bên cạnh.

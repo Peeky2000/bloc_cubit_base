@@ -71,6 +71,11 @@ Chạy trong terminal. Danh sách đầy đủ: `derry ls -d`.
 | `derry perf diagnose` | Đo kèm chẩn đoán widget chậm nhất |
 | `derry perf approve` | Đo lại và lưu kết quả làm mốc |
 
+Các lệnh build, phân phối, phát hành và tạo app mới (`derry build`,
+`derry distribute`, `derry release`, `derry create`, `derry rename`,
+`derry base help`, `derry base doctor`) nằm trong
+[hướng dẫn Derry và build](use-derry-and-build.md).
+
 ## Agent
 
 Gọi bằng cách nhắc tên file trong câu yêu cầu, ví dụ

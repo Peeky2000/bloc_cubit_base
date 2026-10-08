@@ -5,7 +5,10 @@ description: >
   transitions, lifecycle, accessibility, security and regression risk. Use for
   PR review, source audit, migration review, "review source", "soát code", or
   when asked whether Flutter code is production ready; report evidence and
-  exact locations.
+  exact locations. For a general review of a diff that touches auth, tokens,
+  PII, logs or deep links, also load mobile-security-privacy. Not for a
+  security-only check such as "PR này có lộ token/API key không" (use
+  mobile-security-privacy alone).
 ---
 
 # Flutter code review

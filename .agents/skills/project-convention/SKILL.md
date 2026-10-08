@@ -1,9 +1,15 @@
 ---
 name: project-convention
 description: >
-  Master reference for architecture, naming, lint, import boundaries, generated
-  DI, Cubit/BLoC, code patterns, UI ownership, and anti-patterns. Load when
-  generating, reviewing, or implementing code in this repository.
+  Master reference for this repository's cross-layer rules: Clean
+  Architecture dependency flow, import boundaries (what presentation, domain
+  and data may import), naming, lint, feature order, generated DI, code
+  patterns, UI ownership and anti-patterns. Load when generating, reviewing,
+  or implementing code here, and when asked about a repo-wide rule ("có được
+  import ... không", "quy tắc đặt tên"). For a rule inside one layer, load
+  that layer's skill instead: flutter-model-entity, flutter-datasource,
+  flutter-repository, flutter-di, flutter-bloc-cubit, flutter-router,
+  flutter-translations or flutter-error-handling.
 ---
 
 # Project Convention

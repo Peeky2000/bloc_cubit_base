@@ -1,8 +1,13 @@
 ---
 name: flutter-model-entity
 description: >
-  Domain entities (abstract contracts) and data models (json_serializable) for this base.
-  Models implement entities. Trigger: "model", "entity", "fromJson", "response model".
+  Domain entities (abstract contracts) and data models (json_serializable) for
+  this base; models implement entities. Use when creating or changing an
+  entity, a request or response model, JSON fields and @JsonKey names, or when
+  asking what an entity may contain (no fromJson, no part files) or whether a
+  type belongs in domain or data. Trigger: model, entity, fromJson, toJson,
+  response model, request model, DTO, thêm field. Prefer this skill over
+  project-convention for entity and model rules.
 ---
 
 # Entity + Model (separate layers)

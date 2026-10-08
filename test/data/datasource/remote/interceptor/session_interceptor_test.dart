@@ -560,7 +560,13 @@ class _MemoryTokenProvider implements TokenProvider {
   Future<TokenProvider> init() async => this;
 
   @override
-  Future<void> setToken(TokenResponseModel? token) async {
+  bool get persists => true;
+
+  @override
+  Future<void> setToken(
+    TokenResponseModel? token, {
+    bool persist = true,
+  }) async {
     setCount++;
     _revision++;
     _token = token ?? TokenResponseModel();

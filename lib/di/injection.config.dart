@@ -30,11 +30,11 @@ import '../data/datasource/remote/auth_remote_data_source.dart' as _i519;
 import '../data/repositories/app_repo_impl.dart' as _i482;
 import '../data/repositories/auth_repo_impl.dart' as _i743;
 import '../data/repositories/firebase_phone_verification_repo.dart' as _i51;
-import '../data/repositories/user_repo_impl.dart' as _i114;
+import '../data/repositories/session_repo_impl.dart' as _i804;
 import '../domain/repositories/app_repo.dart' as _i546;
 import '../domain/repositories/auth_repo.dart' as _i218;
 import '../domain/repositories/phone_verification_repo.dart' as _i168;
-import '../domain/repositories/user_repo.dart' as _i1042;
+import '../domain/repositories/session_repo.dart' as _i260;
 import '../domain/use_case/app_use_case.dart' as _i1036;
 import '../domain/use_case/auth_use_case.dart' as _i358;
 import '../presentation/confirm_information/cubit/confirm_information_cubit.dart'
@@ -87,9 +87,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i168.PhoneVerificationRepo>(
       () => _i51.FirebasePhoneVerificationRepo(gh<_i59.FirebaseAuth>()),
     );
-    gh.lazySingleton<_i1042.UserRepo>(
-      () => _i114.UserRepoImpl(gh<_i278.UserLocalDataSource>()),
-    );
     gh.lazySingleton<_i546.AppRepo>(
       () => _i482.AppRepoImpl(gh<_i641.AppLocalDataSource>()),
     );
@@ -99,6 +96,12 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i460.SharedPreferences>(),
       ),
       preResolve: true,
+    );
+    gh.lazySingleton<_i260.SessionRepo>(
+      () => _i804.SessionRepoImpl(
+        gh<_i508.TokenProvider>(),
+        gh<_i278.UserLocalDataSource>(),
+      ),
     );
     gh.lazySingleton<_i1036.AppUseCase>(
       () => registerModule.appUseCase(gh<_i546.AppRepo>()),
@@ -112,7 +115,7 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i55.SessionExpiryCoordinator>(
       () => _i55.SessionExpiryCoordinator(
-        gh<_i508.TokenProvider>(),
+        gh<_i260.SessionRepo>(),
         gh<_i924.SessionEventController>(),
       ),
     );
@@ -129,15 +132,12 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i519.AuthRemoteDataSourceImpl(gh<_i44.ApiHandler>()),
     );
     gh.lazySingleton<_i218.AuthRepo>(
-      () => _i743.AuthRepoImpl(
-        gh<_i519.AuthRemoteDataSource>(),
-        gh<_i508.TokenProvider>(),
-      ),
+      () => _i743.AuthRepoImpl(gh<_i519.AuthRemoteDataSource>()),
     );
     gh.lazySingleton<_i358.AuthUseCase>(
       () => registerModule.authUseCase(
         gh<_i218.AuthRepo>(),
-        gh<_i1042.UserRepo>(),
+        gh<_i260.SessionRepo>(),
         gh<_i168.PhoneVerificationRepo>(),
       ),
     );

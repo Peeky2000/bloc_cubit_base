@@ -19,8 +19,14 @@ dụng, còn data source sở hữu việc parse response.
 - Refresh credential bị từ chối (400/401/403), thiếu refresh token hoặc retry
   vẫn 401 là terminal. Timeout/connection/5xx và retry 500 là transient, không
   được clear một session còn hợp lệ.
+- `SessionRepo` (domain port, adapter `SessionRepoImpl`) sở hữu cả vòng đời
+  phiên: token, tài khoản đã cache, bắt đầu, cập nhật và kết thúc. Token và
+  tài khoản luôn sống và mất cùng nhau. Đăng nhập luôn tạo phiên để request sau
+  có Bearer token; "ghi nhớ đăng nhập" chỉ quyết định phiên có được lưu qua lần
+  mở app sau hay không. Phiên không lưu giữ cả token đã refresh trong bộ nhớ.
 - Terminal expiry được coalesce tối đa một callback cho mỗi access-token
-  generation. `SessionExpiryCoordinator` clear credential rồi phát typed event;
+  generation. `SessionExpiryCoordinator` kết thúc phiên qua `SessionRepo.end()`
+  giống đăng xuất, tức xoá cả credential lẫn tài khoản, rồi phát typed event;
   `AppCubit` chuyển event thành state revision và `MainApp` phản ứng bằng
   `BlocListener`. Interceptor vẫn không điều hướng hoặc truy cập UI.
 - Retry dùng request copy; `FormData` được clone và body dạng stream không được

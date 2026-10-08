@@ -25,6 +25,11 @@ lib/data/datasource/local/   settings, caches, TokenProvider
   It never navigates, shows dialogs, translates text, or applies product rules.
 - Store tokens and secrets through `flutter_secure_storage`/`TokenProvider`.
   SharedPreferences is only for non-sensitive settings or caches.
+- Data that lives and dies together (token and cached account) has one owner;
+  sign-out and expiry clear everything a user owns through that owner.
+- Before adding any persisted value, read
+  [references/storage-patterns.md](references/storage-patterns.md) for the
+  store choice table, lifecycle rules and the files to copy.
 - Network logs and inspectors must pass through `NetworkRedactor`, and the
   inspector must be disabled in production.
 - Do not resolve `getIt` inside a data source and do not catch-and-swallow errors.

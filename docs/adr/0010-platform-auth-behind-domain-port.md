@@ -28,3 +28,13 @@ khó unit-test và làm optional Firebase trong tương lai khó tách.
   bootstrap. ADR này không biến Firebase thành optional module ngay.
 - Error code từ SDK được giữ dưới dạng domain failure để UI có thể map sang
   l10n sau này; không truyền nguyên SDK exception qua domain.
+
+## Cập nhật 2026-10-08
+
+`PhoneVerificationRepo.sendCode` trả về một `PhoneVerificationOutcome` duy
+nhất (`codeSent`, `autoVerified`, `superseded`) hoặc ném
+`PhoneVerificationFailure`, thay cho ba callback. Future chỉ hoàn tất khi nền
+tảng đã gửi mã hoặc tự xác thực, nên Cubit chỉ cần `await` một lần. Request mới
+thay thế request cũ; request cũ hoàn tất với `superseded` và Cubit bỏ qua.
+`AuthUseCase.normalizePhone` là nơi duy nhất chuẩn hoá số điện thoại sang E.164.
+Port và quyết định của ADR này giữ nguyên.

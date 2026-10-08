@@ -34,7 +34,8 @@ You own measurement and evidence. You do not fix app code. Read
    core user path. Use `pumpLoggedInApp` from
    `integration_test/performance/support/perf_app.dart` so the scenario runs
    on the real backend with the test account. Never replace repositories with
-   fakes. Keep each scenario at 20 or more frames. Run `derry perf run --scenario=<id>` until it produces
+   fakes. Keep each scenario at 20 or more frames. If the app's sign-in or
+   home screen changed, update only `support/perf_app_adapter.dart`. Run `derry perf run --scenario=<id>` until it produces
    numbers, then record it as unbaselined in the report.
 4. For every FAIL target, run `derry perf run --scenario=<id> --diagnose` if
    the summary has no `diagnosis`. Then open the code of the top hotspots and

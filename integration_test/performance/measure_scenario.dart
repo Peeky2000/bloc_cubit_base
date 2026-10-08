@@ -224,9 +224,7 @@ Future<void> _diagnoseScenario(
       scenario,
       streams: const ['Dart', 'Embedder', 'GC'],
     );
-    binding.reportData = {
-      'diagnosis': summarizeTimeline(timeline.toJson()),
-    };
+    binding.reportData = {'diagnosis': summarizeTimeline(timeline.toJson())};
   } finally {
     debugProfileBuildsEnabled = false;
     debugProfileLayoutsEnabled = false;

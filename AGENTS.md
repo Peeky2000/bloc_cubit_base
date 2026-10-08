@@ -20,6 +20,9 @@
 | Performance tester | `@.agents/agents/perf-tester.md` |
 | Performance engineer | `@.agents/agents/perf-engineer.md` |
 
+Toàn bộ lệnh, agent và skill được tổng hợp trong
+[docs/guides/ai-toolbox.md](docs/guides/ai-toolbox.md).
+
 Vòng đo và sửa hiệu năng giữa hai agent performance được mô tả trong
 [docs/performance/agent-loop.md](docs/performance/agent-loop.md).
 

@@ -1,6 +1,7 @@
 import 'package:bloc_cubit_base/core/validation/auth_validation_error.dart';
 import 'package:bloc_cubit_base/domain/entities/auth/login.dart';
 import 'package:bloc_cubit_base/domain/entities/profile/account.dart';
+import 'package:bloc_cubit_base/domain/repositories/phone_verification_repo.dart';
 import 'package:bloc_cubit_base/domain/use_case/auth_use_case.dart';
 import 'package:bloc_cubit_base/presentation/sign_in/cubit/sign_in_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -84,6 +85,40 @@ void main() {
     final errorEffect = effect! as SignInShowErrorEffect;
     expect(errorEffect.error, same(error));
     expect(errorEffect.retryAction, SignInRetryAction.signIn);
+  });
+
+  test('an unverified login sends a code then asks for it', () async {
+    final login = _MockLogin();
+    final account = _MockAccount();
+    when(() => login.account).thenReturn(account);
+    when(() => account.isPhoneVerified).thenReturn(false);
+    when(
+      () => authUseCase.login(
+        phone: any(named: 'phone'),
+        password: any(named: 'password'),
+        isRememberLogin: any(named: 'isRememberLogin'),
+      ),
+    ).thenAnswer((_) async => login);
+    when(
+      () => authUseCase.sendCodeVerify(phone: any(named: 'phone')),
+    ).thenAnswer((_) async => PhoneVerificationOutcome.codeSent);
+
+    await cubit.onTapSignIn(username: '0912345678', pass: 'Password@1');
+
+    final effect = cubit.state.effect?.value;
+    expect(effect, isA<SignInNavigatePhoneVerificationEffect>());
+    verify(() => authUseCase.sendCodeVerify(phone: '+84912345678')).called(1);
+  });
+
+  test('a send-code failure offers to retry sending the code', () async {
+    when(
+      () => authUseCase.sendCodeVerify(phone: any(named: 'phone')),
+    ).thenThrow(const PhoneVerificationFailure('quota-exceeded'));
+
+    await cubit.sendCodeVerify();
+
+    final effect = cubit.state.effect?.value as SignInShowErrorEffect;
+    expect(effect.retryAction, SignInRetryAction.sendVerificationCode);
   });
 }
 

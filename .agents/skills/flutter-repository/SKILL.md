@@ -18,18 +18,24 @@ description: >
 
 ```dart
 // domain
-abstract class AuthRepo {
-  Future<Login?> appLogin({required String phone, required String password});
+abstract class OrderRepo {
+  Future<List<Order>> getOrders({required int page});
 }
 
 // data
-@LazySingleton(as: AuthRepo)
-class AuthRepoImpl implements AuthRepo {
-  AuthRepoImpl(this._remote, this._tokenProvider);
-  final AuthRemoteDataSource _remote;
-  final TokenProvider _tokenProvider;
+@LazySingleton(as: OrderRepo)
+class OrderRepoImpl implements OrderRepo {
+  OrderRepoImpl(this._remote);
+  final OrderRemoteDataSource _remote;
+
+  @override
+  Future<List<Order>> getOrders({required int page}) =>
+      _remote.getOrders(page: page);
 }
 ```
+
+A repository owns one concern. It does not also persist the session, tokens
+or another feature's data; session state belongs to `SessionRepo`.
 
 ## Rules
 
@@ -38,6 +44,13 @@ class AuthRepoImpl implements AuthRepo {
 - Orchestrate remote + local; **no** UI, **no** form validation
 - Prefer returning types that implement domain entities (`Login`, etc.)
 - UseCases call repos — Cubits call UseCases
+- Accept domain entities and convert them to storable models inside the
+  implementation; never ignore a value because it is not a data model
+- Wrap callback-based SDKs so the port returns one `Future<Outcome>` and
+  throws one typed failure; see
+  [references/async-flow-patterns.md](references/async-flow-patterns.md)
+- For anything persisted, follow
+  `../flutter-datasource/references/storage-patterns.md`
 
 - Catch only to transform an infrastructure failure into a documented domain
   failure or to implement repository-level fallback; never swallow an error.

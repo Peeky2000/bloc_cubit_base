@@ -15,9 +15,14 @@ class TokenProvider {
   TokenResponseModel _token = TokenResponseModel();
   Future<void> _storageOperation = Future<void>.value();
   int _revision = 0;
+  bool _persists = true;
 
   TokenResponseModel get token => _token;
   int get revision => _revision;
+
+  /// Whether the current token is written to secure storage. A session that
+  /// was not remembered keeps its token, including refreshed ones, in memory.
+  bool get persists => _persists;
 
   Future<TokenProvider> init() async {
     var encodedToken = await _secureStorage.read(key: _tokenKey);
@@ -41,11 +46,15 @@ class TokenProvider {
     return this;
   }
 
-  Future<void> setToken(TokenResponseModel? token) async {
+  Future<void> setToken(
+    TokenResponseModel? token, {
+    bool persist = true,
+  }) async {
     _revision++;
     _token = token ?? TokenResponseModel();
+    _persists = persist;
     await _enqueueStorageOperation(() async {
-      if (token == null) {
+      if (token == null || !persist) {
         await _secureStorage.delete(key: _tokenKey);
         return;
       }
@@ -63,15 +72,18 @@ class TokenProvider {
 
     _revision++;
     _token = token;
-    await _enqueueStorageOperation(
-      () => _secureStorage.write(key: _tokenKey, value: jsonEncode(token)),
-    );
+    if (_persists) {
+      await _enqueueStorageOperation(
+        () => _secureStorage.write(key: _tokenKey, value: jsonEncode(token)),
+      );
+    }
     return true;
   }
 
   Future<void> clearToken() async {
     _revision++;
     _token = TokenResponseModel();
+    _persists = true;
     await _enqueueStorageOperation(() => _secureStorage.delete(key: _tokenKey));
   }
 

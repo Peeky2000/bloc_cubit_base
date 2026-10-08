@@ -61,6 +61,23 @@ class AccountResponseModel implements Account {
   @TimeIso8601JsonConverter()
   final DateTime? createdAt;
 
+  /// Copies any domain [Account] into a storable model.
+  factory AccountResponseModel.fromAccount(Account account) =>
+      account is AccountResponseModel
+      ? account
+      : AccountResponseModel(
+          id: account.id,
+          role: account.role,
+          isEmailVerified: account.isEmailVerified,
+          isPhoneVerified: account.isPhoneVerified,
+          isDeleted: account.isDeleted,
+          email: account.email,
+          phone: account.phone,
+          isActive: account.isActive,
+          updatedAt: account.updatedAt,
+          createdAt: account.createdAt,
+        );
+
   factory AccountResponseModel.fromJson(Map<String, dynamic> json) =>
       _$AccountResponseModelFromJson(json);
 

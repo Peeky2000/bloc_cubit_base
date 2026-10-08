@@ -4,13 +4,35 @@
     "name": "Login",
     "description": "Login result with account and token",
     "location": "lib/domain/entities/auth/login.dart",
-    "keywords": ["login", "auth", "entity"]
+    "keywords": [
+      "login",
+      "auth",
+      "entity"
+    ]
   },
   {
     "type": "entity",
     "name": "Account",
     "description": "User account profile contract",
     "location": "lib/domain/entities/profile/account.dart",
-    "keywords": ["account", "profile", "entity"]
+    "keywords": [
+      "account",
+      "profile",
+      "entity"
+    ]
+  },
+  {
+    "type": "entity",
+    "name": "SessionRepo",
+    "description": "Domain port for the signed-in session: token and cached account live and die together; start(persist), updateAccount, end",
+    "location": "lib/domain/repositories/session_repo.dart",
+    "keywords": [
+      "session",
+      "auth",
+      "token",
+      "account",
+      "logout",
+      "expiry"
+    ]
   }
 ]

@@ -1,4 +1,4 @@
-# Trạng Thái Modernization — 2026-10-01
+# Trạng Thái Modernization — 2026-10-08
 
 Tài liệu này tách rõ foundation đã hoàn thành và cleanup legacy còn lại. “Đã
 implement” nghĩa là có code cùng gate liên quan; không có nghĩa sample product
@@ -29,7 +29,11 @@ implement” nghĩa là có code cùng gate liên quan; không có nghĩa sample
 - Contract session/network đã có test cho concurrent 401, terminal/transient
   refresh failure, stale account race, cross-origin bearer protection,
   multipart replay, 403, retry 500 và offline pass/reject.
-- Terminal expiry đi qua `SessionExpiryCoordinator` để clear credential rồi
+- `SessionRepo` sở hữu token và tài khoản đã cache; đăng xuất và hết phiên
+  cùng xoá cả hai. `PhoneVerificationRepo` trả về một kết quả duy nhất.
+- Bộ đo hiệu năng profile-mode trên máy thật, dữ liệu thật, có agent đo và
+  sửa, và tài liệu tiếng Việt.
+- Terminal expiry đi qua `SessionExpiryCoordinator` để kết thúc phiên rồi
   phát typed event; `AppCubit` chuyển event thành app-state revision và
   `MainApp` xử lý bằng `BlocListener` tại presentation boundary.
 - `NetworkChecker` có monitor seam, repeated-init guard, idempotent dispose và

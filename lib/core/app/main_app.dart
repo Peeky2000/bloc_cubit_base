@@ -10,6 +10,7 @@ import 'package:bloc_cubit_base/core/app/app_controller.dart';
 import 'package:bloc_cubit_base/core/app/app_cubit/app_cubit.dart';
 import 'package:bloc_cubit_base/core/common/route.dart';
 import 'package:bloc_cubit_base/core/helper/network/network_checker.dart';
+import 'package:bloc_cubit_base/core/observability/analytics_tracker.dart';
 import 'package:bloc_cubit_base/core/routing/route_observer.dart';
 import 'package:bloc_cubit_base/core/routing/routing.dart';
 import 'package:bloc_cubit_base/core/routing/sli_page_route.dart';
@@ -27,6 +28,7 @@ Widget buildMainApp() => MainApp(
   appCubit: getIt<AppCubit>(),
   appController: getIt<AppController>(),
   networkChecker: getIt<NetworkChecker>(),
+  analytics: getIt<AnalyticsTracker>(),
 );
 
 class MainApp extends StatefulWidget {
@@ -35,11 +37,15 @@ class MainApp extends StatefulWidget {
     required this.appCubit,
     required this.appController,
     required this.networkChecker,
+    this.analytics,
   });
 
   final AppCubit appCubit;
   final AppController appController;
   final NetworkChecker networkChecker;
+
+  /// Receives screen views; null keeps navigation unreported.
+  final AnalyticsTracker? analytics;
 
   @override
   State<MainApp> createState() => _MainAppState();
@@ -230,7 +236,12 @@ class _MainAppState extends State<MainApp> {
                   initialRoute: AppPage.splash,
                   onGenerateRoute: (settings) => MainApp.generator(settings),
                   navigatorKey: SLIRouting.key,
-                  navigatorObservers: [SLIRouteObserver(SLIRouting.routing)],
+                  navigatorObservers: [
+                    SLIRouteObserver(
+                      SLIRouting.routing,
+                      analytics: widget.analytics,
+                    ),
+                  ],
                   localizationsDelegates: [
                     AppLocalizations.delegate,
                     GlobalMaterialLocalizations.delegate,

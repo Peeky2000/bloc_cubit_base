@@ -20,6 +20,7 @@ import '../core/app/app_controller.dart' as _i77;
 import '../core/app/app_cubit/app_cubit.dart' as _i688;
 import '../core/helper/network/network_checker.dart' as _i484;
 import '../core/network/network_inspector.dart' as _i556;
+import '../core/observability/observability.dart' as _i828;
 import '../core/session/session_event.dart' as _i924;
 import '../data/datasource/local/app_local_data_source.dart' as _i641;
 import '../data/datasource/local/session_expiry_coordinator.dart' as _i55;
@@ -79,6 +80,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i556.NetworkInspector>(
       () => registerModule.networkInspector(gh<_i806.AppConfig>()),
     );
+    gh.lazySingleton<_i828.Observability>(
+      () => registerModule.observability(gh<_i806.AppConfig>()),
+    );
     gh.lazySingleton<_i641.AppLocalDataSource>(
       () => _i641.AppLocalDataSource(gh<_i460.SharedPreferences>()),
     );
@@ -100,6 +104,18 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i508.TokenProvider>(),
         gh<_i278.UserLocalDataSource>(),
       ),
+    );
+    gh.lazySingleton<_i828.CrashReporter>(
+      () => registerModule.crashReporter(gh<_i828.Observability>()),
+    );
+    gh.lazySingleton<_i828.AnalyticsTracker>(
+      () => registerModule.analyticsTracker(gh<_i828.Observability>()),
+    );
+    gh.lazySingleton<_i828.PerformanceTracer>(
+      () => registerModule.performanceTracer(gh<_i828.Observability>()),
+    );
+    gh.lazySingleton<_i828.FeatureFlags>(
+      () => registerModule.featureFlags(gh<_i828.Observability>()),
     );
     gh.lazySingleton<_i1036.AppUseCase>(
       () => registerModule.appUseCase(gh<_i546.AppRepo>()),

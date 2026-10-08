@@ -6,6 +6,7 @@ import 'package:bloc_cubit_base/core/common/enum.dart';
 import 'package:bloc_cubit_base/core/validation/auth_validation_error.dart';
 import 'package:bloc_cubit_base/domain/entities/auth/sign_up_params.dart';
 import 'package:bloc_cubit_base/domain/entities/common/app_enums.dart';
+import 'package:bloc_cubit_base/domain/repositories/phone_verification_repo.dart';
 import 'package:bloc_cubit_base/domain/use_case/auth_use_case.dart';
 import 'package:injectable/injectable.dart';
 
@@ -81,7 +82,7 @@ class SignUpCubit extends BaseCubit<SignUpState> {
       return;
     }
 
-    _phone = phone.startsWith('0') ? '+84${phone.substring(1)}' : phone;
+    _phone = AuthUseCase.normalizePhone(phone);
     _email = email;
     _password = pass;
     onNextPage();
@@ -169,16 +170,11 @@ class SignUpCubit extends BaseCubit<SignUpState> {
 
   Future<void> sendCodeVerify() async {
     try {
-      await _authUseCase.sendCodeVerify(
-        phone: _phone,
-        onComplete: () {
-          if (isClosed) {
-            return;
-          }
-          _emitEffect(SignUpNavigatePhoneVerificationEffect(phone: _phone));
-        },
-        onError: _handleSendCodeError,
-      );
+      final outcome = await _authUseCase.sendCodeVerify(phone: _phone);
+      if (isClosed || outcome == PhoneVerificationOutcome.superseded) {
+        return;
+      }
+      _emitEffect(SignUpNavigatePhoneVerificationEffect(phone: _phone));
     } catch (error) {
       _handleSendCodeError(error);
     }

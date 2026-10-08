@@ -1,25 +1,25 @@
 import 'package:bloc_cubit_base/core/session/session_event.dart';
 import 'package:bloc_cubit_base/data/datasource/local/session_expiry_coordinator.dart';
-import 'package:bloc_cubit_base/data/datasource/local/token_provider.dart';
+import 'package:bloc_cubit_base/domain/repositories/session_repo.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 void main() {
-  late _MockTokenProvider tokenProvider;
+  late _MockSessionRepo session;
   late SessionEventController sessionEvents;
   late SessionExpiryCoordinator coordinator;
 
   setUp(() {
-    tokenProvider = _MockTokenProvider();
+    session = _MockSessionRepo();
     sessionEvents = SessionEventController();
-    coordinator = SessionExpiryCoordinator(tokenProvider, sessionEvents);
+    coordinator = SessionExpiryCoordinator(session, sessionEvents);
   });
 
   tearDown(() => sessionEvents.dispose());
 
   test('clears credentials before publishing a typed expiry event', () async {
     var credentialsCleared = false;
-    when(() => tokenProvider.clearToken()).thenAnswer((_) async {
+    when(() => session.end()).thenAnswer((_) async {
       credentialsCleared = true;
     });
     final event = sessionEvents.events.first;
@@ -28,20 +28,20 @@ void main() {
 
     expect(await event, isA<SessionExpiredEvent>());
     expect(credentialsCleared, isTrue);
-    verify(() => tokenProvider.clearToken()).called(1);
+    verify(() => session.end()).called(1);
   });
 
   test('publishes expiry even when secure cleanup reports an error', () async {
     when(
-      () => tokenProvider.clearToken(),
+      () => session.end(),
     ).thenThrow(StateError('secure storage unavailable'));
     final event = sessionEvents.events.first;
 
     await expectLater(coordinator.expire(), throwsStateError);
 
     expect(await event, isA<SessionExpiredEvent>());
-    verify(() => tokenProvider.clearToken()).called(1);
+    verify(() => session.end()).called(1);
   });
 }
 
-class _MockTokenProvider extends Mock implements TokenProvider {}
+class _MockSessionRepo extends Mock implements SessionRepo {}

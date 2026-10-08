@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc_cubit_base/core/common/constant.dart';
 import 'package:bloc_cubit_base/core/common/enum.dart';
 import 'package:bloc_cubit_base/domain/use_case/auth_use_case.dart';
@@ -22,17 +24,12 @@ void main() {
     }
   });
 
-  test('resets the resend timer after codeSent succeeds', () async {
-    when(
-      () => authUseCase.sendCodeVerify(
-        phone: any(named: 'phone'),
-        onComplete: any(named: 'onComplete'),
-        onError: any(named: 'onError'),
-      ),
-    ).thenAnswer((invocation) async {
-      final onComplete = invocation.namedArguments[#onComplete] as Function()?;
-      onComplete?.call();
-    });
+  void stubSend(Future<PhoneVerificationOutcome> Function() answer) => when(
+    () => authUseCase.sendCodeVerify(phone: any(named: 'phone')),
+  ).thenAnswer((_) => answer());
+
+  test('resets the resend timer after a code is sent', () async {
+    stubSend(() async => PhoneVerificationOutcome.codeSent);
 
     await cubit.sendCodeVerify();
 
@@ -43,18 +40,7 @@ void main() {
 
   test('publishes an error effect when sending the code fails', () async {
     const error = PhoneVerificationFailure('quota-exceeded');
-    when(
-      () => authUseCase.sendCodeVerify(
-        phone: any(named: 'phone'),
-        onComplete: any(named: 'onComplete'),
-        onError: any(named: 'onError'),
-      ),
-    ).thenAnswer((invocation) async {
-      final onError =
-          invocation.namedArguments[#onError]
-              as void Function(PhoneVerificationFailure)?;
-      onError?.call(error);
-    });
+    stubSend(() async => throw error);
 
     await cubit.sendCodeVerify();
 
@@ -64,14 +50,10 @@ void main() {
     expect((effect! as ConfirmInformationShowErrorEffect).error, same(error));
   });
 
-  test('maps a thrown send-code failure to the same error effect', () async {
+  test('maps a thrown platform failure to the same error effect', () async {
     final error = StateError('platform failure');
     when(
-      () => authUseCase.sendCodeVerify(
-        phone: any(named: 'phone'),
-        onComplete: any(named: 'onComplete'),
-        onError: any(named: 'onError'),
-      ),
+      () => authUseCase.sendCodeVerify(phone: any(named: 'phone')),
     ).thenThrow(error);
 
     await cubit.sendCodeVerify();
@@ -82,23 +64,24 @@ void main() {
     expect((effect! as ConfirmInformationShowErrorEffect).error, same(error));
   });
 
-  test('ignores delayed phone verification callbacks after close', () async {
-    Function()? delayedCallback;
-    when(
-      () => authUseCase.sendCodeVerify(
-        phone: any(named: 'phone'),
-        onComplete: any(named: 'onComplete'),
-        onError: any(named: 'onError'),
-      ),
-    ).thenAnswer((invocation) async {
-      delayedCallback = invocation.namedArguments[#onComplete] as Function()?;
-    });
+  test('a superseded request changes nothing', () async {
+    stubSend(() async => PhoneVerificationOutcome.superseded);
 
     await cubit.sendCodeVerify();
-    await cubit.close();
 
-    expect(delayedCallback, isNotNull);
-    expect(delayedCallback, returnsNormally);
+    expect(cubit.state.loading, LoadingStatus.loading);
+    expect(cubit.state.effect, isNull);
+  });
+
+  test('a result that arrives after close is ignored', () async {
+    final pending = Completer<PhoneVerificationOutcome>();
+    stubSend(() => pending.future);
+
+    final sending = cubit.sendCodeVerify();
+    await cubit.close();
+    pending.complete(PhoneVerificationOutcome.codeSent);
+
+    await expectLater(sending, completes);
   });
 }
 

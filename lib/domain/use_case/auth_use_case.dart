@@ -5,60 +5,68 @@ import 'package:bloc_cubit_base/domain/entities/profile/account.dart';
 import 'package:bloc_cubit_base/domain/entities/profile/update_account.dart';
 import 'package:bloc_cubit_base/domain/repositories/auth_repo.dart';
 import 'package:bloc_cubit_base/domain/repositories/phone_verification_repo.dart';
-import 'package:bloc_cubit_base/domain/repositories/user_repo.dart';
+import 'package:bloc_cubit_base/domain/repositories/session_repo.dart';
 
 class AuthUseCase {
   final AuthRepo _authRepo;
-  final UserRepo _userRepo;
+  final SessionRepo _session;
 
   final PhoneVerificationRepo _phoneVerificationRepo;
 
-  AuthUseCase(this._authRepo, this._userRepo, this._phoneVerificationRepo);
+  AuthUseCase(this._authRepo, this._session, this._phoneVerificationRepo);
 
-  bool isAppLogin() {
-    return _authRepo.isAppLogin();
-  }
+  /// Converts a local Vietnamese number (`0912…`) to E.164 (`+84912…`).
+  /// Other input, such as an email or an E.164 number, is returned unchanged.
+  static String normalizePhone(String phone) =>
+      phone.startsWith('0') ? '+84${phone.substring(1)}' : phone;
 
+  bool isAppLogin() => _session.isSignedIn;
+
+  /// Signs in and always starts a session, so the next requests are
+  /// authenticated. [isRememberLogin] only decides whether the session
+  /// survives an app restart.
   Future<Login?> login({
     required String phone,
     required String password,
     bool isRememberLogin = false,
   }) async {
-    Login? result = await _authRepo.appLogin(phone: phone, password: password);
-    if (isRememberLogin) {
-      await _authRepo.setTokenToLocal(tokenWrapper: result?.token);
-      await _userRepo.setAccountToLocal(result?.account);
+    final result = await _authRepo.appLogin(
+      phone: normalizePhone(phone),
+      password: password,
+    );
+    if (result != null) {
+      await _session.start(
+        token: result.token,
+        account: result.account,
+        persist: isRememberLogin,
+      );
     }
     return result;
   }
 
-  Account get accountLocal => _userRepo.account;
+  Account get accountLocal => _session.account;
 
   Future<SignUp?> userSignUp({required SignUpParams request}) {
     return _authRepo.userSignUp(request: request);
   }
 
-  Future<void> sendCodeVerify({
-    required String phone,
-    void Function(bool)? verificationCompleted,
-    void Function()? onComplete,
-    void Function(PhoneVerificationFailure)? onError,
-  }) async {
-    await _phoneVerificationRepo.sendCode(
-      phoneNumber: phone.startsWith('0') ? '+84${phone.substring(1)}' : phone,
-      onVerificationCompleted: verificationCompleted,
-      onCodeSent: onComplete,
-      onError: onError,
-    );
-  }
+  /// Sends a verification code to [phone], normalized to E.164.
+  ///
+  /// Completes once with the outcome and throws [PhoneVerificationFailure]
+  /// when the platform rejects the request.
+  Future<PhoneVerificationOutcome> sendCodeVerify({required String phone}) =>
+      _phoneVerificationRepo.sendCode(phoneNumber: normalizePhone(phone));
 
   Future<String?> verifyOTP({required String otp}) =>
       _phoneVerificationRepo.verifyOtp(otp: otp);
 
   Future<void> verifyPhone({required String idToken}) async {
-    UpdateAccount? infoUpdate = await _authRepo.verifyPhone(idToken: idToken);
-    if (infoUpdate?.account != null) {
-      await _userRepo.setAccountToLocal(infoUpdate?.account);
+    final UpdateAccount? infoUpdate = await _authRepo.verifyPhone(
+      idToken: idToken,
+    );
+    final account = infoUpdate?.account;
+    if (account != null) {
+      await _session.updateAccount(account);
     }
   }
 
@@ -72,5 +80,6 @@ class AuthUseCase {
     );
   }
 
-  Future<void> logout() async {}
+  /// Ends the session and clears credentials and the cached account.
+  Future<void> logout() => _session.end();
 }

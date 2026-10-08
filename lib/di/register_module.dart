@@ -8,7 +8,7 @@ import 'package:bloc_cubit_base/data/datasource/remote/api_client.dart';
 import 'package:bloc_cubit_base/domain/repositories/app_repo.dart';
 import 'package:bloc_cubit_base/domain/repositories/auth_repo.dart';
 import 'package:bloc_cubit_base/domain/repositories/phone_verification_repo.dart';
-import 'package:bloc_cubit_base/domain/repositories/user_repo.dart';
+import 'package:bloc_cubit_base/domain/repositories/session_repo.dart';
 import 'package:bloc_cubit_base/domain/use_case/app_use_case.dart';
 import 'package:bloc_cubit_base/domain/use_case/auth_use_case.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -38,9 +38,9 @@ abstract class RegisterModule {
   @lazySingleton
   AuthUseCase authUseCase(
     AuthRepo authRepo,
-    UserRepo userRepo,
+    SessionRepo sessionRepo,
     PhoneVerificationRepo phoneVerificationRepo,
-  ) => AuthUseCase(authRepo, userRepo, phoneVerificationRepo);
+  ) => AuthUseCase(authRepo, sessionRepo, phoneVerificationRepo);
 
   FlutterSecureStorage get secureStorage => const FlutterSecureStorage();
 

@@ -6,6 +6,7 @@ import 'package:bloc_cubit_base/core/base_component/ui_effect.dart';
 import 'package:bloc_cubit_base/core/common/constant.dart';
 import 'package:bloc_cubit_base/core/common/enum.dart';
 import 'package:bloc_cubit_base/core/validation/auth_validation_error.dart';
+import 'package:bloc_cubit_base/domain/repositories/phone_verification_repo.dart';
 import 'package:bloc_cubit_base/domain/use_case/auth_use_case.dart';
 import 'package:injectable/injectable.dart';
 
@@ -51,29 +52,24 @@ class ResetPasswordCubit extends BaseCubit<ResetPasswordState> {
 
   Future<void> _sendCode() async {
     try {
-      await _authUseCase.sendCodeVerify(
-        phone: _phone,
-        onComplete: () {
-          if (isClosed) {
-            return;
-          }
-          final shouldAdvance = state.phone.isEmpty;
-          _counter = Constant.timePeriodOTP;
-          emit(
-            state.copyWith(
-              loading: LoadingStatus.complete,
-              counter: _counter,
-              phone: _phone,
-              isVerifying: false,
-            ),
-          );
-          if (shouldAdvance) {
-            _emitEffect(const ResetPasswordChangePageEffect(delta: 1));
-          }
-          _startTimer();
-        },
-        onError: _handleSendCodeError,
+      final outcome = await _authUseCase.sendCodeVerify(phone: _phone);
+      if (isClosed || outcome == PhoneVerificationOutcome.superseded) {
+        return;
+      }
+      final shouldAdvance = state.phone.isEmpty;
+      _counter = Constant.timePeriodOTP;
+      emit(
+        state.copyWith(
+          loading: LoadingStatus.complete,
+          counter: _counter,
+          phone: _phone,
+          isVerifying: false,
+        ),
       );
+      if (shouldAdvance) {
+        _emitEffect(const ResetPasswordChangePageEffect(delta: 1));
+      }
+      _startTimer();
     } catch (error) {
       _handleSendCodeError(error);
     }

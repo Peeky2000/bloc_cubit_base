@@ -57,7 +57,7 @@ platform :android do
     build_tag = "v" + ENV["VERSION"] + "." + ENV["BUILD_NUMBER"] + "-dev-debug-Android"
     Dir.chdir("../..") do
       sh "fvm flutter clean"
-      sh "./pub_get.sh"
+      sh "./scripts/flutterw.sh pub get"
       sh "fvm flutter build apk --release --target=lib/main_dev.dart --flavor=dev --build-name=#{ENV["VERSION"]} --build-number #{ENV["BUILD_NUMBER"]}"
     end
     firebase_app_distribution(
@@ -79,7 +79,7 @@ platform :android do
     build_tag = "v" + ENV["VERSION"] + "." + ENV["BUILD_NUMBER"] + "-staging-staging-Android"
     Dir.chdir("../..") do
       sh "fvm flutter clean"
-      sh "./pub_get.sh"
+      sh "./scripts/flutterw.sh pub get"
       sh "fvm flutter build apk --release --target=lib/main_staging.dart --flavor=staging --build-name=#{ENV["VERSION"]} --build-number #{ENV["BUILD_NUMBER"]}"
     end
     firebase_app_distribution(
@@ -101,7 +101,7 @@ platform :android do
     build_tag = "v" + ENV["VERSION"] + "." + ENV["BUILD_NUMBER"] + "-prod-release-Android"
     Dir.chdir("../..") do
       sh "fvm flutter clean"
-      sh "./pub_get.sh"
+      sh "./scripts/flutterw.sh pub get"
       sh "fvm flutter build apk --release --target=lib/main_prod.dart --flavor=prod --build-name=#{ENV["VERSION"]} --build-number #{ENV["BUILD_NUMBER"]}"
     end
     firebase_app_distribution(
@@ -127,7 +127,7 @@ platform :android do
     build_tag = "Release-" + version_name + "(" + version_code + ")"
     Dir.chdir("../..") do
       sh "fvm flutter clean"
-      sh "./pub_get.sh"
+      sh "./scripts/flutterw.sh pub get"
       sh "fvm flutter build appbundle --target=lib/main_prod.dart --flavor=prod"
     end
     upload_to_play_store(

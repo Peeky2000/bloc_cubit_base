@@ -25,17 +25,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'No internet connection found.\nPlease check your connection.';
 
   @override
-  String get reconnectInternet =>
-      'Internet connection has been.\nPlease click try again.';
-
-  @override
   String get noInternetShort => 'No internet connection found.';
 
   @override
   String get connectionRestored => 'Connection restored';
-
-  @override
-  String get systemBusy => 'The system is busy.\nPlease try again later';
 
   @override
   String get errGeneral => 'Something went wrong. Please try again';
@@ -51,9 +44,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get confirm => 'Confirm';
-
-  @override
-  String get continueText => 'Tiếp tục';
 
   @override
   String get releaseToLoadMore => 'Release to load more';
@@ -98,80 +88,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get password => 'Mật khẩu';
 
   @override
-  String get usernameIsRequired => 'Tên đăng nhập không được để trống';
-
-  @override
-  String get passwordIsRequired => 'Mật khẩu không được để trống';
-
-  @override
-  String get hello => 'Xin chào, ';
-
-  @override
-  String get today => 'Hôm nay';
-
-  @override
   String get summary => 'Tổng quan';
-
-  @override
-  String get schedule => 'Lịch trình';
-
-  @override
-  String get task => 'Công việc';
-
-  @override
-  String get salaryAndTax => 'Lương & Thuế';
 
   @override
   String get request => 'Yêu cầu';
 
   @override
-  String get whichFoodForLunch => 'Trưa nay ăn gì ?';
-
-  @override
-  String get happyLunch => 'Chúc bạn buổi trưa vui vẻ nhé :)';
-
-  @override
-  String get cameraRequestTitle =>
-      'Bạn có cho phép ứng dụng truy cập camera không ?';
-
-  @override
-  String get alignFlash => 'Căn cho mã quét vào giữa ô vuông này nhé';
-
-  @override
-  String get notHaveAccount => 'Chưa có tài khoản?';
-
-  @override
   String get signUp => 'Đăng ký';
-
-  @override
-  String get welcomeToMySli => 'Welcome to Giaohang247';
 
   @override
   String get forgotPassword => 'Quên mật khẩu';
 
   @override
   String get email => 'Email';
-
-  @override
-  String get firstName => 'First name';
-
-  @override
-  String get lastName => 'Last name';
-
-  @override
-  String get passwordConfirm => 'Xác nhận mật khẩu';
-
-  @override
-  String get alreadyHaveAccount => 'Đã có tài khoản?';
-
-  @override
-  String get registerAccountSli => 'Đăng ký tài khoản Giaohang247';
-
-  @override
-  String get inputCodeSentToEmail => 'Nhập mã xác thực đã được gửi vào email';
-
-  @override
-  String get verifyAccount => 'Xác thực tài khoản';
 
   @override
   String get verify => 'Xác thực';
@@ -181,18 +110,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get emailIsRequired => 'Email không được để trống';
-
-  @override
-  String get passwordCfIsRequired => 'Xác nhận mật khẩu không được để trống';
-
-  @override
-  String get firstNameIsRequired => 'Tên không được để trống';
-
-  @override
-  String get lastNameIsRequired => 'Họ không được để trống';
-
-  @override
-  String get passwordIsNotEqual => 'Mật khẩu không trùng khớp';
 
   @override
   String get scaleL1 => 'Không có nhu cầu thường xuyên';
@@ -217,9 +134,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get cosmetics => 'Mỹ phẩm';
-
-  @override
-  String get interior => 'Nội thất';
 
   @override
   String get motherAndBaby => 'Mẹ và bé';
@@ -398,9 +312,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get scaleLevelIsRequired => 'Quy mô vận chuyển không được bỏ trống';
-
-  @override
-  String get signupSuccess => 'Đăng ký thành công';
 
   @override
   String get noteSignupSuccess => 'GIAOHANG247 luôn đồng hành cùng bạn';

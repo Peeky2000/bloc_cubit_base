@@ -128,12 +128,6 @@ abstract class AppLocalizations {
   /// **'No internet connection found.\nPlease check your connection.'**
   String get noInternet;
 
-  /// No description provided for @reconnectInternet.
-  ///
-  /// In en, this message translates to:
-  /// **'Internet connection has been.\nPlease click try again.'**
-  String get reconnectInternet;
-
   /// No description provided for @noInternetShort.
   ///
   /// In en, this message translates to:
@@ -145,12 +139,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Connection restored'**
   String get connectionRestored;
-
-  /// No description provided for @systemBusy.
-  ///
-  /// In en, this message translates to:
-  /// **'The system is busy.\nPlease try again later'**
-  String get systemBusy;
 
   /// No description provided for @errGeneral.
   ///
@@ -181,12 +169,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Confirm'**
   String get confirm;
-
-  /// No description provided for @continueText.
-  ///
-  /// In en, this message translates to:
-  /// **'Tiếp tục'**
-  String get continueText;
 
   /// No description provided for @releaseToLoadMore.
   ///
@@ -272,53 +254,11 @@ abstract class AppLocalizations {
   /// **'Mật khẩu'**
   String get password;
 
-  /// No description provided for @usernameIsRequired.
-  ///
-  /// In en, this message translates to:
-  /// **'Tên đăng nhập không được để trống'**
-  String get usernameIsRequired;
-
-  /// No description provided for @passwordIsRequired.
-  ///
-  /// In en, this message translates to:
-  /// **'Mật khẩu không được để trống'**
-  String get passwordIsRequired;
-
-  /// No description provided for @hello.
-  ///
-  /// In en, this message translates to:
-  /// **'Xin chào, '**
-  String get hello;
-
-  /// No description provided for @today.
-  ///
-  /// In en, this message translates to:
-  /// **'Hôm nay'**
-  String get today;
-
   /// No description provided for @summary.
   ///
   /// In en, this message translates to:
   /// **'Tổng quan'**
   String get summary;
-
-  /// No description provided for @schedule.
-  ///
-  /// In en, this message translates to:
-  /// **'Lịch trình'**
-  String get schedule;
-
-  /// No description provided for @task.
-  ///
-  /// In en, this message translates to:
-  /// **'Công việc'**
-  String get task;
-
-  /// No description provided for @salaryAndTax.
-  ///
-  /// In en, this message translates to:
-  /// **'Lương & Thuế'**
-  String get salaryAndTax;
 
   /// No description provided for @request.
   ///
@@ -326,47 +266,11 @@ abstract class AppLocalizations {
   /// **'Yêu cầu'**
   String get request;
 
-  /// No description provided for @whichFoodForLunch.
-  ///
-  /// In en, this message translates to:
-  /// **'Trưa nay ăn gì ?'**
-  String get whichFoodForLunch;
-
-  /// No description provided for @happyLunch.
-  ///
-  /// In en, this message translates to:
-  /// **'Chúc bạn buổi trưa vui vẻ nhé :)'**
-  String get happyLunch;
-
-  /// No description provided for @cameraRequestTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Bạn có cho phép ứng dụng truy cập camera không ?'**
-  String get cameraRequestTitle;
-
-  /// No description provided for @alignFlash.
-  ///
-  /// In en, this message translates to:
-  /// **'Căn cho mã quét vào giữa ô vuông này nhé'**
-  String get alignFlash;
-
-  /// No description provided for @notHaveAccount.
-  ///
-  /// In en, this message translates to:
-  /// **'Chưa có tài khoản?'**
-  String get notHaveAccount;
-
   /// No description provided for @signUp.
   ///
   /// In en, this message translates to:
   /// **'Đăng ký'**
   String get signUp;
-
-  /// No description provided for @welcomeToMySli.
-  ///
-  /// In en, this message translates to:
-  /// **'Welcome to Giaohang247'**
-  String get welcomeToMySli;
 
   /// No description provided for @forgotPassword.
   ///
@@ -379,48 +283,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Email'**
   String get email;
-
-  /// No description provided for @firstName.
-  ///
-  /// In en, this message translates to:
-  /// **'First name'**
-  String get firstName;
-
-  /// No description provided for @lastName.
-  ///
-  /// In en, this message translates to:
-  /// **'Last name'**
-  String get lastName;
-
-  /// No description provided for @passwordConfirm.
-  ///
-  /// In en, this message translates to:
-  /// **'Xác nhận mật khẩu'**
-  String get passwordConfirm;
-
-  /// No description provided for @alreadyHaveAccount.
-  ///
-  /// In en, this message translates to:
-  /// **'Đã có tài khoản?'**
-  String get alreadyHaveAccount;
-
-  /// No description provided for @registerAccountSli.
-  ///
-  /// In en, this message translates to:
-  /// **'Đăng ký tài khoản Giaohang247'**
-  String get registerAccountSli;
-
-  /// No description provided for @inputCodeSentToEmail.
-  ///
-  /// In en, this message translates to:
-  /// **'Nhập mã xác thực đã được gửi vào email'**
-  String get inputCodeSentToEmail;
-
-  /// No description provided for @verifyAccount.
-  ///
-  /// In en, this message translates to:
-  /// **'Xác thực tài khoản'**
-  String get verifyAccount;
 
   /// No description provided for @verify.
   ///
@@ -439,30 +301,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Email không được để trống'**
   String get emailIsRequired;
-
-  /// No description provided for @passwordCfIsRequired.
-  ///
-  /// In en, this message translates to:
-  /// **'Xác nhận mật khẩu không được để trống'**
-  String get passwordCfIsRequired;
-
-  /// No description provided for @firstNameIsRequired.
-  ///
-  /// In en, this message translates to:
-  /// **'Tên không được để trống'**
-  String get firstNameIsRequired;
-
-  /// No description provided for @lastNameIsRequired.
-  ///
-  /// In en, this message translates to:
-  /// **'Họ không được để trống'**
-  String get lastNameIsRequired;
-
-  /// No description provided for @passwordIsNotEqual.
-  ///
-  /// In en, this message translates to:
-  /// **'Mật khẩu không trùng khớp'**
-  String get passwordIsNotEqual;
 
   /// No description provided for @scaleL1.
   ///
@@ -511,12 +349,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Mỹ phẩm'**
   String get cosmetics;
-
-  /// No description provided for @interior.
-  ///
-  /// In en, this message translates to:
-  /// **'Nội thất'**
-  String get interior;
 
   /// No description provided for @motherAndBaby.
   ///
@@ -865,12 +697,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Quy mô vận chuyển không được bỏ trống'**
   String get scaleLevelIsRequired;
-
-  /// No description provided for @signupSuccess.
-  ///
-  /// In en, this message translates to:
-  /// **'Đăng ký thành công'**
-  String get signupSuccess;
 
   /// No description provided for @noteSignupSuccess.
   ///

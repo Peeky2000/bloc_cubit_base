@@ -45,7 +45,6 @@ import '../presentation/reset_password/cubit/reset_password_cubit.dart'
 import '../presentation/sign_in/cubit/sign_in_cubit.dart' as _i805;
 import '../presentation/sign_up/cubit/sign_up_cubit.dart' as _i800;
 import '../presentation/splash/cubit/splash_cubit.dart' as _i565;
-import '../presentation/test/cubit/test_cubit.dart' as _i1002;
 import 'register_module.dart' as _i291;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -63,7 +62,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i59.FirebaseAuth>(() => registerModule.firebaseAuth);
     gh.factory<_i558.FlutterSecureStorage>(() => registerModule.secureStorage);
     gh.factory<_i927.HomePageCubit>(() => _i927.HomePageCubit());
-    gh.factory<_i1002.TestCubit>(() => _i1002.TestCubit());
     gh.singleton<_i77.AppController>(() => _i77.AppController());
     gh.singleton<_i924.SessionEventController>(
       () => _i924.SessionEventController(),

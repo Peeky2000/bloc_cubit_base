@@ -225,3 +225,15 @@ Trước khi bỏ `--dry-run`:
 5. Chạy distribution cho một platform/môi trường trước khi chọn `all`.
 
 Không commit token, signing key, provisioning profile hoặc store API key.
+
+## Icon và splash theo flavor
+
+Cấu hình nằm ở `flutter_launcher_icons-<flavor>.yaml` và
+`flutter_native_splash-<flavor>.yaml` tại thư mục gốc. Sau khi thay ảnh:
+
+```bash
+fvm dart run flutter_launcher_icons -f flutter_launcher_icons-dev.yaml
+fvm dart run flutter_native_splash:create --path=flutter_native_splash-dev.yaml
+```
+
+Lặp lại với `staging` và `prod`.

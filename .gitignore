@@ -79,3 +79,6 @@ certificate/
 *.pfx
 *.jks
 *.keystore
+
+# Fastlane run reports
+**/fastlane/report.xml

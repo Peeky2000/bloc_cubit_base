@@ -24,9 +24,9 @@ import 'package:bloc_cubit_base/core/widget/base_field.dart';
 import 'package:sli_common/sli_common.dart' show SliShadcnScope;
 
 Widget buildMainApp() => MainApp(
-  appCubit: Injector.getIt.get<AppCubit>(),
-  appController: Injector.getIt.get<AppController>(),
-  networkChecker: Injector.getIt.get<NetworkChecker>(),
+  appCubit: getIt<AppCubit>(),
+  appController: getIt<AppController>(),
+  networkChecker: getIt<NetworkChecker>(),
 );
 
 class MainApp extends StatefulWidget {
@@ -197,7 +197,7 @@ class _MainAppState extends State<MainApp> {
         useInheritedMediaQuery: true,
         builder: (context, child) {
           if (!_appInitialized) {
-            App.init();
+            App.init(isDarkMode: widget.appController.isDarkMode);
             _appInitialized = true;
           }
           final isDarkMode = widget.appController.isDarkMode;
@@ -233,7 +233,6 @@ class _MainAppState extends State<MainApp> {
                   navigatorObservers: [SLIRouteObserver(SLIRouting.routing)],
                   localizationsDelegates: [
                     AppLocalizations.delegate,
-                    // ServerMessageLocalization.delegate,
                     GlobalMaterialLocalizations.delegate,
                     GlobalCupertinoLocalizations.delegate,
                   ],

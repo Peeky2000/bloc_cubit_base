@@ -51,7 +51,7 @@ commit the regenerated config.
 
 ## Rules
 
-- Do not call `getIt`, `Injector`, or `GetIt.instance` inside a Cubit/BLoC,
+- Do not call `getIt` or `GetIt.instance` inside a Cubit/BLoC,
   UseCase, repository, or data source.
 - Resolution is allowed only in composition roots: bootstrap, route/screen
   builders, and explicit integration adapters.

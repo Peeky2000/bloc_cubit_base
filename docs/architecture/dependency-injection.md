@@ -15,7 +15,8 @@ registration.
   quyết định rõ bằng ADR.
 - Dùng `@module` cho SDK class, plugin, async initialization, và factory cần
   runtime configuration; đây cũng là nơi bind domain UseCase thuần.
-- Feature class không được gọi `Injector.getIt`.
+- Feature class không được gọi `getIt`. Chỉ route builder, `MainApp` và DI module
+  (composition root) mới lấy dependency từ `getIt`.
 - Entry point có thể truyền environment được chọn vào composition root. Đây là
   runtime registration có chủ ý duy nhất.
 

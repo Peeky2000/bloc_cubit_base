@@ -21,7 +21,7 @@ if rg -n "package:bloc_cubit_base/data/" lib/presentation --glob '*.dart'; then
   failed=1
 fi
 
-if rg -n "Injector\.getIt|GetIt\.instance" lib/domain lib/data \
+if rg -n "Injector\.getIt|GetIt\.instance|\bgetIt\b" lib/domain lib/data \
   lib/presentation --glob '*_cubit.dart' --glob '*_bloc.dart'; then
   echo "Feature layers must use constructor injection instead of the service locator." >&2
   failed=1

@@ -21,7 +21,7 @@ import 'package:bloc_cubit_base/presentation/global_handler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 Widget resetPasswordScreenBuilder() => BlocProvider<ResetPasswordCubit>(
-  create: (_) => Injector.getIt.get<ResetPasswordCubit>(),
+  create: (_) => getIt<ResetPasswordCubit>(),
   child: const ResetPasswordScreen(),
 );
 

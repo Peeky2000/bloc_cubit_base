@@ -23,12 +23,3 @@ Future<GetIt> configureDependencies(
   setRuntimeAppConfig(config);
   return await (initializeGraph ?? (container) => container.init())(getIt);
 }
-
-/// Backward-compatible access for route/widget composition during migration.
-///
-/// Feature classes must receive dependencies through constructors.
-abstract final class Injector {
-  static GetIt get getIt => GetIt.instance;
-
-  static Future<void> reset() => getIt.reset();
-}

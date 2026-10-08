@@ -21,7 +21,7 @@ import 'package:bloc_cubit_base/core/widget/common_text_field.dart';
 import 'package:bloc_cubit_base/core/widget/common_drop_down.dart';
 
 Widget signUpScreenBuilder() => BlocProvider<SignUpCubit>(
-  create: (_) => Injector.getIt.get<SignUpCubit>(),
+  create: (_) => getIt<SignUpCubit>(),
   child: const SignUpScreen(),
 );
 

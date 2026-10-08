@@ -4,7 +4,7 @@ import 'package:bloc_cubit_base/di/injection.dart';
 import 'package:bloc_cubit_base/presentation/home_page/cubit/home_page_cubit.dart';
 
 Widget homePageScreenBuilder() => BlocProvider<HomePageCubit>(
-  create: (_) => Injector.getIt.get<HomePageCubit>(),
+  create: (_) => getIt<HomePageCubit>(),
   child: const HomePageScreen(),
 );
 

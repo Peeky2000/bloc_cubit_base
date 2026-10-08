@@ -3,7 +3,7 @@
 ## Hidden dependency resolution
 
 Wrong: a Cubit, UseCase, repository, or data source calls `getIt()` or
-`Injector.getIt`. Correct: declare every dependency in its constructor and let
+`getIt`. Correct: declare every dependency in its constructor and let
 injectable generate the graph.
 
 ## Layer shortcuts

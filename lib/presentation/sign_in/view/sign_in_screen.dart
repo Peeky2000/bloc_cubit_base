@@ -17,7 +17,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:bloc_cubit_base/core/widget/common_text_field.dart';
 
 Widget signInScreenBuilder() => BlocProvider<SignInCubit>(
-  create: (_) => Injector.getIt.get<SignInCubit>(),
+  create: (_) => getIt<SignInCubit>(),
   child: const SignInScreen(),
 );
 

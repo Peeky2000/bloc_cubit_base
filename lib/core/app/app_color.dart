@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:bloc_cubit_base/core/app/app_controller.dart';
-import 'package:bloc_cubit_base/di/injection.dart';
-
 class AppColor {
   Color? primaryColor;
   Color? secondary1;
@@ -16,8 +13,8 @@ class AppColor {
   Color? redBase;
   Color? iconColor;
 
-  AppColor() {
-    if (Injector.getIt.get<AppController>().isDarkMode) {
+  AppColor({bool isDarkMode = false}) {
+    if (isDarkMode) {
       setupDarkMode();
     } else {
       setupLightMode();

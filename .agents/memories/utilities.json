@@ -1,20 +1,6 @@
 [
   {
     "type": "utility",
-    "name": "Injector",
-    "description": "GetIt + Injectable composition root with resettable graph and test initializer seam",
-    "location": "lib/di/injection.dart",
-    "keywords": [
-      "di",
-      "get_it",
-      "injectable",
-      "composition-root",
-      "reset",
-      "test"
-    ]
-  },
-  {
-    "type": "utility",
     "name": "handleErrorResponse",
     "description": "Global API error dialog handler",
     "location": "lib/presentation/global_handler.dart",

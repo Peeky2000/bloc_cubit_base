@@ -36,6 +36,9 @@ jobs:
       - name: Analyze
         run: flutter analyze
 
+      - name: Install ripgrep for the architecture gate
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ripgrep
+
       - name: Check architecture boundaries
         run: ./scripts/check_architecture.sh
 

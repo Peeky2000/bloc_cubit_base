@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- Thêm bộ đo hiệu năng trên máy thật với dữ liệu thật: mở app, độ mượt, bộ
+  nhớ, mạng, chẩn đoán widget chậm, chấm ba mức theo chuẩn, ngưỡng theo lượng
+  dữ liệu và phân loại request lỗi theo bên phải xử lý.
+- Migrate Android và iOS cho Flutter 3.44: Gradle 8.14, AGP 8.11, Kotlin 2.2,
+  Java 17, minSdk 24; iOS giữ CocoaPods.
+- Gộp vòng đời phiên vào `SessionRepo`; sửa lỗi đăng nhập không ghi nhớ thiếu
+  token, `logout()` rỗng và tài khoản còn sót sau khi phiên hết hạn.
+- `PhoneVerificationRepo.sendCode` trả về một kết quả thay cho ba callback.
+- Thêm agent đo và sửa hiệu năng, lệnh `/perf-check`, `/perf-scenario`,
+  `/security-audit`, `derry review plan`, tài liệu mẫu lưu trữ và mẫu luồng.
 - Thêm bootstrap đa môi trường có kiểu rõ ràng và validation.
 - Chuyển dependency injection sang `get_it + injectable` với constructor
   injection và cấu hình sinh mã.

@@ -37,6 +37,9 @@ Chép nguyên câu và thay phần trong ngoặc nhọn.
 | Phân tích trước khi làm | `brainstorm <vấn đề>` |
 | Viết test | `viết test cho <file hoặc tính năng>` |
 | Chuẩn bị phát hành | `kiểm tra release readiness cho bản prod Android và iOS` |
+| Thêm dữ liệu cần lưu trên máy | `thêm lưu <dữ liệu> theo storage-patterns của flutter-datasource` |
+| Bọc một SDK dùng callback | `bọc <SDK> theo async-flow-patterns của flutter-repository` |
+| Thay luồng đăng nhập mẫu | `thay đăng nhập mẫu bằng <luồng mới>, cập nhật perf_app_adapter.dart` |
 
 ## Lệnh gõ trong Claude Code
 
@@ -107,18 +110,22 @@ cần gọi trực tiếp; chỉ cần mô tả việc cần làm. Các skill n�
 
 ### Kiến trúc và từng tầng
 
-| Skill | Phụ trách |
-|---|---|
-| `project-convention` | Quy ước chung của repo, luôn được nạp khi code hoặc review |
-| `flutter-model-entity` | Entity và model |
-| `flutter-datasource` | Gọi API, lưu trữ local |
-| `flutter-repository` | Repository |
-| `flutter-di` | Dependency injection |
-| `flutter-bloc-cubit` | Cubit, BLoC và state |
-| `flutter-router` | Điều hướng |
-| `flutter-atomic-design` | Widget và `sli_common` |
-| `flutter-translations` | Đa ngôn ngữ |
-| `flutter-error-handling` | Xử lý lỗi |
+| Skill | Phụ trách | Tài liệu tham chiếu |
+|---|---|---|
+| `project-convention` | Quy ước chung của repo, luôn được nạp khi code hoặc review | Danh sách lỗi cần tránh trong `rules/anti-patterns.md` |
+| `flutter-model-entity` | Entity và model | |
+| `flutter-datasource` | Gọi API, lưu trữ local | [storage-patterns.md](../../.agents/skills/flutter-datasource/references/storage-patterns.md): chọn nơi lưu, vòng đời dữ liệu, xoá khi đăng xuất |
+| `flutter-repository` | Repository | [async-flow-patterns.md](../../.agents/skills/flutter-repository/references/async-flow-patterns.md): bọc SDK dùng callback thành một kết quả |
+| `flutter-di` | Dependency injection | |
+| `flutter-bloc-cubit` | Cubit, BLoC và state | |
+| `flutter-router` | Điều hướng | |
+| `flutter-atomic-design` | Widget và `sli_common` | |
+| `flutter-translations` | Đa ngôn ngữ | |
+| `flutter-error-handling` | Xử lý lỗi | |
+
+Luồng đăng nhập trong base chỉ là ví dụ và có thể thay khi fork. Thứ cần giữ là
+mẫu lưu trữ và mẫu luồng ở cột tài liệu tham chiếu. Code đăng nhập hiện tại là
+bản cài đặt mẫu có test của hai tài liệu đó.
 
 ### Chất lượng
 
@@ -127,7 +134,7 @@ cần gọi trực tiếp; chỉ cần mô tả việc cần làm. Các skill n�
 | `flutter-code-review` | "review code", "review nhánh" | `derry review plan` |
 | `flutter-testing` | "viết test" | |
 | `flutter-performance` | "app giật", "đo hiệu năng" | `/perf-check`, `/perf-scenario` |
-| `mobile-security-privacy` | "kiểm tra bảo mật", "audit bảo mật" | `/security-audit` |
+| `mobile-security-privacy` | "kiểm tra bảo mật", "audit bảo mật" | `/security-audit`. Danh sách kiểu tấn công mobile ở `references/mobile-attack-classes.md` |
 | `mobile-platform-lifecycle` | Background, foreground, platform channel | |
 | `mobile-release-readiness` | "chuẩn bị phát hành" | |
 
@@ -146,7 +153,7 @@ tiếp file `SKILL.md` khi được nhắc tên.
 | `improve-codebase-architecture` | Tìm module nông, đề xuất gộp cho sâu, xuất báo cáo HTML | Repo chưa có `CONTEXT.md`; đọc ADR trong `docs/adr/` để không đề xuất trái quyết định cũ |
 | `codebase-design` | Bộ từ vựng thiết kế module dùng chung cho hai skill trên | |
 
-Báo cáo lần chạy đầu: [review ngày 2026-10-08](../reviews/2026-10-08-09-00-00-matt-code-review-and-architecture.md).
+Báo cáo lần chạy đầu và kết quả xử lý: [review ngày 2026-10-08](../reviews/2026-10-08-09-00-00-matt-code-review-and-architecture.md).
 
 ## Tài liệu theo chủ đề
 
@@ -156,4 +163,7 @@ Báo cáo lần chạy đầu: [review ngày 2026-10-08](../reviews/2026-10-08-0
 | Chuẩn và ngưỡng hiệu năng | [Chuẩn và ngưỡng](../performance/standards.md) |
 | Từ AC tới kịch bản đo | [Từ AC tới kịch bản](../performance/ac-to-scenario.md) |
 | Vòng agent hiệu năng | [Agent loop](../performance/agent-loop.md) |
+| Lưu trữ dữ liệu và phiên đăng nhập | [storage-patterns.md](../../.agents/skills/flutter-datasource/references/storage-patterns.md), [networking](../architecture/networking.md) |
+| Bọc SDK và luồng bất đồng bộ | [async-flow-patterns.md](../../.agents/skills/flutter-repository/references/async-flow-patterns.md), [ADR-0010](../adr/0010-platform-auth-behind-domain-port.md) |
+| Bảo mật mobile | [mobile-attack-classes.md](../../.agents/skills/mobile-security-privacy/references/mobile-attack-classes.md) |
 | Quy trình làm việc với AI | [ai-process.md](../../ai-process.md) |

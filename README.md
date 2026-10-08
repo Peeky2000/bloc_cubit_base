@@ -1,36 +1,55 @@
 # Flutter Bloc/Cubit Base
 
-Base Flutter cá nhân theo hướng production, xây trên Clean Architecture, môi
+Base Flutter cá nhân theo hướng production. Base gồm Clean Architecture, môi
 trường có kiểu rõ ràng, Cubit/BLoC, dependency injection sinh mã, networking an
-toàn, và bộ UI toolkit tái sử dụng.
+toàn, bộ UI toolkit tái sử dụng, công cụ đo hiệu năng trên máy thật và bộ agent,
+skill cho AI.
 
-Người mới bắt đầu tại **[Mục lục tài liệu](docs/README.md)** để biết cần đọc gì
-cho từng loại công việc và cách truy vết quyết định/roadmap/review.
+Người mới bắt đầu tại **[mục lục tài liệu](docs/README.md)**. Người dùng AI agent
+bắt đầu tại **[bộ công cụ AI](docs/guides/ai-toolbox.md)**.
 
-## Tổng quan kiến trúc
+## Có gì trong base
+
+| Phần | Nội dung | Bắt đầu tại |
+|---|---|---|
+| Kiến trúc | Clean Architecture, Cubit mặc định, BLoC khi cần, `get_it + injectable` | [Kiến trúc](docs/architecture/README.md) |
+| Môi trường | local, dev, staging, prod với `bootstrap()` tập trung | [Environment và bootstrap](docs/architecture/environment-bootstrap.md) |
+| Networking | Dio qua `ApiHandler`, refresh token single-flight, redaction log | [Networking](docs/architecture/networking.md) |
+| Lưu trữ và phiên | `SessionRepo` nắm token và tài khoản, secure storage cho bí mật | [Mẫu lưu trữ](.agents/skills/flutter-datasource/references/storage-patterns.md) |
+| UI toolkit | Submodule `sli_common` với API `Sli*`, Shadcn nằm sau facade | [Dùng sli_common](docs/guides/use-sli-common.md) |
+| Đo hiệu năng | Mở app, độ mượt, bộ nhớ, mạng trên máy thật với dữ liệu thật | [Đo hiệu năng app](docs/guides/measure-performance.md) |
+| Review và bảo mật | Chọn file và luật review theo tầng, audit bảo mật mobile | [Bộ công cụ AI](docs/guides/ai-toolbox.md) |
+| AI agent | Agent PM, coder, reviewer, đo và sửa hiệu năng, cùng 23 skill | [AGENTS.md](AGENTS.md) |
+| Build và phát hành | Derry, `build.sh`, Fastlane, Firebase App Distribution | [Derry và build](docs/guides/use-derry-and-build.md) |
+
+## Kiến trúc
 
 ```text
 Screen → Cubit/BLoC → UseCase → Repository interface → RepositoryImpl
        → Remote/Local DataSource → Dio / platform service
 ```
 
-- Cubit là lựa chọn mặc định cho state đơn giản theo màn hình; BLoC cổ điển vẫn
-  được hỗ trợ cho luồng nhiều event, concurrency, hoặc cần audit rõ.
-- State dùng `BaseAppState + Equatable + copyWith`. Freezed và HydratedBloc
-  không phải yêu cầu mặc định của base.
-- REST qua `ApiHandler` là mặc định. GraphQL là năng lực mở rộng tùy chọn.
-- DI dùng `get_it + injectable`; class feature nhận dependency qua constructor.
-- Routing giữ `SLIRouting / AppPage`.
-- `sli_common` là Git submodule thật, sở hữu UI tái sử dụng, design token, và
-  adapter Shadcn. Code sản phẩm import API toolkit, không phụ thuộc trực tiếp
-  vào Shadcn.
+- Cubit là lựa chọn mặc định. BLoC dùng khi cần nhiều event, xử lý đồng thời
+  hoặc cần audit rõ.
+- State dùng `BaseAppState + Equatable + copyWith`. Hành động một lần như điều
+  hướng hay hiện dialog đi qua `UiEffect` có kiểu, Screen xử lý.
+- Class nhận dependency qua constructor. Chỉ composition root mới lấy từ
+  `getIt`.
+- Domain không phụ thuộc Flutter, data hay SDK nền tảng. SDK dùng callback được
+  bọc trong data adapter và trả về một kết quả duy nhất
+  ([mẫu luồng](.agents/skills/flutter-repository/references/async-flow-patterns.md)).
+- Dữ liệu sống chết cùng nhau có đúng một module quản lý. Đăng xuất và hết
+  phiên xoá cả token lẫn tài khoản.
+- Routing dùng `SLIRouting / AppPage`. REST là mặc định, GraphQL là tuỳ chọn.
 
-Quy tắc chi tiết: [kiến trúc](docs/architecture/README.md) ·
-[ADR](docs/adr/README.md) · [quy trình AI](ai-process.md).
+Quyết định kiến trúc: [ADR](docs/adr/README.md) · quy trình làm việc với AI:
+[ai-process.md](ai-process.md).
 
 ## Bắt đầu nhanh
 
 Yêu cầu môi trường nằm trong [docs/prerequisites.md](docs/prerequisites.md).
+Phiên bản Flutter được pin trong `.fvmrc`. Script dùng FVM nếu có, nếu không thì
+dùng Flutter trên `PATH`.
 
 ```bash
 git clone --recurse-submodules <repository-url>
@@ -41,7 +60,7 @@ derry base doctor
 derry run dev
 ```
 
-Với clone đã tồn tại:
+Với clone đã có sẵn:
 
 ```bash
 git submodule sync --recursive
@@ -50,15 +69,12 @@ derry get
 derry gen
 ```
 
-Script sẽ dùng FVM nếu có, nếu không sẽ dùng Flutter trên `PATH`. Phiên bản
-Flutter được pin trong `.fvmrc`.
+Build Android cần Java 17 trở lên, Gradle 8.14 và khoảng 10 GB ổ đĩa trống.
+App hỗ trợ Android 7.0 (minSdk 24) trở lên. iOS dùng CocoaPods.
 
 ## Môi trường
 
-Entrypoint chỉ chọn môi trường có kiểu; `bootstrap()` xử lý toàn bộ khởi tạo ở
-một nơi xác định.
-
-| Môi trường | Entrypoint | Inspector |
+| Môi trường | Entrypoint | Network inspector |
 |---|---|---|
 | local | `lib/main_local.dart` | bật |
 | development | `lib/main_dev.dart` | bật |
@@ -73,47 +89,66 @@ Giá trị runtime truyền qua `--dart-define`:
   --dart-define=ENABLE_NETWORK_INSPECTOR=true
 ```
 
-Production sẽ chặn URL không phải HTTPS và chặn network inspector bị bật nhầm.
-Xem [environment và bootstrap](docs/architecture/environment-bootstrap.md).
+Production chặn URL không phải HTTPS và chặn network inspector bị bật nhầm.
 
 ## Lệnh hằng ngày
 
-```bash
-derry gen       # build_runner + format
-derry analyze   # analyzer + kiểm tra boundary kiến trúc
-derry test      # test app
-derry quality   # format, analyzer, boundary, test
-```
+| Lệnh | Việc |
+|---|---|
+| `derry gen` | Sinh code (DI, model, asset) và format |
+| `derry analyze` | Analyzer và kiểm tra ranh giới kiến trúc |
+| `derry test` | Test của app |
+| `derry quality` | Format, analyzer, kiểm tra kiến trúc và test cho cả app lẫn `sli_common` |
+| `derry review plan` | Liệt kê file đã thay đổi cần review và luật cho từng file |
+| `derry perf run` | Đo hiệu năng trên máy thật |
+| `derry perf diagnose` | Đo kèm chẩn đoán widget chậm nhất |
+| `derry perf approve` | Đo lại và lưu kết quả làm mốc so sánh |
 
-Build local, phân phối Firebase và release Store là ba luồng khác nhau. Xem
-[hướng dẫn Derry và build](docs/guides/use-derry-and-build.md) trước khi dùng
-lệnh có side effect từ xa.
+Xem toàn bộ lệnh bằng `derry ls -d`. Build local, phân phối Firebase và phát
+hành Store là ba luồng khác nhau; đọc [hướng dẫn Derry và build](docs/guides/use-derry-and-build.md)
+trước khi chạy lệnh có tác động từ xa.
 
-DI sinh mã nằm ở `lib/di/injection.config.dart`. Không sửa file này thủ công.
-Gắn annotation cho class, inject dependency qua constructor, rồi chạy
-`derry gen`. Dependency runtime/platform vẫn khai báo rõ trong
-`lib/di/register_module.dart`.
+Không sửa `lib/di/injection.config.dart` bằng tay. Gắn annotation cho class,
+inject qua constructor rồi chạy `derry gen`.
 
-## UI toolkit
+## Làm việc với AI
 
-`lib/modules/sli_common` trỏ tới repo độc lập `sli_common`. Dùng API `Sli*` ổn
-định cho component và token tái sử dụng. Shadcn chỉ là chi tiết triển khai phía
-sau facade này, để app có thể theme hoặc thay thế mà không kéo API bên thứ ba
-vào từng màn hình.
+Trong Claude Code có sẵn các lệnh:
 
-Xem [dùng sli_common](docs/guides/use-sli-common.md) và
-[kiến trúc UI toolkit](docs/architecture/ui-toolkit.md).
+| Lệnh | Việc |
+|---|---|
+| `/perf-check [màn hoặc luồng]` | Đo hiệu năng, tìm nguyên nhân, sửa, đo lại và viết báo cáo tiếng Việt |
+| `/perf-scenario <AC, spec hoặc mô tả>` | Viết kịch bản đo và đề xuất ngưỡng, kể cả từ AC không có con số |
+| `/security-audit [phạm vi]` | Audit bảo mật mobile, ghi báo cáo vào `docs/reviews/` |
 
-## Tạo feature và app mới
+Với agent khác, nói bằng lời là đủ; agent tự nạp skill phù hợp. Câu gọi mẫu,
+danh sách agent và skill nằm trong [bộ công cụ AI](docs/guides/ai-toolbox.md).
+AI agent phải bắt đầu từ [AGENTS.md](AGENTS.md).
+
+## Đo hiệu năng
+
+Phần đo chạy trên máy thật ở profile mode, với server thật và một tài khoản test
+riêng. Mỗi lần đo được chấm hai kiểu: PASS hoặc FAIL so với mốc đã lưu, và GOOD,
+NEEDS_IMPROVEMENT hoặc POOR theo chuẩn Android vitals và Nielsen. Request lỗi
+được phân loại theo bên phải xử lý: mobile, backend, mạng hay môi trường.
+
+| Tài liệu | Nội dung |
+|---|---|
+| [Đo hiệu năng app](docs/guides/measure-performance.md) | Chuẩn bị, chạy, đọc kết quả, lỗi thường gặp |
+| [Chuẩn và ngưỡng](docs/performance/standards.md) | Từng mốc, nguồn gốc và ý nghĩa |
+| [Từ AC tới kịch bản](docs/performance/ac-to-scenario.md) | Ngưỡng mặc định theo loại thao tác |
+| [PERFORMANCE.md](PERFORMANCE.md) | Hợp đồng kỹ thuật của runner |
+
+## Tạo app và feature mới
 
 - [Tạo app từ base này](docs/guides/create-app-from-base.md)
 - [Thêm feature theo Clean Architecture](docs/guides/add-feature.md)
 - [Chọn Cubit hay BLoC](docs/guides/choose-cubit-or-bloc.md)
 - [Thêm môi trường](docs/guides/add-environment.md)
-- [Dùng Derry, build.sh và Fastlane](docs/guides/use-derry-and-build.md)
-- [Đo hiệu năng app](docs/guides/measure-performance.md)
-- [Bộ công cụ AI: lệnh, agent, skill](docs/guides/ai-toolbox.md)
-- [Trạng thái modernization hiện tại](docs/modernization-status.md)
+- [Trạng thái modernization](docs/modernization-status.md)
 
-AI agent phải bắt đầu từ [AGENTS.md](AGENTS.md). Package/application identifier
-hiện là giá trị template và phải đổi khi fork base.
+Khi fork, đổi package và application identifier, URL môi trường, file Firebase,
+branding và signing. Các màn đăng nhập, đăng ký, splash là ví dụ và có thể thay.
+Khi thay luồng đăng nhập, cập nhật
+`integration_test/performance/support/perf_app_adapter.dart` để kịch bản đo
+hiệu năng vẫn chạy.

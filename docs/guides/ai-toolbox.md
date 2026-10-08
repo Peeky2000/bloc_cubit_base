@@ -21,6 +21,8 @@ Chép nguyên câu và thay phần trong ngoặc nhọn.
 
 | Muốn làm | Gõ |
 |---|---|
+| Làm trọn một tính năng: dev code, tester kiểm tra | `/build-feature docs/specs/<mã spec>/fe.md` |
+| Tạo khung feature đúng convention | `derry scaffold -- <feature> [--bloc] [--data] --apply` |
 | Đo hiệu năng cả app | `/perf-check` |
 | Đo một màn | `/perf-check màn danh sách đơn` |
 | Viết kịch bản đo từ AC | `/perf-scenario docs/specs/<mã spec>/fe.md AC3` |
@@ -48,6 +50,7 @@ Gõ lệnh trong khung chat của Claude Code. Các lệnh này nằm ở
 
 | Lệnh | Dùng khi | Cần chuẩn bị | Kết quả |
 |---|---|---|---|
+| `/build-feature <spec, AC hoặc mô tả>` | Muốn giao trọn một tính năng | Không bắt buộc | Code trên nhánh mới, test nghiệm thu, báo cáo tiếng Việt |
 | `/perf-check` | Muốn đo và tối ưu hiệu năng cả app | Máy thật, tài khoản test, địa chỉ server, 10 GB ổ đĩa | Báo cáo tiếng Việt trong `docs/performance/` |
 | `/perf-check <màn hoặc luồng>` | Chỉ đo một màn hoặc một luồng | Như trên | Như trên, tự viết kịch bản nếu chưa có |
 | `/perf-scenario <AC, spec hoặc mô tả>` | Có AC hoặc mô tả luồng, cần kịch bản đo | Máy thật để chạy thử, không bắt buộc | Kịch bản và ngưỡng đề xuất chờ duyệt |
@@ -66,6 +69,7 @@ Chạy trong terminal. Danh sách đầy đủ: `derry ls -d`.
 |---|---|
 | `derry quality` | Format, analyzer, kiểm tra kiến trúc và test, cho cả app lẫn `sli_common` |
 | `derry gen` | Sinh code: DI, model, asset |
+| `derry scaffold -- <feature> [--bloc] [--data[=<domain>]] [--apply]` | Sinh khung feature đúng convention; không có `--apply` thì chỉ in kế hoạch |
 | `derry review plan` | Liệt kê file đã thay đổi cần review và luật áp cho từng file |
 | `derry perf run` | Đo hiệu năng trên máy thật |
 | `derry perf diagnose` | Đo kèm chẩn đoán widget chậm nhất |
@@ -84,16 +88,27 @@ Gọi bằng cách nhắc tên file trong câu yêu cầu, ví dụ
 
 | Agent | Vai trò |
 |---|---|
-| [pm](../../.agents/agents/pm.md) | Phân tích yêu cầu, viết plan, điều phối coder và reviewer |
-| [coder](../../.agents/agents/coder.md) | Code tính năng theo đúng kiến trúc |
-| [flutter-engineer](../../.agents/agents/flutter-engineer.md) | Sửa nhanh một việc nhỏ |
+| [pm](../../.agents/agents/pm.md) | Phân tích yêu cầu, viết plan, điều phối dev và tester |
+| [flutter-dev](../../.agents/agents/flutter-dev.md) | Từ tài liệu tới code đúng convention: phân tích, plan, scaffold, code, tự kiểm tra |
+| [flutter-tester](../../.agents/agents/flutter-tester.md) | Kiểm tra độc lập: test nghiệm thu từ AC, convention, bảo mật, hiệu năng |
 | [reviewer](../../.agents/agents/reviewer.md) | Review code, ghi báo cáo vào `docs/reviews/` |
 | [perf-tester](../../.agents/agents/perf-tester.md) | Đo hiệu năng, tìm nguyên nhân, kiểm tra lại sau khi sửa |
 | [perf-engineer](../../.agents/agents/perf-engineer.md) | Sửa lỗi hiệu năng theo phiếu bàn giao |
 
-Theo [plan agent dev và agent test](../plan/2026-10-07-flutter-dev-and-test-agents.md),
-`coder` và `flutter-engineer` sẽ được gộp thành `flutter-dev`, còn
-`perf-tester` sẽ mở rộng thành `flutter-tester`.
+`coder` và `flutter-engineer` đã được gộp thành `flutter-dev`; hai file cũ chỉ
+còn chuyển hướng. Vòng giữa dev và tester nằm trong
+[delivery-loop.md](../agents/delivery-loop.md).
+
+### Agent dev giữ convention bằng cách nào
+
+| Lớp | Công cụ | Chặn ở đâu |
+|---|---|---|
+| Sinh khung | `derry scaffold` | Agent không tự viết khung feature |
+| Luật tự động | `test/convention/convention_test.dart`, luật trong `tool/convention/rules.dart` | `derry quality` và CI báo đỏ khi sai tên file, tên class, vị trí, annotation DI, cấu trúc state, effect, screen, thiếu test, dùng `print` |
+| Review theo luật | `derry review plan` | Agent test review từng file với luật của tầng đó |
+
+Code cũ có trước luật nằm trong `tool/convention/baseline.txt` và chỉ được bớt
+dòng.
 
 ## Skill
 
@@ -172,3 +187,5 @@ Báo cáo lần chạy đầu và kết quả xử lý: [review ngày 2026-10-08
 | Bọc SDK và luồng bất đồng bộ | [async-flow-patterns.md](../../.agents/skills/flutter-repository/references/async-flow-patterns.md), [ADR-0010](../adr/0010-platform-auth-behind-domain-port.md) |
 | Bảo mật mobile | [mobile-attack-classes.md](../../.agents/skills/mobile-security-privacy/references/mobile-attack-classes.md) |
 | Quy trình làm việc với AI | [ai-process.md](../../ai-process.md) |
+| Vòng dev và tester | [delivery-loop.md](../agents/delivery-loop.md) |
+| Thêm feature | [add-feature.md](add-feature.md) |

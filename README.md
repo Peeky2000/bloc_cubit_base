@@ -19,7 +19,7 @@ bắt đầu tại **[bộ công cụ AI](docs/guides/ai-toolbox.md)**.
 | UI toolkit | Submodule `sli_common` với API `Sli*`, Shadcn nằm sau facade | [Dùng sli_common](docs/guides/use-sli-common.md) |
 | Đo hiệu năng | Mở app, độ mượt, bộ nhớ, mạng trên máy thật với dữ liệu thật | [Đo hiệu năng app](docs/guides/measure-performance.md) |
 | Review và bảo mật | Chọn file và luật review theo tầng, audit bảo mật mobile | [Bộ công cụ AI](docs/guides/ai-toolbox.md) |
-| AI agent | Agent PM, coder, reviewer, đo và sửa hiệu năng, cùng 23 skill | [AGENTS.md](AGENTS.md) |
+| AI agent | Agent PM, dev, tester, reviewer, đo và sửa hiệu năng, cùng 23 skill | [AGENTS.md](AGENTS.md) |
 | Build và phát hành | Derry, `build.sh`, Fastlane, Firebase App Distribution | [Derry và build](docs/guides/use-derry-and-build.md) |
 
 ## Kiến trúc
@@ -100,6 +100,7 @@ Production chặn URL không phải HTTPS và chặn network inspector bị bậ
 | `derry test` | Test của app |
 | `derry quality` | Format, analyzer, kiểm tra kiến trúc và test cho cả app lẫn `sli_common` |
 | `derry review plan` | Liệt kê file đã thay đổi cần review và luật cho từng file |
+| `derry scaffold -- <feature> [--bloc] [--data] --apply` | Sinh khung feature đúng convention |
 | `derry perf run` | Đo hiệu năng trên máy thật |
 | `derry perf diagnose` | Đo kèm chẩn đoán widget chậm nhất |
 | `derry perf approve` | Đo lại và lưu kết quả làm mốc so sánh |
@@ -142,7 +143,8 @@ NEEDS_IMPROVEMENT hoặc POOR theo chuẩn Android vitals và Nielsen. Request l
 ## Tạo app và feature mới
 
 - [Tạo app từ base này](docs/guides/create-app-from-base.md)
-- [Thêm feature theo Clean Architecture](docs/guides/add-feature.md)
+- [Thêm feature theo Clean Architecture](docs/guides/add-feature.md); bắt đầu
+  bằng `derry scaffold -- <feature> --apply`
 - [Chọn Cubit hay BLoC](docs/guides/choose-cubit-or-bloc.md)
 - [Thêm môi trường](docs/guides/add-environment.md)
 - [Trạng thái modernization](docs/modernization-status.md)

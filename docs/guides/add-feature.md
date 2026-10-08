@@ -6,6 +6,19 @@ Chỉ thêm layer mà feature thật sự cần, đồng thời giữ đúng th�
 Entity → Model → DataSource → Repository → UseCase → Cubit/BLoC → Screen
 ```
 
+## Bắt đầu bằng scaffold
+
+```bash
+derry scaffold -- order_list --data=order          # xem trước
+derry scaffold -- order_list --data=order --apply  # ghi file
+```
+
+Scaffold sinh Cubit (hoặc BLoC với `--bloc`), state, effect, screen, test và,
+với `--data`, cả entity, model, remote data source, repository, use case. Mọi
+file sinh ra đã qua luật convention tự động. Sau đó làm theo phần "Next steps"
+mà lệnh in ra: thêm route, đăng ký use case, chuyển đường dẫn API vào
+`UrlEndPoint`, thêm text vào ARB.
+
 ## Checklist
 
 1. Tìm trong app-memory, `sli_common`, routes, và domain code tương tự.
@@ -25,6 +38,7 @@ Entity → Model → DataSource → Repository → UseCase → Cubit/BLoC → Sc
    localize mọi text hiển thị cho user.
 9. Register `AppPage`/`SLIPage`, cập nhật ARB, và tái sử dụng component `Sli*`.
 10. Chạy `derry gen`, `derry quality`, và cập nhật app-memory/docs.
+    `derry quality` chạy cả luật convention trong `test/convention/`.
 
 Không đặt `BuildContext`, navigation, localization, Dio, hoặc service-locator
 call trong domain/business logic.

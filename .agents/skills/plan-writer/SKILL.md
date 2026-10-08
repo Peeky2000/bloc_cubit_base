@@ -26,14 +26,17 @@ architecture decisions. Always save it to
 ## Task format
 
 ```markdown
-- [ ] **[layer]** *(coder)* — Implement one verifiable change at
+- [ ] **[layer]** *(flutter-dev)* — Implement one verifiable change at
   `exact/path.dart`. **Verify:** objective command or behavior.
 ```
 
 Allowed tags include `discovery`, `entity`, `model`, `datasource`, `repository`,
 `usecase`, `di`, `bloc-cubit`, `route`, `widget`, `page`, `l10n`, `security`,
-`test`, `docs`, `tooling`, `migration`, and `review`. Ownership is `coder` or
-`reviewer`; use another agent tag only when that agent exists in the repository.
+`test`, `docs`, `tooling`, `migration`, and `review`. Ownership is
+`flutter-dev`, `flutter-tester` or `reviewer`; use another agent tag only when
+that agent exists in the repository. For a new feature, the first task is the
+scaffold command `dart run tool/scaffold/feature.dart <feature> [--bloc]
+[--data] --apply`.
 
 ## Ordering
 

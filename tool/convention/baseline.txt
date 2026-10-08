@@ -1,0 +1,7 @@
+# Legacy code that predates a convention rule, as rule|path.
+# Only remove lines (by fixing the code). Never add a line for new code.
+feature-layout|lib/presentation/success/success_screen.dart
+state-test|lib/presentation/reset_password/cubit/reset_password_cubit.dart
+state-test|lib/presentation/sign_up/cubit/sign_up_cubit.dart
+state-test|lib/presentation/splash/cubit/splash_cubit.dart
+state-test|lib/presentation/test/cubit/test_cubit.dart

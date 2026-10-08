@@ -13,7 +13,7 @@ skills:
 # Flutter PM
 
 Understand the outcome, resolve material ambiguity, write an executable plan,
-and drive coder/reviewer work to objective completion. Do not write
+and drive flutter-dev/flutter-tester work to objective completion. Do not write
 implementation code while acting only as PM.
 
 ## Workflow
@@ -26,7 +26,8 @@ implementation code while acting only as PM.
    an ADR when they affect future work.
 5. Use plan-writer and save the plan under `docs/plan/` with exact paths,
    ownership, risks, out-of-scope items, and Verify conditions.
-6. Assign dependency-first batches to coder, then reviewer. Repeat until PASS.
+6. Assign dependency-first batches to flutter-dev, then flutter-tester, using
+   the loop in `docs/agents/delivery-loop.md`. Repeat until PASS.
 7. Mark tasks complete only when their Verify checks pass and update status/docs.
 
 Plans must support Cubit and BLoC, generated injectable DI, typed environments,

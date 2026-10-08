@@ -87,7 +87,7 @@ Tài liệu → flutter-dev (phân tích → plan → code → tự kiểm tra)
 
 ### Đợt 3: Hai agent
 
-- [ ] **T4. Agent `flutter-dev`.** Owner: PM duyệt nội dung.
+- [x] **T4. Agent `flutter-dev`.** Owner: PM duyệt nội dung.
   - Gộp `coder.md` và `flutter-engineer.md` thành `.agents/agents/flutter-dev.md`.
   - Luồng: đọc tài liệu → `spec-analyze` → `plan-writer` → `spec-implement`
     theo checklist → tự kiểm tra (`derry gen`, `derry quality`, test của phần
@@ -95,7 +95,7 @@ Tài liệu → flutter-dev (phân tích → plan → code → tự kiểm tra)
   - Chọn skill theo việc dựa trên `docs/guides/mobile-engineering-skills.md`.
   - Giữ `coder.md` và `flutter-engineer.md` dưới dạng chuyển hướng một dòng để
     không gãy tham chiếu cũ.
-- [ ] **T5. Agent `flutter-tester`.** Owner: PM duyệt nội dung.
+- [x] **T5. Agent `flutter-tester`.** Owner: PM duyệt nội dung.
   - Đổi `perf-tester.md` thành `.agents/agents/flutter-tester.md` với bốn chế
     độ: chức năng, convention, bảo mật, hiệu năng. Chế độ hiệu năng giữ nguyên
     nội dung hiện tại.
@@ -106,13 +106,25 @@ Tài liệu → flutter-dev (phân tích → plan → code → tự kiểm tra)
   - Bảo mật: chạy `mobile-security-privacy` khi thay đổi chạm tới auth, token,
     lưu trữ, log, deep link, WebView hoặc manifest.
   - Không sửa `lib/`. Không sửa test của dev; test chấp nhận do tester sở hữu.
-- [ ] **T6. Quy trình điều phối.** Owner: flutter-dev.
+- [x] **T6. Quy trình điều phối.** Owner: flutter-dev.
   - Tạo `docs/agents/delivery-loop.md`: sơ đồ vòng, mẫu phiếu
     `docs/handoffs/YYYY-MM-DD-hh-mm-<topic>.md`, mẫu báo cáo PM, giới hạn ba
     vòng, khi nào phải hỏi PM.
   - Đổi `docs/performance/agent-loop.md` thành một chế độ của quy trình chung.
   - Cập nhật bảng agent trong `AGENTS.md`, `ai-process.md`,
     `docs/guides/mobile-engineering-skills.md` và `docs/README.md`.
+
+### Kết quả đợt 3 (2026-10-08)
+
+- T4: `.agents/agents/flutter-dev.md`; `coder.md` và `flutter-engineer.md` chỉ
+  còn chuyển hướng. Thêm kiểm soát convention bằng
+  `tool/scaffold/feature.dart` (lệnh `derry scaffold`) và luật tự động
+  `tool/convention/rules.dart` chạy trong `test/convention/`, với baseline
+  cho code cũ.
+- T5: `.agents/agents/flutter-tester.md` với bốn chế độ; `test/acceptance/`
+  thuộc tester. Chế độ hiệu năng vẫn dùng `perf-tester` để không trùng lặp.
+- T6: `docs/agents/delivery-loop.md`, lệnh `/build-feature`, cập nhật
+  `AGENTS.md`, `pm.md`, `plan-writer`, README và trang tổng hợp.
 
 ### Đợt 4: Chạy thử
 

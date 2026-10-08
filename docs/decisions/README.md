@@ -30,7 +30,16 @@ hưởng toàn dự án là ADR trong `docs/adr/`. Cách viết và vòng đời
 
 ## Đang chờ duyệt
 
-Chưa có.
+| Mã | Quyết định | Trạng thái | Phạm vi | Tags | Ngày |
+|---|---|---|---|---|---|
+| [D-0001](D-0001-phan-trang-danh-sach-keo-de-lam-moi-va-tai-them.md) | Phân trang danh sách: kéo để làm mới và tải thêm | proposed | feature | pagination, list, load-more | 2026-10-08 |
+| [D-0002](D-0002-form-va-validation-co-kieu.md) | Form và validation có kiểu | proposed | feature | form, validation | 2026-10-08 |
+| [D-0003](D-0003-cache-offline-theo-stale-while-revalidate.md) | Cache offline theo stale-while-revalidate | proposed | feature | cache, offline | 2026-10-08 |
+| [D-0004](D-0004-upload-anh-co-tien-trinh.md) | Upload ảnh có tiến trình | proposed | feature | upload, image, progress | 2026-10-08 |
+| [D-0005](D-0005-cap-nhat-realtime-qua-stream.md) | Cập nhật realtime qua Stream | proposed | feature | realtime, websocket, polling, stream | 2026-10-08 |
+| [D-0006](D-0006-deep-link-qua-domain-port.md) | Deep link qua domain port | proposed | feature | deeplink, routing, security | 2026-10-08 |
+| [D-0007](D-0007-push-notification-qua-domain-port.md) | Push notification qua domain port | proposed | feature | push, notification | 2026-10-08 |
+| [D-0008](D-0008-xin-quyen-runtime-qua-domain-port.md) | Xin quyền runtime qua domain port | proposed | feature | permission, privacy | 2026-10-08 |
 
 ## Đã thay thế hoặc bị từ chối
 

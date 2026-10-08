@@ -1,63 +1,9 @@
 ---
 name: coder
-description: Implements production Flutter code for this Clean Architecture base.
-skills:
-  - project-convention
-  - app-memory
-  - flutter-model-entity
-  - flutter-datasource
-  - flutter-repository
-  - flutter-di
-  - flutter-bloc-cubit
-  - flutter-router
-  - flutter-error-handling
-  - flutter-atomic-design
-  - flutter-translations
+description: Superseded by flutter-dev. Use .agents/agents/flutter-dev.md.
 ---
 
-# Flutter Coder
+# Coder (superseded)
 
-Implement an approved task completely, including tests, generated files, and
-documentation. Do not bypass `Cubit/BLoC → UseCase → Repository → DataSource`.
-
-## Before coding
-
-1. Read the requirement/spec/plan and relevant architecture docs/ADRs.
-2. Read `project-convention` and each skill for layers being changed.
-3. Search app-memory, `sli_common`, and sibling files before creating artifacts.
-4. Establish the current quality baseline so old debt is not confused with a
-   regression.
-
-For a regression/concurrency test task, load `flutter-testing`. For changes to
-credentials/PII, app lifecycle/native integration, measured performance, or
-delivery, load the matching mobile quality skill listed in
-`docs/guides/mobile-engineering-skills.md`.
-
-## Implementation order
-
-Entity → Model → DataSource → Repository interface/impl → UseCase → generated DI
-→ Cubit/BLoC → Screen → Route → ARB → tests/docs.
-
-Skip layers the requirement does not need.
-
-## Hard rules
-
-- Domain stays pure and presentation never imports data.
-- Every class receives dependencies through constructors. Never resolve a
-  service locator inside Cubit/BLoC, UseCase, repository, or data source.
-- Annotate feature state owners `@injectable`, stateless services ngoài domain
-  `@lazySingleton`, and bind interfaces on implementations. Register pure
-  domain UseCases with `@lazySingleton` providers in the DI module.
-- Cubit is default; use BLoC only for a documented event/concurrency need.
-- State is immutable Equatable + copyWith and contains recoverable errors.
-- Navigation/dialog/snackbar/l10n stays in Screen listeners; Cubit/BLoC emits
-  revisioned typed `UiEffect` and has no `BuildContext`.
-- Data/network code has no UI side effects and logs only redacted diagnostics.
-- Reuse `sli_common` public APIs; Shadcn imports stay inside its adapter.
-- Never edit generated output. Run `derry gen`.
-
-## Completion gate
-
-Run `derry quality` and any affected submodule/package tests. Update app-memory
-for new reusable artifacts. If baseline debt prevents a clean analyzer, report
-exact counts and prove no compile errors or new warnings were introduced.
+This role is now `flutter-dev`. Read and follow
+[flutter-dev.md](flutter-dev.md).

@@ -21,6 +21,12 @@ Chép nguyên câu và thay phần trong ngoặc nhọn.
 
 | Muốn làm | Gõ |
 |---|---|
+| Thiết kế kỹ thuật từ tài liệu, chưa code | `/tech-design <đường dẫn tài liệu hoặc nội dung AC>` |
+| Làm trọn một tính năng: thiết kế, chờ duyệt, code, kiểm tra | `/build-feature docs/specs/<mã spec>/fe.md` |
+| Hỏi đã quyết thế nào về một chủ đề | `/decision phân trang đang làm thế nào` |
+| Ghi một quyết định mới | `/decision ghi quyết định: định dạng tiền theo vi_VN, không số lẻ` |
+| Tìm quyết định trong terminal | `derry decision search "phân trang"` |
+| Tạo khung feature đúng convention | `derry scaffold -- <feature> [--bloc] [--data] --apply` |
 | Đo hiệu năng cả app | `/perf-check` |
 | Đo một màn | `/perf-check màn danh sách đơn` |
 | Viết kịch bản đo từ AC | `/perf-scenario docs/specs/<mã spec>/fe.md AC3` |
@@ -48,6 +54,9 @@ Gõ lệnh trong khung chat của Claude Code. Các lệnh này nằm ở
 
 | Lệnh | Dùng khi | Cần chuẩn bị | Kết quả |
 |---|---|---|---|
+| `/tech-design <tài liệu>` | Có tài liệu, muốn xem cách triển khai trước | Không | `docs/specs/<id>-<feature>/tech.md` và quyết định đề xuất, chờ duyệt |
+| `/build-feature <spec, AC hoặc mô tả>` | Muốn giao trọn một tính năng | Không bắt buộc | Dừng chờ duyệt `tech.md`, sau đó code trên nhánh mới, test nghiệm thu, báo cáo tiếng Việt |
+| `/decision <câu hỏi hoặc quyết định>` | Tra cứu hoặc ghi quyết định kỹ thuật | Không | Câu trả lời có mã quyết định, hoặc quyết định mới ở trạng thái proposed |
 | `/perf-check` | Muốn đo và tối ưu hiệu năng cả app | Máy thật, tài khoản test, địa chỉ server, 10 GB ổ đĩa | Báo cáo tiếng Việt trong `docs/performance/` |
 | `/perf-check <màn hoặc luồng>` | Chỉ đo một màn hoặc một luồng | Như trên | Như trên, tự viết kịch bản nếu chưa có |
 | `/perf-scenario <AC, spec hoặc mô tả>` | Có AC hoặc mô tả luồng, cần kịch bản đo | Máy thật để chạy thử, không bắt buộc | Kịch bản và ngưỡng đề xuất chờ duyệt |
@@ -66,6 +75,11 @@ Chạy trong terminal. Danh sách đầy đủ: `derry ls -d`.
 |---|---|
 | `derry quality` | Format, analyzer, kiểm tra kiến trúc và test, cho cả app lẫn `sli_common` |
 | `derry gen` | Sinh code: DI, model, asset |
+| `derry scaffold -- <feature> [--bloc] [--data[=<domain>]] [--apply]` | Sinh khung feature đúng convention; không có `--apply` thì chỉ in kế hoạch |
+| `derry decision search "<chủ đề>"` | Tìm quyết định kỹ thuật cũ, có dấu hoặc không dấu |
+| `derry decision new -- "<tiêu đề>" [--scope project] [--tags a,b]` | Tạo quyết định mới ở trạng thái proposed; `--scope project` tạo ADR |
+| `derry decision index` | Sinh lại mục lục sổ quyết định |
+| `derry decision check` | Kiểm tra sổ quyết định; cũng chạy trong `derry quality` |
 | `derry review plan` | Liệt kê file đã thay đổi cần review và luật áp cho từng file |
 | `derry perf run` | Đo hiệu năng trên máy thật |
 | `derry perf diagnose` | Đo kèm chẩn đoán widget chậm nhất |
@@ -84,16 +98,29 @@ Gọi bằng cách nhắc tên file trong câu yêu cầu, ví dụ
 
 | Agent | Vai trò |
 |---|---|
-| [pm](../../.agents/agents/pm.md) | Phân tích yêu cầu, viết plan, điều phối coder và reviewer |
-| [coder](../../.agents/agents/coder.md) | Code tính năng theo đúng kiến trúc |
-| [flutter-engineer](../../.agents/agents/flutter-engineer.md) | Sửa nhanh một việc nhỏ |
+| [pm](../../.agents/agents/pm.md) | Phân tích yêu cầu, viết plan, điều phối dev và tester |
+| [flutter-dev](../../.agents/agents/flutter-dev.md) | Từ tài liệu tới code đúng convention: đọc sổ quyết định, viết `tech.md`, chờ duyệt, scaffold, code, tự kiểm tra |
+| [flutter-tester](../../.agents/agents/flutter-tester.md) | Kiểm tra độc lập: test nghiệm thu từ AC, convention, bảo mật, hiệu năng |
 | [reviewer](../../.agents/agents/reviewer.md) | Review code, ghi báo cáo vào `docs/reviews/` |
 | [perf-tester](../../.agents/agents/perf-tester.md) | Đo hiệu năng, tìm nguyên nhân, kiểm tra lại sau khi sửa |
 | [perf-engineer](../../.agents/agents/perf-engineer.md) | Sửa lỗi hiệu năng theo phiếu bàn giao |
 
-Theo [plan agent dev và agent test](../plan/2026-10-07-flutter-dev-and-test-agents.md),
-`coder` và `flutter-engineer` sẽ được gộp thành `flutter-dev`, còn
-`perf-tester` sẽ mở rộng thành `flutter-tester`.
+`coder` và `flutter-engineer` đã được gộp thành `flutter-dev`; hai file cũ chỉ
+còn chuyển hướng. Vòng giữa dev và tester nằm trong
+[delivery-loop.md](../agents/delivery-loop.md).
+
+### Agent dev giữ convention bằng cách nào
+
+| Lớp | Công cụ | Chặn ở đâu |
+|---|---|---|
+| Thiết kế trước | `tech.md` theo skill `tech-design` | PM duyệt tên, vị trí, cấu trúc trước khi có code |
+| Sổ quyết định | `docs/decisions/`, `docs/adr/`, `derry decision` | Tính năng sau làm giống quyết định đã chấp nhận |
+| Sinh khung | `derry scaffold` | Agent không tự viết khung feature |
+| Luật tự động | `test/convention/convention_test.dart`, luật trong `tool/convention/rules.dart` | `derry quality` và CI báo đỏ khi sai tên file, tên class, vị trí, annotation DI, cấu trúc state, effect, screen, thiếu test, dùng `print` |
+| Review theo luật | `derry review plan` | Agent test review từng file với luật của tầng đó |
+
+Code cũ có trước luật nằm trong `tool/convention/baseline.txt` và chỉ được bớt
+dòng.
 
 ## Skill
 
@@ -105,6 +132,7 @@ cần gọi trực tiếp; chỉ cần mô tả việc cần làm. Các skill n�
 
 | Skill | Agent nạp khi bạn nói |
 |---|---|
+| `tech-design` | "thiết kế kỹ thuật", "triển khai kỹ thuật thế nào", đưa tài liệu từ nơi khác |
 | `brainstorm` | "phân tích", "suy nghĩ kỹ", "brainstorm" trước khi làm |
 | `spec-analyze` | Đưa ảnh thiết kế, Figma hoặc mô tả yêu cầu để viết spec |
 | `spec-checklists` | Tách spec thành checklist kỹ thuật |
@@ -172,3 +200,7 @@ Báo cáo lần chạy đầu và kết quả xử lý: [review ngày 2026-10-08
 | Bọc SDK và luồng bất đồng bộ | [async-flow-patterns.md](../../.agents/skills/flutter-repository/references/async-flow-patterns.md), [ADR-0010](../adr/0010-platform-auth-behind-domain-port.md) |
 | Bảo mật mobile | [mobile-attack-classes.md](../../.agents/skills/mobile-security-privacy/references/mobile-attack-classes.md) |
 | Quy trình làm việc với AI | [ai-process.md](../../ai-process.md) |
+| Vòng dev và tester | [delivery-loop.md](../agents/delivery-loop.md) |
+| Sổ quyết định và thuật ngữ | [docs/decisions/](../decisions/README.md), [cách dùng](../decisions/HOW-TO.md), [thuật ngữ](../decisions/glossary.md) |
+| Mẫu thiết kế kỹ thuật | [tech-template.md](../../.agents/skills/tech-design/templates/tech-template.md) |
+| Thêm feature | [add-feature.md](add-feature.md) |

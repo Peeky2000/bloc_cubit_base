@@ -17,6 +17,11 @@
 | Coder | `@.agents/agents/coder.md` |
 | Reviewer | `@.agents/agents/reviewer.md` |
 | Quick fix | `@.agents/agents/flutter-engineer.md` |
+| Performance tester | `@.agents/agents/perf-tester.md` |
+| Performance engineer | `@.agents/agents/perf-engineer.md` |
+
+Vòng đo và sửa hiệu năng giữa hai agent performance được mô tả trong
+[docs/performance/agent-loop.md](docs/performance/agent-loop.md).
 
 Tìm artifact đã được index trước khi tạo bản trùng:
 

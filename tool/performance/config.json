@@ -1,0 +1,79 @@
+{
+  "flavor": "dev",
+  "scenario_directory": "integration_test/performance/scenarios",
+  "routes_file": "lib/core/common/route.dart",
+  "runs": 5,
+  "warmup_runs": 1,
+  "retry": {
+    "max_extra_runs": 3,
+    "delay_seconds": 30
+  },
+  "diagnose_on_failure": true,
+  "startup": {
+    "enabled": true,
+    "target": "lib/main_dev.dart",
+    "runs": 3,
+    "max_first_frame_ms": 2000.0,
+    "bands": {
+      "startup_first_frame_ms": [
+        1500.0,
+        5000.0
+      ]
+    }
+  },
+  "report_directory": "performance/reports",
+  "latest_directory": "performance/latest",
+  "history_file": "performance/history.jsonl",
+  "baseline_directory": "performance/baselines",
+  "pending_file": "performance/pending.json",
+  "bands": {
+    "frame_p95_ms": [
+      16.67,
+      33.0
+    ],
+    "frame_p99_ms": [
+      33.0,
+      700.0
+    ],
+    "jank_percent": [
+      5.0,
+      25.0
+    ],
+    "scenario_ms": [
+      1000.0,
+      10000.0
+    ],
+    "network_p95_ms": [
+      1000.0,
+      3000.0
+    ]
+  },
+  "data_budgets": {
+    "_example_orders_list": {
+      "scenario_ms": {
+        "items_metric": "data_items",
+        "base_ms": 1000,
+        "base_items": 50,
+        "per_unit_ms": 200,
+        "unit": 100,
+        "cap_ms": 2500,
+        "poor_factor": 2
+      }
+    }
+  },
+  "thresholds": {
+    "max_jank_percent": 3.0,
+    "max_frame_p95_ms": 20.0,
+    "max_frame_p99_ms": 32.0,
+    "max_scenario_ms": 15000.0,
+    "max_regression_percent": 5.0,
+    "min_frame_count": 20,
+    "zero_baseline_regression_delta": {
+      "jank_percent": 0.5,
+      "frame_p95_ms": 1.0,
+      "frame_p99_ms": 2.0,
+      "scenario_ms": 50.0
+    },
+    "max_network_failures": 0
+  }
+}

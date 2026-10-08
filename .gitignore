@@ -66,6 +66,12 @@ android/fastlane/*-deploy-key-android.json
 
 lib/build/
 
+# Local performance benchmark outputs; commit an approved baseline separately.
+/performance/reports/
+/performance/history.jsonl
+/performance/latest/
+/performance/pending.json
+
 # Signing material must be provided by the developer machine or CI secrets.
 certificate/
 *.mobileprovision

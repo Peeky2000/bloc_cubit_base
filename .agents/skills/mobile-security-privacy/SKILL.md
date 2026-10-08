@@ -28,10 +28,26 @@ Check the relevant threats:
 - analytics consent and data minimization before adding user/device events;
 - signing, Firebase config and CI secrets without printing secret values.
 
+## Attack classes
+
+For a security review or audit, read
+[references/mobile-attack-classes.md](references/mobile-attack-classes.md).
+It lists Flutter-specific attack classes (deep links, WebView bridges,
+exported components, storage after logout, token handling, network) and the
+verdict and severity rules below in detail.
+
 ## Finding standard
 
+Every candidate names the lower-trust actor, the input it controls, the
+control that should stop it, the boundary crossed and the concrete result.
 Provide the exact source and reachable condition, exposed asset or user impact,
-and a verification step. Do not copy live credentials into reports. Separate a
+and a verification step.
+
+Classify each candidate as `confirmed` (complete source trace and safe local
+evidence; gets a severity from critical to informational), `needs_validation`
+(decided by a fact outside the repo; name that fact; no severity) or
+`rejected` (disproved; keep it listed). Try to disprove every candidate before
+reporting it. Do not copy live credentials into reports. Separate a
 confirmed leak from a potential exposure. A review request does not authorize
 rotation, deletion or production configuration changes.
 

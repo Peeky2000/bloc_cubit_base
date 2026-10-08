@@ -8,8 +8,8 @@ trong base này, sau đó chỉ đọc skill khớp với phần việc đang l�
 
 | Nhu cầu | Skill chính | Kết quả cần nhận |
 |---|---|---|
-| Review PR hoặc source Flutter | [`flutter-code-review`](../../.agents/skills/flutter-code-review/SKILL.md) | Finding theo mức độ, đường dẫn/dòng, điều kiện gây lỗi, bằng chứng và test gap |
-| Chẩn đoán jank, startup chậm, memory tăng | [`flutter-performance`](../../.agents/skills/flutter-performance/SKILL.md) | Scenario profile, số đo trước/sau, nguyên nhân được kiểm chứng hoặc giả thuyết có giới hạn |
+| Review PR hoặc source Flutter (bắt đầu bằng `derry review plan`) | [`flutter-code-review`](../../.agents/skills/flutter-code-review/SKILL.md) | Finding theo mức độ, đường dẫn/dòng, điều kiện gây lỗi, bằng chứng và test gap |
+| Chẩn đoán jank, startup chậm, memory tăng ([cách đo](measure-performance.md)) | [`flutter-performance`](../../.agents/skills/flutter-performance/SKILL.md) | Scenario profile, số đo trước/sau, nguyên nhân được kiểm chứng hoặc giả thuyết có giới hạn |
 | Chọn cấp test, viết regression test | [`flutter-testing`](../../.agents/skills/flutter-testing/SKILL.md) | Test nhỏ nhất chứng minh hành vi, gồm failure/concurrency path liên quan |
 | Token, PII, permission, log, Firebase data | [`mobile-security-privacy`](../../.agents/skills/mobile-security-privacy/SKILL.md) | Data-flow/threat finding, tác động và cách xác minh, không lộ secret |
 | Resume/background, dispose, platform channel | [`mobile-platform-lifecycle`](../../.agents/skills/mobile-platform-lifecycle/SKILL.md) | Ownership/transition audit, test đúng cấp và khoảng trống device verification |

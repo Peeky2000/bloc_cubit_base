@@ -66,6 +66,26 @@ toolkit:
     (scripts):
       - ./scripts/quality_sli_common.sh
 
+review:
+  plan:
+    (description): Liệt kê file cần review và luật áp cho từng file (thay đổi chưa commit)
+    (scripts):
+      - dart run tool/review/plan.dart
+
+perf:
+  run:
+    (description): Benchmark profile-mode opt-in trên thiết bị; chỉ chạy khi được yêu cầu
+    (scripts):
+      - dart run tool/perf.dart
+  diagnose:
+    (description): Đo kèm một lần chạy chẩn đoán để chỉ ra widget tốn thời gian nhất
+    (scripts):
+      - dart run tool/perf.dart --diagnose
+  approve:
+    (description): Đo lại và duyệt baseline performance; không bao giờ chạy tự động
+    (scripts):
+      - dart run tool/perf.dart --approve-baseline
+
 run:
   local:
     (description): Chạy config local trên native flavor dev

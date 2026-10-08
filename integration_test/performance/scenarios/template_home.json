@@ -1,0 +1,7 @@
+{
+  "id": "template_home",
+  "description": "Example only: first render of the base template's empty Home screen",
+  "routes": ["/home"],
+  "test": "integration_test/performance_test.dart",
+  "enabled": false
+}

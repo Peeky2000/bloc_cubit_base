@@ -18,6 +18,7 @@ không cần đọc tất cả ngay; hãy chọn đúng mục tiêu trong bảng
 | Làm widget/design system | [UI toolkit](architecture/ui-toolkit.md) → [dùng sli_common](guides/use-sli-common.md) |
 | Thêm môi trường/flavor | [Environment và bootstrap](architecture/environment-bootstrap.md) → [thêm môi trường](guides/add-environment.md) |
 | Build APK/AAB/IPA | [Derry/build/Fastlane](guides/use-derry-and-build.md) |
+| Đo hiệu năng app | [Đo hiệu năng app](guides/measure-performance.md) → [chuẩn và ngưỡng](performance/standards.md) → [từ AC tới kịch bản](performance/ac-to-scenario.md) → [hợp đồng benchmark](../PERFORMANCE.md) → [quy trình agent](performance/agent-loop.md) |
 | Phân phối Firebase hoặc Store | [Derry/build/Fastlane](guides/use-derry-and-build.md) → [Android Fastlane](../android/fastlane/README.md) / [iOS Fastlane](../ios/fastlane/README.md) |
 | Xem vì sao chọn công nghệ hiện tại | [Danh sách ADR](adr/README.md) |
 | Xem việc đã làm và việc còn lại | [Trạng thái modernization](modernization-status.md) → [roadmap](plan/2026-08-26-base-modernization.md) |

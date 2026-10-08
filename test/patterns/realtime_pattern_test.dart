@@ -6,8 +6,9 @@
 // The domain port is `Stream<OrderRealtimeEvent>`. Two adapters implement it:
 // WebSocket (when the backend has a socket) and polling (when it does not).
 // The Cubit is the same for both. The WebSocket transport needs
-// `web_socket_channel` as a direct dependency (D-0005), so the transport sits
-// behind `RealtimeSocketFactory`; reconnect, resubscribe and parsing are
+// `web_socket_channel` ^3.0.3 as a direct dependency (D-0005), so it sits
+// behind `RealtimeSocketFactory`; its adapter below was analyzed against the
+// real package. Reconnect, re-authentication, resubscribe and parsing are
 // compiled and tested here with a fake socket.
 
 import 'dart:async';
@@ -94,8 +95,9 @@ class OrderTrackingUseCase {
 // lib/data/datasource/remote/realtime_backoff.dart  (shared)
 // ---------------------------------------------------------------------------
 
-/// 1 s, 2 s, 4 s ... capped at 30 s, plus up to 20 % jitter so clients do not
-/// reconnect in lockstep after a server restart.
+/// "Full jitter": a random delay in [0, min(30 s, 1 s * 2^attempt)], so
+/// clients spread out instead of reconnecting in lockstep after a server
+/// restart (AWS Architecture Blog, "Exponential Backoff And Jitter").
 final class RealtimeBackoff {
   RealtimeBackoff({
     this.initial = const Duration(seconds: 1),
@@ -108,9 +110,8 @@ final class RealtimeBackoff {
   final Random _random;
 
   Duration delay(int attempt) {
-    final base = initial * pow(2, min(attempt, 16)).toInt();
-    final capped = base > max ? max : base;
-    return capped * (1 + 0.2 * _random.nextDouble());
+    final ceiling = initial * pow(2, min(attempt, 16)).toInt();
+    return (ceiling > max ? max : ceiling) * _random.nextDouble();
   }
 }
 
@@ -133,27 +134,81 @@ abstract class RealtimeSocket {
 }
 
 abstract class RealtimeSocketFactory {
-  /// Opens and authenticates a socket; throws when it cannot.
+  /// Opens a socket with a fresh credential on every call. Throws
+  /// [RealtimeFailure] when the session cannot authenticate (terminal); any
+  /// other error is a transient failure that the repo retries.
   Future<RealtimeSocket> connect(Uri uri);
 }
 
-// Adapter sketch for lib/data/datasource/remote/web_socket_factory.dart.
-// Needs `web_socket_channel` as a direct dependency (D-0005).
+// Adapter for lib/data/datasource/remote/web_socket_factory.dart, analyzed
+// with web_socket_channel 3.0.3 (`flutter analyze`: no issues).
+//
+//   import 'dart:async';
+//   import 'dart:io' show WebSocketException;
+//
+//   import 'package:web_socket_channel/io.dart';
+//   import 'package:web_socket_channel/status.dart' as ws_status;
+//   import 'package:web_socket_channel/web_socket_channel.dart';
+//
+//   /// `POST /realtime/tickets` through ApiClient: a single-use ticket valid
+//   /// for about 60 s. Going through Dio means SessionInterceptor refreshes an
+//   /// expired access token first, and a failed refresh ends the session.
+//   abstract class RealtimeTicketSource {
+//     /// Throws `RealtimeFailure(unauthorized)` on 401/403; other errors are
+//     /// transient.
+//     Future<String> ticket();
+//   }
 //
 //   @LazySingleton(as: RealtimeSocketFactory)
 //   class WebSocketChannelFactory implements RealtimeSocketFactory {
-//     WebSocketChannelFactory(this._tokens);
-//     final TokenProvider _tokens;
+//     WebSocketChannelFactory(this._tickets);
+//
+//     final RealtimeTicketSource _tickets;
 //
 //     @override
 //     Future<RealtimeSocket> connect(Uri uri) async {
+//       final ticket = await _tickets.ticket(); // fresh on every (re)connect
 //       final channel = IOWebSocketChannel.connect(
-//         uri,                                   // wss:// only
-//         headers: {'Authorization': 'Bearer ${_tokens.token.accessToken}'},
-//         pingInterval: const Duration(seconds: 20),
+//         uri, // wss:// from AppConfig
+//         headers: {'Authorization': 'Bearer $ticket'},
+//         pingInterval: const Duration(seconds: 20), // no pong → closed, 1001
+//         connectTimeout: const Duration(seconds: 10), // default: never
 //       );
-//       await channel.ready;                     // throws when it cannot open
-//       return _ChannelSocket(channel);          // maps stream/closeCode/sink
+//       try {
+//         await channel.ready;
+//       } on WebSocketChannelException catch (error) {
+//         final inner = error.inner;
+//         final status =
+//             inner is WebSocketException ? inner.httpStatusCode : null;
+//         if (status == 401 || status == 403) {
+//           throw const RealtimeFailure(RealtimeFailureCode.unauthorized);
+//         }
+//         rethrow; // transient: the repo retries with backoff
+//       }
+//       return _ChannelSocket(channel);
+//     }
+//   }
+//
+//   class _ChannelSocket implements RealtimeSocket {
+//     _ChannelSocket(this._channel);
+//
+//     final WebSocketChannel _channel;
+//
+//     @override
+//     Stream<String> get messages =>
+//         _channel.stream.where((m) => m is String).cast<String>();
+//
+//     @override
+//     int? get closeCode => _channel.closeCode;
+//
+//     @override
+//     void send(String message) => _channel.sink.add(message);
+//
+//     @override
+//     Future<void> close() async {
+//       // Clients may only send 1000 or 3000-4999; `status.goingAway` (1001)
+//       // throws in package:web_socket. Do not wait for the closing handshake.
+//       unawaited(_channel.sink.close(ws_status.normalClosure));
 //     }
 //   }
 
@@ -165,7 +220,8 @@ abstract class RealtimeSocketFactory {
 /// client → `{"type":"subscribe","topic":"order","orderId":"o-1"}`
 /// server → `{"type":"order.snapshot",...}` once, then `{"type":"order.status",
 /// "orderId":"o-1","status":"shipping","updatedAt":"2026-10-08T09:00:00Z"}`.
-/// Close code 4401 = token rejected, 4404 = order not visible to this user.
+/// Close code 4401 = credential rejected or session expired on the server,
+/// 4404 = order not visible to this user.
 // @LazySingleton(as: OrderRealtimeRepo)
 class WebSocketOrderRealtimeRepo implements OrderRealtimeRepo {
   WebSocketOrderRealtimeRepo(
@@ -214,11 +270,13 @@ class WebSocketOrderRealtimeRepo implements OrderRealtimeRepo {
               'orderId': orderId,
             }),
           );
+          var wentLive = false;
           await for (final raw in open.messages) {
             final event = _parse(raw, orderId);
             if (event == null || cancelled) continue;
             if (event.$1) {
               attempt = 0;
+              wentLive = true;
               controller.add(
                 const RealtimeConnectionChanged(RealtimeConnection.live),
               );
@@ -226,7 +284,11 @@ class WebSocketOrderRealtimeRepo implements OrderRealtimeRepo {
             controller.add(event.$2);
           }
           final failure = switch (open.closeCode) {
-            unauthorizedCloseCode => RealtimeFailureCode.unauthorized,
+            // 4401 on a live socket: the session expired while connected.
+            // Reconnecting fetches a fresh credential. 4401 straight after a
+            // fresh credential cannot be fixed by retrying.
+            unauthorizedCloseCode when !wentLive =>
+              RealtimeFailureCode.unauthorized,
             notFoundCloseCode => RealtimeFailureCode.notFound,
             _ => null,
           };
@@ -234,6 +296,10 @@ class WebSocketOrderRealtimeRepo implements OrderRealtimeRepo {
             controller.addError(RealtimeFailure(failure));
             break;
           }
+        } on RealtimeFailure catch (failure) {
+          // The session cannot issue a credential: retrying cannot help.
+          if (!cancelled) controller.addError(failure);
+          break;
         } catch (_) {
           // Could not connect: retry below.
         }
@@ -484,8 +550,12 @@ class OrderTrackingCubit extends BaseCubit<OrderTrackingState> {
   final OrderTrackingUseCase _useCase;
   StreamSubscription<OrderRealtimeEvent>? _subscription;
 
+  /// True only while [pause] holds a stream that [resume] should restart.
+  bool _paused = false;
+
   /// Called from the screen builder with the route argument.
   void start(String orderId) {
+    _paused = false;
     unawaited(_subscription?.cancel());
     emit(
       state.copyWith(
@@ -502,15 +572,22 @@ class OrderTrackingCubit extends BaseCubit<OrderTrackingState> {
   }
 
   /// Screen: `AppLifecycleListener(onHide: cubit.pause, onShow: cubit.resume)`
-  /// so no socket or timer runs in the background.
+  /// so no socket or timer runs in the background. The snapshot sent after
+  /// the reconnect covers what changed meanwhile.
   Future<void> pause() async {
-    await _subscription?.cancel();
+    final subscription = _subscription;
+    if (subscription == null) return;
     _subscription = null;
+    _paused = true;
+    await subscription.cancel();
   }
 
+  /// Restarts only what [pause] stopped; a stream that ended with a
+  /// [RealtimeFailure] waits for the user's [reconnect].
   void resume() {
     final orderId = state.orderId;
-    if (orderId != null && _subscription == null) start(orderId);
+    if (!_paused || orderId == null) return;
+    start(orderId);
   }
 
   /// Retry action of the error effect.
@@ -578,14 +655,18 @@ void main() {
   });
 
   group('RealtimeBackoff', () {
-    test('doubles, caps at max and adds at most 20 % jitter', () {
-      final backoff = RealtimeBackoff(random: Random(1));
+    test('full jitter below a ceiling that doubles and caps at 30 s', () {
+      final random = RealtimeBackoff(random: Random(1));
+      for (var i = 0; i < 10; i++) {
+        final ceiling = min(1000 * pow(2, i), 30000);
+        expect(random.delay(i).inMilliseconds, inInclusiveRange(0, ceiling));
+      }
 
-      final delays = [for (var i = 0; i < 8; i++) backoff.delay(i)];
-
-      expect(delays[0].inMilliseconds, inInclusiveRange(1000, 1200));
-      expect(delays[1].inMilliseconds, inInclusiveRange(2000, 2400));
-      expect(delays[7].inMilliseconds, inInclusiveRange(30000, 36000));
+      final midpoint = RealtimeBackoff(random: _FixedRandom(0.5));
+      expect(
+        [for (var i = 0; i < 7; i++) midpoint.delay(i).inMilliseconds],
+        [500, 1000, 2000, 4000, 8000, 15000, 15000],
+      );
     });
   });
 
@@ -600,7 +681,7 @@ void main() {
       repo = WebSocketOrderRealtimeRepo(
         sockets,
         endpoint: endpoint,
-        backoff: RealtimeBackoff(random: Random(1)),
+        backoff: RealtimeBackoff(random: _FixedRandom(0.5)),
         wait: (d) async => waits.add(d),
       );
     });
@@ -722,10 +803,7 @@ void main() {
       }
       await sub.cancel();
 
-      expect(
-        waits.map((d) => d.inMilliseconds),
-        everyElement(inInclusiveRange(1000, 1200)),
-      );
+      expect(waits.map((d) => d.inMilliseconds), [500, 500, 500]);
     });
 
     test('a rejected token ends the stream with a typed failure', () async {
@@ -747,6 +825,46 @@ void main() {
         RealtimeFailureCode.unauthorized,
       );
       expect(sockets.opened, hasLength(1));
+    });
+
+    test(
+      'a session expiring while live reconnects with a new credential',
+      () async {
+        final errors = <Object>[];
+        final sub = repo.watchOrder('o-1').listen((_) {}, onError: errors.add);
+        await pumpEventQueue();
+        sockets.opened.single.receive(
+          status('order.snapshot', OrderStatus.confirmed, t0),
+        );
+        await pumpEventQueue();
+
+        await sockets.opened.single.drop(
+          closeCode: WebSocketOrderRealtimeRepo.unauthorizedCloseCode,
+        );
+        await pumpEventQueue();
+        await sub.cancel();
+
+        expect(errors, isEmpty);
+        expect(sockets.connects, 2);
+        expect(sockets.opened.last.sent.single, contains('subscribe'));
+      },
+    );
+
+    test('a session that cannot issue a credential ends the stream', () async {
+      sockets.failWith = const RealtimeFailure(
+        RealtimeFailureCode.unauthorized,
+      );
+
+      await expectLater(
+        repo.watchOrder('o-1'),
+        emitsInOrder([
+          isA<RealtimeConnectionChanged>(),
+          emitsError(isA<RealtimeFailure>()),
+          emitsDone,
+        ]),
+      );
+      expect(sockets.connects, 1);
+      expect(waits, isEmpty);
     });
 
     test('cancelling closes the socket and stops reconnecting', () async {
@@ -957,6 +1075,17 @@ void main() {
       expect(repo.listens, 2);
     });
 
+    test('resume does not restart a stream that ended in failure', () async {
+      cubit.start('o-1');
+      repo.fail(const RealtimeFailure(RealtimeFailureCode.notFound));
+      await pumpEventQueue();
+
+      await cubit.pause();
+      cubit.resume();
+
+      expect(repo.listens, 1);
+    });
+
     test('close cancels the stream', () async {
       cubit.start('o-1');
 
@@ -971,6 +1100,22 @@ String _describe(OrderRealtimeEvent event) => switch (event) {
   RealtimeConnectionChanged(:final connection) => connection.name,
   OrderStatusChanged(:final status) => status.name,
 };
+
+/// Makes jitter deterministic: every draw returns [value].
+class _FixedRandom implements Random {
+  _FixedRandom(this.value);
+
+  final double value;
+
+  @override
+  double nextDouble() => value;
+
+  @override
+  int nextInt(int max) => (value * max).floor();
+
+  @override
+  bool nextBool() => value >= 0.5;
+}
 
 class _FakeSocket implements RealtimeSocket {
   final StreamController<String> _incoming = StreamController<String>();
@@ -1003,9 +1148,16 @@ class _FakeSocket implements RealtimeSocket {
 class _FakeSocketFactory implements RealtimeSocketFactory {
   final List<_FakeSocket> opened = [];
   int failNextConnects = 0;
+  RealtimeFailure? failWith;
+
+  /// Every call stands for one fresh credential in the real adapter.
+  int connects = 0;
 
   @override
   Future<RealtimeSocket> connect(Uri uri) async {
+    connects++;
+    final failure = failWith;
+    if (failure != null) throw failure;
     if (failNextConnects > 0) {
       failNextConnects--;
       throw NetworkIssueException();

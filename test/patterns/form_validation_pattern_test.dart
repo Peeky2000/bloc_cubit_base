@@ -4,8 +4,9 @@
 // Decision: docs/decisions/D-0002-form-va-validation-co-kieu.md
 //
 // Each section is one file of a real feature ("edit shop"). The Cubit owns
-// the input values and typed field errors; the Screen owns the
-// TextEditingControllers, FocusNodes and the l10n text of each error.
+// the input values, typed field errors and when they show ("reward early,
+// punish late"); the Screen owns the TextEditingControllers, FocusNodes and
+// the l10n text of each error.
 
 import 'dart:async';
 
@@ -113,8 +114,19 @@ final class ShopFormErrors extends Equatable {
     return null;
   }
 
-  ShopFormErrors withEmail(ShopEmailInputError? email) =>
-      ShopFormErrors(shopName: shopName, email: email, phone: phone);
+  bool has(ShopFormField field) => switch (field) {
+    ShopFormField.shopName => shopName != null,
+    ShopFormField.email => email != null,
+    ShopFormField.phone => phone != null,
+  };
+
+  /// This value with the error of [field] taken from [other].
+  ShopFormErrors withFieldFrom(ShopFormField field, ShopFormErrors other) =>
+      ShopFormErrors(
+        shopName: field == ShopFormField.shopName ? other.shopName : shopName,
+        email: field == ShopFormField.email ? other.email : email,
+        phone: field == ShopFormField.phone ? other.phone : phone,
+      );
 
   @override
   List<Object?> get props => [shopName, email, phone];
@@ -228,17 +240,18 @@ class ShopFormState extends BaseAppState<Object> {
     super.error,
     required this.input,
     required this.errors,
-    required this.submitted,
+    this.edited = const {},
     this.effect,
   });
 
+  /// Edit forms pass the stored values; the Screen copies them into its
+  /// controllers once.
   factory ShopFormState.initial({
     ShopFormInput input = const ShopFormInput(),
   }) => ShopFormState(
     loading: LoadingStatus.initial,
     input: input,
     errors: ShopFormErrors.none,
-    submitted: false,
   );
 
   final ShopFormInput input;
@@ -246,20 +259,24 @@ class ShopFormState extends BaseAppState<Object> {
   /// What the Screen shows under each field.
   final ShopFormErrors errors;
 
-  /// False until the first submit. Before it, typing shows no errors; after
-  /// it, every change re-validates so errors disappear as the user fixes them.
-  final bool submitted;
+  /// Fields the user changed. Losing focus validates only these, so tabbing
+  /// through an untouched form shows nothing.
+  final Set<ShopFormField> edited;
 
   final UiEffect<ShopFormEffect>? effect;
 
   bool get isSubmitting => loading == LoadingStatus.loading;
+
+  /// False while saving and after a save until the input changes, so a
+  /// double tap or a tap during the pop sends once.
+  bool get canSubmit => !isSubmitting && loading != LoadingStatus.complete;
 
   ShopFormState copyWith({
     LoadingStatus? loading,
     Object? error,
     ShopFormInput? input,
     ShopFormErrors? errors,
-    bool? submitted,
+    Set<ShopFormField>? edited,
     UiEffect<ShopFormEffect>? effect,
   }) {
     return ShopFormState(
@@ -267,13 +284,13 @@ class ShopFormState extends BaseAppState<Object> {
       error: error,
       input: input ?? this.input,
       errors: errors ?? this.errors,
-      submitted: submitted ?? this.submitted,
+      edited: edited ?? this.edited,
       effect: effect ?? this.effect,
     );
   }
 
   @override
-  List<Object?> get props => [loading, error, input, errors, submitted, effect];
+  List<Object?> get props => [loading, error, input, errors, edited, effect];
 }
 
 // ---------------------------------------------------------------------------
@@ -287,27 +304,52 @@ class ShopFormCubit extends BaseCubit<ShopFormState> {
   final ShopUseCase _useCase;
 
   void onShopNameChanged(String value) =>
-      _onInput(state.input.copyWith(shopName: value));
+      _onInput(ShopFormField.shopName, state.input.copyWith(shopName: value));
 
   void onEmailChanged(String value) =>
-      _onInput(state.input.copyWith(email: value));
+      _onInput(ShopFormField.email, state.input.copyWith(email: value));
 
   void onPhoneChanged(String value) =>
-      _onInput(state.input.copyWith(phone: value));
+      _onInput(ShopFormField.phone, state.input.copyWith(phone: value));
 
-  void _onInput(ShopFormInput input) {
+  /// Reward early: a field that shows an error is re-validated on every
+  /// change, so the error goes away as soon as the value is fixed. A field
+  /// without an error stays quiet while the user is still typing.
+  void _onInput(ShopFormField field, ShopFormInput input) {
     emit(
       state.copyWith(
         input: input,
-        errors: state.submitted ? ShopFormValidator.validate(input) : null,
+        edited: {...state.edited, field},
+        errors: state.errors.has(field)
+            ? state.errors.withFieldFrom(
+                field,
+                ShopFormValidator.validate(input),
+              )
+            : null,
+        // After a save, a change makes the form submittable again.
+        loading: state.loading == LoadingStatus.complete
+            ? LoadingStatus.initial
+            : null,
       ),
     );
   }
 
+  /// Punish late: the Screen calls this when a field loses focus. Only a
+  /// field the user changed is validated.
+  void onFieldUnfocused(ShopFormField field) {
+    if (!state.edited.contains(field)) return;
+    final errors = state.errors.withFieldFrom(
+      field,
+      ShopFormValidator.validate(state.input),
+    );
+    if (errors != state.errors) emit(state.copyWith(errors: errors));
+  }
+
+  /// Validates every field, including untouched required ones.
   Future<void> submit() async {
-    if (state.isSubmitting) return;
+    if (!state.canSubmit) return;
     final errors = ShopFormValidator.validate(state.input);
-    emit(state.copyWith(errors: errors, submitted: true));
+    emit(state.copyWith(errors: errors));
     final invalid = errors.firstInvalidField;
     if (invalid != null) {
       _emitEffect(ShopFormFocusFieldEffect(invalid));
@@ -327,7 +369,10 @@ class ShopFormCubit extends BaseCubit<ShopFormState> {
           emit(
             state.copyWith(
               loading: LoadingStatus.error,
-              errors: state.errors.withEmail(ShopEmailInputError.taken),
+              errors: state.errors.withFieldFrom(
+                ShopFormField.email,
+                const ShopFormErrors(email: ShopEmailInputError.taken),
+              ),
             ),
           );
           _emitEffect(const ShopFormFocusFieldEffect(ShopFormField.email));
@@ -350,7 +395,7 @@ class ShopFormCubit extends BaseCubit<ShopFormState> {
 }
 
 // ---------------------------------------------------------------------------
-// lib/presentation/shop_form/view/shop_form_screen.dart  (mapping excerpt)
+// lib/presentation/shop_form/view/shop_form_screen.dart  (excerpt)
 //
 //   String? _shopNameError(BuildContext context, ShopNameInputError? e) =>
 //       switch (e) {
@@ -359,8 +404,16 @@ class ShopFormCubit extends BaseCubit<ShopFormState> {
 //         null => null,
 //       };
 //
-// The full Screen wiring (controllers, focus nodes, listener) is in
-// references/form_validation.md.
+//   // initState: one listener per FocusNode
+//   _shopNameFocus.addListener(() {
+//     if (!_shopNameFocus.hasFocus) {
+//       _cubit.onFieldUnfocused(ShopFormField.shopName);
+//     }
+//   });
+//
+// The full Screen wiring (AutofillGroup, CommonTextField, focus and the iOS
+// announcement on ShopFormFocusFieldEffect) is in
+// references/form_validation.md and was checked with `flutter analyze`.
 // ---------------------------------------------------------------------------
 
 // ===========================================================================
@@ -418,11 +471,35 @@ void main() {
         ..onPhoneChanged('0912345678');
     }
 
-    test('typing before the first submit shows no errors', () {
+    test('typing shows no errors while the field has none', () {
       cubit.onEmailChanged('not-an-email');
 
       expect(cubit.state.errors, ShopFormErrors.none);
       expect(cubit.state.input.email, 'not-an-email');
+    });
+
+    test('leaving an edited field validates it; untouched stays quiet', () {
+      cubit
+        ..onFieldUnfocused(ShopFormField.shopName)
+        ..onEmailChanged('shop@')
+        ..onFieldUnfocused(ShopFormField.email);
+
+      expect(cubit.state.errors.shopName, isNull);
+      expect(cubit.state.errors.email, ShopEmailInputError.invalid);
+    });
+
+    test('a field in error re-validates on every change', () {
+      cubit
+        ..onEmailChanged('shop@')
+        ..onFieldUnfocused(ShopFormField.email)
+        ..onEmailChanged('');
+      expect(cubit.state.errors.email, ShopEmailInputError.required);
+
+      cubit.onEmailChanged('shop@example.com');
+      expect(cubit.state.errors.email, isNull);
+
+      cubit.onEmailChanged('shop@');
+      expect(cubit.state.errors.email, isNull, reason: 'punish late');
     });
 
     test('invalid submit shows typed errors, focuses, sends nothing', () async {
@@ -431,13 +508,12 @@ void main() {
       expect(cubit.state.errors.shopName, ShopNameInputError.required);
       expect(cubit.state.errors.email, ShopEmailInputError.required);
       expect(cubit.state.errors.phone, isNull);
-      expect(cubit.state.submitted, isTrue);
       final effect = cubit.state.effect!.value as ShopFormFocusFieldEffect;
       expect(effect.field, ShopFormField.shopName);
       expect(repo.updates, isEmpty);
     });
 
-    test('after a submit, each change re-validates live', () async {
+    test('after a submit, fields in error clear as they are fixed', () async {
       await cubit.submit();
 
       cubit.onShopNameChanged('Shop A');
@@ -481,6 +557,22 @@ void main() {
 
       expect(repo.updates, hasLength(1));
     });
+
+    test(
+      'after a save, submit sends nothing until the input changes',
+      () async {
+        fillValid();
+        await cubit.submit();
+        await cubit.submit();
+        expect(repo.updates, hasLength(1));
+        expect(cubit.state.canSubmit, isFalse);
+
+        cubit.onShopNameChanged('Shop B');
+        expect(cubit.state.canSubmit, isTrue);
+        await cubit.submit();
+        expect(repo.updates, hasLength(2));
+      },
+    );
 
     test('a server field error lands on that field', () async {
       fillValid();

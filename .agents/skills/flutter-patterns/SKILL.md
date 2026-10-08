@@ -37,12 +37,12 @@ python3 tool/decisions/decisions.py search "<concern>"
 
 | Pattern | Reference | Reference code and tests | Decision |
 |---|---|---|---|
-| Pagination: pull-to-refresh + load more | [references/pagination.md](references/pagination.md) | `test/patterns/pagination_pattern_test.dart` | D-0001 |
+| Pagination: `RefreshIndicator` + `PaginatedListView`, page numbers, retry button | [references/pagination.md](references/pagination.md) | `test/patterns/pagination_pattern_test.dart` | D-0001 |
 | Forms and validation | [references/form_validation.md](references/form_validation.md) | `test/patterns/form_validation_pattern_test.dart` | D-0002 |
-| Offline cache (stale-while-revalidate) | [references/offline_cache.md](references/offline_cache.md) | `test/patterns/offline_cache_pattern_test.dart` | D-0003 |
-| Image upload with progress | [references/image_upload.md](references/image_upload.md) | `test/patterns/image_upload_pattern_test.dart` | D-0004 |
-| Realtime: stream, WebSocket, polling | [references/realtime.md](references/realtime.md) | `test/patterns/realtime_pattern_test.dart` | D-0005 |
-| Deep links | [references/deep_link.md](references/deep_link.md) | `test/patterns/deep_link_pattern_test.dart` | D-0006 |
+| Offline cache: stale-while-revalidate, `maxStale` 7 days, per-user keys cleared on sign-out | [references/offline_cache.md](references/offline_cache.md) | `test/patterns/offline_cache_pattern_test.dart` | D-0003 |
+| Image upload: system picker, re-encode without EXIF/GPS, progress, cancel | [references/image_upload.md](references/image_upload.md) | `test/patterns/image_upload_pattern_test.dart` | D-0004 |
+| Realtime: WebSocket with ticket auth, full-jitter backoff, pause in background | [references/realtime.md](references/realtime.md) | `test/patterns/realtime_pattern_test.dart` | D-0005 |
+| Deep links: verified App Links/Universal Links, allow-listed routes | [references/deep_link.md](references/deep_link.md) | `test/patterns/deep_link_pattern_test.dart` | D-0006 |
 | Push notifications | [references/push_notification.md](references/push_notification.md) | `test/patterns/push_notification_pattern_test.dart` | D-0007 |
 | Runtime permissions | [references/permission.md](references/permission.md) | `test/patterns/permission_pattern_test.dart` | D-0008 |
 
@@ -59,10 +59,19 @@ Decision files: `docs/decisions/D-000N-*.md`.
 3. Copy the tests into `test/presentation/<feature>_cubit_test.dart` and
    the data-layer tests next to their sources; keep every case in the
    reference's checklist.
-4. Patterns that need a plugin not yet in `pubspec.yaml` (upload picker,
-   WebSocket, deep links, push, permissions) define the domain port and fake
-   now. Adding the plugin and the adapter is part of the feature that first
-   needs it, after the PM accepts the decision.
+4. Patterns that need a plugin not yet in `pubspec.yaml` define the domain
+   port and fake now; the feature that first needs it adds the plugin, the
+   adapter from the reference (already analyzed against the real package) and
+   the native setup listed there. Plugins and versions:
+
+   | Pattern | Packages |
+   |---|---|
+   | Image upload | `image_picker ^1.2.4`, `flutter_image_compress ^2.5.1` |
+   | Realtime | `web_socket_channel ^3.0.3` |
+   | Deep links | `app_links ^7.2.2` |
+   | Push | `firebase_messaging ^16.7.0` (needs `firebase_core ^4.15.0`, iOS 15), `flutter_local_notifications ^19.5.0` |
+   | Permissions | `permission_handler ^12.0.3` |
+   | Large offline cache | `drift >=2.34.4 <2.35.0`, `drift_flutter ^0.3.1` (drift 2.35 needs injectable 3) |
 
 ## Shared rules
 

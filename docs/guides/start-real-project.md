@@ -117,10 +117,21 @@ Không chặn dự án thật nhưng nên xử lý khi có thời gian.
   offline, upload ảnh, realtime, deep link, push notification, quyền hệ thống:
   skill `flutter-patterns`, code mẫu có test trong `test/patterns/`, quyết
   định D-0001 đến D-0008 đang chờ duyệt. 2026-10-08.
-- [ ] **Duyệt các quyết định D-0001 đến D-0008** trong
-  [sổ quyết định](../decisions/README.md): đổi trạng thái sang `accepted` hoặc
-  chỉnh nội dung. Các mẫu dùng plugin (push, deep link, quyền, chọn ảnh) mới
-  chỉ chốt hình dạng cổng và tên plugin đề xuất.
+- [x] **Duyệt các quyết định D-0001 đến D-0008.** Đã đối chiếu best practice
+  từ tài liệu chính thức, sửa 3 lỗi trong code mẫu deep link và xin quyền, rồi
+  chấp nhận. 2026-10-08.
+- [x] **Gỡ quyền đọc ảnh và video do `open_filex` (qua `alice`) tự thêm** vào
+  AndroidManifest; Google Play từ chối các quyền này với app chỉ chọn ảnh.
+  2026-10-08.
+- [ ] **Việc phải làm khi áp dụng mẫu lần đầu,** đã ghi trong mục "Duyệt" của
+  từng quyết định:
+  - phân trang: thay `LoadingListScreen` và gỡ `pull_to_refresh`;
+  - upload: thêm `ApiHandler.upload`, sửa ánh xạ lỗi ngoại tuyến;
+  - push: nâng `firebase_core` 4, `firebase_auth` 6, iOS tối thiểu 15;
+  - realtime: backend cần endpoint cấp vé và mã đóng kết nối;
+  - deep link: cần host thật, Apple Team ID, SHA-256 chứng chỉ ký Play;
+  - cache: thêm `UserCacheCleaner` vào `SessionRepoImpl.end()`;
+  - form: thêm `autofillHints` cho `CommonTextField` trong `sli_common`.
 - [ ] **Bật Version Health với Firebase thật** khi dự án có Firebase project
   cho từng flavor.
 

@@ -6,8 +6,9 @@
 // `permission_handler` is only a transitive dependency (through sli_common),
 // and `PermissionUtil` in sli_common shows toasts and dialogs itself, which a
 // Cubit cannot test. The pattern puts permission_handler behind a domain
-// port (adapter sketch below; the app adds it as a direct dependency per
-// D-0008) and keeps the flow in a testable Cubit.
+// port (adapter sketch below, verified with `flutter analyze` against
+// permission_handler 12.0.3 and 13.0.2; the app adds it as a direct
+// dependency per D-0008) and keeps the flow in a testable Cubit.
 
 import 'dart:async';
 
@@ -22,23 +23,26 @@ import 'package:flutter_test/flutter_test.dart';
 // ---------------------------------------------------------------------------
 
 /// Capabilities the app asks for. Add a value only when a feature needs it
-/// and the manifest/Info.plist declares it.
-enum AppPermission { camera, photos, location, notifications }
+/// and the manifest/Info.plist declares it. No `photos`: picking a photo uses
+/// the system picker (image_picker, D-0004), which needs no permission; full
+/// library access needs its own decision (Google Play restricts it).
+enum AppPermission { camera, location, notifications }
 
 /// One answer, the same on Android and iOS.
 enum PermissionAccess {
   /// Full access.
   granted,
 
-  /// iOS partial photo library or provisional notifications. Treat as
+  /// iOS provisional notifications (or partial photo access). Treat as
   /// usable; the feature works with what it got.
   limited,
 
-  /// Not granted, and asking again shows the system dialog.
+  /// Not granted. On Android `status` says this even after "don't ask
+  /// again": the OS cannot tell without asking, so only `request` decides.
   denied,
 
-  /// Not granted, and the system dialog will not appear again (Android
-  /// "don't ask again", iOS after the first refusal). Only Settings helps.
+  /// Not granted, and no system dialog will appear. iOS: after the first
+  /// refusal. Android: only as the answer of `request`. Only Settings helps.
   permanentlyDenied,
 
   /// Blocked by parental controls or MDM. Neither the app nor the user can
@@ -60,38 +64,66 @@ abstract class PermissionRepo {
 }
 
 // Adapter sketch: lib/data/repositories/permission_handler_repo.dart
-// Needs `permission_handler` as a direct dependency (D-0008).
+// Needs `permission_handler: ^12.0.3` as a direct dependency (D-0008).
+// Verified with `flutter analyze` against 12.0.3 and 13.0.2.
 //
 //   @LazySingleton(as: PermissionRepo)
 //   class PermissionHandlerRepo implements PermissionRepo {
 //     final Map<AppPermission, Future<PermissionAccess>> _inFlight = {};
+//     Future<void> _queue = Future<void>.value();
 //
-//     Permission _map(AppPermission p) => switch (p) {
+//     static Permission _map(AppPermission permission) => switch (permission) {
 //       AppPermission.camera => Permission.camera,
-//       AppPermission.photos => Permission.photos,   // Android 13+; the
 //       AppPermission.location => Permission.locationWhenInUse,
 //       AppPermission.notifications => Permission.notification,
-//     };   // Android ≤ 12 photos: Permission.storage (sdkInt from
-//          // device_info_plus), as PermissionUtil does today.
-//
-//     PermissionAccess _access(PermissionStatus s) => switch (s) {
-//       PermissionStatus.granted => PermissionAccess.granted,
-//       PermissionStatus.limited ||
-//       PermissionStatus.provisional => PermissionAccess.limited,
-//       PermissionStatus.denied => PermissionAccess.denied,
-//       PermissionStatus.permanentlyDenied =>
-//         PermissionAccess.permanentlyDenied,
-//       PermissionStatus.restricted => PermissionAccess.restricted,
 //     };
 //
-//     @override
-//     Future<PermissionAccess> status(AppPermission p) async =>
-//         _access(await _map(p).status);
+//     static PermissionAccess _access(PermissionStatus status) =>
+//         switch (status) {
+//           PermissionStatus.granted => PermissionAccess.granted,
+//           PermissionStatus.limited ||
+//           PermissionStatus.provisional => PermissionAccess.limited,
+//           PermissionStatus.denied => PermissionAccess.denied,
+//           PermissionStatus.permanentlyDenied =>
+//             PermissionAccess.permanentlyDenied,
+//           PermissionStatus.restricted => PermissionAccess.restricted,
+//         };
 //
 //     @override
-//     Future<PermissionAccess> request(AppPermission p) =>
-//         _inFlight[p] ??= _map(p).request().then(_access)
-//             .whenComplete(() => _inFlight.remove(p));
+//     Future<PermissionAccess> status(AppPermission permission) async {
+//       final access = _access(await _map(permission).status);
+//       // Android cannot tell "never asked", "Ask every time" and "don't ask
+//       // again" apart without asking; only request() may say
+//       // permanentlyDenied (what permission_handler 13.0.2 does natively).
+//       final isAndroid = defaultTargetPlatform == TargetPlatform.android;
+//       return isAndroid && access == PermissionAccess.permanentlyDenied
+//           ? PermissionAccess.denied
+//           : access;
+//     }
+//
+//     /// Same permission: one dialog, one answer. Other permissions queue,
+//     /// because Android rejects a request while another one is running.
+//     @override
+//     Future<PermissionAccess> request(AppPermission permission) {
+//       final running = _inFlight[permission];
+//       if (running != null) return running;
+//       final answer = _queue.then((_) => _ask(permission));
+//       _queue = answer;
+//       return _inFlight[permission] = answer.whenComplete(() {
+//         _inFlight.remove(permission); // block body: `=>` would await itself
+//       });
+//     }
+//
+//     Future<PermissionAccess> _ask(AppPermission permission) async {
+//       try {
+//         return _access(await _map(permission).request());
+//       } catch (error) {
+//         // Another plugin's dialog is open, or a manifest/Info.plist entry
+//         // is missing. Degrade like a refusal; the user can tap again.
+//         debugPrint('Permission request failed: $error');
+//         return PermissionAccess.denied;
+//       }
+//     }
 //
 //     @override
 //     Future<bool> openSettings() => openAppSettings();
@@ -125,8 +157,10 @@ class PermissionUseCase {
 
   final PermissionRepo _repo;
 
-  /// Step 1: check without a dialog. A rationale comes before the first
-  /// system dialog, because a refusal there may be permanent.
+  /// Step 1: check without a dialog. A rationale comes before the system
+  /// dialog, because a refusal there may be permanent. On Android `denied`
+  /// may already be permanent; `request` then answers at once, without a
+  /// dialog, and the flow lands on settings.
   Future<PermissionDecision> check(AppPermission permission) async =>
       switch (await _repo.status(permission)) {
         PermissionAccess.granted ||
@@ -431,6 +465,23 @@ void main() {
       expect(cubit.state.camera, PermissionDecision.declined);
       expect(cubit.state.effect, opened);
     });
+
+    test(
+      'Android: a permanent denial shows up only in the request answer',
+      () async {
+        repo
+          ..current = PermissionAccess.denied
+          ..answer = PermissionAccess.permanentlyDenied;
+
+        await cubit.onTapScan();
+        expect(effect(), isA<ScanReceiptShowRationaleEffect>());
+
+        await cubit.confirmRationale();
+
+        expect(cubit.state.camera, PermissionDecision.openSettings);
+        expect(effect(), isA<ScanReceiptShowSettingsEffect>());
+      },
+    );
 
     test('restricted: unavailable, no dialog at all', () async {
       repo.current = PermissionAccess.restricted;

@@ -5,8 +5,9 @@
 // Decision: docs/decisions/D-0006-deep-link-qua-domain-port.md
 //
 // `app_links` (proposed in D-0006) is not in pubspec, so the platform side is
-// a one-line adapter sketch. The parser, the gate that waits for app start
-// and sign-in, the Cubit and the SLIRouting wiring are compiled and tested.
+// an adapter sketch, verified with `flutter analyze` against app_links 7.2.2.
+// The parser, the gate that waits for app start and sign-in, the Cubit and
+// the SLIRouting wiring are compiled and tested here.
 
 import 'dart:async';
 
@@ -14,6 +15,7 @@ import 'package:bloc_cubit_base/core/base_component/base_app_state.dart';
 import 'package:bloc_cubit_base/core/base_component/base_cubit.dart';
 import 'package:bloc_cubit_base/core/base_component/ui_effect.dart';
 import 'package:bloc_cubit_base/core/common/enum.dart';
+import 'package:bloc_cubit_base/core/routing/route_observer.dart';
 import 'package:bloc_cubit_base/core/routing/routing.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +47,8 @@ final class OrderDetailLink extends AppLinkTarget {
 }
 
 /// Opens a confirmation screen. A link never accepts, pays or changes data
-/// by itself.
+/// by itself. The code is a secret, so it only arrives through a verified
+/// https link (see [AppLinkParser.parse]).
 final class InviteLink extends AppLinkTarget {
   const InviteLink(this.code);
 
@@ -75,33 +78,43 @@ final class PromotionLink extends AppLinkTarget {
 // ---------------------------------------------------------------------------
 
 /// The only place that turns a URI into a target. Anything not listed here
-/// is ignored. Push notification taps use the same parser.
+/// is ignored. Push notification taps use the same parser. Keep the paths in
+/// sync with the intent-filter and apple-app-site-association, so the OS
+/// never hands the app a link it then ignores.
 abstract final class AppLinkParser {
   /// Verified App Link / Universal Link hosts. Fork: replace with the real
   /// domain(s) that serve assetlinks.json and apple-app-site-association.
   static const Set<String> hosts = {'app.example.com'};
 
-  /// Custom scheme, for links from email or QR codes that cannot be https.
+  /// Custom scheme. Any app can register it and receive these links, so it
+  /// carries only ids that are safe to leak; secrets need https.
   static const String scheme = 'blocbase';
 
   static final RegExp _id = RegExp(r'^[A-Za-z0-9_-]{1,64}$');
 
+  /// Never throws. Reads the raw, still-encoded path: decoding
+  /// (`pathSegments`) throws on a bad escape such as `%FF`, and a `%` never
+  /// matches the id pattern anyway.
   static AppLinkTarget? parse(Uri uri) {
-    final List<String> segments;
+    if (uri.hasPort || uri.userInfo.isNotEmpty) return null;
+    final bool verified;
+    final List<String> raw;
     if (uri.scheme == 'https' && hosts.contains(uri.host)) {
-      if (uri.hasPort || uri.userInfo.isNotEmpty) return null;
-      segments = uri.pathSegments;
-    } else if (uri.scheme == scheme) {
-      segments = [uri.host, ...uri.pathSegments];
+      verified = true;
+      raw = uri.path.split('/');
+    } else if (uri.scheme == scheme && uri.host.isNotEmpty) {
+      verified = false;
+      raw = [uri.host, ...uri.path.split('/')];
     } else {
       return null;
     }
-    final parts = segments.where((s) => s.isNotEmpty).toList();
+    final parts = raw.where((s) => s.isNotEmpty).toList();
     if (parts.length != 2 || !_id.hasMatch(parts[1])) return null;
+    final id = parts[1];
     return switch (parts[0]) {
-      'orders' => OrderDetailLink(parts[1]),
-      'invites' => InviteLink(parts[1]),
-      'promotions' => PromotionLink(parts[1]),
+      'orders' => OrderDetailLink(id),
+      'promotions' => PromotionLink(id),
+      'invites' when verified => InviteLink(id),
       _ => null,
     };
   }
@@ -118,21 +131,30 @@ abstract class DeepLinkRepo {
 }
 
 // Adapter sketch: lib/data/repositories/app_links_deep_link_repo.dart
-// Needs `app_links` (D-0006).
+// Needs `app_links: ^7.2.2` (D-0006). Verified with `flutter analyze`.
+//
+//   // lib/di/register_module.dart (inside RegisterModule)
+//   @lazySingleton
+//   AppLinks get appLinks => AppLinks();
 //
 //   @LazySingleton(as: DeepLinkRepo)
 //   class AppLinksDeepLinkRepo implements DeepLinkRepo {
-//     AppLinksDeepLinkRepo(this._appLinks);   // AppLinks() from RegisterModule
+//     AppLinksDeepLinkRepo(this._appLinks);
+//
 //     final AppLinks _appLinks;
 //
+//     /// Includes the launch link and every link received before the first
+//     /// listen. Never also call getInitialLink(): the launch link would open
+//     /// twice.
 //     @override
-//     Stream<Uri> watchLinks() => _appLinks.uriLinkStream;  // includes the
-//   }                                                       // initial link
+//     Stream<Uri> watchLinks() =>
+//         _appLinks.uriLinkStream.handleError((Object _) {});
+//   }
 //
 // Native: Android intent-filter (autoVerify) + assetlinks.json, iOS
 // Associated Domains + apple-app-site-association, and Flutter's built-in
 // deep linking turned off (flutter_deeplinking_enabled=false,
-// FlutterDeepLinkingEnabled=NO): MainApp.generator throws for an unknown
+// FlutterDeepLinkingEnabled=false): MainApp.generator throws for an unknown
 // route name, and the plugin must be the only reader.
 
 // ---------------------------------------------------------------------------
@@ -304,7 +326,7 @@ abstract final class LinkRoutes {
 void handleDeepLinkEffect(DeepLinkEffect? effect) {
   switch (effect) {
     case DeepLinkSignInRequiredEffect():
-      SLIRouting.toNamed(LinkRoutes.signIn);
+      SLIRouting.toNamed(LinkRoutes.signIn); // not stacked twice
     case DeepLinkOpenEffect(:final target):
       final (route, argument) = switch (target) {
         OrderDetailLink(:final orderId) => (LinkRoutes.orderDetail, orderId),
@@ -314,7 +336,9 @@ void handleDeepLinkEffect(DeepLinkEffect? effect) {
           promotionId,
         ),
       };
-      SLIRouting.toNamed(route, arguments: argument);
+      // A link to order o-2 while o-1 is open has the same route name; the
+      // default duplicate check would drop it.
+      SLIRouting.toNamed(route, arguments: argument, preventDuplicates: false);
     case null:
       break;
   }
@@ -332,8 +356,12 @@ void main() {
         const OrderDetailLink('o-1'),
       );
       expect(
-        AppLinkParser.parse(Uri.parse('blocbase://invites/ABC_123')),
-        const InviteLink('ABC_123'),
+        AppLinkParser.parse(Uri.parse('https://APP.example.com/invites/A_1')),
+        const InviteLink('A_1'),
+      );
+      expect(
+        AppLinkParser.parse(Uri.parse('blocbase://orders/o-1')),
+        const OrderDetailLink('o-1'),
       );
       expect(
         AppLinkParser.parse(
@@ -353,12 +381,19 @@ void main() {
         'https://app.example.com/orders',
         'https://app.example.com/orders/o-1/pay',
         'https://app.example.com/orders/..%2Fadmin',
+        'https://app.example.com/orders/%FF',
         'https://app.example.com/accounts/42',
         'otherapp://orders/o-1',
+        'blocbase://user@orders/o-1',
+        'blocbase:orders/o-1',
         'blocbase://orders/${'x' * 65}',
       ]) {
         expect(AppLinkParser.parse(Uri.parse(link)), isNull, reason: link);
       }
+    });
+
+    test('a secret (invite code) never comes through the custom scheme', () {
+      expect(AppLinkParser.parse(Uri.parse('blocbase://invites/A_1')), isNull);
     });
   });
 
@@ -480,6 +515,7 @@ void main() {
           listener: (_, state) => handleDeepLinkEffect(state.effect?.value),
           child: MaterialApp(
             navigatorKey: SLIRouting.key,
+            navigatorObservers: [SLIRouteObserver(SLIRouting.routing)],
             onGenerateRoute: (settings) => MaterialPageRoute<void>(
               settings: settings,
               builder: (_) => Text('${settings.name} ${settings.arguments}'),
@@ -498,6 +534,10 @@ void main() {
     cubit.onSessionStarted();
     await tester.pumpAndSettle();
     expect(find.text('/order_detail o-1'), findsOneWidget);
+
+    links.add(Uri.parse('https://app.example.com/orders/o-2'));
+    await tester.pumpAndSettle();
+    expect(find.text('/order_detail o-2'), findsOneWidget);
   });
 }
 

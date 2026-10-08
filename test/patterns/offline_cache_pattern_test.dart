@@ -5,7 +5,8 @@
 //
 // The repository owns cache + network and exposes one Stream of snapshots:
 // the saved value first (when there is one), then the fresh value. The Cubit
-// only renders snapshots; it never decides between cache and network.
+// only renders snapshots; it never decides between cache and network, and it
+// revalidates by itself when the network comes back.
 
 import 'dart:async';
 import 'dart:convert';
@@ -14,6 +15,7 @@ import 'package:bloc_cubit_base/core/base_component/base_app_state.dart';
 import 'package:bloc_cubit_base/core/base_component/base_cubit.dart';
 import 'package:bloc_cubit_base/core/common/enum.dart';
 import 'package:bloc_cubit_base/core/error/exception.dart';
+import 'package:bloc_cubit_base/core/helper/network/network_checker.dart';
 import 'package:bloc_cubit_base/domain/entities/profile/account.dart';
 import 'package:bloc_cubit_base/domain/repositories/session_repo.dart';
 import 'package:equatable/equatable.dart';
@@ -38,7 +40,9 @@ final class CachedSnapshot<T> extends Equatable {
   final T value;
   final SnapshotSource source;
 
-  /// When the server produced this value. The Screen shows "updated at".
+  /// When this device received the value from the server (device clock).
+  /// The Screen shows it as "updated at" whenever saved data is on screen
+  /// without a fresh copy.
   final DateTime fetchedAt;
 
   /// True when a network snapshot will follow this one.
@@ -63,15 +67,16 @@ abstract class DashboardSummary {
 // ---------------------------------------------------------------------------
 
 abstract class DashboardRepo {
-  /// Emits the saved summary first when one exists for the signed-in
-  /// account, then the network summary unless the saved one is younger than
-  /// the freshness window and [forceRefresh] is false. Ends after the last
-  /// snapshot. A network failure is a stream error after the saved snapshot.
+  /// Emits the saved summary first when one exists for the signed-in account
+  /// and is not expired, then the network summary unless the saved one is
+  /// still fresh and [forceRefresh] is false. Ends after the last snapshot. A
+  /// network failure is a stream error after the saved snapshot.
   Stream<CachedSnapshot<DashboardSummary>> watchSummary({
     bool forceRefresh = false,
   });
 
-  /// Removes the saved summary. Called from the session end path.
+  /// Removes the saved summary, for example after an edit that makes it
+  /// wrong. Sign-out clears every cache through `UserCacheCleaner`.
   Future<void> clearCache();
 }
 
@@ -128,6 +133,30 @@ abstract class DashboardRemoteDataSource {
 }
 
 // ---------------------------------------------------------------------------
+// lib/data/datasource/local/user_cache_cleaner.dart  (shared; add once)
+// ---------------------------------------------------------------------------
+
+/// Every cache entry that belongs to a user is stored under [prefix]. The
+/// session end path (`SessionRepoImpl.end()`, shared by sign-out and expiry)
+/// calls [clearAll] once, so no feature cache can be forgotten (storage rules
+/// 1, 4 and 5). Device settings use other keys and stay.
+// @lazySingleton
+class UserCacheCleaner {
+  UserCacheCleaner(this._preferences);
+
+  static const String prefix = 'cache.';
+
+  final SharedPreferences _preferences;
+
+  Future<void> clearAll() async {
+    final keys = _preferences.getKeys().where((key) => key.startsWith(prefix));
+    await Future.wait([
+      for (final key in keys.toList()) _preferences.remove(key),
+    ]);
+  }
+}
+
+// ---------------------------------------------------------------------------
 // lib/data/datasource/local/dashboard_local_data_source.dart
 // ---------------------------------------------------------------------------
 
@@ -156,8 +185,10 @@ abstract class DashboardLocalDataSource {
 class DashboardLocalDataSourceImpl implements DashboardLocalDataSource {
   DashboardLocalDataSourceImpl(this._preferences);
 
-  /// Bump the suffix when the stored shape changes; old keys become misses.
-  static const String key = 'cache.dashboard_summary.v1';
+  /// One key per feature; the owner is inside the entry, so the device never
+  /// holds two accounts' data. Bump the suffix when the stored shape changes:
+  /// the old key becomes a miss and is removed at the next sign-out.
+  static const String key = '${UserCacheCleaner.prefix}dashboard_summary.v1';
 
   final SharedPreferences _preferences;
 
@@ -212,6 +243,10 @@ class DashboardRepoImpl implements DashboardRepo {
   /// A saved value younger than this is shown without a network call.
   static const Duration freshFor = Duration(minutes: 5);
 
+  /// A saved value older than this is never shown, not even offline: it is
+  /// removed and read as a miss. The product sets it per feature.
+  static const Duration maxStale = Duration(days: 7);
+
   final DashboardRemoteDataSource _remote;
   final DashboardLocalDataSource _local;
   final SessionRepo _session;
@@ -221,16 +256,22 @@ class DashboardRepoImpl implements DashboardRepo {
   /// so a slow older response cannot overwrite a newer one (storage rule 6).
   int _revision = 0;
 
-  String get _ownerId => '${_session.account.id ?? ''}';
+  /// Null when nobody is signed in: nothing is read or saved then.
+  String? get _ownerId {
+    final id = _session.account.id;
+    return id == null ? null : '$id';
+  }
 
   @override
   Stream<CachedSnapshot<DashboardSummary>> watchSummary({
     bool forceRefresh = false,
   }) async* {
     final owner = _ownerId;
-    final saved = _local.read();
-    if (saved != null && saved.ownerId == owner) {
-      final fresh = _now().difference(saved.fetchedAt) < freshFor;
+    final saved = owner == null ? null : await _readUsable(owner);
+    if (saved != null) {
+      final age = _now().difference(saved.fetchedAt);
+      // A fetch time in the future means the clock moved: never fresh.
+      final fresh = !age.isNegative && age < freshFor;
       final revalidate = forceRefresh || !fresh;
       yield CachedSnapshot(
         value: saved.value,
@@ -245,7 +286,7 @@ class DashboardRepoImpl implements DashboardRepo {
     final remote = await _remote.getSummary();
     final fetchedAt = _now();
     // Skip the write when a newer read started or the account changed.
-    if (revision == _revision && _ownerId == owner) {
+    if (owner != null && revision == _revision && _ownerId == owner) {
       await _local.write(
         CacheEntry(ownerId: owner, fetchedAt: fetchedAt, value: remote),
       );
@@ -260,6 +301,20 @@ class DashboardRepoImpl implements DashboardRepo {
 
   @override
   Future<void> clearCache() => _local.clear();
+
+  /// The saved entry of [owner], or null. An entry past [maxStale] is
+  /// removed: very old data is worse than an honest error.
+  Future<CacheEntry<DashboardSummaryResponseModel>?> _readUsable(
+    String owner,
+  ) async {
+    final saved = _local.read();
+    if (saved == null || saved.ownerId != owner) return null;
+    if (_now().difference(saved.fetchedAt) > maxStale) {
+      await _local.clear();
+      return null;
+    }
+    return saved;
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -311,9 +366,13 @@ class DashboardState extends BaseAppState<Object> {
 
 // @injectable
 class DashboardCubit extends BaseCubit<DashboardState> {
-  DashboardCubit(this._useCase) : super(DashboardState.initial());
+  DashboardCubit(this._useCase, NetworkChecker network)
+    : super(DashboardState.initial()) {
+    _connection = network.connectionChanges.listen(_onConnectionChanged);
+  }
 
   final DashboardUseCase _useCase;
+  late final StreamSubscription<bool> _connection;
   int _generation = 0;
 
   @override
@@ -321,6 +380,19 @@ class DashboardCubit extends BaseCubit<DashboardState> {
 
   /// Pull-to-refresh and the banner's retry button.
   Future<void> refresh() => _watch(forceRefresh: true);
+
+  /// Revalidates when the network comes back while an error or the offline
+  /// banner is shown. Connectivity is only this hint; it never blocks a
+  /// request, because a connection does not prove the server is reachable.
+  void _onConnectionChanged(bool connected) {
+    if (connected && state.error != null) unawaited(refresh());
+  }
+
+  @override
+  Future<void> close() async {
+    await _connection.cancel();
+    return super.close();
+  }
 
   Future<void> _watch({required bool forceRefresh}) async {
     final generation = ++_generation;
@@ -344,6 +416,9 @@ class DashboardCubit extends BaseCubit<DashboardState> {
                 : LoadingStatus.complete,
             summary: snapshot.value,
             updatedAt: snapshot.fetchedAt,
+            // Saved data stays marked as saved until a fresh copy arrives,
+            // so a retry offline does not flash the banner away.
+            error: snapshot.revalidating ? state.error : null,
           ),
         );
       }
@@ -472,6 +547,70 @@ void main() {
       expect(snapshots.single.source, SnapshotSource.network);
     });
 
+    test('an entry past maxStale is never shown and is removed', () async {
+      await repo.watchSummary().drain<void>();
+      now = now.add(DashboardRepoImpl.maxStale + const Duration(minutes: 1));
+      remote.failNext = NetworkIssueException();
+      final received = <Object>[];
+
+      await repo.watchSummary().handleError(received.add).forEach(received.add);
+
+      expect(received.single, isA<NetworkIssueException>());
+      expect(preferences.getString(DashboardLocalDataSourceImpl.key), isNull);
+    });
+
+    test('a fetch time in the future is not trusted as fresh', () async {
+      await repo.watchSummary().drain<void>();
+      now = now.subtract(const Duration(hours: 1));
+
+      final snapshots = await repo.watchSummary().toList();
+
+      expect(snapshots.map((s) => s.source), [
+        SnapshotSource.cache,
+        SnapshotSource.network,
+      ]);
+    });
+
+    test('nothing is read or saved without a signed-in account', () async {
+      await repo.watchSummary().drain<void>();
+      session.accountId = null;
+
+      final snapshots = await repo.watchSummary().toList();
+
+      expect(snapshots.single.source, SnapshotSource.network);
+      final stored = preferences.getString(DashboardLocalDataSourceImpl.key)!;
+      expect(jsonDecode(stored)['ownerId'], '7');
+    });
+
+    test('a response that lands after sign-out is not saved', () async {
+      remote.hold = true;
+      final reading = repo.watchSummary().toList();
+      await pumpEventQueue();
+      session.accountId = null;
+      await UserCacheCleaner(preferences).clearAll();
+
+      remote.release();
+      await reading;
+
+      expect(preferences.getString(DashboardLocalDataSourceImpl.key), isNull);
+    });
+
+    test('sign-out clears every user cache and keeps settings', () async {
+      await repo.watchSummary().drain<void>();
+      await preferences.setString('${UserCacheCleaner.prefix}other.v1', '{}');
+      await preferences.setString('language', 'vi');
+
+      await UserCacheCleaner(preferences).clearAll();
+
+      expect(
+        preferences.getKeys().where(
+          (key) => key.startsWith(UserCacheCleaner.prefix),
+        ),
+        isEmpty,
+      );
+      expect(preferences.getString('language'), 'vi');
+    });
+
     test('a corrupt entry is a miss and is removed', () async {
       await preferences.setString(DashboardLocalDataSourceImpl.key, '{oops');
 
@@ -484,9 +623,13 @@ void main() {
   });
 
   group('DashboardCubit', () {
+    late _FakeNetwork network;
     late DashboardCubit cubit;
 
-    setUp(() => cubit = DashboardCubit(DashboardUseCase(repo)));
+    setUp(() {
+      network = _FakeNetwork();
+      cubit = DashboardCubit(DashboardUseCase(repo), network);
+    });
     tearDown(() => cubit.close());
 
     test('no cache: loading, then the network value', () async {
@@ -536,6 +679,40 @@ void main() {
 
       expect(cubit.state.showsSavedData, isFalse);
       expect(cubit.state.summary!.orderCount, 3);
+    });
+
+    test('a retry that fails again keeps the banner the whole time', () async {
+      await repo.watchSummary().drain<void>();
+      remote.failNext = NetworkIssueException();
+      await cubit.refresh();
+      remote.failNext = NetworkIssueException();
+
+      final states = await _record(cubit, cubit.refresh);
+
+      expect(states, isNotEmpty);
+      expect(states.every((s) => s.showsSavedData), isTrue);
+    });
+
+    test('reconnecting revalidates while the banner is shown', () async {
+      await repo.watchSummary().drain<void>();
+      remote.failNext = NetworkIssueException();
+      await cubit.refresh();
+      expect(cubit.state.showsSavedData, isTrue);
+
+      network.changes.add(true);
+      await pumpEventQueue();
+
+      expect(cubit.state.showsSavedData, isFalse);
+      expect(cubit.state.summary!.orderCount, 3);
+    });
+
+    test('reconnecting without an error sends nothing', () async {
+      await cubit.load();
+
+      network.changes.add(true);
+      await pumpEventQueue();
+
+      expect(remote.calls, 1);
     });
 
     test('offline without cache is a full-screen error', () async {
@@ -619,10 +796,18 @@ class _FakeRemote implements DashboardRemoteDataSource {
   }
 }
 
+/// Only the connection stream is used by the Cubit.
+class _FakeNetwork extends Fake implements NetworkChecker {
+  final StreamController<bool> changes = StreamController<bool>.broadcast();
+
+  @override
+  Stream<bool> get connectionChanges => changes.stream;
+}
+
 class _FakeSession extends Fake implements SessionRepo {
   _FakeSession({required this.accountId});
 
-  int accountId;
+  int? accountId;
 
   @override
   Account get account => _FakeAccount(accountId);
@@ -632,5 +817,5 @@ class _FakeAccount extends Fake implements Account {
   _FakeAccount(this.id);
 
   @override
-  final int id;
+  final int? id;
 }

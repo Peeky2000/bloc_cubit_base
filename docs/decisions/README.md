@@ -17,6 +17,14 @@ hưởng toàn dự án là ADR trong `docs/adr/`. Cách viết và vòng đời
 
 | Mã | Quyết định | Trạng thái | Phạm vi | Tags | Ngày |
 |---|---|---|---|---|---|
+| [D-0001](D-0001-phan-trang-danh-sach-keo-de-lam-moi-va-tai-them.md) | Phân trang danh sách: kéo để làm mới và tải thêm | accepted | feature | pagination, list, load-more | 2026-10-08 |
+| [D-0002](D-0002-form-va-validation-co-kieu.md) | Form và validation có kiểu | accepted | feature | form, validation | 2026-10-08 |
+| [D-0003](D-0003-cache-offline-theo-stale-while-revalidate.md) | Cache offline theo stale-while-revalidate | accepted | feature | cache, offline | 2026-10-08 |
+| [D-0004](D-0004-upload-anh-co-tien-trinh.md) | Upload ảnh có tiến trình | accepted | feature | upload, image, progress | 2026-10-08 |
+| [D-0005](D-0005-cap-nhat-realtime-qua-stream.md) | Cập nhật realtime qua Stream | accepted | feature | realtime, websocket, polling, stream | 2026-10-08 |
+| [D-0006](D-0006-deep-link-qua-domain-port.md) | Deep link qua domain port | accepted | feature | deeplink, routing, security | 2026-10-08 |
+| [D-0007](D-0007-push-notification-qua-domain-port.md) | Push notification qua domain port | accepted | feature | push, notification | 2026-10-08 |
+| [D-0008](D-0008-xin-quyen-runtime-qua-domain-port.md) | Xin quyền runtime qua domain port | accepted | feature | permission, privacy | 2026-10-08 |
 | [ADR-0001](../adr/0001-get-it-injectable.md) | Dùng GetIt với Injectable | accepted | project |  | 2026-08-26 |
 | [ADR-0002](../adr/0002-cubit-default-bloc-supported.md) | Dùng Cubit Mặc Định và Hỗ Trợ BLoC | accepted | project |  | 2026-08-26 |
 | [ADR-0003](../adr/0003-equatable-state.md) | Giữ State Ứng Dụng Bằng Equatable | accepted | project |  | 2026-08-26 |
@@ -31,16 +39,7 @@ hưởng toàn dự án là ADR trong `docs/adr/`. Cách viết và vòng đời
 
 ## Đang chờ duyệt
 
-| Mã | Quyết định | Trạng thái | Phạm vi | Tags | Ngày |
-|---|---|---|---|---|---|
-| [D-0001](D-0001-phan-trang-danh-sach-keo-de-lam-moi-va-tai-them.md) | Phân trang danh sách: kéo để làm mới và tải thêm | proposed | feature | pagination, list, load-more | 2026-10-08 |
-| [D-0002](D-0002-form-va-validation-co-kieu.md) | Form và validation có kiểu | proposed | feature | form, validation | 2026-10-08 |
-| [D-0003](D-0003-cache-offline-theo-stale-while-revalidate.md) | Cache offline theo stale-while-revalidate | proposed | feature | cache, offline | 2026-10-08 |
-| [D-0004](D-0004-upload-anh-co-tien-trinh.md) | Upload ảnh có tiến trình | proposed | feature | upload, image, progress | 2026-10-08 |
-| [D-0005](D-0005-cap-nhat-realtime-qua-stream.md) | Cập nhật realtime qua Stream | proposed | feature | realtime, websocket, polling, stream | 2026-10-08 |
-| [D-0006](D-0006-deep-link-qua-domain-port.md) | Deep link qua domain port | proposed | feature | deeplink, routing, security | 2026-10-08 |
-| [D-0007](D-0007-push-notification-qua-domain-port.md) | Push notification qua domain port | proposed | feature | push, notification | 2026-10-08 |
-| [D-0008](D-0008-xin-quyen-runtime-qua-domain-port.md) | Xin quyền runtime qua domain port | proposed | feature | permission, privacy | 2026-10-08 |
+Chưa có.
 
 ## Đã thay thế hoặc bị từ chối
 
@@ -48,10 +47,31 @@ Chưa có.
 
 ## Theo chủ đề
 
+- **cache**: D-0003
 - **composition-root**: ADR-0011
+- **deeplink**: D-0006
 - **di**: ADR-0011
+- **form**: D-0002
 - **getit**: ADR-0011
+- **image**: D-0004
 - **injector**: ADR-0011
+- **list**: D-0001
+- **load-more**: D-0001
+- **notification**: D-0007
+- **offline**: D-0003
+- **pagination**: D-0001
+- **permission**: D-0008
+- **polling**: D-0005
+- **privacy**: D-0008
+- **progress**: D-0004
+- **push**: D-0007
+- **realtime**: D-0005
+- **routing**: D-0006
+- **security**: D-0006
+- **stream**: D-0005
+- **upload**: D-0004
+- **validation**: D-0002
+- **websocket**: D-0005
 
 ## Thuật ngữ
 

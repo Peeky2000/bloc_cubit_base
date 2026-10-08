@@ -6,28 +6,28 @@
 // Every section below is one file of a real feature. Copy the shape into the
 // path in the section header, rename `Order` to the feature's entity, and keep
 // the behavior the tests pin. The code here compiles against the real base
-// types (BaseCubit, BaseAppState, BaseAppListState, LoadingListModel,
-// BaseListResponseModel, ApiHandler) so a change to the base breaks it.
+// types (BaseCubit, BaseAppState, BaseListResponseModel, ApiHandler,
+// ErrorMapper) so a change to the base breaks it. The list uses Flutter's own
+// widgets only: RefreshIndicator, ListView.builder and scroll notifications.
 
 import 'dart:async';
 
-import 'package:bloc_cubit_base/core/base_component/base_app_list_state.dart';
 import 'package:bloc_cubit_base/core/base_component/base_app_state.dart';
 import 'package:bloc_cubit_base/core/base_component/base_cubit.dart';
 import 'package:bloc_cubit_base/core/base_component/ui_effect.dart';
 import 'package:bloc_cubit_base/core/common/constant.dart';
 import 'package:bloc_cubit_base/core/common/enum.dart';
+import 'package:bloc_cubit_base/core/error/error_to_string_mapper.dart';
 import 'package:bloc_cubit_base/core/error/exception.dart';
 import 'package:bloc_cubit_base/data/datasource/remote/api_client.dart';
 import 'package:bloc_cubit_base/data/model/response/base_list_response_model.dart';
 import 'package:bloc_cubit_base/domain/entities/response/base_list_response.dart';
 import 'package:bloc_cubit_base/l10n/l10n.dart';
-import 'package:bloc_cubit_base/widget/loading_list_screen.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:sli_common/sli_common.dart';
 
 // ---------------------------------------------------------------------------
 // lib/domain/entities/order/order.dart
@@ -52,8 +52,10 @@ final class PageResult<T> {
   });
 
   /// Reads the paging contract of `BaseListResponse` once, so no Cubit does
-  /// paging arithmetic. Uses `totalResults` when the server sends it and
-  /// otherwise treats a full page as "there may be more".
+  /// paging arithmetic. An empty page always ends the list, so a server whose
+  /// `totalResults` disagrees with its data cannot cause endless requests.
+  /// Otherwise uses `totalResults` when the server sends it and treats a full
+  /// page as "there may be more".
   factory PageResult.fromResponse(
     BaseListResponse<T> response, {
     required int page,
@@ -63,9 +65,11 @@ final class PageResult<T> {
     final servedPage = response.page ?? page;
     final servedSize = response.perPage ?? pageSize;
     final total = response.totalResults;
-    final hasMore = total != null
-        ? servedPage * servedSize < total
-        : items.length >= servedSize;
+    final hasMore =
+        items.isNotEmpty &&
+        (total != null
+            ? servedPage * servedSize < total
+            : items.length >= servedSize);
     return PageResult<T>(items: items, page: servedPage, hasMore: hasMore);
   }
 
@@ -204,28 +208,28 @@ final class OrderListShowErrorEffect extends OrderListEffect {
 // lib/presentation/order_list/cubit/order_list_state.dart  (part file)
 // ---------------------------------------------------------------------------
 
-/// `implements BaseAppListState<Order>` lets the existing `LoadingListScreen`
-/// render this state. `loading` is always `orders.loading`, so there is one
-/// source of truth for the list status.
-class OrderListState extends BaseAppState<Object>
-    implements BaseAppListState<Order> {
-  OrderListState({
+/// `loading` (from BaseAppState) is the one list status: initial, loading,
+/// refresh, loadMore, complete, noMoreData, loadMoreError or error.
+class OrderListState extends BaseAppState<Object> {
+  const OrderListState({
+    required super.loading,
     required this.orders,
     required this.page,
     required this.hasMore,
     super.error,
     this.effect,
-  }) : super(loading: orders.loading);
+  });
 
-  factory OrderListState.initial() => OrderListState(
-    orders: LoadingListModel<Order>(),
+  factory OrderListState.initial() => const OrderListState(
+    loading: LoadingStatus.initial,
+    orders: [],
     page: Pagination.firstPage - 1,
     hasMore: true,
   );
 
-  /// Items plus list status: loading, refresh, loadMore, complete,
-  /// noMoreData, loadMoreError or error.
-  final LoadingListModel<Order> orders;
+  /// Unmodifiable. The Cubit builds a new list only when the items change, so
+  /// `buildWhen` can compare by identity.
+  final List<Order> orders;
 
   /// The last page that was loaded; 0 before the first page.
   final int page;
@@ -235,17 +239,16 @@ class OrderListState extends BaseAppState<Object>
 
   final UiEffect<OrderListEffect>? effect;
 
-  @override
-  LoadingListModel<Order> get loadingListModel => orders;
-
   OrderListState copyWith({
-    LoadingListModel<Order>? orders,
+    LoadingStatus? loading,
+    List<Order>? orders,
     int? page,
     bool? hasMore,
     Object? error,
     UiEffect<OrderListEffect>? effect,
   }) {
     return OrderListState(
+      loading: loading ?? this.loading,
       orders: orders ?? this.orders,
       page: page ?? this.page,
       hasMore: hasMore ?? this.hasMore,
@@ -255,7 +258,7 @@ class OrderListState extends BaseAppState<Object>
   }
 
   @override
-  List<Object?> get props => [orders, page, hasMore, error, effect];
+  List<Object?> get props => [loading, orders, page, hasMore, error, effect];
 }
 
 // ---------------------------------------------------------------------------
@@ -280,12 +283,30 @@ class OrderListCubit extends BaseCubit<OrderListState> {
   Future<void> load() => _loadFirstPage(LoadingStatus.loading);
 
   /// Pull-to-refresh: keeps the current items on screen until page 1 returns.
+  /// `RefreshIndicator.onRefresh` awaits this Future to hide its spinner.
   Future<void> refresh() => _loadFirstPage(LoadingStatus.refresh);
+
+  /// Next page, called by the list when the user scrolls near the end. Runs
+  /// only when the list is settled with more pages, so repeated scroll events
+  /// never send a duplicate request and a failed page is never retried just
+  /// by scrolling.
+  Future<void> loadMore() async {
+    if (state.loading != LoadingStatus.complete || !state.hasMore) return;
+    await _loadNextPage();
+  }
+
+  /// The footer's retry button after a failed next page: asks the same page.
+  Future<void> retryLoadMore() async {
+    if (state.loading != LoadingStatus.loadMoreError) return;
+    await _loadNextPage();
+  }
 
   Future<void> _loadFirstPage(LoadingStatus status) async {
     final generation = ++_generation;
     final previous = state;
-    emit(state.copyWith(orders: _withStatus(status)));
+    // Keep the error until the new result: an error view being refreshed
+    // stays an error view instead of flashing the empty view.
+    emit(state.copyWith(loading: status, error: state.error));
     try {
       final result = await _useCase.getOrders(
         page: Pagination.firstPage,
@@ -294,30 +315,23 @@ class OrderListCubit extends BaseCubit<OrderListState> {
       if (isClosed || generation != _generation) return;
       emit(
         state.copyWith(
-          orders: LoadingListModel<Order>(
-            loading: _settled(result.items, result.hasMore),
-            data: result.items,
-          ),
+          loading: _settled(result.items, result.hasMore),
+          orders: List.unmodifiable(result.items),
           page: result.page,
           hasMore: result.hasMore,
         ),
       );
     } catch (error) {
       if (isClosed || generation != _generation) return;
-      if (previous.orders.data.isEmpty) {
-        // Nothing to show: the Screen renders an error view with retry.
-        emit(
-          state.copyWith(
-            orders: _withStatus(LoadingStatus.error),
-            error: error,
-          ),
-        );
+      if (previous.orders.isEmpty) {
+        // Nothing to show: the list renders an error view with retry.
+        emit(state.copyWith(loading: LoadingStatus.error, error: error));
         return;
       }
       // Keep the list usable and report the failure once.
       emit(
         state.copyWith(
-          orders: _withStatus(_settled(previous.orders.data, previous.hasMore)),
+          loading: _settled(previous.orders, previous.hasMore),
           error: error,
           effect: createEffect<OrderListEffect>(
             OrderListShowErrorEffect(
@@ -330,52 +344,34 @@ class OrderListCubit extends BaseCubit<OrderListState> {
     }
   }
 
-  /// Next page. Ignored unless the list is settled with more pages, so a
-  /// fast scroll or a second footer trigger never sends a duplicate request.
-  Future<void> loadMore() async {
-    final status = state.orders.loading;
-    final canLoad =
-        status == LoadingStatus.complete ||
-        status == LoadingStatus.loadMoreError;
-    if (!state.hasMore || !canLoad) return;
-
+  Future<void> _loadNextPage() async {
     final generation = _generation;
     final nextPage = state.page + 1;
-    emit(state.copyWith(orders: _withStatus(LoadingStatus.loadMore)));
+    emit(state.copyWith(loading: LoadingStatus.loadMore));
     try {
       final result = await _useCase.getOrders(
         page: nextPage,
         pageSize: pageSize,
       );
       if (isClosed || generation != _generation) return;
-      final merged = _appendDistinct(state.orders.data, result.items);
+      final merged = _appendDistinct(state.orders, result.items);
       emit(
         state.copyWith(
-          orders: LoadingListModel<Order>(
-            loading: _settled(merged, result.hasMore),
-            data: merged,
-          ),
+          loading: _settled(merged, result.hasMore),
+          orders: merged,
           page: result.page,
           hasMore: result.hasMore,
         ),
       );
     } catch (error) {
       if (isClosed || generation != _generation) return;
-      // The footer shows "failed"; pulling up again retries the same page.
-      emit(
-        state.copyWith(
-          orders: _withStatus(LoadingStatus.loadMoreError),
-          error: error,
-        ),
-      );
+      // The footer shows the failure and a retry button.
+      emit(state.copyWith(loading: LoadingStatus.loadMoreError, error: error));
     }
   }
 
-  LoadingListModel<Order> _withStatus(LoadingStatus status) =>
-      LoadingListModel<Order>(loading: status, data: state.orders.data);
-
-  /// `complete` for an empty list keeps the empty view of LoadingListScreen;
-  /// `noMoreData` marks a non-empty list that reached its end.
+  /// `complete` for an empty list keeps the empty view; `noMoreData` marks a
+  /// non-empty list that reached its end.
   static LoadingStatus _settled(List<Order> items, bool hasMore) =>
       items.isNotEmpty && !hasMore
       ? LoadingStatus.noMoreData
@@ -385,11 +381,212 @@ class OrderListCubit extends BaseCubit<OrderListState> {
   /// already shown instead of rendering duplicates.
   static List<Order> _appendDistinct(List<Order> current, List<Order> next) {
     final seen = current.map((order) => order.id).toSet();
-    return [
+    return List.unmodifiable([
       ...current,
       for (final order in next)
         if (seen.add(order.id)) order,
-    ];
+    ]);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// lib/widget/paginated_list_view.dart  (shared; add once)
+// Flutter widgets only: RefreshIndicator.adaptive for pull-to-refresh and
+// scroll notifications for load more. Replaces LoadingListScreen and
+// pull_to_refresh for new lists.
+// ---------------------------------------------------------------------------
+
+/// Renders a paged list from a Cubit's state. Holds no paging state itself:
+/// the Cubit decides whether a request is sent.
+class PaginatedListView<T> extends StatelessWidget {
+  const PaginatedListView({
+    super.key,
+    required this.items,
+    required this.status,
+    required this.hasMore,
+    required this.itemBuilder,
+    required this.empty,
+    required this.onRetry,
+    required this.onRefresh,
+    required this.onLoadMore,
+    required this.onRetryLoadMore,
+    this.error,
+    this.refreshKey,
+    this.listKey,
+  });
+
+  /// Request the next page when fewer than this many pixels are left below
+  /// the viewport (Flutter's default cache extent), so it is usually loaded
+  /// before the footer is seen.
+  static const double loadMoreExtent = 250;
+
+  final List<T> items;
+  final LoadingStatus status;
+  final bool hasMore;
+  final Object? error;
+  final Widget Function(BuildContext context, T item) itemBuilder;
+
+  /// Shown when the settled list has no items; pull-to-refresh still works.
+  final Widget empty;
+
+  /// Retry button of the full-screen error after the first page failed.
+  final VoidCallback onRetry;
+  final RefreshCallback onRefresh;
+  final VoidCallback onLoadMore;
+  final VoidCallback onRetryLoadMore;
+
+  /// `refreshKey.currentState?.show()` refreshes with the indicator from a
+  /// button, which also gives a non-drag alternative (WCAG 2.5.7).
+  final GlobalKey<RefreshIndicatorState>? refreshKey;
+
+  /// A `PageStorageKey` keeps the scroll offset across tab switches.
+  final Key? listKey;
+
+  @override
+  Widget build(BuildContext context) {
+    if (status == LoadingStatus.initial || status == LoadingStatus.loading) {
+      return const Center(child: _Spinner());
+    }
+    final error = this.error;
+    final Widget body;
+    if (items.isEmpty) {
+      body = _FillViewport(
+        child: error == null
+            ? empty
+            : _FirstPageError(error: error, onRetry: onRetry),
+      );
+    } else {
+      body = NotificationListener<Notification>(
+        onNotification: _onScrollMetrics,
+        child: ListView.builder(
+          key: listKey,
+          physics: const AlwaysScrollableScrollPhysics(),
+          itemCount: items.length + 1,
+          itemBuilder: (context, index) => index < items.length
+              ? itemBuilder(context, items[index])
+              : _PageFooter(
+                  status: status,
+                  hasMore: hasMore,
+                  onRetry: onRetryLoadMore,
+                ),
+        ),
+      );
+    }
+    return RefreshIndicator.adaptive(
+      key: refreshKey,
+      onRefresh: onRefresh,
+      child: body,
+    );
+  }
+
+  /// Scroll updates cover scrolling; metrics notifications cover a page that
+  /// does not fill the screen (tablet, landscape), which cannot be scrolled.
+  bool _onScrollMetrics(Notification notification) {
+    final metrics = switch (notification) {
+      ScrollUpdateNotification(:final metrics, depth: 0) => metrics,
+      ScrollMetricsNotification(:final metrics, depth: 0) => metrics,
+      _ => null,
+    };
+    if (metrics != null && metrics.extentAfter < loadMoreExtent) onLoadMore();
+    return false;
+  }
+}
+
+/// The adaptive indicator ignores `semanticsLabel` on iOS, so label it here.
+class _Spinner extends StatelessWidget {
+  const _Spinner();
+
+  @override
+  Widget build(BuildContext context) => Semantics(
+    label: context.l10n.loading,
+    child: const CircularProgressIndicator.adaptive(),
+  );
+}
+
+/// Lets an empty or error view be pulled to refresh.
+class _FillViewport extends StatelessWidget {
+  const _FillViewport({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => CustomScrollView(
+    physics: const AlwaysScrollableScrollPhysics(),
+    slivers: [
+      SliverFillRemaining(hasScrollBody: false, child: Center(child: child)),
+    ],
+  );
+}
+
+class _FirstPageError extends StatelessWidget {
+  const _FirstPageError({required this.error, required this.onRetry});
+
+  final Object error;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Semantics(
+            liveRegion: true,
+            child: Text(
+              ErrorMapper.parse(
+                error,
+                fallbackMessage: l10n.errGeneral,
+                noNetworkMessage: l10n.noInternetShort,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          const SizedBox(height: 16),
+          SliButton(label: l10n.retry, onPressed: onRetry),
+        ],
+      ),
+    );
+  }
+}
+
+class _PageFooter extends StatelessWidget {
+  const _PageFooter({
+    required this.status,
+    required this.hasMore,
+    required this.onRetry,
+  });
+
+  final LoadingStatus status;
+  final bool hasMore;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Center(
+        child: switch (status) {
+          LoadingStatus.loadMoreError => Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // A live region is announced politely by TalkBack/VoiceOver.
+              Semantics(liveRegion: true, child: Text(l10n.loadFail)),
+              const SizedBox(height: 8),
+              SliButton(
+                label: l10n.retry,
+                variant: SliButtonVariant.outline,
+                onPressed: onRetry,
+              ),
+            ],
+          ),
+          _ when !hasMore => Text(l10n.noMoreData),
+          _ => const _Spinner(),
+        },
+      ),
+    );
   }
 }
 
@@ -397,35 +594,9 @@ class OrderListCubit extends BaseCubit<OrderListState> {
 // lib/presentation/order_list/view/order_list_screen.dart  (excerpt)
 // ---------------------------------------------------------------------------
 
-/// Drives the pull_to_refresh indicators from state. Call it from the
-/// `listener` of `LoadingListScreen`; the Cubit never sees the controller.
-void syncRefreshController(RefreshController controller, OrderListState state) {
-  final status = state.orders.loading;
-  if (controller.isRefresh && status != LoadingStatus.refresh) {
-    if (state.error == null) {
-      controller.refreshCompleted(resetFooterState: true);
-    } else {
-      controller.refreshFailed();
-    }
-  }
-  switch (status) {
-    case LoadingStatus.loading ||
-        LoadingStatus.refresh ||
-        LoadingStatus.loadMore:
-      return;
-    case LoadingStatus.loadMoreError:
-      controller.loadFailed();
-    case _ when !state.hasMore:
-      controller.loadNoData();
-    case _ when controller.isLoading:
-      controller.loadComplete();
-    case _:
-      return;
-  }
-}
-
 /// The list body. The real screen wraps it in `BlocProvider` created once in
-/// `orderListScreenBuilder()` and calls `cubit.load()` there.
+/// `orderListScreenBuilder()`, calls `cubit.load()` there, and adds an app bar
+/// refresh action calling `_refreshKey.currentState?.show()`.
 class OrderListView extends StatefulWidget {
   const OrderListView({super.key});
 
@@ -434,46 +605,60 @@ class OrderListView extends StatefulWidget {
 }
 
 class _OrderListViewState extends State<OrderListView> {
-  final RefreshController _refreshController = RefreshController();
-
-  @override
-  void dispose() {
-    _refreshController.dispose();
-    super.dispose();
-  }
+  final GlobalKey<RefreshIndicatorState> _refreshKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<OrderListCubit>();
-    return BlocListener<OrderListCubit, OrderListState>(
+    return BlocConsumer<OrderListCubit, OrderListState>(
       listenWhen: (previous, current) => previous.effect != current.effect,
       listener: (context, state) {
+        final l10n = context.l10n;
         switch (state.effect?.value) {
-          case OrderListShowErrorEffect():
+          case OrderListShowErrorEffect(:final error):
             // Real screen: handleErrorResponse(context, error) + retry action.
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(context.l10n.loadFail)));
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  ErrorMapper.parse(
+                    error,
+                    fallbackMessage: l10n.errGeneral,
+                    noNetworkMessage: l10n.noInternetShort,
+                  ),
+                ),
+                action: SnackBarAction(
+                  label: l10n.retry,
+                  onPressed: () => _refreshKey.currentState?.show(),
+                ),
+              ),
+            );
           case null:
             break;
         }
       },
-      child: LoadingListScreen<OrderListCubit, OrderListState>(
-        refreshController: _refreshController,
-        loadingStyle: LoadingListStyle.android,
-        refreshData: cubit.refresh,
-        loadMore: cubit.loadMore,
-        listener: (_, state) =>
-            syncRefreshController(_refreshController, state),
-        emptyWidget: const Center(child: Text('empty')),
-        builder: (context, state, index) {
-          final order = state.orders.data[index];
-          return SizedBox(
-            key: ValueKey(order.id),
-            height: 64,
-            child: Text(order.code),
-          );
-        },
+      buildWhen: (previous, current) =>
+          previous.loading != current.loading ||
+          previous.orders != current.orders ||
+          previous.hasMore != current.hasMore ||
+          previous.error != current.error,
+      builder: (context, state) => PaginatedListView<Order>(
+        refreshKey: _refreshKey,
+        listKey: const PageStorageKey<String>('order_list'),
+        items: state.orders,
+        status: state.loading,
+        hasMore: state.hasMore,
+        error: state.error,
+        onRetry: cubit.load,
+        onRefresh: cubit.refresh,
+        onLoadMore: cubit.loadMore,
+        onRetryLoadMore: cubit.retryLoadMore,
+        // Real screen: a localized empty message.
+        empty: const Text('empty'),
+        itemBuilder: (context, order) => SizedBox(
+          key: ValueKey(order.id),
+          height: 64,
+          child: Text(order.code),
+        ),
       ),
     );
   }
@@ -538,6 +723,21 @@ void main() {
       expect(result.items, isEmpty);
       expect(result.hasMore, isFalse);
     });
+
+    test('an empty page ends the list even if totalResults says more', () {
+      final result = PageResult<int>.fromResponse(
+        BaseListResponseModel<int>(
+          page: 3,
+          perPage: 20,
+          totalResults: 100,
+          data: const [],
+        ),
+        page: 3,
+        pageSize: 20,
+      );
+
+      expect(result.hasMore, isFalse);
+    });
   });
 
   group('data source and repository', () {
@@ -579,21 +779,20 @@ void main() {
       final states = await _statuses(cubit, cubit.load);
 
       expect(states, [LoadingStatus.loading, LoadingStatus.complete]);
-      expect(cubit.state.orders.data, hasLength(20));
+      expect(cubit.state.orders, hasLength(20));
       expect(cubit.state.page, 1);
       expect(cubit.state.hasMore, isTrue);
-      expect(cubit.state.loading, cubit.state.orders.loading);
     });
 
     test('load more appends the next page until noMoreData', () async {
       await cubit.load();
       await cubit.loadMore();
-      expect(cubit.state.orders.data, hasLength(40));
-      expect(cubit.state.orders.loading, LoadingStatus.complete);
+      expect(cubit.state.orders, hasLength(40));
+      expect(cubit.state.loading, LoadingStatus.complete);
 
       await cubit.loadMore();
-      expect(cubit.state.orders.data, hasLength(45));
-      expect(cubit.state.orders.loading, LoadingStatus.noMoreData);
+      expect(cubit.state.orders, hasLength(45));
+      expect(cubit.state.loading, LoadingStatus.noMoreData);
       expect(cubit.state.hasMore, isFalse);
 
       await cubit.loadMore();
@@ -610,21 +809,24 @@ void main() {
       await Future.wait([first, second]);
 
       expect(repo.requestedPages, [1, 2]);
-      expect(cubit.state.orders.data, hasLength(40));
+      expect(cubit.state.orders, hasLength(40));
     });
 
-    test('load more failure keeps items and retries the same page', () async {
+    test('a failed page is retried by the footer, not by scrolling', () async {
       await cubit.load();
       repo.failNext = NetworkIssueException();
 
       await cubit.loadMore();
-      expect(cubit.state.orders.loading, LoadingStatus.loadMoreError);
-      expect(cubit.state.orders.data, hasLength(20));
+      expect(cubit.state.loading, LoadingStatus.loadMoreError);
+      expect(cubit.state.orders, hasLength(20));
       expect(cubit.state.effect, isNull);
 
       await cubit.loadMore();
-      expect(cubit.state.orders.loading, LoadingStatus.complete);
-      expect(cubit.state.orders.data, hasLength(40));
+      expect(repo.requestedPages, [1, 2]);
+
+      await cubit.retryLoadMore();
+      expect(cubit.state.loading, LoadingStatus.complete);
+      expect(cubit.state.orders, hasLength(40));
       expect(repo.requestedPages, [1, 2, 2]);
     });
 
@@ -637,7 +839,7 @@ void main() {
       final states = await _statuses(cubit, cubit.refresh);
 
       expect(states, [LoadingStatus.refresh, LoadingStatus.complete]);
-      expect(cubit.state.orders.data, hasLength(20));
+      expect(cubit.state.orders, hasLength(20));
       expect(cubit.state.page, 1);
       expect(cubit.state.hasMore, isTrue);
     });
@@ -647,8 +849,8 @@ void main() {
       repo.hold = true;
 
       final refreshing = cubit.refresh();
-      expect(cubit.state.orders.loading, LoadingStatus.refresh);
-      expect(cubit.state.orders.data, hasLength(20));
+      expect(cubit.state.loading, LoadingStatus.refresh);
+      expect(cubit.state.orders, hasLength(20));
       repo.release();
       await refreshing;
     });
@@ -662,9 +864,9 @@ void main() {
       repo.release();
       await Future.wait([loadingMore, refreshing]);
 
-      expect(cubit.state.orders.data, hasLength(20));
+      expect(cubit.state.orders, hasLength(20));
       expect(cubit.state.page, 1);
-      expect(cubit.state.orders.loading, LoadingStatus.complete);
+      expect(cubit.state.loading, LoadingStatus.complete);
     });
 
     test('rows shifted by a server insert are not shown twice', () async {
@@ -673,7 +875,7 @@ void main() {
 
       await cubit.loadMore();
 
-      final ids = cubit.state.orders.data.map((o) => o.id).toList();
+      final ids = cubit.state.orders.map((o) => o.id).toList();
       expect(ids.toSet(), hasLength(ids.length));
       expect(ids, hasLength(39));
     });
@@ -685,7 +887,7 @@ void main() {
 
         await cubit.load();
 
-        expect(cubit.state.orders.loading, LoadingStatus.error);
+        expect(cubit.state.loading, LoadingStatus.error);
         expect(cubit.state.error, isA<NetworkIssueException>());
         expect(cubit.state.effect, isNull);
       },
@@ -698,8 +900,8 @@ void main() {
 
       await cubit.refresh();
 
-      expect(cubit.state.orders.loading, LoadingStatus.complete);
-      expect(cubit.state.orders.data, hasLength(20));
+      expect(cubit.state.loading, LoadingStatus.complete);
+      expect(cubit.state.orders, hasLength(20));
       final effect = cubit.state.effect!.value as OrderListShowErrorEffect;
       expect(effect.error, same(error));
       expect(effect.retryAction, OrderListRetryAction.refresh);
@@ -712,8 +914,8 @@ void main() {
 
       await cubit.load();
 
-      expect(cubit.state.orders.loading, LoadingStatus.complete);
-      expect(cubit.state.orders.data, isEmpty);
+      expect(cubit.state.loading, LoadingStatus.complete);
+      expect(cubit.state.orders, isEmpty);
       expect(cubit.state.hasMore, isFalse);
     });
 
@@ -727,74 +929,88 @@ void main() {
     });
   });
 
-  group('screen wiring', () {
-    testWidgets('syncRefreshController maps state to the indicators', (
+  group('PaginatedListView', () {
+    testWidgets('shows page 1 and loads the next page near the end', (
       tester,
     ) async {
-      final controller = RefreshController();
-      addTearDown(controller.dispose);
-      // Footer changes land in a post-frame callback of pull_to_refresh.
-      Future<void> nextFrame() {
-        tester.binding.scheduleFrame();
-        return tester.pump();
-      }
+      final repo = _FakeOrderRepo(total: 45);
+      final cubit = await _pumpList(tester, repo);
 
-      final settled = OrderListState.initial().copyWith(
-        orders: LoadingListModel<Order>(loading: LoadingStatus.complete),
-      );
+      expect(find.text('ORD-0'), findsOneWidget);
+      expect(repo.requestedPages, [1]);
 
-      controller.headerMode!.value = RefreshStatus.refreshing;
-      syncRefreshController(controller, settled);
-      expect(controller.headerStatus, RefreshStatus.completed);
+      await tester.drag(find.byType(ListView), const Offset(0, -1000));
+      await tester.pump();
+      await tester.pump();
 
-      controller.headerMode!.value = RefreshStatus.refreshing;
-      syncRefreshController(controller, settled.copyWith(error: 'offline'));
-      expect(controller.headerStatus, RefreshStatus.failed);
-
-      controller.footerMode!.value = LoadStatus.loading;
-      syncRefreshController(controller, settled);
-      await nextFrame();
-      expect(controller.footerStatus, LoadStatus.idle);
-
-      syncRefreshController(
-        controller,
-        settled.copyWith(
-          orders: LoadingListModel<Order>(loading: LoadingStatus.loadMoreError),
-        ),
-      );
-      await nextFrame();
-      expect(controller.footerStatus, LoadStatus.failed);
-
-      syncRefreshController(
-        controller,
-        settled.copyWith(
-          hasMore: false,
-          orders: LoadingListModel<Order>(loading: LoadingStatus.noMoreData),
-        ),
-      );
-      await nextFrame();
-      expect(controller.footerStatus, LoadStatus.noMore);
+      expect(repo.requestedPages, [1, 2]);
+      expect(cubit.state.orders, hasLength(40));
     });
 
-    testWidgets('LoadingListScreen renders the first page', (tester) async {
-      final cubit = OrderListCubit(OrderUseCase(_FakeOrderRepo(total: 45)));
-      addTearDown(cubit.close);
-      await tester.pumpWidget(_app(cubit));
-      await cubit.load();
+    testWidgets('a page shorter than the screen loads the next one', (
+      tester,
+    ) async {
+      final repo = _FakeOrderRepo(total: 45, servedPageSize: 3);
+      final cubit = await _pumpList(tester, repo);
+      for (var i = 0; i < 10; i++) {
+        await tester.pump();
+      }
+
+      // Filled the screen, then stopped while more pages remain.
+      expect(repo.requestedPages.length, greaterThan(1));
+      expect(repo.requestedPages.length, lessThan(15));
+      expect(cubit.state.hasMore, isTrue);
+    });
+
+    testWidgets('a failed next page shows retry in the footer', (tester) async {
+      final repo = _FakeOrderRepo(total: 45);
+      final cubit = await _pumpList(tester, repo);
+      repo.failNext = NetworkIssueException();
+
+      await tester.drag(find.byType(ListView), const Offset(0, -1000));
+      await tester.pump();
+      await tester.pump();
+      expect(cubit.state.loading, LoadingStatus.loadMoreError);
+      expect(find.text('Fail', skipOffstage: false), findsOneWidget);
+
+      await tester.ensureVisible(find.text('Retry'));
+      await tester.pump();
+      await tester.tap(find.text('Retry'));
+      await tester.pump();
+      await tester.pump();
+
+      expect(repo.requestedPages, [1, 2, 2]);
+      expect(cubit.state.orders, hasLength(40));
+    });
+
+    testWidgets('the empty view can be pulled to refresh', (tester) async {
+      final repo = _FakeOrderRepo(total: 0);
+      await _pumpList(tester, repo);
+      expect(find.text('empty'), findsOneWidget);
+
+      await tester.fling(find.text('empty'), const Offset(0, 300), 1000);
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+      await tester.pump(const Duration(seconds: 1));
+      await tester.pump(const Duration(seconds: 1));
+
+      expect(repo.requestedPages, [1, 1]);
+    });
+
+    testWidgets('a failed first page shows the error and retries', (
+      tester,
+    ) async {
+      final repo = _FakeOrderRepo(total: 45)
+        ..failNext = NetworkIssueException();
+      await _pumpList(tester, repo);
+      expect(find.text('No internet connection found.'), findsOneWidget);
+
+      await tester.tap(find.text('Retry'));
+      await tester.pump();
       await tester.pump();
 
       expect(find.text('ORD-0'), findsOneWidget);
-      expect(find.text('empty'), findsNothing);
-    });
-
-    testWidgets('LoadingListScreen renders the empty view', (tester) async {
-      final cubit = OrderListCubit(OrderUseCase(_FakeOrderRepo(total: 0)));
-      addTearDown(cubit.close);
-      await tester.pumpWidget(_app(cubit));
-      await cubit.load();
-      await tester.pump();
-
-      expect(find.text('empty'), findsOneWidget);
+      expect(repo.requestedPages, [1, 1]);
     });
   });
 }
@@ -806,25 +1022,41 @@ Future<List<LoadingStatus>> _statuses(
   Future<void> Function() action,
 ) async {
   final statuses = <LoadingStatus>[];
-  final sub = cubit.stream.listen((s) => statuses.add(s.orders.loading));
+  final sub = cubit.stream.listen((s) => statuses.add(s.loading));
   await action();
   await Future<void>.delayed(Duration.zero);
   await sub.cancel();
   return statuses;
 }
 
-Widget _app(OrderListCubit cubit) => MaterialApp(
-  localizationsDelegates: AppLocalizations.localizationsDelegates,
-  supportedLocales: AppLocalizations.supportedLocales,
-  home: Scaffold(
-    body: BlocProvider.value(value: cubit, child: const OrderListView()),
-  ),
-);
+/// Pumps the screen, runs the first load and renders its result.
+Future<OrderListCubit> _pumpList(
+  WidgetTester tester,
+  _FakeOrderRepo repo,
+) async {
+  final cubit = OrderListCubit(OrderUseCase(repo));
+  addTearDown(cubit.close);
+  await tester.pumpWidget(
+    MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: Scaffold(
+        body: BlocProvider.value(value: cubit, child: const OrderListView()),
+      ),
+    ),
+  );
+  await cubit.load();
+  await tester.pump();
+  return cubit;
+}
 
 class _FakeOrderRepo implements OrderRepo {
-  _FakeOrderRepo({required this.total});
+  _FakeOrderRepo({required this.total, this.servedPageSize});
 
   final int total;
+
+  /// A server page size that differs from the requested one.
+  final int? servedPageSize;
   final List<int> requestedPages = [];
   Object? failNext;
   bool hold = false;
@@ -855,11 +1087,12 @@ class _FakeOrderRepo implements OrderRepo {
       failNext = null;
       throw failure;
     }
-    final start = (page - 1) * pageSize - shiftBy;
-    final end = (start + pageSize).clamp(0, total);
+    final size = servedPageSize ?? pageSize;
+    final start = (page - 1) * size - shiftBy;
+    final end = (start + size).clamp(0, total);
     return BaseListResponseModel<OrderResponseModel>(
       page: page,
-      perPage: pageSize,
+      perPage: size,
       totalResults: total,
       data: [
         for (var i = start.clamp(0, total); i < end; i++)

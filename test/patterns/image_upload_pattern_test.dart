@@ -3,10 +3,12 @@
 // Pattern: .agents/skills/flutter-patterns/references/image_upload.md
 // Decision: docs/decisions/D-0004-upload-anh-co-tien-trinh.md
 //
-// Picking needs a plugin that is not in pubspec yet (`image_picker`, proposed
-// in D-0004), so the picker is a domain port with a documented adapter sketch
-// and a fake here. Uploading uses real Dio (FormData, onSendProgress,
-// CancelToken) against a fake HttpClientAdapter, so no network is used.
+// Picking needs plugins that are not in pubspec yet (`image_picker`,
+// `flutter_image_compress`, proposed in D-0004), so the picker is a domain
+// port with an adapter that was compiled with `flutter analyze` in a scratch
+// package, and a fake here. Uploading uses real Dio (FormData,
+// onSendProgress, CancelToken) and the app's NetworkInterceptor against a
+// fake HttpClientAdapter, so no network is used.
 
 import 'dart:async';
 import 'dart:convert';
@@ -18,7 +20,9 @@ import 'package:bloc_cubit_base/core/base_component/base_cubit.dart';
 import 'package:bloc_cubit_base/core/base_component/ui_effect.dart';
 import 'package:bloc_cubit_base/core/common/enum.dart';
 import 'package:bloc_cubit_base/core/error/exception.dart';
+import 'package:bloc_cubit_base/core/helper/network/network_checker.dart';
 import 'package:bloc_cubit_base/data/datasource/remote/api_client.dart';
+import 'package:bloc_cubit_base/data/datasource/remote/interceptor/network_interceptor.dart';
 import 'package:bloc_cubit_base/data/model/response/base_response_model.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
@@ -28,7 +32,8 @@ import 'package:flutter_test/flutter_test.dart';
 // lib/domain/entities/media/local_image.dart
 // ---------------------------------------------------------------------------
 
-/// A picked image on the device. Domain keeps a path, never a dart:io File.
+/// A picked image on the device, already downscaled, upright and without
+/// EXIF. Domain keeps a path, never a dart:io File.
 final class LocalImage extends Equatable {
   const LocalImage({
     required this.path,
@@ -79,7 +84,7 @@ final class PickCancelled extends PickImageOutcome {
   const PickCancelled();
 }
 
-enum MediaPickFailureCode { permissionDenied, unavailable, unknown }
+enum MediaPickFailureCode { permissionDenied, unavailable, unreadable, unknown }
 
 final class MediaPickFailure implements Exception {
   const MediaPickFailure(this.code);
@@ -91,47 +96,135 @@ final class MediaPickFailure implements Exception {
 }
 
 abstract class MediaPickerRepo {
-  /// Opens the system picker and completes once with the outcome. Images are
-  /// downscaled by the adapter before they are returned.
+  /// Opens the system picker and completes once with the outcome. The image
+  /// is downscaled, re-encoded as JPEG and stripped of EXIF (GPS) first.
   Future<PickImageOutcome> pickImage(MediaSource source);
+
+  /// Android may destroy the activity while the camera is open; the photo is
+  /// then kept by the plugin and returned here once. [PickCancelled] when
+  /// there is none (always on iOS).
+  Future<PickImageOutcome> retrieveLostImage();
 }
 
 // ---------------------------------------------------------------------------
-// lib/data/repositories/image_picker_media_repo.dart  (adapter sketch)
+// lib/data/repositories/image_picker_media_repo.dart  (adapter)
 //
-// Needs `image_picker` (D-0004). Not compiled here because the package is not
-// in pubspec; the fake below plays it in tests.
+// Needs image_picker ^1.2.4, image_picker_android ^0.8.13+22,
+// image_picker_platform_interface ^2.11.0 and flutter_image_compress ^2.5.1
+// (D-0004). Verified with `flutter analyze` (Flutter 3.44.5) in a scratch
+// package; commented out here because the packages are not in pubspec. The
+// fake below plays it in tests. RegisterModule: `ImagePicker get imagePicker
+// => ImagePicker();`.
+//
+//   import 'dart:async';
+//   import 'dart:io';
+//
+//   import 'package:flutter/services.dart';
+//   import 'package:flutter_image_compress/flutter_image_compress.dart';
+//   import 'package:image_picker/image_picker.dart';
+//   import 'package:image_picker_android/image_picker_android.dart';
+//   import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
+//   import 'package:injectable/injectable.dart';
 //
 //   @LazySingleton(as: MediaPickerRepo)
 //   class ImagePickerMediaRepo implements MediaPickerRepo {
-//     ImagePickerMediaRepo(this._picker);   // ImagePicker from RegisterModule
+//     ImagePickerMediaRepo(this._picker) {
+//       // System Photo Picker on Android 11+ and the Play services backport
+//       // on older devices: no storage permission. Android 16+ uses it anyway.
+//       final platform = ImagePickerPlatform.instance;
+//       if (platform is ImagePickerAndroid) platform.useAndroidPhotoPicker = true;
+//     }
+//
+//     /// Short side of the uploaded JPEG. flutter_image_compress scales so
+//     /// both sides stay >= min*, never up: 4032x3024 becomes 2133x1600.
+//     static const int shortSide = 1600;
+//     static const int jpegQuality = 85;
+//
 //     final ImagePicker _picker;
+//     Future<PickImageOutcome>? _inFlight;
+//
+//     /// A second tap while the picker is open joins the same request instead
+//     /// of failing with `already_active` / `multiple_request`.
+//     @override
+//     Future<PickImageOutcome> pickImage(MediaSource source) =>
+//         _inFlight ??= _pick(source).whenComplete(() => _inFlight = null);
 //
 //     @override
-//     Future<PickImageOutcome> pickImage(MediaSource source) async {
+//     Future<PickImageOutcome> retrieveLostImage() async {
+//       if (!Platform.isAndroid) return const PickCancelled();
+//       final LostDataResponse lost = await _picker.retrieveLostData();
+//       final error = lost.exception;
+//       if (error != null) throw _failure(error);
+//       final file = lost.file;
+//       if (lost.isEmpty || file == null) return const PickCancelled();
+//       return ImagePicked(await _prepare(file));
+//     }
+//
+//     Future<PickImageOutcome> _pick(MediaSource source) async {
+//       final XFile? file;
 //       try {
-//         final file = await _picker.pickImage(
-//           source: source == MediaSource.camera
-//               ? ImageSource.camera
-//               : ImageSource.gallery,
-//           maxWidth: 2048,
-//           maxHeight: 2048,
-//           imageQuality: 85,
+//         file = await _picker.pickImage(
+//           source: switch (source) {
+//             MediaSource.camera => ImageSource.camera,
+//             MediaSource.gallery => ImageSource.gallery,
+//           },
+//           // No PHAsset lookup: no Photos permission prompt on iOS 13.
+//           requestFullMetadata: false,
 //         );
-//         if (file == null) return const PickCancelled();
-//         return ImagePicked(LocalImage(
-//           path: file.path,
-//           fileName: file.name,
-//           mimeType: file.mimeType ?? lookupMimeType(file.path) ?? '',
-//           sizeBytes: await file.length(),
-//         ));
 //       } on PlatformException catch (error) {
-//         throw MediaPickFailure(switch (error.code) {
-//           'camera_access_denied' || 'photo_access_denied' =>
-//             MediaPickFailureCode.permissionDenied,
+//         throw _failure(error);
+//       }
+//       if (file == null) return const PickCancelled();
+//       return ImagePicked(await _prepare(file));
+//     }
+//
+//     /// One re-encode: downscale, bake the EXIF orientation into the pixels
+//     /// and drop every EXIF tag (GPS included); HEIC and PNG become JPEG.
+//     Future<LocalImage> _prepare(XFile picked) async {
+//       XFile? output;
+//       try {
+//         output = await FlutterImageCompress.compressAndGetFile(
+//           picked.path,
+//           '${picked.path}.upload.jpg',
+//           minWidth: shortSide,
+//           minHeight: shortSide,
+//           quality: jpegQuality,
+//           format: CompressFormat.jpeg,
+//           keepExif: false,
+//           autoCorrectionAngle: true,
+//         );
+//       } catch (_) {
+//         output = null;
+//       }
+//       if (output == null || !File(output.path).existsSync()) {
+//         throw const MediaPickFailure(MediaPickFailureCode.unreadable);
+//       }
+//       unawaited(_deleteQuietly(picked.path)); // the original keeps GPS
+//       return LocalImage(
+//         path: output.path,
+//         fileName: 'photo.jpg', // the server names the stored object
+//         mimeType: 'image/jpeg',
+//         sizeBytes: await output.length(),
+//       );
+//     }
+//
+//     static MediaPickFailure _failure(PlatformException error) =>
+//         MediaPickFailure(switch (error.code) {
+//           'camera_access_denied' ||
+//           'photo_access_denied' => MediaPickFailureCode.permissionDenied,
+//           'camera_access_restricted' ||
+//           'photo_access_restricted' ||
 //           'no_available_camera' => MediaPickFailureCode.unavailable,
+//           'invalid_image' ||
+//           'no_valid_image_uri' => MediaPickFailureCode.unreadable,
 //           _ => MediaPickFailureCode.unknown,
 //         });
+//
+//     static Future<void> _deleteQuietly(String path) async {
+//       try {
+//         await File(path).delete();
+//       } on FileSystemException {
+//         // The OS clears the cache directory anyway.
 //       }
 //     }
 //   }
@@ -211,6 +304,8 @@ class ImageUseCase {
   Future<PickImageOutcome> pickImage(MediaSource source) =>
       _picker.pickImage(source);
 
+  Future<PickImageOutcome> recoverLostImage() => _picker.retrieveLostImage();
+
   /// Product rules run before any byte is sent.
   Stream<UploadEvent> uploadProfilePhoto(LocalImage image) {
     if (!allowedTypes.contains(image.mimeType.toLowerCase())) {
@@ -228,9 +323,10 @@ class ImageUseCase {
 // ---------------------------------------------------------------------------
 // Base change to propose: `ApiHandler.upload` in
 // lib/data/datasource/remote/api_client.dart. ApiClient implements it with
-// its configured `_dio` inside `_remapError`, so auth, session refresh and
-// the network inspector apply to uploads too. Shown here as a separate type
-// because this change may not edit lib/.
+// its configured `_dio` inside `_remapError`, so auth, session refresh (it
+// replays FormData with `clone()`) and the network inspector apply to
+// uploads too. Shown here as a separate type because this change may not
+// edit lib/.
 // ---------------------------------------------------------------------------
 
 abstract class UploadApiHandler {
@@ -246,9 +342,16 @@ abstract class UploadApiHandler {
 class DioUploadApiHandler implements UploadApiHandler {
   DioUploadApiHandler(this._dio);
 
-  /// ApiClient's 30 s sendTimeout covers the whole body; an upload on a slow
-  /// network needs longer.
-  static const Duration sendTimeout = Duration(minutes: 2);
+  /// Slowest uplink an upload must survive (256 kbit/s).
+  static const int minBytesPerSecond = 32 * 1024;
+
+  /// Dio's IO adapter applies sendTimeout to the whole body, and ApiClient
+  /// sets 30 s, so the timeout grows with the body: 30 s plus the body at
+  /// [minBytesPerSecond]. 1 MB gets about a minute, 10 MB about six.
+  static Duration sendTimeoutFor(int bodyBytes) => Duration(
+    seconds: 30,
+    milliseconds: bodyBytes * 1000 ~/ minBytesPerSecond,
+  );
 
   final Dio _dio;
 
@@ -266,19 +369,22 @@ class DioUploadApiHandler implements UploadApiHandler {
         data: data,
         onSendProgress: onSendProgress,
         cancelToken: cancelToken,
-        options: Options(sendTimeout: sendTimeout),
+        options: Options(sendTimeout: sendTimeoutFor(data.length)),
       );
       return BaseResponseModel<T>.fromJson(
         response.data! as Map<String, dynamic>,
         (json) => parser(json as Map<String, dynamic>),
       );
     } on DioException catch (error) {
-      // Same mapping as ApiClient._apiErrorToInternalError.
-      if (error.type == DioExceptionType.connectionTimeout ||
-          error.type == DioExceptionType.sendTimeout ||
+      // ApiClient._apiErrorToInternalError plus what it misses today:
+      // NetworkInterceptor's offline rejection and Dio 5 socket failures are
+      // `connectionError`, a slow body is `sendTimeout`.
+      if (error.error is NetworkIssueException ||
+          error.error is SocketException ||
+          error.type == DioExceptionType.connectionTimeout ||
           error.type == DioExceptionType.connectionError ||
-          (error.type == DioExceptionType.unknown &&
-              error.error is SocketException)) {
+          error.type == DioExceptionType.sendTimeout ||
+          error.type == DioExceptionType.receiveTimeout) {
         throw NetworkIssueException();
       }
       throw ServerException(error);
@@ -547,10 +653,17 @@ class ProfilePhotoCubit extends BaseCubit<ProfilePhotoState> {
   StreamSubscription<UploadEvent>? _upload;
   Completer<void>? _uploadDone;
 
-  Future<void> pickFrom(MediaSource source) async {
+  Future<void> pickFrom(MediaSource source) =>
+      _pickWith(() => _useCase.pickImage(source));
+
+  /// The Screen calls this once from initState: a photo taken before Android
+  /// destroyed the activity uploads as if it had just been picked.
+  Future<void> recoverLostPick() => _pickWith(_useCase.recoverLostImage);
+
+  Future<void> _pickWith(Future<PickImageOutcome> Function() pick) async {
     final PickImageOutcome outcome;
     try {
-      outcome = await _useCase.pickImage(source);
+      outcome = await pick();
     } catch (error) {
       if (isClosed) return;
       _emitEffect(
@@ -684,12 +797,34 @@ void main() {
     late _FakeHttpAdapter adapter;
     late ImageRemoteDataSourceImpl remote;
 
+    late _NetworkCheckerStub network;
+
     setUp(() {
       adapter = _FakeHttpAdapter();
-      final dio = Dio(BaseOptions(baseUrl: 'https://api.test'))
-        ..httpClientAdapter = adapter;
+      network = _NetworkCheckerStub();
+      final dio =
+          Dio(
+              BaseOptions(
+                baseUrl: 'https://api.test',
+                sendTimeout: const Duration(seconds: 30),
+              ),
+            )
+            ..httpClientAdapter = adapter
+            ..interceptors.addAll([
+              NetworkInterceptor(network),
+              // Like AuthInterceptor, which sets a JSON content type on
+              // every request; Dio must still send multipart.
+              InterceptorsWrapper(
+                onRequest: (options, handler) {
+                  options.headers['Content-Type'] = 'application/json';
+                  handler.next(options);
+                },
+              ),
+            ]);
       remote = ImageRemoteDataSourceImpl(DioUploadApiHandler(dio));
     });
+
+    tearDown(() => network.dispose());
 
     test('sends multipart with progress and parses the result', () async {
       final progress = <int>[];
@@ -704,7 +839,11 @@ void main() {
       final request = adapter.request!;
       expect(request.path, '/media/images');
       expect(request.method, 'POST');
-      expect(request.sendTimeout, DioUploadApiHandler.sendTimeout);
+      expect(
+        request.sendTimeout,
+        DioUploadApiHandler.sendTimeoutFor(adapter.body.length),
+      );
+      expect(request.sendTimeout, greaterThan(const Duration(seconds: 30)));
       expect(request.headers['content-type'], contains('multipart/form-data'));
       final body = latin1.decode(adapter.body);
       expect(body, contains('filename="photo.jpg"'));
@@ -729,6 +868,34 @@ void main() {
       token.cancel();
 
       await expectLater(uploading, throwsA(isA<ServerException>()));
+    });
+
+    test('offline is a NetworkIssueException and sends nothing', () async {
+      network.isConnected = false;
+
+      await expectLater(
+        remote.upload(
+          image,
+          slot: 'profile-photo',
+          cancelToken: CancelToken(),
+          onProgress: (_, _) {},
+        ),
+        throwsA(isA<NetworkIssueException>()),
+      );
+      expect(adapter.request, isNull);
+    });
+
+    test('a retry builds a new FormData and sends the file again', () async {
+      for (var i = 0; i < 2; i++) {
+        await remote.upload(
+          image,
+          slot: 'profile-photo',
+          cancelToken: CancelToken(),
+          onProgress: (_, _) {},
+        );
+      }
+
+      expect(adapter.requests, 2);
     });
 
     test('HTTP 413 surfaces as a ServerException with the status', () async {
@@ -919,6 +1086,18 @@ void main() {
       expect(cubit.state.effect!.value, isA<ProfilePhotoUploadedEffect>());
     });
 
+    test('a photo lost with the Android activity is recovered', () async {
+      picker.lost = ImagePicked(image);
+
+      await cubit.recoverLostPick();
+      await pumpEventQueue();
+
+      expect(cubit.state.loading, LoadingStatus.complete);
+      expect(cubit.state.photo, isNotNull);
+      expect(remote.calls, 1);
+      expect(picker.calls, 0);
+    });
+
     test('a cancelled pick changes nothing', () async {
       picker.next = const PickCancelled();
 
@@ -988,6 +1167,7 @@ void main() {
 
 class _FakePicker implements MediaPickerRepo {
   PickImageOutcome next = const PickCancelled();
+  PickImageOutcome lost = const PickCancelled();
   Object? failWith;
   int calls = 0;
 
@@ -997,6 +1177,15 @@ class _FakePicker implements MediaPickerRepo {
     final failure = failWith;
     if (failure != null) throw failure;
     return next;
+  }
+
+  @override
+  Future<PickImageOutcome> retrieveLostImage() async => lost;
+}
+
+class _NetworkCheckerStub extends NetworkChecker {
+  _NetworkCheckerStub() {
+    isConnected = true;
   }
 }
 
@@ -1037,6 +1226,7 @@ class _FakeImageRemote implements ImageRemoteDataSource {
 /// Consumes the request body like a socket would, so Dio reports progress.
 class _FakeHttpAdapter implements HttpClientAdapter {
   RequestOptions? request;
+  int requests = 0;
   final List<int> body = [];
   int status = 200;
   Completer<void>? hold;
@@ -1048,6 +1238,8 @@ class _FakeHttpAdapter implements HttpClientAdapter {
     Future<void>? cancelFuture,
   ) async {
     request = options;
+    requests++;
+    body.clear();
     if (requestStream != null) {
       await for (final chunk in requestStream) {
         body.addAll(chunk);

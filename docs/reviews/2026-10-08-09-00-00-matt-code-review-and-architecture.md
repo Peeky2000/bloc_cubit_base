@@ -153,3 +153,33 @@ Cả ba nằm trong phần code chưa có test. Làm xong mục 1 thì mục 2 c
 | 5 | Đổi cổng xác thực số điện thoại sang trả một kết quả | Cải thiện kiến trúc |
 
 Skill `improve-codebase-architecture` dừng ở bước hỏi PM muốn đào sâu mục nào. Chọn một mục thì agent sẽ cùng bạn đi qua các ràng buộc, hình dạng module mới và phần test giữ lại, trước khi code.
+
+## Kết quả xử lý (2026-10-08)
+
+PM duyệt ba mục kiến trúc 1, 2 và 3. Cả ba đã được làm trên nhánh
+`refactor/session-phone-perf-policy`.
+
+| Mục | Commit | Kết quả |
+|---|---|---|
+| 1. Vòng đời phiên đăng nhập | `06c39e6` | `SessionRepo` nắm token và tài khoản. Đã sửa ba lỗi: đăng nhập không ghi nhớ giờ có token trong bộ nhớ, `logout()` kết thúc phiên, phiên hết hạn xoá cả tài khoản. Bỏ `UserRepo` và các hàm token trong `AuthRepo` |
+| 2. Cổng xác thực số điện thoại | `06c39e6` | `sendCode` trả một kết quả `codeSent`, `autoVerified` hoặc `superseded`, hoặc ném lỗi. Năm Cubit chỉ cần `await` một lần. Chuẩn hoá số điện thoại chỉ còn ở `AuthUseCase.normalizePhone`. ADR-0010 đã được cập nhật |
+| 3. Tách phần quyết định của runner | `a383dd5` | `run.dart` giảm từ 1347 xuống 751 dòng. `policy.dart` và `report.dart` là module thuần, có 22 test mới |
+
+Các phát hiện nhỏ trong phần code review cũng đã được sửa trong `a383dd5`:
+- chữ hỏng ở thông báo 429;
+- cú pháp trong ghi chú `plan.dart`;
+- `API_BASE_URL` giờ được chuyển vào app;
+- mọi file JSON, Markdown và history đều được che bí mật;
+- `--help` trả mã 0;
+- `app_start` báo lỗi khi thiếu tài khoản test.
+
+Kiểm chứng: `derry quality` qua hết với 150 test của app (trước là 100) và 20
+test của `sli_common`. `build_runner` chỉ đổi phần DI của `SessionRepo`. Runner
+cho cùng kết quả và cùng mã thoát như trước với `--help`, cờ sai, config sai và
+khi không có thiết bị.
+
+Còn mở:
+- Mục 4 (bỏ `Injector`) và mục 5 (gộp use case chỉ chuyển tiếp) chưa làm.
+- Chưa có kịch bản nào truyền `dataSize`.
+- Android chưa build xong vì ổ đĩa đầy.
+- Luồng đăng nhập, gửi mã và hết phiên chưa được thử trên máy thật.

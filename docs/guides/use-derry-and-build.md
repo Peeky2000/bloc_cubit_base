@@ -33,6 +33,7 @@ derry ls -d
 
 | Nhu cầu | Lệnh | Có side effect từ xa? |
 |---|---|---|
+| Xem lệnh và nguyên tắc an toàn của Base CLI | `derry base help` | Không |
 | Kiểm tra template identity | `derry base doctor` | Không |
 | Xem plan đổi identity | `derry rename -- ...` | Không nếu chưa `--apply` |
 | Xem plan tạo app | `derry create -- ...` | Không nếu chưa `--apply` |

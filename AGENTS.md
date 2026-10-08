@@ -25,7 +25,10 @@ giữa dev và tester nằm trong
 [docs/agents/delivery-loop.md](docs/agents/delivery-loop.md).
 
 Toàn bộ lệnh, agent và skill được tổng hợp trong
-[docs/guides/ai-toolbox.md](docs/guides/ai-toolbox.md).
+[docs/guides/ai-toolbox.md](docs/guides/ai-toolbox.md). Thứ tự làm việc trên dự
+án thật và danh sách việc còn mở nằm trong
+[docs/guides/start-real-project.md](docs/guides/start-real-project.md); khi xong
+một mục trong đó, đánh dấu và ghi link PR.
 
 Vòng đo và sửa hiệu năng giữa hai agent performance được mô tả trong
 [docs/performance/agent-loop.md](docs/performance/agent-loop.md).

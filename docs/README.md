@@ -10,6 +10,7 @@ không cần đọc tất cả ngay; hãy chọn đúng mục tiêu trong bảng
 |---|---|
 | Bắt đầu làm quen với base | [README gốc](../README.md) → [điều kiện dự án](prerequisites.md) → [tổng quan kiến trúc](architecture/README.md) → [trạng thái hiện tại](modernization-status.md) |
 | Cài project và chạy lần đầu | [Điều kiện dự án](prerequisites.md) → [Derry/build/Fastlane](guides/use-derry-and-build.md) |
+| Đem base vào dự án thật | [Sổ tay dự án thật](guides/start-real-project.md) → [bộ công cụ AI](guides/ai-toolbox.md) |
 | Tạo app mới từ base | [Tạo app từ base](guides/create-app-from-base.md) → [trạng thái hiện tại](modernization-status.md) |
 | Thêm feature mới | [Thêm feature](guides/add-feature.md) → [quy tắc dependency](architecture/dependency-rules.md) → [chọn Cubit/BLoC](guides/choose-cubit-or-bloc.md) |
 | Thêm hoặc sửa DI | [Kiến trúc DI](architecture/dependency-injection.md) → [ADR Injectable](adr/0001-get-it-injectable.md) |
@@ -21,7 +22,7 @@ không cần đọc tất cả ngay; hãy chọn đúng mục tiêu trong bảng
 | Đo hiệu năng app | [Đo hiệu năng app](guides/measure-performance.md) → [chuẩn và ngưỡng](performance/standards.md) → [từ AC tới kịch bản](performance/ac-to-scenario.md) → [hợp đồng benchmark](../PERFORMANCE.md) → [quy trình agent](performance/agent-loop.md) |
 | Phân phối Firebase hoặc Store | [Derry/build/Fastlane](guides/use-derry-and-build.md) → [Android Fastlane](../android/fastlane/README.md) / [iOS Fastlane](../ios/fastlane/README.md) |
 | Xem vì sao chọn công nghệ hiện tại | [Danh sách ADR](adr/README.md) |
-| Xem việc đã làm và việc còn lại | [Trạng thái modernization](modernization-status.md) → [roadmap](plan/2026-08-26-base-modernization.md) |
+| Xem việc đã làm và việc còn lại | [Việc còn mở](guides/start-real-project.md#5-việc-còn-mở-trong-base) → [Trạng thái modernization](modernization-status.md) → [roadmap](plan/2026-08-26-base-modernization.md) |
 | Xem bằng chứng review/quality gate | [Review full analyzer](reviews/2026-10-01-sli-common-full-analyzer-review.md) → [review skill](reviews/2026-10-01-mobile-skills-review.md) |
 | Làm việc cùng AI agent | [Bộ công cụ AI](guides/ai-toolbox.md) → [Quy trình AI](../ai-process.md) → [AGENTS.md](../AGENTS.md) → [chọn skill Flutter/mobile](guides/mobile-engineering-skills.md) |
 

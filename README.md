@@ -6,7 +6,9 @@ toàn, bộ UI toolkit tái sử dụng, công cụ đo hiệu năng trên máy 
 skill cho AI.
 
 Người mới bắt đầu tại **[mục lục tài liệu](docs/README.md)**. Người dùng AI agent
-bắt đầu tại **[bộ công cụ AI](docs/guides/ai-toolbox.md)**.
+bắt đầu tại **[bộ công cụ AI](docs/guides/ai-toolbox.md)**. Đem base vào dự án
+thật thì theo **[sổ tay dự án thật](docs/guides/start-real-project.md)**, nơi
+cũng ghi mọi việc còn mở.
 
 ## Có gì trong base
 

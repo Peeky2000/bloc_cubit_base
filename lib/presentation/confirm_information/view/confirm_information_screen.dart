@@ -19,7 +19,7 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 
 Widget confirmInformationScreenBuilder() =>
     BlocProvider<ConfirmInformationCubit>(
-      create: (_) => getIt<ConfirmInformationCubit>(),
+      create: (_) => Injector.getIt.get<ConfirmInformationCubit>(),
       child: const ConfirmInformationScreen(),
     );
 

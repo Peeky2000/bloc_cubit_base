@@ -86,8 +86,9 @@ Không chặn dự án thật nhưng nên xử lý khi có thời gian.
 - [x] **Hai golden test của `sli_common` fail trên CI Linux.** Đã thêm bộ so
   sánh chấp nhận lệch tối đa 2% do khác cách khử răng cưa giữa macOS và
   Linux; thay đổi thật vẫn bị bắt. `sli_common` PR #1, 2026-10-08.
-- [x] **Review kiến trúc mục 4:** đã bỏ lớp `Injector`; route builder và
-  `MainApp` dùng `getIt`, `AppColor` nhận chế độ tối qua tham số. 2026-10-08.
+- [x] **Review kiến trúc mục 4:** PM quyết định **giữ** `Injector` làm điểm
+  truy cập DI tại composition root (ADR-0011). Chỉ sửa `AppColor` và
+  `NoInternetScreen` để không tự tra dependency. 2026-10-08.
 - [ ] **Review kiến trúc mục 5:** gộp use case chỉ chuyển tiếp. Cố ý không làm
   vì trái với thứ tự tầng template đang dạy. Xem
   [báo cáo review](../reviews/2026-10-08-09-00-00-matt-code-review-and-architecture.md).

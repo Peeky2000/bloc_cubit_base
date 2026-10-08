@@ -23,3 +23,15 @@ Future<GetIt> configureDependencies(
   setRuntimeAppConfig(config);
   return await (initializeGraph ?? (container) => container.init())(getIt);
 }
+
+/// The app's dependency-injection entry point for composition roots.
+///
+/// Route builders, `MainApp`, `bootstrap` and DI modules resolve objects with
+/// `Injector.getIt.get<T>()`. Feature classes (Cubit/BLoC, use cases,
+/// repositories, data sources, widgets) never use it: they receive their
+/// dependencies through constructors. See ADR-0011.
+abstract final class Injector {
+  static GetIt get getIt => GetIt.instance;
+
+  static Future<void> reset() => getIt.reset();
+}

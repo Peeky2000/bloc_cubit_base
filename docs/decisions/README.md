@@ -27,6 +27,7 @@ hưởng toàn dự án là ADR trong `docs/adr/`. Cách viết và vòng đời
 | [ADR-0008](../adr/0008-mobile-engineering-skills-no-viper.md) | Skill Tập Trung Flutter/Mobile, Không Adopt VIPER | accepted | project |  | 2026-09-28 |
 | [ADR-0009](../adr/0009-typed-ui-effects-at-presentation-boundary.md) | Typed UI Effect Tại Presentation Boundary | accepted | project |  | 2026-09-28 |
 | [ADR-0010](../adr/0010-platform-auth-behind-domain-port.md) | Firebase Phone Auth Nằm Sau Domain Port | accepted | project |  | 2026-10-01 |
+| [ADR-0011](../adr/0011-giu-injector-lam-diem-truy-cap-di-tai-composition-root.md) | Giữ Injector làm điểm truy cập DI tại composition root | accepted | project | di, injector, getit, composition-root | 2026-10-08 |
 
 ## Đang chờ duyệt
 
@@ -44,6 +45,13 @@ hưởng toàn dự án là ADR trong `docs/adr/`. Cách viết và vòng đời
 ## Đã thay thế hoặc bị từ chối
 
 Chưa có.
+
+## Theo chủ đề
+
+- **composition-root**: ADR-0011
+- **di**: ADR-0011
+- **getit**: ADR-0011
+- **injector**: ADR-0011
 
 ## Thuật ngữ
 

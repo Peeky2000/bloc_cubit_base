@@ -183,3 +183,8 @@ Còn mở:
 - Chưa có kịch bản nào truyền `dataSize`.
 - Android chưa build xong vì ổ đĩa đầy.
 - Luồng đăng nhập, gửi mã và hết phiên chưa được thử trên máy thật.
+
+## Cập nhật sau (2026-10-08)
+
+Mục 4 (bỏ `Injector`) đã làm rồi hoàn tác theo quyết định của PM: giữ
+`Injector` làm điểm truy cập DI tại composition root. Xem ADR-0011.

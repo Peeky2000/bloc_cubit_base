@@ -84,5 +84,17 @@
       "e164",
       "auth"
     ]
+  },
+  {
+    "type": "utility",
+    "name": "Injector",
+    "description": "App DI entry point for composition roots: Injector.getIt.get<T>() in route builders, MainApp, bootstrap and DI modules only (ADR-0011)",
+    "location": "lib/di/injection.dart",
+    "keywords": [
+      "di",
+      "injector",
+      "getit",
+      "composition-root"
+    ]
   }
 ]

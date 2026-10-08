@@ -17,7 +17,7 @@ import 'package:bloc_cubit_base/presentation/global_handler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 Widget signInScreenBuilder() => BlocProvider<SignInCubit>(
-  create: (_) => getIt<SignInCubit>(),
+  create: (_) => Injector.getIt.get<SignInCubit>(),
   child: const SignInScreen(),
 );
 

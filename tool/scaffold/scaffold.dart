@@ -211,8 +211,8 @@ final class ${F}ShowErrorEffect extends ${F}Effect {
 
   final owner = kind == 'cubit' ? '${F}Cubit' : '${F}Bloc';
   final create = kind == 'cubit'
-      ? 'getIt<$owner>()..load()'
-      : 'getIt<$owner>()..add(const ${F}Started())';
+      ? 'Injector.getIt.get<$owner>()..load()'
+      : 'Injector.getIt.get<$owner>()..add(const ${F}Started())';
   files['lib/presentation/$f/view/${f}_screen.dart'] =
       '''
 import 'package:$p/di/injection.dart';

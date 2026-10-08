@@ -72,7 +72,7 @@ Future<void> bootstrap(
     final config = AppConfig.forEnvironment(environment);
     await Firebase.initializeApp();
     await configureDependencies(config);
-    attachObservability(errors, getIt<Observability>());
+    attachObservability(errors, Injector.getIt.get<Observability>());
     await SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitDown,
       DeviceOrientation.portraitUp,

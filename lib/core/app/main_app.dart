@@ -31,10 +31,10 @@ import 'package:sli_common/sli_common.dart'
         TitleWidget;
 
 Widget buildMainApp() => MainApp(
-  appCubit: getIt<AppCubit>(),
-  appController: getIt<AppController>(),
-  networkChecker: getIt<NetworkChecker>(),
-  analytics: getIt<AnalyticsTracker>(),
+  appCubit: Injector.getIt.get<AppCubit>(),
+  appController: Injector.getIt.get<AppController>(),
+  networkChecker: Injector.getIt.get<NetworkChecker>(),
+  analytics: Injector.getIt.get<AnalyticsTracker>(),
 );
 
 class MainApp extends StatefulWidget {

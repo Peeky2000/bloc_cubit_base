@@ -12,7 +12,7 @@ import 'package:bloc_cubit_base/generated/assets.gen.dart';
 import 'package:bloc_cubit_base/presentation/splash/cubit/splash_cubit.dart';
 
 Widget splashScreenBuilder() => BlocProvider<SplashCubit>(
-  create: (_) => getIt<SplashCubit>(),
+  create: (_) => Injector.getIt.get<SplashCubit>(),
   child: const SplashScreen(),
 );
 

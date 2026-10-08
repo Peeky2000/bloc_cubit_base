@@ -21,7 +21,7 @@ import 'package:bloc_cubit_base/presentation/sign_up/cubit/sign_up_cubit.dart';
 import 'package:bloc_cubit_base/presentation/global_handler.dart';
 
 Widget signUpScreenBuilder() => BlocProvider<SignUpCubit>(
-  create: (_) => getIt<SignUpCubit>(),
+  create: (_) => Injector.getIt.get<SignUpCubit>(),
   child: const SignUpScreen(),
 );
 

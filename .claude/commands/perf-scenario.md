@@ -22,7 +22,9 @@ Follow `docs/performance/ac-to-scenario.md` exactly.
    `lib/core/common/route.dart`, the screen under `lib/presentation/` and the
    ARB files. Prefer finding widgets by type over by text. Never guess.
 5. Create `integration_test/performance/<id>_test.dart`:
-   - start with `pumpLoggedInApp` from `support/perf_app.dart`;
+   - start with `pumpLoggedInApp` from `support/perf_app.dart`; never import
+     sign-in or home screens in a scenario, they live only in
+     `support/perf_app_adapter.dart`;
    - do setup such as navigation outside `measureScenario`;
    - wrap only the interaction the AC is about in `measureScenario`;
    - wait for real data with `pumpUntilFound`;

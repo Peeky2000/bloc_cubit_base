@@ -116,8 +116,7 @@ class _Endpoint {
 String _redact(Uri uri) {
   final segments = [
     for (final s in uri.pathSegments)
-      RegExp(r'^\d+$').hasMatch(s) ||
-              RegExp(r'^[0-9a-fA-F-]{16,}$').hasMatch(s)
+      RegExp(r'^\d+$').hasMatch(s) || RegExp(r'^[0-9a-fA-F-]{16,}$').hasMatch(s)
           ? ':id'
           : s,
   ];

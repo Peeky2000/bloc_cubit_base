@@ -31,6 +31,18 @@ injectable generate the graph.
 - Raw Dio/CURL logging, production inspectors, or refresh-token stampedes.
 - Returning data models across the domain/presentation boundary.
 
+## Storage and async flow mistakes
+
+- Splitting data that lives and dies together (token and cached account)
+  across modules, so sign-out or expiry can leave part of it behind.
+- Making "remember me" or "save offline" decide whether a value exists in
+  memory instead of only whether it is persisted.
+- Repository methods that silently ignore a domain value because it is not a
+  data-layer model.
+- Exposing SDK callbacks through a domain port, or making each Cubit
+  re-implement callback choreography, instead of one `Future<Outcome>`.
+- Normalizing the same input (phone, money, date) in several Cubits.
+
 ## UI ownership mistakes
 
 - Duplicating a reusable component already present in `sli_common`.

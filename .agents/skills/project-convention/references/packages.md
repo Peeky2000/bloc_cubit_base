@@ -10,7 +10,7 @@ Read exact constraints from `pubspec.yaml`; this file documents intent.
 | `dio` | HTTP through `ApiHandler` |
 | `json_annotation`, `json_serializable` | data models |
 | `shared_preferences` | non-sensitive settings/cache |
-| `flutter_secure_storage` | credentials through `TokenProvider` |
+| `flutter_secure_storage` | credentials through `TokenProvider`, owned by `SessionRepo` |
 | `alice` | redacted non-production network inspection |
 | `sli_common` | shared tokens/components; Shadcn facade |
 | `firebase_core`, `firebase_auth` | current authentication integration |

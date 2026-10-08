@@ -30,6 +30,9 @@ that hit an error page does not measure the real screen.
 1. Create `integration_test/performance/<name>_test.dart`.
 2. Start the real app with `pumpLoggedInApp` from `support/perf_app.dart`. It
    runs `bootstrap` and logs in with the test account when no session exists.
+   The app's sign-in and home screens are known only to
+   `support/perf_app_adapter.dart`; when a fork replaces the auth flow, update
+   that one file and every scenario keeps working.
 3. Navigate like a user, wait for real data with `pumpUntilFound`, and wrap the
    measured interaction in `measureScenario`. Produce at least 20 frames, for
    example with `scrollSteps` or `pumpFor`.

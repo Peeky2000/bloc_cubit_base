@@ -1,12 +1,10 @@
 import 'package:bloc_cubit_base/bootstrap.dart';
 import 'package:bloc_cubit_base/core/app/app_config.dart';
 import 'package:bloc_cubit_base/core/app/main_app.dart';
-import 'package:bloc_cubit_base/presentation/home_page/view/home_page_screen.dart';
-import 'package:bloc_cubit_base/presentation/sign_in/view/sign_in_screen.dart';
-import 'package:bloc_cubit_base/widget/delivery_go_button.dart';
 import 'package:flutter/foundation.dart' show FlutterError;
-import 'package:flutter/material.dart' show TextField;
 import 'package:flutter_test/flutter_test.dart';
+
+import 'perf_app_adapter.dart';
 
 /// Credentials of a dedicated performance test account on a real backend.
 ///
@@ -36,6 +34,43 @@ Future<void> pumpPerfApp(
   await tester.pumpAndSettle();
 }
 
+/// Opens the app and makes sure the test account is signed in and on the
+/// first signed-in screen. App-specific screens and steps come from
+/// [perfAppAdapter], so this file never changes when the auth flow does.
+Future<void> pumpLoggedInApp(WidgetTester tester) async {
+  await pumpPerfApp(tester);
+  await pumpUntilFound(
+    tester,
+    find.byWidgetPredicate(
+      (w) => perfAppAdapter.isSignInScreen(w) || perfAppAdapter.isHomeScreen(w),
+    ),
+  );
+  if (find
+      .byWidgetPredicate(perfAppAdapter.isSignInScreen)
+      .evaluate()
+      .isNotEmpty) {
+    await logInWithTestAccount(tester);
+  }
+}
+
+/// Signs in with [perfUsername] and [perfPassword] using the app's own sign-in
+/// steps from [perfAppAdapter], then waits for the home screen.
+///
+/// Fails with a clear message when credentials are missing.
+Future<void> logInWithTestAccount(WidgetTester tester) async {
+  if (perfUsername.isEmpty || perfPassword.isEmpty) {
+    fail(
+      'Set PERF_USERNAME and PERF_PASSWORD in the environment for a '
+      'dedicated test account. The runner forwards them to the app.',
+    );
+  }
+  await perfAppAdapter.signIn(tester, perfUsername, perfPassword);
+  await pumpUntilFound(
+    tester,
+    find.byWidgetPredicate(perfAppAdapter.isHomeScreen),
+  );
+}
+
 /// Waits for real async work such as network calls while frames keep being
 /// produced, until [finder] appears or [timeout] passes.
 Future<void> pumpUntilFound(
@@ -52,47 +87,6 @@ Future<void> pumpUntilFound(
     'Timed out after ${timeout.inSeconds}s waiting for $finder. '
     'Check the backend, network and test account.',
   );
-}
-
-/// Logs in with the real backend using [perfUsername] and [perfPassword],
-/// starting from the sign-in screen, and waits for Home.
-///
-/// Fails with a clear message when credentials are missing. Session tokens
-/// persist in secure storage, so later runs may start already logged in;
-/// call this only when the sign-in screen is shown.
-Future<void> logInWithTestAccount(WidgetTester tester) async {
-  if (perfUsername.isEmpty || perfPassword.isEmpty) {
-    fail(
-      'Set PERF_USERNAME and PERF_PASSWORD in the environment for a '
-      'dedicated test account. The runner forwards them to the app.',
-    );
-  }
-  final fields = find.descendant(
-    of: find.byType(SignInScreen),
-    matching: find.byType(TextField),
-  );
-  await pumpUntilFound(tester, fields);
-  await tester.enterText(fields.at(0), perfUsername);
-  await tester.enterText(fields.at(1), perfPassword);
-  await tester.testTextInput.receiveAction(TextInputAction.done);
-  await tester.pumpAndSettle();
-  final button = find.descendant(
-    of: find.byType(SignInScreen),
-    matching: find.byType(DeliveryGoButton),
-  );
-  await tester.tap(button);
-  await pumpUntilFound(tester, find.byType(HomePageScreen));
-}
-
-/// Opens the app and makes sure the test account is on Home.
-Future<void> pumpLoggedInApp(WidgetTester tester) async {
-  await pumpPerfApp(tester);
-  final signIn = find.byType(SignInScreen);
-  await pumpUntilFound(
-    tester,
-    find.byWidgetPredicate((w) => w is SignInScreen || w is HomePageScreen),
-  );
-  if (signIn.evaluate().isNotEmpty) await logInWithTestAccount(tester);
 }
 
 /// Pumps frames for a fixed duration so idle animations produce frames.

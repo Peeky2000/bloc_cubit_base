@@ -55,7 +55,9 @@ For an explicit benchmark/measurement request, follow `PERFORMANCE.md`.
 - New scenarios start the real app with `pumpLoggedInApp` from
   `integration_test/performance/support/perf_app.dart` against the real backend
   and a dedicated test account (`PERF_USERNAME`/`PERF_PASSWORD`). Never fake
-  repositories for a benchmark.
+  repositories for a benchmark. Sign-in and home screens are known only to
+  `support/perf_app_adapter.dart`; update that file when the auth flow
+  changes.
 - The agent loop in `docs/performance/agent-loop.md` assigns measurement to
   `perf-tester` and fixes to `perf-engineer`. Never approve a baseline or
   loosen a threshold without the PM's explicit approval. A normal code edit

@@ -24,6 +24,11 @@ create:
   (scripts):
     - dart run tool/base_cli.dart create
 
+new:
+  (description): Dry-run tạo app mới từ base với 1 commit đầu tiên; thêm --apply để tạo
+  (scripts):
+    - dart run tool/base_cli.dart create --fresh-history
+
 bootstrap:
   (description): Khởi tạo submodule, dependency và generated code cho clone mới
   (scripts):

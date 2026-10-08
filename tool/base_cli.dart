@@ -13,11 +13,14 @@ Future<void> main(List<String> arguments) async {
   }
 }
 
+/// Runs the CLI. [environment] is the process environment for `git` and
+/// `scripts/bootstrap.sh`; tests inject an isolated Git config through it.
 Future<int> runBaseCli(
   List<String> arguments, {
   LineWriter? output,
   LineWriter? errorOutput,
   String? defaultRoot,
+  Map<String, String>? environment,
 }) async {
   final LineWriter out = output ?? (line) => stdout.writeln(line);
   final LineWriter err = errorOutput ?? (line) => stderr.writeln(line);
@@ -69,16 +72,19 @@ Future<int> runBaseCli(
             'bundle-id',
             'display-name',
           },
-          flags: const {'apply', 'skip-bootstrap'},
+          flags: const {'apply', 'skip-bootstrap', 'fresh-history'},
         );
         final request = RenameRequest.fromArguments(parsed);
         final destination = parsed.requiredOption('destination');
-        return _createApplication(
+        // Await so BaseCliException from create reaches the handler below.
+        return await _createApplication(
           sourceRoot: root,
           destination: destination,
           request: request,
           apply: parsed.flag('apply'),
           skipBootstrap: parsed.flag('skip-bootstrap'),
+          freshHistory: parsed.flag('fresh-history'),
+          environment: environment ?? Platform.environment,
           out: out,
         );
       default:
@@ -101,6 +107,8 @@ Future<int> _createApplication({
   required RenameRequest request,
   required bool apply,
   required bool skipBootstrap,
+  required bool freshHistory,
+  required Map<String, String> environment,
   required LineWriter out,
 }) async {
   final source = _canonicalExistingDirectory(sourceRoot);
@@ -113,7 +121,15 @@ Future<int> _createApplication({
     );
   }
 
-  final dirty = await _gitStatus(source);
+  final dirty = await _gitStatus(source, environment);
+  final history = freshHistory
+      ? await FreshHistoryPlan.read(
+          source: source,
+          target: target,
+          baseName: sourceEngine.config.dartPackage,
+          environment: environment,
+        )
+      : null;
   out('CREATE PLAN');
   out('  source      : $source');
   out('  destination : $target');
@@ -121,31 +137,43 @@ Future<int> _createApplication({
   out('  bundle id   : ${request.bundleId}');
   out('  display name: ${request.displayName}');
   out('  bootstrap   : ${skipBootstrap ? 'skip' : 'run scripts/bootstrap.sh'}');
+  if (history == null) {
+    out('  history     : giữ nguyên Git history của base');
+  } else {
+    history.describe().forEach(out);
+  }
   if (dirty.isNotEmpty) {
     out(
       '  BLOCKED     : source Git tree đang dirty; clone sẽ bỏ sót thay đổi.',
     );
+  }
+  final missingIdentity = history != null && !history.hasIdentity;
+  if (missingIdentity) {
+    out('  BLOCKED     : ${FreshHistoryPlan.missingIdentityMessage}');
   }
 
   if (!apply) {
     out(
       'DRY-RUN: chưa tạo thư mục. Commit source rồi thêm --apply để thực thi.',
     );
-    return dirty.isEmpty ? 0 : 2;
+    return dirty.isEmpty && !missingIdentity ? 0 : 2;
   }
   if (dirty.isNotEmpty) {
     throw BaseCliException(
       'Source Git tree phải sạch trước create --apply:\n$dirty',
     );
   }
+  if (missingIdentity) {
+    throw const BaseCliException(FreshHistoryPlan.missingIdentityMessage);
+  }
 
-  final clone = await Process.run('git', [
+  final clone = await _runProcess('git', [
     'clone',
     '--recurse-submodules',
     '--local',
     source,
     target,
-  ]);
+  ], environment: environment);
   if (clone.exitCode != 0) {
     throw BaseCliException('Git clone thất bại:\n${clone.stderr}');
   }
@@ -162,11 +190,11 @@ Future<int> _createApplication({
   }
 
   if (!skipBootstrap) {
-    final bootstrap = await Process.run(
+    final bootstrap = await _runProcess(
       './scripts/bootstrap.sh',
       const [],
       workingDirectory: target,
-      runInShell: false,
+      environment: environment,
     );
     if (bootstrap.exitCode != 0) {
       throw BaseCliException(
@@ -176,9 +204,304 @@ Future<int> _createApplication({
     }
   }
 
-  out('Đã tạo application tại $target. Git history của base được giữ nguyên.');
+  if (history == null) {
+    out(
+      'Đã tạo application tại $target. Git history của base được giữ nguyên.',
+    );
+  } else {
+    final String commit;
+    try {
+      final cloneHead = (await _git(
+        ['rev-parse', 'HEAD'],
+        root: target,
+        environment: environment,
+      )).trim();
+      if (cloneHead != history.sourceHead) {
+        throw BaseCliException(
+          'HEAD của clone ($cloneHead) khác HEAD lúc lập plan '
+          '(${history.sourceHead}).',
+        );
+      }
+      commit = await replaceGitHistory(
+        target,
+        commitMessage: history.commitMessage,
+        environment: environment,
+      );
+    } on Object catch (error) {
+      throw BaseCliException(
+        'App đã tạo tại $target nhưng thay Git history thất bại. Giữ thư mục '
+        'để điều tra; xóa thư mục rồi chạy lại create: $error',
+      );
+    }
+    out(
+      'Đã tạo application tại $target với Git history mới: 1 commit '
+      '${commit.substring(0, 7)} trên branch $freshHistoryBranch.',
+    );
+    out('Chưa có remote. Thêm remote của app: git remote add origin <url>.');
+  }
   _printPostRenameChecklist(targetEngine.config, out);
   return 0;
+}
+
+/// Branch name of the single commit created by `create --fresh-history`.
+const freshHistoryBranch = 'main';
+
+/// Read-only facts gathered before `create --fresh-history` mutates anything.
+class FreshHistoryPlan {
+  const FreshHistoryPlan({
+    required this.sourceHead,
+    required this.commitMessage,
+    required this.submodules,
+    required this.identityName,
+    required this.identityEmail,
+  });
+
+  static const missingIdentityMessage =
+      '--fresh-history cần git config user.name và user.email để tạo commit '
+      'đầu tiên. Chạy: git config --global user.name "Tên" và '
+      'git config --global user.email "email@company.com".';
+
+  /// Reads the source HEAD, its submodule pins and the Git identity the new
+  /// repository at [target] will use. Never writes to [source].
+  static Future<FreshHistoryPlan> read({
+    required String source,
+    required String target,
+    required String baseName,
+    required Map<String, String> environment,
+  }) async {
+    final head = (await _git(
+      ['rev-parse', 'HEAD'],
+      root: source,
+      environment: environment,
+    )).trim();
+    final shortHead = (await _git(
+      ['rev-parse', '--short', head],
+      root: source,
+      environment: environment,
+    )).trim();
+    return FreshHistoryPlan(
+      sourceHead: head,
+      commitMessage: 'chore: initial commit from $baseName $shortHead',
+      submodules: await readSubmodulePins(source, environment: environment),
+      identityName: await _futureRepositoryConfig(
+        target,
+        'user.name',
+        environment,
+      ),
+      identityEmail: await _futureRepositoryConfig(
+        target,
+        'user.email',
+        environment,
+      ),
+    );
+  }
+
+  final String sourceHead;
+  final String commitMessage;
+  final List<SubmodulePin> submodules;
+  final String? identityName;
+  final String? identityEmail;
+
+  bool get hasIdentity =>
+      (identityName?.isNotEmpty ?? false) &&
+      (identityEmail?.isNotEmpty ?? false);
+
+  List<String> describe() => [
+    '  history     : thay bằng 1 commit "$commitMessage" '
+        'trên branch $freshHistoryBranch, không có remote',
+    for (final pin in submodules)
+      '  submodule   : ${pin.path} @ ${pin.commit.substring(0, 12)} '
+          '(${pin.url})',
+    if (hasIdentity) '  git identity: $identityName <$identityEmail>',
+  ];
+}
+
+class SubmodulePin {
+  const SubmodulePin({
+    required this.name,
+    required this.path,
+    required this.url,
+    required this.commit,
+  });
+
+  final String name;
+  final String path;
+  final String url;
+  final String commit;
+}
+
+/// Lists gitlinks committed at HEAD of [root] with their `.gitmodules` name
+/// and URL. Read-only.
+Future<List<SubmodulePin>> readSubmodulePins(
+  String root, {
+  required Map<String, String> environment,
+}) async {
+  final tree = await _git(
+    ['ls-tree', '-r', '-z', 'HEAD'],
+    root: root,
+    environment: environment,
+  );
+  final gitlinks = <String, String>{};
+  for (final entry in tree.split('\u0000').where((line) => line.isNotEmpty)) {
+    final tab = entry.indexOf('\t');
+    final fields = entry.substring(0, tab).split(' ');
+    if (fields.first == '160000') {
+      gitlinks[entry.substring(tab + 1)] = fields[2];
+    }
+  }
+  if (gitlinks.isEmpty) {
+    return const [];
+  }
+
+  final paths = await _git(
+    [
+      'config',
+      '--blob',
+      'HEAD:.gitmodules',
+      '--null',
+      '--get-regexp',
+      r'^submodule\..*\.path$',
+    ],
+    root: root,
+    environment: environment,
+  );
+  final pins = <SubmodulePin>[];
+  for (final entry in paths.split('\u0000').where((line) => line.isNotEmpty)) {
+    final newline = entry.indexOf('\n');
+    final key = entry.substring(0, newline);
+    final path = entry.substring(newline + 1);
+    final name = key.substring(
+      'submodule.'.length,
+      key.length - '.path'.length,
+    );
+    final commit = gitlinks.remove(path);
+    if (commit == null) {
+      continue;
+    }
+    final url = (await _git(
+      ['config', '--blob', 'HEAD:.gitmodules', '--get', 'submodule.$name.url'],
+      root: root,
+      environment: environment,
+    )).trim();
+    pins.add(SubmodulePin(name: name, path: path, url: url, commit: commit));
+  }
+  if (gitlinks.isNotEmpty) {
+    throw BaseCliException(
+      'Gitlink không có trong .gitmodules: ${gitlinks.keys.join(', ')}',
+    );
+  }
+  return pins..sort((left, right) => left.path.compareTo(right.path));
+}
+
+/// Replaces the history of the repository at [root] with one commit holding
+/// its current working tree. Works offline: the submodule repositories under
+/// `.git/modules` are kept, each submodule is checked out at the commit HEAD
+/// pinned, and `.gitmodules` URLs stay unchanged. Returns the new commit SHA.
+Future<String> replaceGitHistory(
+  String root, {
+  required String commitMessage,
+  required Map<String, String> environment,
+}) async {
+  final gitDirectory = Directory('$root/.git');
+  if (!gitDirectory.existsSync()) {
+    throw BaseCliException('Không tìm thấy thư mục .git trong $root');
+  }
+  for (final key in const ['user.name', 'user.email']) {
+    final value = await _gitConfigValue(root, key, environment);
+    if (value == null) {
+      throw const BaseCliException(FreshHistoryPlan.missingIdentityMessage);
+    }
+  }
+  final pins = await readSubmodulePins(root, environment: environment);
+  for (final pin in pins) {
+    final submodule = '$root/${pin.path}';
+    if (FileSystemEntity.typeSync('$submodule/.git') ==
+        FileSystemEntityType.notFound) {
+      throw BaseCliException(
+        'Submodule ${pin.path} chưa được checkout trong $root.',
+      );
+    }
+    final head = (await _git(
+      ['rev-parse', 'HEAD'],
+      root: submodule,
+      environment: environment,
+    )).trim();
+    if (head != pin.commit) {
+      await _git(
+        ['checkout', '--quiet', '--detach', pin.commit],
+        root: submodule,
+        environment: environment,
+      );
+    }
+  }
+
+  // Files the base tracks even though .gitignore matches them.
+  final trackedIgnored = (await _git(
+    ['ls-files', '-z', '--cached', '--ignored', '--exclude-standard'],
+    root: root,
+    environment: environment,
+  )).split('\u0000').where((path) => path.isNotEmpty).toList();
+
+  for (final entity in gitDirectory.listSync(followLinks: false)) {
+    if (_basename(entity.path) != 'modules') {
+      entity.deleteSync(recursive: true);
+    }
+  }
+  Future<String> git(List<String> arguments) =>
+      _git(arguments, root: root, environment: environment);
+
+  await git(['init', '--quiet', '--initial-branch=$freshHistoryBranch']);
+  // Register each gitlink first so `add --all` treats the checkout as a
+  // submodule instead of an embedded repository.
+  for (final pin in pins) {
+    await git([
+      'update-index',
+      '--add',
+      '--cacheinfo',
+      '160000,${pin.commit},${pin.path}',
+    ]);
+  }
+  await git(['add', '--all']);
+  final keep = trackedIgnored
+      .where(
+        (path) =>
+            FileSystemEntity.typeSync('$root/$path', followLinks: false) !=
+            FileSystemEntityType.notFound,
+      )
+      .toList();
+  if (keep.isNotEmpty) {
+    await git(['add', '--force', '--', ...keep]);
+  }
+  await git(['submodule', '--quiet', 'init']);
+  await git(['submodule', '--quiet', 'sync', '--recursive']);
+  await git([
+    '-c',
+    'user.useConfigOnly=true',
+    'commit',
+    '--quiet',
+    '--no-verify',
+    '--message',
+    commitMessage,
+  ]);
+
+  final count = (await git(['rev-list', '--count', 'HEAD'])).trim();
+  if (count != '1') {
+    throw BaseCliException('History mới có $count commit thay vì 1.');
+  }
+  final committed = await readSubmodulePins(root, environment: environment);
+  final status = await git(['submodule', 'status']);
+  for (final pin in pins) {
+    final match = committed.where((item) => item.path == pin.path).toList();
+    if (match.length != 1 ||
+        match.single.commit != pin.commit ||
+        match.single.url != pin.url ||
+        !status.contains(' ${pin.commit} ${pin.path}')) {
+      throw BaseCliException(
+        'Submodule ${pin.path} không còn trỏ đúng ${pin.url} @ ${pin.commit}.',
+      );
+    }
+  }
+  return (await git(['rev-parse', 'HEAD'])).trim();
 }
 
 void _printPlan(
@@ -740,7 +1063,7 @@ class CliArguments {
     final options = <String, String>{};
     final flags = <String>{};
     var showHelp = false;
-    const booleanFlags = {'apply', 'skip-bootstrap'};
+    const booleanFlags = {'apply', 'skip-bootstrap', 'fresh-history'};
 
     for (var index = start; index < arguments.length; index++) {
       final item = arguments[index];
@@ -976,18 +1299,94 @@ void _writeAtomically(String path, String content) {
   temporary.renameSync(file.path);
 }
 
-Future<String> _gitStatus(String root) async {
-  final result = await Process.run('git', [
+Future<String> _gitStatus(String root, Map<String, String> environment) => _git(
+  ['status', '--porcelain', '--untracked-files=normal'],
+  root: root,
+  environment: environment,
+).then((status) => status.trim());
+
+/// Variables that would redirect `git -C <root>` to another repository, for
+/// example the source repository when the CLI runs inside a Git hook.
+const _repositoryEnvironment = {
+  'GIT_DIR',
+  'GIT_WORK_TREE',
+  'GIT_INDEX_FILE',
+  'GIT_OBJECT_DIRECTORY',
+  'GIT_ALTERNATE_OBJECT_DIRECTORIES',
+  'GIT_COMMON_DIR',
+  'GIT_NAMESPACE',
+  'GIT_PREFIX',
+};
+
+Future<ProcessResult> _runProcess(
+  String executable,
+  List<String> arguments, {
+  required Map<String, String> environment,
+  String? workingDirectory,
+  Map<String, String> overrides = const {},
+}) => Process.run(
+  executable,
+  arguments,
+  workingDirectory: workingDirectory,
+  environment: {
+    for (final entry in environment.entries)
+      if (!_repositoryEnvironment.contains(entry.key)) entry.key: entry.value,
+    ...overrides,
+  },
+  includeParentEnvironment: false,
+);
+
+Future<String> _git(
+  List<String> arguments, {
+  required String root,
+  required Map<String, String> environment,
+}) async {
+  final result = await _runProcess('git', [
     '-C',
     root,
-    'status',
-    '--porcelain',
-    '--untracked-files=normal',
-  ]);
+    ...arguments,
+  ], environment: environment);
   if (result.exitCode != 0) {
-    throw BaseCliException('Không đọc được Git status: ${result.stderr}');
+    throw BaseCliException(
+      'git ${arguments.join(' ')} thất bại tại $root:\n${result.stderr}'.trim(),
+    );
   }
-  return (result.stdout as String).trim();
+  return result.stdout as String;
+}
+
+/// Reads [key] the way a new repository at [target] would see it: system,
+/// global and command-line config, but no config of any enclosing repository.
+Future<String?> _futureRepositoryConfig(
+  String target,
+  String key,
+  Map<String, String> environment,
+) async {
+  final result = await _runProcess(
+    'git',
+    ['config', '--get', key],
+    workingDirectory: Directory(target).parent.path,
+    environment: environment,
+    overrides: {'GIT_DIR': '$target/.git'},
+  );
+  final value = (result.stdout as String).trim();
+  return result.exitCode == 0 && value.isNotEmpty ? value : null;
+}
+
+/// Reads [key] as the existing repository at [root] sees it.
+Future<String?> _gitConfigValue(
+  String root,
+  String key,
+  Map<String, String> environment,
+) async {
+  final result = await _runProcess('git', [
+    '-C',
+    root,
+    'config',
+    '--get',
+    key,
+  ], environment: environment);
+  final value = (result.stdout as String).trim();
+  return result.exitCode == 0 && value.isNotEmpty ? value : null;
 }
 
 String _scriptRoot() {
@@ -1043,11 +1442,16 @@ Usage:
   dart run tool/base_cli.dart create \\
     --destination ../my_app --display-name "My App" \\
     --package-name my_app --bundle-id com.company.my_app \\
-    [--apply] [--skip-bootstrap] [--root PATH]
+    [--fresh-history] [--apply] [--skip-bootstrap] [--root PATH]
+
+  --fresh-history: thay history của clone bằng 1 commit
+    "chore: initial commit from <base> <short-sha>". Submodule giữ nguyên
+    URL trong .gitmodules và commit đã pin. Cần git user.name/user.email.
 
 Safety:
   - create và rename luôn dry-run nếu không có --apply.
   - validation hoàn tất trước mutation đầu tiên.
   - create --apply chỉ chạy khi source Git tree sạch.
+  - create không bao giờ ghi vào source repository.
   - Firebase/signing/secret không được tự động tạo hoặc tin cậy.
 ''';

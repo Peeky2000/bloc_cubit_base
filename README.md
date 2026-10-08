@@ -19,7 +19,8 @@ bắt đầu tại **[bộ công cụ AI](docs/guides/ai-toolbox.md)**.
 | UI toolkit | Submodule `sli_common` với API `Sli*`, Shadcn nằm sau facade | [Dùng sli_common](docs/guides/use-sli-common.md) |
 | Đo hiệu năng | Mở app, độ mượt, bộ nhớ, mạng trên máy thật với dữ liệu thật | [Đo hiệu năng app](docs/guides/measure-performance.md) |
 | Review và bảo mật | Chọn file và luật review theo tầng, audit bảo mật mobile | [Bộ công cụ AI](docs/guides/ai-toolbox.md) |
-| AI agent | Agent PM, dev, tester, reviewer, đo và sửa hiệu năng, cùng 23 skill | [AGENTS.md](AGENTS.md) |
+| AI agent | Agent PM, dev, tester, reviewer, đo và sửa hiệu năng, cùng 24 skill | [AGENTS.md](AGENTS.md) |
+| Sổ quyết định | Mọi lựa chọn kỹ thuật được ghi và tra cứu, để các tính năng làm giống nhau | [docs/decisions](docs/decisions/README.md) |
 | Build và phát hành | Derry, `build.sh`, Fastlane, Firebase App Distribution | [Derry và build](docs/guides/use-derry-and-build.md) |
 
 ## Kiến trúc
@@ -100,6 +101,7 @@ Production chặn URL không phải HTTPS và chặn network inspector bị bậ
 | `derry test` | Test của app |
 | `derry quality` | Format, analyzer, kiểm tra kiến trúc và test cho cả app lẫn `sli_common` |
 | `derry review plan` | Liệt kê file đã thay đổi cần review và luật cho từng file |
+| `derry decision search "<chủ đề>"` | Tìm quyết định kỹ thuật đã chốt |
 | `derry scaffold -- <feature> [--bloc] [--data] --apply` | Sinh khung feature đúng convention |
 | `derry perf run` | Đo hiệu năng trên máy thật |
 | `derry perf diagnose` | Đo kèm chẩn đoán widget chậm nhất |
@@ -118,6 +120,9 @@ Trong Claude Code có sẵn các lệnh:
 
 | Lệnh | Việc |
 |---|---|
+| `/tech-design <tài liệu>` | Viết thiết kế kỹ thuật `tech.md` từ tài liệu để duyệt trước khi code |
+| `/build-feature <tài liệu>` | Thiết kế, chờ duyệt, code đúng convention, agent test kiểm tra độc lập |
+| `/decision <câu hỏi>` | Tra cứu hoặc ghi quyết định kỹ thuật |
 | `/perf-check [màn hoặc luồng]` | Đo hiệu năng, tìm nguyên nhân, sửa, đo lại và viết báo cáo tiếng Việt |
 | `/perf-scenario <AC, spec hoặc mô tả>` | Viết kịch bản đo và đề xuất ngưỡng, kể cả từ AC không có con số |
 | `/security-audit [phạm vi]` | Audit bảo mật mobile, ghi báo cáo vào `docs/reviews/` |

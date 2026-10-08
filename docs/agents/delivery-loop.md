@@ -5,9 +5,12 @@ một yêu cầu thành code đúng convention, đã được kiểm tra độc 
 yêu cầu và đọc báo cáo cuối.
 
 ```text
-PM: đưa spec, AC hoặc mô tả
+PM: đưa tài liệu (spec, AC, PRD, thiết kế)
  └─ flutter-dev
-      phân tích → plan → scaffold → code → derry quality → tự review
+      đọc sổ quyết định → viết tech.md → chờ PM duyệt
+ └─ PM duyệt hoặc chỉnh tech.md và các quyết định đề xuất
+ └─ flutter-dev
+      scaffold → code → derry quality → tự review → cập nhật sổ quyết định
       ghi phần Dev trong phiếu bàn giao
        └─ flutter-tester
             viết test nghiệm thu từ AC trước khi đọc code
@@ -16,6 +19,24 @@ PM: đưa spec, AC hoặc mô tả
             PASS → báo cáo cho PM
 PM: đọc báo cáo, quyết định đánh đổi nếu có
 ```
+
+## Thiết kế kỹ thuật trước khi code
+
+Tài liệu đưa vào đã chốt nghiệp vụ. `flutter-dev` chỉ quyết phần kỹ thuật và
+ghi vào `docs/specs/<id>-<feature>/tech.md` theo mẫu của skill `tech-design`:
+file nào, class và trường tên gì, đặt ở đâu, state và effect, API, lưu trữ,
+test, ngưỡng hiệu năng, quyết định dùng lại và quyết định mới. PM duyệt hoặc
+chỉnh file này trước khi có dòng code nào. Chỗ tài liệu chưa rõ về nghiệp vụ
+được liệt kê để PM trả lời, không tự đoán.
+
+## Sổ quyết định
+
+Mọi lựa chọn kỹ thuật có thể lặp lại được ghi vào `docs/decisions/` (cấp tính
+năng) hoặc `docs/adr/` (cấp dự án), và tra bằng
+`python3 tool/decisions/decisions.py search "<chủ đề>"`. Tính năng sau phải
+làm giống quyết định đã `accepted`; muốn khác thì tạo quyết định mới thay thế.
+Tên khái niệm nghiệp vụ thống nhất nằm trong `docs/decisions/glossary.md`.
+Cách dùng: [docs/decisions/HOW-TO.md](../decisions/HOW-TO.md).
 
 ## Kiểm soát convention
 

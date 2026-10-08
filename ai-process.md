@@ -8,14 +8,17 @@ và `project-convention`.
 ## Luồng bàn giao
 
 ```text
-Brainstorm / Spec → cổng quyết định của user → implementation plan
-→ implementation → review → tests và architecture gates → cập nhật status/docs
+Tài liệu nghiệp vụ → tech.md + quyết định đề xuất → PM duyệt
+→ scaffold + implementation → agent test kiểm tra → tests và gates
+→ cập nhật sổ quyết định và docs
 ```
 
 | Artifact | Đường dẫn |
 |---|---|
 | Brainstorm | `docs/brainstorm/YYYY-MM-DD-{topic}.md` |
 | Frontend spec | `docs/specs/{NNN}-{name}/fe.md` |
+| Thiết kế kỹ thuật | `docs/specs/{NNN}-{name}/tech.md` |
+| Quyết định cấp tính năng | `docs/decisions/D-NNNN-{slug}.md` |
 | Checklists | `docs/specs/{NNN}-{name}/checklists/` |
 | Plan | `docs/plan/YYYY-MM-DD-{topic}.md` |
 | Review | `docs/reviews/YYYY-MM-DD-hh-mm-ss-{topic}.md` |

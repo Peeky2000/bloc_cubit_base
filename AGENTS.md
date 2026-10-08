@@ -30,6 +30,15 @@ Toàn bộ lệnh, agent và skill được tổng hợp trong
 Vòng đo và sửa hiệu năng giữa hai agent performance được mô tả trong
 [docs/performance/agent-loop.md](docs/performance/agent-loop.md).
 
+Trước khi chọn cách làm, tìm quyết định kỹ thuật đã chốt:
+
+```bash
+python3 tool/decisions/decisions.py search "phân trang"
+```
+
+Tính năng mới đi qua `tech.md` (skill `tech-design`) và chờ PM duyệt trước khi
+code.
+
 Tìm artifact đã được index trước khi tạo bản trùng:
 
 ```bash

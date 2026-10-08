@@ -47,6 +47,10 @@ Run the modes the change needs. Functional and convention always run.
 3. Check that new code matches the reference shapes listed in
    `.agents/agents/flutter-dev.md`, and that `tool/convention/baseline.txt`
    did not grow.
+4. Check the code against the approved `tech.md`: every listed file, class,
+   field, route and test exists with that name, and nothing unlisted was
+   added. Check that accepted decisions were followed and that
+   `python3 tool/decisions/decisions.py check` passes.
 
 ### 3. Security (when auth, tokens, storage, logs, deep links, WebView,
 permissions or manifests changed)

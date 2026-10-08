@@ -9,8 +9,10 @@ $ARGUMENTS
 Follow `docs/agents/delivery-loop.md` exactly.
 
 1. Create a branch `feat/<feature>` from `main` if you are on `main`.
-2. Act as `.agents/agents/flutter-dev.md`: understand the input (run
-   `spec-analyze` when there is no `fe.md`), reuse first, plan, scaffold with
+2. Act as `.agents/agents/flutter-dev.md`. First search the decision log and
+   write `tech.md` with the `tech-design` skill, then STOP and ask the PM to
+   approve it; do not write feature code in the same turn. After approval:
+   reuse first, scaffold with
    `dart run tool/scaffold/feature.dart`, implement, then self-check with
    `derry gen` and `derry quality`. Write the handoff to
    `docs/handoffs/YYYY-MM-DD-hh-mm-<feature>.md`.

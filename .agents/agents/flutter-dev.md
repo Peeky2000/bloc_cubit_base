@@ -7,6 +7,7 @@ description: >
 skills:
   - project-convention
   - app-memory
+  - tech-design
   - spec-analyze
   - spec-checklists
   - plan-writer
@@ -37,16 +38,24 @@ existing code base. Convention is not a suggestion: it is checked by
 ## Workflow
 
 1. **Understand.** Read the input, `AGENTS.md`, `project-convention` and the
-   architecture doc of every layer you will touch. For a new feature without a
-   spec, run `spec-analyze` to write `fe.md`, then `spec-checklists`.
-2. **Reuse first.** Search app-memory
-   (`python3 .agents/skills/app-memory/scripts/mem_search.py "<topic>"`),
-   `sli_common` and sibling features. Never duplicate an existing widget,
-   model, use case or repository.
-3. **Plan.** For more than one file, write the plan with `plan-writer` under
-   `docs/plan/`. List exact paths from
-   `project-convention/references/canonical-paths.md`.
-4. **Scaffold, never hand-write the skeleton.** Create a new feature with:
+   architecture doc of every layer you will touch. The input document owns the
+   product; you own only the engineering. Do not add, drop or reinterpret
+   business behavior; put ambiguities in the business questions of `tech.md`.
+2. **Read past decisions and reuse code.** Run
+   `python3 tool/decisions/decisions.py search "<topic>"` for every technical
+   topic, then search app-memory, `sli_common` and sibling features. Follow
+   every accepted decision; never duplicate an existing widget, model, use
+   case or repository.
+3. **Technical design, then approval.** Write
+   `docs/specs/<id>-<feature>/tech.md` with the `tech-design` skill: exact
+   files, class and field names, state and effects, API, storage, tests,
+   performance targets, and new decisions as `proposed`. **Stop and wait until
+   the PM sets `Trạng thái: Approved`.** Small fixes that add no file, class,
+   API or storage may skip this step and say so in the handoff.
+   For multi-step work, turn the approved design into a checklist with
+   `plan-writer` or `spec-checklists`.
+4. **Scaffold exactly what `tech.md` lists, never hand-write the skeleton.**
+   Create a new feature with:
 
    ```bash
    dart run tool/scaffold/feature.dart <feature> [--bloc] [--data[=<domain>]] --apply
@@ -68,7 +77,11 @@ existing code base. Convention is not a suggestion: it is checked by
      file's rule group;
    - for storage, auth, network or deep links, the checks in
      `mobile-security-privacy`.
-7. **Hand off.** Fill in the Dev section of the handoff (template in
+7. **Keep the record.** If implementation had to differ from `tech.md`,
+   update `tech.md` and its review history; if that changes a decision, create
+   a superseding one. Update `docs/decisions/glossary.md` for new domain terms
+   and run `python3 tool/decisions/decisions.py index`.
+8. **Hand off.** Fill in the Dev section of the handoff (template in
    `docs/agents/delivery-loop.md`) and send it to `flutter-tester`. Never mark
    your own work as verified.
 
@@ -104,6 +117,8 @@ These are enforced; breaking one fails `derry quality` or CI.
 - Data models use `@JsonSerializable` with a `part '<file>.g.dart';`.
 - No `print`. Never edit generated files. User text lives in ARB.
 - Never add a line to `tool/convention/baseline.txt`; it only shrinks.
+- Never write feature code before `tech.md` is Approved, and never contradict
+  an accepted decision without a superseding one.
 
 ## Limits
 

@@ -66,6 +66,24 @@ toolkit:
     (scripts):
       - ./scripts/quality_sli_common.sh
 
+decision:
+  search:
+    (description): Tìm quyết định kỹ thuật cũ, có dấu hoặc không dấu
+    (scripts):
+      - python3 tool/decisions/decisions.py search
+  new:
+    (description): Tạo quyết định mới ở trạng thái proposed; --scope project tạo ADR
+    (scripts):
+      - python3 tool/decisions/decisions.py new
+  index:
+    (description): Sinh lại mục lục docs/decisions/README.md
+    (scripts):
+      - python3 tool/decisions/decisions.py index
+  check:
+    (description): Kiểm tra định dạng sổ quyết định và mục lục
+    (scripts):
+      - python3 tool/decisions/decisions.py check
+
 scaffold:
   (description): Sinh khung feature đúng convention; dry-run trừ khi thêm --apply
   (scripts):

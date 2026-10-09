@@ -145,6 +145,7 @@ cần gọi trực tiếp; chỉ cần mô tả việc cần làm. Các skill n�
 | `plan-writer` | "viết plan", "lên kế hoạch" |
 | `app-memory` | Tự dùng để tìm widget, model, route đã có trước khi tạo mới |
 | `skill-creator` | Tạo hoặc sửa skill |
+| `sli-kit-from-spec` | Cài bộ kit thiết kế (từ the-forge-design) thành component `Sli*` trong `sli_common`, kèm golden từng trạng thái và trang đối chiếu `tool/kit/compare.py` |
 
 ### Kiến trúc và từng tầng
 

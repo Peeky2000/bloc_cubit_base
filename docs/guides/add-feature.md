@@ -31,7 +31,7 @@ mà lệnh in ra: thêm route, đăng ký use case, chuyển đường dẫn API
 6. Thêm UseCase thuần inject qua constructor để orchestration; đăng ký lifetime
    của UseCase trong `lib/di/register_module.dart`, không import Injectable
    vào domain.
-7. Chọn Cubit hoặc BLoC theo [guide quyết định](choose-cubit-or-bloc.md), gắn
+7. Chọn Cubit hoặc BLoC theo [bảng chọn](../architecture/state-management.md#lựa-chọn-mặc-định), gắn
    `@injectable`, unit-test transition, và dùng
    [typed UI effect](handle-ui-effects.md) nếu cần route/dialog/snackbar.
 8. Tạo một screen mỏng. Resolve owner của state một lần trong builder và

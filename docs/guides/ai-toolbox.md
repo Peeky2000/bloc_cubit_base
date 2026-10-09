@@ -4,6 +4,9 @@ Trang này tổng hợp mọi lệnh, agent và skill dành cho AI có trong rep
 cách gọi. Khi thêm hoặc đổi một công cụ, cập nhật trang này trong cùng thay
 đổi.
 
+Muốn biết gọi lệnh nào theo thứ tự nào khi làm dự án thật, và việc nào còn mở,
+xem [sổ tay dự án thật](start-real-project.md).
+
 ## Cách gọi nhanh
 
 Có ba cách gọi công cụ AI. Không cần nhớ hết; chọn một cách là đủ.
@@ -44,6 +47,8 @@ Chép nguyên câu và thay phần trong ngoặc nhọn.
 | Viết test | `viết test cho <file hoặc tính năng>` |
 | Chuẩn bị phát hành | `kiểm tra release readiness cho bản prod Android và iOS` |
 | Thêm dữ liệu cần lưu trên máy | `thêm lưu <dữ liệu> theo storage-patterns của flutter-datasource` |
+| Làm danh sách có phân trang, form, cache, upload, realtime... | `làm <tính năng> theo mẫu <tên mẫu> của flutter-patterns` |
+| Tạo app mới từ base | `derry new -- --destination ../my_app --display-name "My App" --package-name my_app --bundle-id com.company.my_app --apply` |
 | Bọc một SDK dùng callback | `bọc <SDK> theo async-flow-patterns của flutter-repository` |
 | Thay luồng đăng nhập mẫu | `thay đăng nhập mẫu bằng <luồng mới>, cập nhật perf_app_adapter.dart` |
 
@@ -75,6 +80,7 @@ Chạy trong terminal. Danh sách đầy đủ: `derry ls -d`.
 |---|---|
 | `derry quality` | Format, analyzer, kiểm tra kiến trúc và test, cho cả app lẫn `sli_common` |
 | `derry gen` | Sinh code: DI, model, asset |
+| `derry new -- --destination ../my_app --display-name "My App" --package-name my_app --bundle-id com.company.my_app [--apply]` | Tạo app mới từ base với một commit đầu tiên; không có `--apply` thì chỉ in kế hoạch |
 | `derry scaffold -- <feature> [--bloc] [--data[=<domain>]] [--apply]` | Sinh khung feature đúng convention; không có `--apply` thì chỉ in kế hoạch |
 | `derry decision search "<chủ đề>"` | Tìm quyết định kỹ thuật cũ, có dấu hoặc không dấu |
 | `derry decision new -- "<tiêu đề>" [--scope project] [--tags a,b]` | Tạo quyết định mới ở trạng thái proposed; `--scope project` tạo ADR |
@@ -149,6 +155,7 @@ cần gọi trực tiếp; chỉ cần mô tả việc cần làm. Các skill n�
 | `flutter-model-entity` | Entity và model | |
 | `flutter-datasource` | Gọi API, lưu trữ local | [storage-patterns.md](../../.agents/skills/flutter-datasource/references/storage-patterns.md): chọn nơi lưu, vòng đời dữ liệu, xoá khi đăng xuất |
 | `flutter-repository` | Repository | [async-flow-patterns.md](../../.agents/skills/flutter-repository/references/async-flow-patterns.md): bọc SDK dùng callback thành một kết quả |
+| `flutter-patterns` | Mẫu kỹ thuật chuẩn | Phân trang, form, cache offline, upload ảnh, realtime, deep link, push, quyền; code mẫu có test trong `test/patterns/` |
 | `flutter-di` | Dependency injection | |
 | `flutter-bloc-cubit` | Cubit, BLoC và state | |
 | `flutter-router` | Điều hướng | |
@@ -199,6 +206,8 @@ Báo cáo lần chạy đầu và kết quả xử lý: [review ngày 2026-10-08
 | Lưu trữ dữ liệu và phiên đăng nhập | [storage-patterns.md](../../.agents/skills/flutter-datasource/references/storage-patterns.md), [networking](../architecture/networking.md) |
 | Bọc SDK và luồng bất đồng bộ | [async-flow-patterns.md](../../.agents/skills/flutter-repository/references/async-flow-patterns.md), [ADR-0010](../adr/0010-platform-auth-behind-domain-port.md) |
 | Bảo mật mobile | [mobile-attack-classes.md](../../.agents/skills/mobile-security-privacy/references/mobile-attack-classes.md) |
+| Theo dõi app trên máy người dùng | [Bật Version Health](enable-version-health.md) |
+| Đánh giá định tuyến skill | [Báo cáo eval](../reviews/2026-10-08-skill-routing-eval.md), [cách chạy lại](../../.agents/skills/evals/README.md) |
 | Quy trình làm việc với AI | [ai-process.md](../../ai-process.md) |
 | Vòng dev và tester | [delivery-loop.md](../agents/delivery-loop.md) |
 | Sổ quyết định và thuật ngữ | [docs/decisions/](../decisions/README.md), [cách dùng](../decisions/HOW-TO.md), [thuật ngữ](../decisions/glossary.md) |

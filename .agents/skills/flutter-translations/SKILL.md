@@ -1,8 +1,16 @@
 ---
 name: flutter-translations
 description: >
-  Localization for this base using Flutter gen-l10n (ARB files) and optional server
-  message codes. Trigger: "l10n", "translation", "arb", "localize".
+  Localization for this base with Flutter gen-l10n: ARB keys in app_en.arb
+  and app_vi.arb, context.l10n in widgets, and mapping server message codes or
+  typed errors to localized text at the UI boundary. Use when adding or
+  changing user-facing text, replacing a hardcoded string (also inside a
+  shared widget or an error message), adding an English or Vietnamese version,
+  or showing a server code as a message in the current language. Trigger:
+  l10n, translation, ARB, localize, đa ngôn ngữ, bản dịch, thêm chuỗi,
+  hardcode text, tiếng Anh. Not for where a widget lives (use
+  flutter-atomic-design) or how an error flows through layers (use
+  flutter-error-handling).
 ---
 
 # Translations — gen-l10n

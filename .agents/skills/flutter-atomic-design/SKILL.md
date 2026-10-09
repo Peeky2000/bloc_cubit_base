@@ -1,9 +1,17 @@
 ---
 name: flutter-atomic-design
 description: >
-  Pragmatic UI reuse and placement across feature views, app widgets, and the
-  sli_common Git submodule with Shadcn behind a stable facade.
-  Trigger: widget, component, design system, reuse UI, shadcn, sli_common.
+  Decide where a UI widget lives and how to build it for reuse: feature view,
+  app widget (lib/core/widget), or the shared sli_common package with Shadcn
+  behind its facade. Use when creating or extracting a reusable widget or
+  component, choosing sli_common versus the feature folder, composing Sli*
+  components, or setting tokens, loading/disabled states, touch targets and
+  semantics of a shared widget. Also load it next to flutter-testing when a
+  test targets a shared widget or Sli* component. Trigger: widget dùng chung,
+  component, design system, tách widget, reuse UI, shadcn, sli_common, Sli*.
+  Not for moving hardcoded text into ARB (use flutter-translations), package
+  or architecture brainstorming (use brainstorm), or jank in a widget tree
+  (use flutter-performance).
 ---
 
 # UI components

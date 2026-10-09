@@ -1,9 +1,16 @@
 ---
 name: flutter-datasource
 description: >
-  Remote and local data sources using ApiHandler/Dio, SharedPreferences for
-  non-secret settings, secure TokenProvider storage, and injectable bindings.
-  Trigger: datasource, API client, remote, local storage, Dio, token.
+  Write or change a data source in this base: remote calls through
+  ApiHandler/Dio and UrlEndPoint, local storage (SharedPreferences only for
+  non-secret settings and caches, TokenProvider/flutter_secure_storage for
+  tokens), parsing into data models, and the @LazySingleton(as: ...) binding.
+  Use when adding an endpoint or API call, choosing where to persist a value,
+  or saving a token after login. Trigger: datasource, data source, endpoint,
+  API client, ApiHandler, Dio, SharedPreferences, gọi API, thêm API, lưu local,
+  lưu xuống máy. Not for the repository that combines remote and local
+  sources, offline fallback or repo responsibilities (use flutter-repository),
+  and not for a security audit of token storage (use mobile-security-privacy).
 ---
 
 # Data Sources

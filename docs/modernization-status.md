@@ -97,6 +97,10 @@ Catalog và Base CLI vẫn có snapshot riêng tại
 
 ## Việc còn lại trước template zero-debt
 
+Danh sách việc còn mở luôn cập nhật nằm ở
+[sổ tay dự án thật](guides/start-real-project.md#5-việc-còn-mở-trong-base).
+Phần dưới đây là bối cảnh lịch sử.
+
 1. Tiếp tục migration theo family cho 9 file trùng còn lại: dialog, form/input,
    button/action và display; matrix hiện tại đã chỉ ra khác biệt và gate của
    từng loại tại [widget family matrix](plan/2026-10-01-widget-family-migration-matrix.md).

@@ -1,4 +1,4 @@
-# Matrix migration widget trùng — 2026-10-01
+# Matrix migration widget trùng — 2026-10-01 (cập nhật 2026-10-08)
 
 Đây là checklist quyết định cho 10 filename còn trùng sau BottomSheet. So sánh
 source app tại `lib/core/widget` với public export trong `sli_common`; tên file
@@ -33,3 +33,15 @@ Mỗi dòng chỉ được đánh dấu xong khi có test behavioral/semantics, 
 đây là inventory, không phải thước đo chất lượng API. Xem
 [guide migration](../guides/use-sli-common.md) và
 [review BottomSheet](../reviews/2026-09-30-shadcn-bottom-sheet-review.md).
+
+## Kết quả 2026-10-08
+
+Bảy file trùng đã được xử lý:
+
+| Widget | Kết quả |
+|---|---|
+| `TitleWidget`, `MoneyWidget`, `BaseField`, `CommonDropDown`, `CommonTextField` | Code trùng 100% với `sli_common` (chỉ khác import). App dùng bản `sli_common`, xoá bản app. `MainApp` vẫn cấu hình style tĩnh như cũ, nay trên class của `sli_common` |
+| `DialogUtil` | Code trùng 100%. App dùng bản `sli_common`; `MainApp` đăng ký thêm `sli_common` localizations delegate để nhãn mặc định (Hủy, Ok) dịch được. Có test `test/core/widget/shared_dialog_localization_test.dart` |
+| `BottomButton`, `Bottom2Button` | Không còn caller nào; đã xoá cùng wrapper `DeliveryGo*` |
+| `InkWellButton` | Khác hẳn về layout với bản `sli_common`. Giữ bản app, đổi tên `AppInkWellButton` và chuyển vào `lib/widget/` cạnh `AppPrimaryButton` |
+| `BottomSheetWidget`, `ExpandedWidget` | Vẫn là adapter deprecated có test, chuyển tiếp sang `sli_common` |

@@ -13,6 +13,7 @@ class AppConfig {
     required this.environment,
     required this.baseUri,
     required this.enableNetworkInspector,
+    this.observabilityEnabled = false,
   }) {
     _validate();
   }
@@ -28,15 +29,26 @@ class AppConfig {
     const inspectorOverride = String.fromEnvironment(
       'ENABLE_NETWORK_INSPECTOR',
     );
+    const observabilityOverride = String.fromEnvironment(
+      'ENABLE_OBSERVABILITY',
+    );
 
     return AppConfig(
       environment: environment,
       baseUri: Uri.parse(
         baseUrlOverride.isEmpty ? defaultBaseUrl : baseUrlOverride,
       ),
-      enableNetworkInspector: _parseInspectorOverride(
+      enableNetworkInspector: _parseBoolOverride(
         inspectorOverride,
+        name: 'ENABLE_NETWORK_INSPECTOR',
         defaultValue: !environment.isProduction,
+      ),
+      observabilityEnabled: _parseBoolOverride(
+        observabilityOverride,
+        name: 'ENABLE_OBSERVABILITY',
+        // Off everywhere in the base. A fork with Firebase adapters turns it
+        // on per environment here or with --dart-define.
+        defaultValue: false,
       ),
     );
   }
@@ -45,10 +57,16 @@ class AppConfig {
   final Uri baseUri;
   final bool enableNetworkInspector;
 
+  /// Sends crash reports, analytics, traces and remote flags through the
+  /// remote adapters registered in DI. When false, or when no adapters are
+  /// registered, everything stays on the device.
+  final bool observabilityEnabled;
+
   String get baseUrl => baseUri.toString();
 
-  static bool _parseInspectorOverride(
+  static bool _parseBoolOverride(
     String value, {
+    required String name,
     required bool defaultValue,
   }) {
     if (value.isEmpty) {
@@ -57,11 +75,7 @@ class AppConfig {
     return switch (value.toLowerCase()) {
       'true' => true,
       'false' => false,
-      _ => throw ArgumentError.value(
-        value,
-        'ENABLE_NETWORK_INSPECTOR',
-        'Expected true or false.',
-      ),
+      _ => throw ArgumentError.value(value, name, 'Expected true or false.'),
     };
   }
 

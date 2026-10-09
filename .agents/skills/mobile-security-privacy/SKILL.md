@@ -5,7 +5,12 @@ description: >
   Use for authentication, token storage/refresh, logging, network inspection,
   Firebase/analytics data, permissions, PII, deep links, release secrets or a
   security review or "bảo mật/dữ liệu cá nhân". Prioritize concrete data flows
-  and exploit conditions.
+  and exploit conditions. A security-only check of a PR or diff (leaked
+  token, API key, PII in logs) needs only this skill; a general PR review that
+  also touches these areas loads it next to flutter-code-review. Routine
+  data-layer code that saves a token through TokenProvider belongs to
+  flutter-datasource; load this skill for an audit, a threat question or a
+  new security control.
 ---
 
 # Mobile security and privacy

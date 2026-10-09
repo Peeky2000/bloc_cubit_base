@@ -1,5 +1,5 @@
+import 'package:sli_common/sli_common.dart' show DialogUtil;
 import 'package:bloc_cubit_base/core/error/error_to_string_mapper.dart';
-import 'package:bloc_cubit_base/core/widget/dialog_util.dart';
 import 'package:bloc_cubit_base/l10n/l10n.dart';
 import 'package:flutter/widgets.dart';
 

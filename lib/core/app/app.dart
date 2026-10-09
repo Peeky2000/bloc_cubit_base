@@ -11,9 +11,9 @@ class App {
   static AppTheme? get theme => _theme;
   static AppColor? get appColor => _appColor;
 
-  static void init() {
+  static void init({bool isDarkMode = false}) {
     _appStyle = AppStyle();
     _theme = AppTheme();
-    _appColor = AppColor();
+    _appColor = AppColor(isDarkMode: isDarkMode);
   }
 }

@@ -13,7 +13,7 @@ import 'package:bloc_cubit_base/core/mixin/after_layout.dart';
 import 'package:bloc_cubit_base/di/injection.dart';
 import 'package:bloc_cubit_base/presentation/confirm_information/cubit/confirm_information_cubit.dart';
 import 'package:bloc_cubit_base/presentation/global_handler.dart';
-import 'package:bloc_cubit_base/presentation/success/success_screen.dart';
+import 'package:bloc_cubit_base/widget/success_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 

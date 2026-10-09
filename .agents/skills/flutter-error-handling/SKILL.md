@@ -1,9 +1,14 @@
 ---
 name: flutter-error-handling
 description: >
-  Layered error handling for this base: infrastructure exceptions, mapping,
-  state errors, UI effects, redacted diagnostics, and session expiry.
-  Trigger: exception, error, failure, dialog, retry, 401.
+  Layered error handling for this base: infrastructure exceptions, mapping to
+  domain failures, error and retry state in Cubit/BLoC, one-shot UI effects
+  such as dialogs, redacted diagnostics, and single-flight session expiry.
+  Use when deciding which layer catches or maps an error, what a screen shows
+  on failure, how retry works, or how 401 and session expiry are handled.
+  Trigger: exception, error, failure, DioException, dialog, retry, 401, hết
+  phiên, xử lý lỗi. Not for the wording or translation of an error message
+  (use flutter-translations).
 ---
 
 # Error handling

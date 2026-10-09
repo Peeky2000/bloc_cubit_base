@@ -14,3 +14,4 @@ viết lại lịch sử.
 - [0008 — Skill tập trung Flutter/mobile, không adopt VIPER](0008-mobile-engineering-skills-no-viper.md)
 - [0009 — Typed UI effect tại presentation boundary](0009-typed-ui-effects-at-presentation-boundary.md)
 - [0010 — Firebase Phone Auth sau domain port](0010-platform-auth-behind-domain-port.md)
+- [0011 — Giữ Injector làm điểm truy cập DI tại composition root](0011-giu-injector-lam-diem-truy-cap-di-tai-composition-root.md)

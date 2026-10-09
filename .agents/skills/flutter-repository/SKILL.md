@@ -1,8 +1,15 @@
 ---
 name: flutter-repository
 description: >
-  Repository layer for this base: abstract interface in domain, implementation in data.
-  Trigger: "repository", "AuthRepo", "repo impl".
+  Repository layer for this base: abstract XxxRepo interface in domain and
+  XxxRepoImpl in data, bound with @LazySingleton(as: XxxRepo). Use when
+  creating or changing a repository, combining remote and local data sources
+  (cache, offline fallback), deciding what one repo owns (session belongs to
+  SessionRepo), returning entities, or asking whether a repo may call Dio
+  directly (no: it goes through a data source). Trigger: repository, repo,
+  repo impl, RepoImpl, AuthRepo, tách repo, gộp remote với local. Load
+  flutter-datasource as well only when the data source itself must change
+  (new endpoint, new storage key).
 ---
 
 # Repository

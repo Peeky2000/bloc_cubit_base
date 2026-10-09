@@ -15,7 +15,10 @@ registration.
   quyết định rõ bằng ADR.
 - Dùng `@module` cho SDK class, plugin, async initialization, và factory cần
   runtime configuration; đây cũng là nơi bind domain UseCase thuần.
-- Feature class không được gọi `Injector.getIt`.
+- `Injector.getIt.get<T>()` là điểm truy cập DI của app, chỉ dùng ở composition
+  root: route builder, `MainApp`, `bootstrap` và DI module (ADR-0011).
+- Feature class (Cubit/BLoC, use case, repository, data source, widget) không
+  gọi `Injector` hay `getIt`; nhận dependency qua constructor.
 - Entry point có thể truyền environment được chọn vào composition root. Đây là
   runtime registration có chủ ý duy nhất.
 

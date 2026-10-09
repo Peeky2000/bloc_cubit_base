@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:bloc_cubit_base/core/app/app_config.dart';
+import 'package:bloc_cubit_base/core/observability/observability.dart';
 import 'package:bloc_cubit_base/di/injection.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
@@ -41,13 +42,27 @@ class AppBlocObserver extends BlocObserver {
   }
 }
 
+/// Connects the resolved [observability] bundle to the app-wide hooks:
+/// uncaught errors go to its crash reporter and remote feature flags start
+/// refreshing in the background. Flags keep their in-code defaults until that
+/// refresh succeeds. Route changes reach analytics through the observer that
+/// `MainApp` builds with the injected tracker.
+@visibleForTesting
+void attachObservability(
+  UncaughtErrorForwarder errors,
+  Observability observability,
+) {
+  errors.attach(observability.crash);
+  unawaited(observability.flags.refresh());
+}
+
 Future<void> bootstrap(
   FutureOr<Widget> Function() builder, {
   required AppEnvironment environment,
 }) async {
-  FlutterError.onError = (details) {
-    log(details.exceptionAsString(), stackTrace: details.stack);
-  };
+  // Logs Flutter, platform and zone errors from the first line on, and sends
+  // them to the crash reporter once dependency injection has built it.
+  final errors = UncaughtErrorForwarder()..install();
 
   Bloc.observer = const AppBlocObserver();
 
@@ -57,6 +72,7 @@ Future<void> bootstrap(
     final config = AppConfig.forEnvironment(environment);
     await Firebase.initializeApp();
     await configureDependencies(config);
+    attachObservability(errors, Injector.getIt.get<Observability>());
     await SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitDown,
       DeviceOrientation.portraitUp,
@@ -65,5 +81,5 @@ Future<void> bootstrap(
       const SystemUiOverlayStyle(statusBarBrightness: Brightness.light),
     );
     runApp(await builder());
-  }, (error, stackTrace) => log(error.toString(), stackTrace: stackTrace));
+  }, errors.onZoneError);
 }

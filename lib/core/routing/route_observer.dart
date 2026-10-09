@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:bloc_cubit_base/core/observability/analytics_tracker.dart';
+import 'package:bloc_cubit_base/core/observability/diagnostics.dart';
 import 'package:bloc_cubit_base/core/routing/sli_bottomsheet.dart';
 import 'package:bloc_cubit_base/core/routing/sli_page_route.dart';
 
@@ -23,8 +25,24 @@ String? _extractRouteName(Route? route) {
 
 class SLIRouteObserver extends NavigatorObserver {
   final RoutingCache? _routeSend;
+  final AnalyticsTracker? _analytics;
 
-  SLIRouteObserver(this._routeSend);
+  SLIRouteObserver(this._routeSend, {AnalyticsTracker? analytics})
+    : _analytics = analytics;
+
+  /// Reports the screen the user now sees. Only full pages count, so opening
+  /// or closing a dialog or bottom sheet does not inflate screen views.
+  void _reportScreenView(Route? route, {bool onlyIfCurrent = false}) {
+    final tracker = _analytics;
+    if (onlyIfCurrent && !(route?.isCurrent ?? false)) {
+      return;
+    }
+    final name = route is PageRoute ? _extractRouteName(route) : null;
+    if (tracker == null || name == null || name.isEmpty) {
+      return;
+    }
+    fireAndForget(() => tracker.screenView(name));
+  }
 
   @override
   void didPop(Route route, Route? previousRoute) {
@@ -33,9 +51,9 @@ class SLIRouteObserver extends NavigatorObserver {
     final newRoute = _RouteData.ofRoute(previousRoute);
 
     if (currentRoute.isBottomSheet) {
-      log('CLOSE ${currentRoute.name}', name: 'Giaohang247');
+      log('CLOSE ${currentRoute.name}', name: 'Route');
     } else if (currentRoute.isGetPageRoute) {
-      log('CLOSE TO ROUTE ${currentRoute.name}', name: 'Giaohang247');
+      log('CLOSE TO ROUTE ${currentRoute.name}', name: 'Route');
     }
 
     _routeSend?.update((value) {
@@ -53,6 +71,10 @@ class SLIRouteObserver extends NavigatorObserver {
       value.removed = '';
       value.isBottomSheet = newRoute.isBottomSheet;
     });
+
+    if (route is PageRoute) {
+      _reportScreenView(previousRoute);
+    }
   }
 
   @override
@@ -61,9 +83,9 @@ class SLIRouteObserver extends NavigatorObserver {
     final newRoute = _RouteData.ofRoute(route);
 
     if (newRoute.isBottomSheet) {
-      log('OPEN ${newRoute.name}', name: 'Giaohang247');
+      log('OPEN ${newRoute.name}', name: 'Route');
     } else if (newRoute.isGetPageRoute) {
-      log('GOING TO ROUTE ${newRoute.name}', name: 'Giaohang247');
+      log('GOING TO ROUTE ${newRoute.name}', name: 'Route');
     }
 
     _routeSend?.update((value) {
@@ -83,6 +105,8 @@ class SLIRouteObserver extends NavigatorObserver {
           ? true
           : value.isBottomSheet ?? false;
     });
+
+    _reportScreenView(route);
   }
 
   @override
@@ -91,7 +115,7 @@ class SLIRouteObserver extends NavigatorObserver {
     final routeName = _extractRouteName(route);
     final currentRoute = _RouteData.ofRoute(route);
 
-    log('REMOVING ROUTE $routeName', name: 'Giaohang247');
+    log('REMOVING ROUTE $routeName', name: 'Route');
 
     _routeSend?.update((value) {
       value.route = previousRoute;
@@ -102,6 +126,10 @@ class SLIRouteObserver extends NavigatorObserver {
           ? false
           : value.isBottomSheet;
     });
+
+    if (route is PageRoute) {
+      _reportScreenView(previousRoute, onlyIfCurrent: true);
+    }
   }
 
   @override
@@ -111,8 +139,8 @@ class SLIRouteObserver extends NavigatorObserver {
     final oldName = _extractRouteName(oldRoute);
     final currentRoute = _RouteData.ofRoute(oldRoute);
 
-    log('REPLACE ROUTE $oldName', name: 'Giaohang247');
-    log('NEW ROUTE $newName', name: 'Giaohang247');
+    log('REPLACE ROUTE $oldName', name: 'Route');
+    log('NEW ROUTE $newName', name: 'Route');
 
     _routeSend?.update((value) {
       if (newRoute is PageRoute) {
@@ -128,6 +156,8 @@ class SLIRouteObserver extends NavigatorObserver {
           ? false
           : value.isBottomSheet;
     });
+
+    _reportScreenView(newRoute, onlyIfCurrent: true);
   }
 }
 

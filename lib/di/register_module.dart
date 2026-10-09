@@ -1,6 +1,7 @@
 import 'package:bloc_cubit_base/core/app/app_config.dart';
 import 'package:bloc_cubit_base/core/helper/network/network_checker.dart';
 import 'package:bloc_cubit_base/core/network/network_inspector.dart';
+import 'package:bloc_cubit_base/core/observability/observability.dart';
 import 'package:bloc_cubit_base/core/routing/routing.dart';
 import 'package:bloc_cubit_base/data/datasource/local/token_provider.dart';
 import 'package:bloc_cubit_base/data/datasource/local/session_expiry_coordinator.dart';
@@ -55,6 +56,29 @@ abstract class RegisterModule {
     enabled: config.enableNetworkInspector,
     navigatorKey: SLIRouting.key,
   );
+
+  /// Local, debug-only diagnostics unless `AppConfig.observabilityEnabled`
+  /// is true and remote adapters are passed here. A fork with Firebase adds
+  /// `remote: createFirebaseObservability`; see
+  /// docs/guides/enable-version-health.md.
+  @lazySingleton
+  Observability observability(AppConfig config) =>
+      Observability.select(enabled: config.observabilityEnabled);
+
+  @lazySingleton
+  CrashReporter crashReporter(Observability observability) =>
+      observability.crash;
+
+  @lazySingleton
+  AnalyticsTracker analyticsTracker(Observability observability) =>
+      observability.analytics;
+
+  @lazySingleton
+  PerformanceTracer performanceTracer(Observability observability) =>
+      observability.performance;
+
+  @lazySingleton
+  FeatureFlags featureFlags(Observability observability) => observability.flags;
 
   @preResolve
   @Singleton(dispose: disposeNetworkChecker)

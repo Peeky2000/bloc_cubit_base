@@ -6,6 +6,12 @@ cd "$project_root"
 
 failed=0
 
+# The gate must never pass silently because the search tool is missing.
+if ! command -v rg >/dev/null 2>&1 || ! rg --version >/dev/null 2>&1; then
+  echo "ripgrep (rg) is required for the architecture gate. Install it: brew install ripgrep" >&2
+  exit 2
+fi
+
 if rg -n "package:bloc_cubit_base/(data|presentation)/" lib/domain --glob '*.dart'; then
   echo "Domain must not import data or presentation layers." >&2
   failed=1
@@ -21,7 +27,7 @@ if rg -n "package:bloc_cubit_base/data/" lib/presentation --glob '*.dart'; then
   failed=1
 fi
 
-if rg -n "Injector\.getIt|GetIt\.instance" lib/domain lib/data \
+if rg -n "Injector\.getIt|GetIt\.instance|\bgetIt\b" lib/domain lib/data \
   lib/presentation --glob '*_cubit.dart' --glob '*_bloc.dart'; then
   echo "Feature layers must use constructor injection instead of the service locator." >&2
   failed=1

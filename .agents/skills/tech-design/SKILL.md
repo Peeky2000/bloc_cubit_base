@@ -4,9 +4,12 @@ description: >
   Turn an approved product document (spec, AC, PRD, Figma notes) into a
   technical design `tech.md`: exact files, class and field names, state shape,
   API contract, storage, patterns, tests and performance targets, aligned with
-  this base and with past decisions. Use before writing feature code, when a
-  document arrives from outside, or when asked for "thiết kế kỹ thuật",
-  "tech design", "triển khai kỹ thuật thế nào". Does not redesign the product.
+  this base and with past decisions. Use before writing feature code: when a
+  PO/PM document arrives and the user asks to build it ("làm luôn",
+  "triển khai", "implement"), or asks for "thiết kế kỹ thuật", "tech design",
+  "triển khai kỹ thuật thế nào". Does not redesign the product. Not for a
+  frontend spec fe.md (use spec-analyze) or a task breakdown after tech.md is
+  approved (use plan-writer).
 ---
 
 # Technical design

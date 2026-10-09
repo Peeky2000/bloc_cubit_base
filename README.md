@@ -6,7 +6,9 @@ toàn, bộ UI toolkit tái sử dụng, công cụ đo hiệu năng trên máy 
 skill cho AI.
 
 Người mới bắt đầu tại **[mục lục tài liệu](docs/README.md)**. Người dùng AI agent
-bắt đầu tại **[bộ công cụ AI](docs/guides/ai-toolbox.md)**.
+bắt đầu tại **[bộ công cụ AI](docs/guides/ai-toolbox.md)**. Đem base vào dự án
+thật thì theo **[sổ tay dự án thật](docs/guides/start-real-project.md)**, nơi
+cũng ghi mọi việc còn mở.
 
 ## Có gì trong base
 
@@ -19,7 +21,9 @@ bắt đầu tại **[bộ công cụ AI](docs/guides/ai-toolbox.md)**.
 | UI toolkit | Submodule `sli_common` với API `Sli*`, Shadcn nằm sau facade | [Dùng sli_common](docs/guides/use-sli-common.md) |
 | Đo hiệu năng | Mở app, độ mượt, bộ nhớ, mạng trên máy thật với dữ liệu thật | [Đo hiệu năng app](docs/guides/measure-performance.md) |
 | Review và bảo mật | Chọn file và luật review theo tầng, audit bảo mật mobile | [Bộ công cụ AI](docs/guides/ai-toolbox.md) |
-| AI agent | Agent PM, dev, tester, reviewer, đo và sửa hiệu năng, cùng 24 skill | [AGENTS.md](AGENTS.md) |
+| AI agent | Agent PM, dev, tester, reviewer, đo và sửa hiệu năng, cùng 25 skill | [AGENTS.md](AGENTS.md) |
+| Mẫu kỹ thuật | Phân trang, form, cache offline, upload, realtime, deep link, push, quyền | [flutter-patterns](.agents/skills/flutter-patterns/SKILL.md) |
+| Theo dõi phiên bản | Khung báo lỗi, analytics, feature flag, bật khi có Firebase | [Version Health](docs/guides/enable-version-health.md) |
 | Sổ quyết định | Mọi lựa chọn kỹ thuật được ghi và tra cứu, để các tính năng làm giống nhau | [docs/decisions](docs/decisions/README.md) |
 | Build và phát hành | Derry, `build.sh`, Fastlane, Firebase App Distribution | [Derry và build](docs/guides/use-derry-and-build.md) |
 
@@ -103,6 +107,7 @@ Production chặn URL không phải HTTPS và chặn network inspector bị bậ
 | `derry review plan` | Liệt kê file đã thay đổi cần review và luật cho từng file |
 | `derry decision search "<chủ đề>"` | Tìm quyết định kỹ thuật đã chốt |
 | `derry scaffold -- <feature> [--bloc] [--data] --apply` | Sinh khung feature đúng convention |
+| `derry new -- --destination ../my_app ... --apply` | Tạo app mới từ base với một commit đầu tiên |
 | `derry perf run` | Đo hiệu năng trên máy thật |
 | `derry perf diagnose` | Đo kèm chẩn đoán widget chậm nhất |
 | `derry perf approve` | Đo lại và lưu kết quả làm mốc so sánh |

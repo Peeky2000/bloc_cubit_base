@@ -24,9 +24,12 @@ Future<GetIt> configureDependencies(
   return await (initializeGraph ?? (container) => container.init())(getIt);
 }
 
-/// Backward-compatible access for route/widget composition during migration.
+/// The app's dependency-injection entry point for composition roots.
 ///
-/// Feature classes must receive dependencies through constructors.
+/// Route builders, `MainApp`, `bootstrap` and DI modules resolve objects with
+/// `Injector.getIt.get<T>()`. Feature classes (Cubit/BLoC, use cases,
+/// repositories, data sources, widgets) never use it: they receive their
+/// dependencies through constructors. See ADR-0011.
 abstract final class Injector {
   static GetIt get getIt => GetIt.instance;
 

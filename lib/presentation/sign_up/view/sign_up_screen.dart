@@ -1,3 +1,5 @@
+import 'package:sli_common/sli_common.dart'
+    show CommonDropDown, CommonTextField;
 import 'package:bloc_cubit_base/core/app/app.dart';
 import 'package:bloc_cubit_base/core/common/route.dart';
 import 'package:bloc_cubit_base/domain/entities/common/app_enums.dart';
@@ -6,7 +8,7 @@ import 'package:bloc_cubit_base/core/routing/routing.dart';
 import 'package:bloc_cubit_base/core/validation/auth_validation_error.dart';
 import 'package:bloc_cubit_base/generated/assets.gen.dart';
 import 'package:bloc_cubit_base/l10n/l10n.dart';
-import 'package:bloc_cubit_base/widget/delivery_go_button.dart';
+import 'package:bloc_cubit_base/widget/app_primary_button.dart';
 import 'package:bloc_cubit_base/widget/loading_screen.dart';
 import 'package:bloc_cubit_base/widget/selection_bottom_sheet.dart';
 import 'package:flutter/gestures.dart';
@@ -17,8 +19,6 @@ import 'package:bloc_cubit_base/core/mixin/after_layout.dart';
 import 'package:bloc_cubit_base/di/injection.dart';
 import 'package:bloc_cubit_base/presentation/sign_up/cubit/sign_up_cubit.dart';
 import 'package:bloc_cubit_base/presentation/global_handler.dart';
-import 'package:bloc_cubit_base/core/widget/common_text_field.dart';
-import 'package:bloc_cubit_base/core/widget/common_drop_down.dart';
 
 Widget signUpScreenBuilder() => BlocProvider<SignUpCubit>(
   create: (_) => Injector.getIt.get<SignUpCubit>(),
@@ -179,7 +179,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
           Padding(
             padding: EdgeInsets.only(top: 16.h, bottom: 32.h),
             child: Text(
-              context.l10n.welcomeToGiaohang247,
+              context.l10n.welcomeTitle,
               style: App.appStyle?.medium14?.copyWith(
                 color: App.appColor?.textColor,
               ),
@@ -235,7 +235,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
             },
           ),
           SizedBox(height: 32.h),
-          DeliveryGoButton(
+          AppPrimaryButton(
             title: context.l10n.signUpNowPerWord,
             onTap: () {
               String phone = _phoneEditingController.text.trim();
@@ -332,7 +332,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
               Padding(
                 padding: EdgeInsets.only(top: 16.h, bottom: 32.h),
                 child: Text(
-                  context.l10n.giaohang247DuetYou,
+                  context.l10n.brandTagline,
                   style: App.appStyle?.medium14?.copyWith(
                     color: App.appColor?.textColor,
                   ),
@@ -425,7 +425,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 32.h),
-              DeliveryGoButton(
+              AppPrimaryButton(
                 title: context.l10n.confirmInfo,
                 onTap: () {
                   String shopName = _shopNameEditingController.text.trim();

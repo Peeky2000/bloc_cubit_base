@@ -1,6 +1,6 @@
 import 'package:bloc_cubit_base/presentation/home_page/view/home_page_screen.dart';
 import 'package:bloc_cubit_base/presentation/sign_in/view/sign_in_screen.dart';
-import 'package:bloc_cubit_base/widget/delivery_go_button.dart';
+import 'package:bloc_cubit_base/widget/app_primary_button.dart';
 import 'package:flutter/material.dart' show TextField;
 import 'package:flutter/widgets.dart' show Widget;
 import 'package:flutter_test/flutter_test.dart';
@@ -49,7 +49,7 @@ class _SampleAuthAdapter implements PerfAppAdapter {
     await tester.tap(
       find.descendant(
         of: find.byType(SignInScreen),
-        matching: find.byType(DeliveryGoButton),
+        matching: find.byType(AppPrimaryButton),
       ),
     );
   }

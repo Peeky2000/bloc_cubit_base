@@ -10,23 +10,31 @@ import 'package:bloc_cubit_base/core/app/app_controller.dart';
 import 'package:bloc_cubit_base/core/app/app_cubit/app_cubit.dart';
 import 'package:bloc_cubit_base/core/common/route.dart';
 import 'package:bloc_cubit_base/core/helper/network/network_checker.dart';
+import 'package:bloc_cubit_base/core/observability/analytics_tracker.dart';
 import 'package:bloc_cubit_base/core/routing/route_observer.dart';
 import 'package:bloc_cubit_base/core/routing/routing.dart';
 import 'package:bloc_cubit_base/core/routing/sli_page_route.dart';
 import 'package:bloc_cubit_base/di/injection.dart';
 import 'package:bloc_cubit_base/l10n/l10n.dart';
-import 'package:bloc_cubit_base/core/widget/dialog_util.dart';
-import 'package:bloc_cubit_base/core/widget/title_widget.dart';
-import 'package:bloc_cubit_base/core/widget/money_widget.dart';
-import 'package:bloc_cubit_base/core/widget/common_text_field.dart';
-import 'package:bloc_cubit_base/core/widget/common_drop_down.dart';
-import 'package:bloc_cubit_base/core/widget/base_field.dart';
-import 'package:sli_common/sli_common.dart' show SliShadcnScope;
+import 'package:sli_common/l10n/arb/app_localizations.dart' as sli_l10n;
+import 'package:sli_common/sli_common.dart'
+    show
+        BaseField,
+        BaseFieldStyle,
+        CommonDropDown,
+        CommonDropDownStyle,
+        CommonTextField,
+        CommonTextFieldStyle,
+        DialogUtil,
+        MoneyWidget,
+        SliShadcnScope,
+        TitleWidget;
 
 Widget buildMainApp() => MainApp(
   appCubit: Injector.getIt.get<AppCubit>(),
   appController: Injector.getIt.get<AppController>(),
   networkChecker: Injector.getIt.get<NetworkChecker>(),
+  analytics: Injector.getIt.get<AnalyticsTracker>(),
 );
 
 class MainApp extends StatefulWidget {
@@ -35,11 +43,15 @@ class MainApp extends StatefulWidget {
     required this.appCubit,
     required this.appController,
     required this.networkChecker,
+    this.analytics,
   });
 
   final AppCubit appCubit;
   final AppController appController;
   final NetworkChecker networkChecker;
+
+  /// Receives screen views; null keeps navigation unreported.
+  final AnalyticsTracker? analytics;
 
   @override
   State<MainApp> createState() => _MainAppState();
@@ -197,7 +209,7 @@ class _MainAppState extends State<MainApp> {
         useInheritedMediaQuery: true,
         builder: (context, child) {
           if (!_appInitialized) {
-            App.init();
+            App.init(isDarkMode: widget.appController.isDarkMode);
             _appInitialized = true;
           }
           final isDarkMode = widget.appController.isDarkMode;
@@ -230,10 +242,16 @@ class _MainAppState extends State<MainApp> {
                   initialRoute: AppPage.splash,
                   onGenerateRoute: (settings) => MainApp.generator(settings),
                   navigatorKey: SLIRouting.key,
-                  navigatorObservers: [SLIRouteObserver(SLIRouting.routing)],
+                  navigatorObservers: [
+                    SLIRouteObserver(
+                      SLIRouting.routing,
+                      analytics: widget.analytics,
+                    ),
+                  ],
                   localizationsDelegates: [
                     AppLocalizations.delegate,
-                    // ServerMessageLocalization.delegate,
+                    // Labels used by shared sli_common widgets such as DialogUtil.
+                    sli_l10n.AppLocalizations.delegate,
                     GlobalMaterialLocalizations.delegate,
                     GlobalCupertinoLocalizations.delegate,
                   ],

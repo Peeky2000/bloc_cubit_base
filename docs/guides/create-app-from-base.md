@@ -80,11 +80,61 @@ Create thực hiện theo thứ tự:
 2. `git clone --recurse-submodules --local` sang destination chưa tồn tại;
 3. apply cùng rename engine trong clone;
 4. chạy `scripts/bootstrap.sh` để resolve dependency và sinh code;
-5. in checklist Firebase/signing/branding còn lại.
+5. nếu có `--fresh-history`: thay history của clone bằng 1 commit;
+6. in checklist Firebase/signing/branding còn lại.
 
-Git history của base được giữ nguyên để không phá metadata của submodule. Owner
-app quyết định thời điểm tạo remote/history mới. Khi chỉ muốn smoke-test nhanh,
-có thể thêm `--skip-bootstrap`; không dùng cờ này cho handoff app thật.
+Mặc định, app mới giữ nguyên Git history của base. Khi chỉ muốn smoke-test
+nhanh, có thể thêm `--skip-bootstrap`; không dùng cờ này cho handoff app thật.
+
+### App mới với history sạch: `derry new`
+
+`derry new` là lối tắt cho `create --fresh-history`. App mới chỉ có 1 commit.
+Lệnh vẫn dry-run mặc định:
+
+```bash
+derry new -- \
+  --destination ../my_app \
+  --display-name "My App" \
+  --package-name my_app \
+  --bundle-id com.company.my_app
+```
+
+Review plan, rồi thêm `--apply`:
+
+```bash
+derry new -- \
+  --destination ../my_app \
+  --display-name "My App" \
+  --package-name my_app \
+  --bundle-id com.company.my_app \
+  --apply
+```
+
+Plan in thêm dòng `history`, dòng `submodule` và `git identity`. Sau khi
+clone, rename và bootstrap, CLI làm như sau trong destination:
+
+1. Xóa history cũ, giữ repository của submodule trong `.git/modules`.
+2. Tạo repository mới trên branch `main`, chưa có remote.
+3. Tạo 1 commit `chore: initial commit from bloc_cubit_base <short-sha>`.
+   `<short-sha>` là commit của base đã dùng để tạo app.
+
+`sli_common` vẫn là submodule thật. Nó trỏ cùng URL GitHub trong `.gitmodules`
+và cùng commit đã pin trong base. Bước này không cần mạng. CLI không ghi gì vào
+repository base.
+
+Cần `git config user.name` và `user.email`. Nếu thiếu, plan báo `BLOCKED` và
+`--apply` dừng trước khi tạo thư mục. Commit này bỏ qua Git hook.
+
+Sau khi tạo, thêm remote của app rồi push:
+
+```bash
+cd ../my_app
+git remote add origin <url-repo-app>
+git push -u origin main
+```
+
+Nếu bước thay history lỗi, thư mục vẫn được giữ để điều tra. Xóa thư mục rồi
+chạy lại lệnh.
 
 ## 4. CLI tự động đổi gì?
 
@@ -142,6 +192,11 @@ Khi debug hoặc chạy CI không có Derry:
 dart run tool/base_cli.dart --help
 dart run tool/base_cli.dart doctor
 dart run tool/base_cli.dart rename \
+  --display-name "My App" \
+  --package-name my_app \
+  --bundle-id com.company.my_app
+dart run tool/base_cli.dart create --fresh-history \
+  --destination ../my_app \
   --display-name "My App" \
   --package-name my_app \
   --bundle-id com.company.my_app

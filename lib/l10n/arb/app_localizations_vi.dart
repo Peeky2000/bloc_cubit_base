@@ -25,17 +25,10 @@ class AppLocalizationsVi extends AppLocalizations {
       'Không tìm thấy kết nối Internet.\nVui lòng kiểm tra kết nối của bạn.';
 
   @override
-  String get reconnectInternet =>
-      'Đã có kết nối Internet.\nVui lòng bấm thử lại.';
-
-  @override
   String get noInternetShort => 'Không tìm thấy kết nối Internet.';
 
   @override
   String get connectionRestored => 'Đã có lại kết nối';
-
-  @override
-  String get systemBusy => 'Hệ thống bận.\nVui lòng thử lại sau';
 
   @override
   String get errGeneral => 'Có lỗi xảy ra. Vui lòng thử lại.';
@@ -51,9 +44,6 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get confirm => 'Confirm';
-
-  @override
-  String get continueText => 'Tiếp tục';
 
   @override
   String get releaseToLoadMore => 'Thả để xem thêm';
@@ -98,80 +88,19 @@ class AppLocalizationsVi extends AppLocalizations {
   String get password => 'Mật khẩu';
 
   @override
-  String get usernameIsRequired => 'Tên đăng nhập không được để trống';
-
-  @override
-  String get passwordIsRequired => 'Mật khẩu không được để trống';
-
-  @override
-  String get hello => 'Xin chào, ';
-
-  @override
-  String get today => 'Hôm nay';
-
-  @override
   String get summary => 'Tổng quan';
-
-  @override
-  String get schedule => 'Lịch trình';
-
-  @override
-  String get task => 'Công việc';
-
-  @override
-  String get salaryAndTax => 'Lương & Thuế';
 
   @override
   String get request => 'Yêu cầu';
 
   @override
-  String get whichFoodForLunch => 'Trưa nay ăn gì ?';
-
-  @override
-  String get happyLunch => 'Chúc bạn buổi trưa vui vẻ nhé :)';
-
-  @override
-  String get cameraRequestTitle =>
-      'Bạn có cho phép ứng dụng truy cập camera không ?';
-
-  @override
-  String get alignFlash => 'Căn cho mã quét vào giữa ô vuông này nhé';
-
-  @override
-  String get notHaveAccount => 'Chưa có tài khoản?';
-
-  @override
   String get signUp => 'Đăng ký';
-
-  @override
-  String get welcomeToMySli => 'Welcome to Giaohang247';
 
   @override
   String get forgotPassword => 'Quên mật khẩu';
 
   @override
   String get email => 'Email';
-
-  @override
-  String get firstName => 'First name';
-
-  @override
-  String get lastName => 'Last name';
-
-  @override
-  String get passwordConfirm => 'Xác nhận mật khẩu';
-
-  @override
-  String get alreadyHaveAccount => 'Đã có tài khoản?';
-
-  @override
-  String get registerAccountSli => 'Đăng ký tài khoản Giaohang247';
-
-  @override
-  String get inputCodeSentToEmail => 'Nhập mã xác thực đã được gửi vào email';
-
-  @override
-  String get verifyAccount => 'Xác thực tài khoản';
 
   @override
   String get verify => 'Xác thực';
@@ -181,18 +110,6 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get emailIsRequired => 'Email không được để trống';
-
-  @override
-  String get passwordCfIsRequired => 'Xác nhận mật khẩu không được để trống';
-
-  @override
-  String get firstNameIsRequired => 'Tên không được để trống';
-
-  @override
-  String get lastNameIsRequired => 'Họ không được để trống';
-
-  @override
-  String get passwordIsNotEqual => 'Mật khẩu không trùng khớp';
 
   @override
   String get scaleL1 => 'Không có nhu cầu thường xuyên';
@@ -217,9 +134,6 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get cosmetics => 'Mỹ phẩm';
-
-  @override
-  String get interior => 'Nội thất';
 
   @override
   String get motherAndBaby => 'Mẹ và bé';
@@ -261,7 +175,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get other => 'Khác';
 
   @override
-  String get welcomeToGiaohang247 => 'Chào mừng bạn đến với Giao Hàng 247';
+  String get welcomeTitle => 'Chào mừng bạn';
 
   @override
   String get phoneNumber => 'Số điện thoại';
@@ -285,7 +199,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get shopInfo => 'Thông tin cửa hàng';
 
   @override
-  String get giaohang247DuetYou => 'Giao Hàng 247 luôn đồng hành cùng bạn';
+  String get brandTagline => 'Luôn đồng hành cùng bạn';
 
   @override
   String get shopName => 'Tên cửa hàng';
@@ -400,10 +314,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get scaleLevelIsRequired => 'Quy mô vận chuyển không được bỏ trống';
 
   @override
-  String get signupSuccess => 'Đăng ký thành công';
-
-  @override
-  String get noteSignupSuccess => 'GIAOHANG247 luôn đồng hành cùng bạn';
+  String get noteSignupSuccess => 'Tài khoản của bạn đã sẵn sàng';
 
   @override
   String get verifyPhoneSuccess => 'Xác thực số điện thoại thành công';

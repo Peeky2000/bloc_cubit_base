@@ -1,6 +1,6 @@
 ---
 name: spec-analyze
-description: 'Analyze design/requirements and generate frontend spec (fe.md). Use when: (1) user provides UI screenshot, Figma link, requirement description, documentation link, or Stitch Screen ID and asks to generate a spec, (2) creating docs/specs/{id}-{name}/fe.md from design, (3) user provides a doc-review file and asks to fix fe.md issues — apply only Need Fix items, (4) user asks to review an existing fe.md for completeness, clarity, and consistency. Covers input validation, gathering design/requirements, app-memory reuse check, template fill, output to docs/specs/, targeted spec fixes from review, and spec-fe review.'
+description: 'Analyze design/requirements and generate frontend spec (fe.md). Use when: (1) user provides UI screenshot, Figma link, requirement description, documentation link, or Stitch Screen ID and asks to generate a spec, (2) creating docs/specs/{id}-{name}/fe.md from design, (3) user provides a doc-review file and asks to fix fe.md issues — apply only Need Fix items, (4) user asks to review an existing fe.md for completeness, clarity, and consistency. Covers input validation, gathering design/requirements, app-memory reuse check, template fill, output to docs/specs/, targeted spec fixes from review, and spec-fe review. Not for turning a PRD into code or a technical design (use tech-design).'
 ---
 
 # Spec Analyze

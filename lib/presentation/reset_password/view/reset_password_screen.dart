@@ -1,3 +1,4 @@
+import 'package:sli_common/sli_common.dart' show CommonTextField, DialogUtil;
 import 'package:bloc_cubit_base/core/app/app.dart';
 import 'package:bloc_cubit_base/core/common/route.dart';
 import 'package:bloc_cubit_base/core/error/exception.dart';
@@ -5,11 +6,9 @@ import 'package:bloc_cubit_base/core/routing/routing.dart';
 import 'package:bloc_cubit_base/core/validation/auth_validation_error.dart';
 import 'package:bloc_cubit_base/generated/assets.gen.dart';
 import 'package:bloc_cubit_base/l10n/l10n.dart';
-import 'package:bloc_cubit_base/widget/delivery_go_button.dart';
+import 'package:bloc_cubit_base/widget/app_primary_button.dart';
 import 'package:bloc_cubit_base/widget/loading_screen.dart';
 import 'package:bloc_cubit_base/core/extension/int_extension.dart';
-import 'package:bloc_cubit_base/core/widget/common_text_field.dart';
-import 'package:bloc_cubit_base/core/widget/dialog_util.dart';
 import 'package:flutter/gestures.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:flutter/material.dart';
@@ -102,7 +101,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
                 },
               ),
               SizedBox(height: 32.h),
-              DeliveryGoButton(
+              AppPrimaryButton(
                 title: context.l10n.sendRequestSignIn,
                 onTap: () {
                   String phone = _phoneController.text.trim();
@@ -304,7 +303,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
                 },
               ),
               SizedBox(height: 32.h),
-              DeliveryGoButton(
+              AppPrimaryButton(
                 title: context.l10n.confirmPassword,
                 onTap: () {
                   String newPass = _newPasswordController.text.trim();

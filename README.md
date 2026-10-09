@@ -1,166 +1,214 @@
 # Flutter Bloc/Cubit Base
 
-Base Flutter cá nhân theo hướng production. Base gồm Clean Architecture, môi
-trường có kiểu rõ ràng, Cubit/BLoC, dependency injection sinh mã, networking an
-toàn, bộ UI toolkit tái sử dụng, công cụ đo hiệu năng trên máy thật và bộ agent,
-skill cho AI.
+Base Flutter để bắt đầu app mobile mới: kiến trúc sạch, convention được kiểm
+tra tự động, và một bộ agent AI biết cách viết code theo đúng convention đó.
 
-Người mới bắt đầu tại **[mục lục tài liệu](docs/README.md)**. Người dùng AI agent
-bắt đầu tại **[bộ công cụ AI](docs/guides/ai-toolbox.md)**. Đem base vào dự án
-thật thì theo **[sổ tay dự án thật](docs/guides/start-real-project.md)**, nơi
-cũng ghi mọi việc còn mở.
+Tài liệu nghiệp vụ (PRD, AC, thiết kế) đến từ bên ngoài. Base lo phần kỹ
+thuật: thiết kế kỹ thuật, sinh khung, viết code, viết test, đo hiệu năng,
+review. Bạn chỉ cần duyệt.
+
+```text
+Tài liệu nghiệp vụ ──▶ /tech-design ──▶ tech.md ──▶ PM duyệt ──▶ /build-feature
+                                                                    │
+           code đúng convention + test + agent test kiểm tra độc lập ◀┘
+```
+
+**Đọc theo thứ tự:** README này → [sổ tay dự án thật](docs/guides/start-real-project.md)
+→ [bộ công cụ AI](docs/guides/ai-toolbox.md). Mọi tài liệu khác có trong
+[mục lục](docs/README.md).
+
+---
+
+## Mục lục
+
+1. [Có gì trong base](#có-gì-trong-base)
+2. [Cài đặt lần đầu](#cài-đặt-lần-đầu)
+3. [Bắt đầu một dự án thật](#bắt-đầu-một-dự-án-thật)
+4. [Làm một tính năng](#làm-một-tính-năng)
+5. [Lệnh hằng ngày](#lệnh-hằng-ngày)
+6. [Kiến trúc](#kiến-trúc)
+7. [Cấu trúc thư mục](#cấu-trúc-thư-mục)
+8. [Tài liệu](#tài-liệu)
+
+---
 
 ## Có gì trong base
 
-| Phần | Nội dung | Bắt đầu tại |
-|---|---|---|
-| Kiến trúc | Clean Architecture, Cubit mặc định, BLoC khi cần, `get_it + injectable` | [Kiến trúc](docs/architecture/README.md) |
-| Môi trường | local, dev, staging, prod với `bootstrap()` tập trung | [Environment và bootstrap](docs/architecture/environment-bootstrap.md) |
-| Networking | Dio qua `ApiHandler`, refresh token single-flight, redaction log | [Networking](docs/architecture/networking.md) |
-| Lưu trữ và phiên | `SessionRepo` nắm token và tài khoản, secure storage cho bí mật | [Mẫu lưu trữ](.agents/skills/flutter-datasource/references/storage-patterns.md) |
-| UI toolkit | Submodule `sli_common` với API `Sli*`, Shadcn nằm sau facade | [Dùng sli_common](docs/guides/use-sli-common.md) |
-| Đo hiệu năng | Mở app, độ mượt, bộ nhớ, mạng trên máy thật với dữ liệu thật | [Đo hiệu năng app](docs/guides/measure-performance.md) |
-| Review và bảo mật | Chọn file và luật review theo tầng, audit bảo mật mobile | [Bộ công cụ AI](docs/guides/ai-toolbox.md) |
-| AI agent | Agent PM, dev, tester, reviewer, đo và sửa hiệu năng, cùng 25 skill | [AGENTS.md](AGENTS.md) |
-| Mẫu kỹ thuật | Phân trang, form, cache offline, upload, realtime, deep link, push, quyền | [flutter-patterns](.agents/skills/flutter-patterns/SKILL.md) |
-| Theo dõi phiên bản | Khung báo lỗi, analytics, feature flag, bật khi có Firebase | [Version Health](docs/guides/enable-version-health.md) |
-| Sổ quyết định | Mọi lựa chọn kỹ thuật được ghi và tra cứu, để các tính năng làm giống nhau | [docs/decisions](docs/decisions/README.md) |
-| Build và phát hành | Derry, `build.sh`, Fastlane, Firebase App Distribution | [Derry và build](docs/guides/use-derry-and-build.md) |
+| Phần | Nội dung |
+|---|---|
+| Kiến trúc | Clean Architecture, Cubit mặc định, BLoC khi cần, `get_it + injectable` |
+| Convention tự kiểm | Lệnh sinh khung feature; test convention và gate kiến trúc chạy trong CI |
+| Môi trường | local, dev, staging, prod; một hàm `bootstrap()` duy nhất |
+| Networking | Dio qua `ApiHandler`, refresh token chạy một lần cho nhiều request 401, ẩn token trong log |
+| Phiên đăng nhập | `SessionRepo` giữ token và tài khoản; đăng xuất xoá cả hai |
+| UI toolkit | Submodule [`sli_common`](lib/modules/sli_common) với các widget `Sli*` |
+| Mẫu kỹ thuật | Phân trang, form, cache offline, upload, realtime, deep link, push, xin quyền; có code mẫu và test |
+| Sổ quyết định | Mọi lựa chọn kỹ thuật được ghi lại để các tính năng làm giống nhau |
+| Đo hiệu năng | Mở app, độ mượt, bộ nhớ, mạng; đo trên máy thật với server thật |
+| Theo dõi phiên bản | Khung báo lỗi, analytics, feature flag; mặc định tắt, bật khi có Firebase |
+| Build và phát hành | Derry, Fastlane, Firebase App Distribution |
+| AI | 6 agent, 25 skill, 6 lệnh `/` trong Claude Code |
 
-## Kiến trúc
+## Cài đặt lần đầu
 
-```text
-Screen → Cubit/BLoC → UseCase → Repository interface → RepositoryImpl
-       → Remote/Local DataSource → Dio / platform service
-```
-
-- Cubit là lựa chọn mặc định. BLoC dùng khi cần nhiều event, xử lý đồng thời
-  hoặc cần audit rõ.
-- State dùng `BaseAppState + Equatable + copyWith`. Hành động một lần như điều
-  hướng hay hiện dialog đi qua `UiEffect` có kiểu, Screen xử lý.
-- Class nhận dependency qua constructor. Chỉ composition root mới lấy từ
-  `getIt`.
-- Domain không phụ thuộc Flutter, data hay SDK nền tảng. SDK dùng callback được
-  bọc trong data adapter và trả về một kết quả duy nhất
-  ([mẫu luồng](.agents/skills/flutter-repository/references/async-flow-patterns.md)).
-- Dữ liệu sống chết cùng nhau có đúng một module quản lý. Đăng xuất và hết
-  phiên xoá cả token lẫn tài khoản.
-- Routing dùng `SLIRouting / AppPage`. REST là mặc định, GraphQL là tuỳ chọn.
-
-Quyết định kiến trúc: [ADR](docs/adr/README.md) · quy trình làm việc với AI:
-[ai-process.md](ai-process.md).
-
-## Bắt đầu nhanh
-
-Yêu cầu môi trường nằm trong [docs/prerequisites.md](docs/prerequisites.md).
-Phiên bản Flutter được pin trong `.fvmrc`. Script dùng FVM nếu có, nếu không thì
-dùng Flutter trên `PATH`.
+Cần Flutter theo `.fvmrc` (khuyên dùng [FVM](https://fvm.app)), Java 17+ cho
+Android, CocoaPods cho iOS. Chi tiết: [điều kiện dự án](docs/prerequisites.md).
 
 ```bash
-git clone --recurse-submodules <repository-url>
+git clone --recurse-submodules https://github.com/Peeky2000/bloc_cubit_base.git
 cd bloc_cubit_base
 dart pub global activate derry
-derry bootstrap
-derry base doctor
+derry bootstrap        # cài dependency, sinh code
+derry quality          # phải xanh trước khi làm gì tiếp
 derry run dev
 ```
 
-Với clone đã có sẵn:
+Clone rồi mà quên submodule:
 
 ```bash
-git submodule sync --recursive
-git submodule update --init --recursive
-derry get
-derry gen
+git submodule update --init --recursive && derry get && derry gen
 ```
 
-Build Android cần Java 17 trở lên, Gradle 8.14 và khoảng 10 GB ổ đĩa trống.
-App hỗ trợ Android 7.0 (minSdk 24) trở lên. iOS dùng CocoaPods.
+## Bắt đầu một dự án thật
 
-## Môi trường
+Không code thẳng trong repo base. Tạo app mới từ nó:
 
-| Môi trường | Entrypoint | Network inspector |
+```bash
+# Xem trước những gì sẽ đổi
+derry new -- --destination ../my_app --display-name "My App" \
+  --package-name my_app --bundle-id com.company.my_app
+
+# Đồng ý thì chạy thật
+derry new -- --destination ../my_app --display-name "My App" \
+  --package-name my_app --bundle-id com.company.my_app --apply
+```
+
+App mới có một commit đầu tiên sạch, đã đổi package, bundle id, tên app, và
+vẫn giữ `sli_common` là submodule. Sau đó, trong app mới:
+
+| # | Việc | Ở đâu |
 |---|---|---|
-| local | `lib/main_local.dart` | bật |
-| development | `lib/main_dev.dart` | bật |
-| staging | `lib/main_staging.dart` | bật |
-| production | `lib/main_prod.dart` | tắt |
+| 1 | Đổi địa chỉ server | `lib/core/app/app_config.dart` hoặc `--dart-define=API_BASE_URL=...` |
+| 2 | Firebase, signing, icon, splash | [Tạo app từ base](docs/guides/create-app-from-base.md), mục 5 |
+| 3 | Giữ hay bỏ các màn mẫu (đăng nhập, đăng ký, splash, OTP) | Bỏ đăng nhập thì sửa `integration_test/performance/support/perf_app_adapter.dart` |
+| 4 | Làm các việc để dành cho tuần đầu | [Sổ tay dự án thật](docs/guides/start-real-project.md#4-việc-để-dành-tới-dự-án-thật) |
 
-Giá trị runtime truyền qua `--dart-define`:
+Sổ tay dự án thật là nơi duy nhất ghi việc còn mở. Xong việc nào thì đánh dấu
+và ghi link PR ở đó.
 
-```bash
-./scripts/flutterw.sh run --flavor dev -t lib/main_dev.dart \
-  --dart-define=API_BASE_URL=https://dev.example.com \
-  --dart-define=ENABLE_NETWORK_INSPECTOR=true
+## Làm một tính năng
+
+Trong Claude Code:
+
+```text
+/tech-design docs/prd/thanh-toan.md
 ```
 
-Production chặn URL không phải HTTPS và chặn network inspector bị bật nhầm.
+1. Agent tra sổ quyết định, viết `docs/specs/<id>-<feature>/tech.md` cùng các
+   quyết định mới ở trạng thái đề xuất, rồi **dừng lại**.
+2. Bạn đọc `tech.md`, trả lời mục "Câu hỏi nghiệp vụ", đổi
+   `Trạng thái: Draft` thành `Trạng thái: Approved`.
+3. Gõ `/build-feature docs/specs/<id>-<feature>/tech.md`. Agent dev sinh khung
+   bằng `derry scaffold`, viết code theo đúng thứ tự tầng, rồi agent test kiểm
+   tra độc lập. Lỗi được trả về cho dev sửa tới khi qua.
+
+Các lệnh `/` khác:
+
+| Lệnh | Việc |
+|---|---|
+| `/decision <câu hỏi>` | Tra hoặc ghi quyết định kỹ thuật |
+| `/perf-check [màn]` | Đo hiệu năng, tìm nguyên nhân, sửa, đo lại, báo cáo |
+| `/perf-scenario <AC>` | Viết kịch bản đo và đề xuất ngưỡng từ AC |
+| `/security-audit [phạm vi]` | Audit bảo mật mobile |
+
+Không dùng Claude Code? Gọi agent bằng `@.agents/agents/flutter-dev.md <việc>`.
+Danh sách agent, skill và câu gọi mẫu: [bộ công cụ AI](docs/guides/ai-toolbox.md).
+
+Tự viết tay cũng được, nhưng sinh khung bằng lệnh để qua test convention:
+
+```bash
+derry scaffold -- payment --data --apply          # Cubit, kèm tầng data
+derry scaffold -- chat --bloc --apply             # BLoC
+```
 
 ## Lệnh hằng ngày
 
 | Lệnh | Việc |
 |---|---|
+| `derry run dev` | Chạy app môi trường dev |
 | `derry gen` | Sinh code (DI, model, asset) và format |
-| `derry analyze` | Analyzer và kiểm tra ranh giới kiến trúc |
-| `derry test` | Test của app |
-| `derry quality` | Format, analyzer, kiểm tra kiến trúc và test cho cả app lẫn `sli_common` |
-| `derry review plan` | Liệt kê file đã thay đổi cần review và luật cho từng file |
-| `derry decision search "<chủ đề>"` | Tìm quyết định kỹ thuật đã chốt |
-| `derry scaffold -- <feature> [--bloc] [--data] --apply` | Sinh khung feature đúng convention |
-| `derry new -- --destination ../my_app ... --apply` | Tạo app mới từ base với một commit đầu tiên |
-| `derry perf run` | Đo hiệu năng trên máy thật |
-| `derry perf diagnose` | Đo kèm chẩn đoán widget chậm nhất |
-| `derry perf approve` | Đo lại và lưu kết quả làm mốc so sánh |
+| `derry quality` | Format, analyzer, gate kiến trúc, test convention, test app và `sli_common` |
+| `derry test` | Chỉ chạy test |
+| `derry scaffold -- <feature> [--bloc] [--data] --apply` | Sinh khung feature |
+| `derry decision search "<chủ đề>"` | Tìm quyết định đã chốt |
+| `derry review plan` | Liệt kê file đổi và luật review cho từng file |
+| `derry perf run` / `diagnose` / `approve` | Đo hiệu năng / đo kèm chẩn đoán / lưu làm mốc |
 
-Xem toàn bộ lệnh bằng `derry ls -d`. Build local, phân phối Firebase và phát
-hành Store là ba luồng khác nhau; đọc [hướng dẫn Derry và build](docs/guides/use-derry-and-build.md)
-trước khi chạy lệnh có tác động từ xa.
+Toàn bộ lệnh: `derry ls -d`. Build local, phân phối Firebase và lên Store là ba
+luồng riêng; đọc [Derry và build](docs/guides/use-derry-and-build.md) trước khi
+chạy lệnh có tác động ra ngoài.
 
-Không sửa `lib/di/injection.config.dart` bằng tay. Gắn annotation cho class,
-inject qua constructor rồi chạy `derry gen`.
+| Môi trường | Entrypoint | Network inspector |
+|---|---|---|
+| local | `lib/main_local.dart` | bật |
+| dev | `lib/main_dev.dart` | bật |
+| staging | `lib/main_staging.dart` | bật |
+| prod | `lib/main_prod.dart` | tắt, và bắt buộc HTTPS |
 
-## Làm việc với AI
+## Kiến trúc
 
-Trong Claude Code có sẵn các lệnh:
+```text
+Screen ─▶ Cubit/BLoC ─▶ UseCase ─▶ Repository (interface)
+                                         ▲
+                     RepositoryImpl ─────┘ ─▶ DataSource ─▶ Dio / SDK
 
-| Lệnh | Việc |
+presentation ─▶ domain ◀─ data
+```
+
+Năm quy tắc không thoả hiệp, được kiểm tra trong `derry quality`:
+
+1. **Thứ tự tầng:** Entity → Model → DataSource → Repository → UseCase →
+   Cubit/BLoC → Screen → Route → l10n → DI.
+2. **Domain thuần Dart:** không import Flutter, data, SDK hay DI.
+3. **Constructor injection:** chỉ composition root (route builder, `MainApp`,
+   `bootstrap`, DI module) mới lấy dependency qua `Injector.getIt.get<T>()`.
+4. **Cubit không biết UI:** không `BuildContext`, không điều hướng, không chuỗi
+   dịch. Việc một lần đi qua `UiEffect` có kiểu, Screen xử lý.
+5. **Không sửa `lib/di/injection.config.dart`:** gắn annotation rồi chạy `derry gen`.
+
+Chi tiết: [kiến trúc](docs/architecture/README.md) ·
+[vì sao chọn vậy (ADR)](docs/adr/README.md).
+
+## Cấu trúc thư mục
+
+```text
+lib/
+  core/            app config, bootstrap, network, observability
+  data/            model, data source, repository impl
+  domain/          entity, repository interface, use case
+  presentation/    screen + Cubit/BLoC theo feature
+  widget/          widget riêng của app (dùng sli_common trước)
+  di/              Injector và cấu hình get_it
+  l10n/            chuỗi dịch ARB
+  modules/         sli_common (submodule)
+test/              unit, widget, convention, patterns
+integration_test/  kịch bản đo hiệu năng
+tool/              scaffold, convention, decisions, review, base CLI
+docs/              tài liệu (xem mục dưới)
+.agents/           agent và skill cho AI
+.claude/commands/  lệnh / trong Claude Code
+```
+
+## Tài liệu
+
+| Muốn | Đọc |
 |---|---|
-| `/tech-design <tài liệu>` | Viết thiết kế kỹ thuật `tech.md` từ tài liệu để duyệt trước khi code |
-| `/build-feature <tài liệu>` | Thiết kế, chờ duyệt, code đúng convention, agent test kiểm tra độc lập |
-| `/decision <câu hỏi>` | Tra cứu hoặc ghi quyết định kỹ thuật |
-| `/perf-check [màn hoặc luồng]` | Đo hiệu năng, tìm nguyên nhân, sửa, đo lại và viết báo cáo tiếng Việt |
-| `/perf-scenario <AC, spec hoặc mô tả>` | Viết kịch bản đo và đề xuất ngưỡng, kể cả từ AC không có con số |
-| `/security-audit [phạm vi]` | Audit bảo mật mobile, ghi báo cáo vào `docs/reviews/` |
-
-Với agent khác, nói bằng lời là đủ; agent tự nạp skill phù hợp. Câu gọi mẫu,
-danh sách agent và skill nằm trong [bộ công cụ AI](docs/guides/ai-toolbox.md).
-AI agent phải bắt đầu từ [AGENTS.md](AGENTS.md).
-
-## Đo hiệu năng
-
-Phần đo chạy trên máy thật ở profile mode, với server thật và một tài khoản test
-riêng. Mỗi lần đo được chấm hai kiểu: PASS hoặc FAIL so với mốc đã lưu, và GOOD,
-NEEDS_IMPROVEMENT hoặc POOR theo chuẩn Android vitals và Nielsen. Request lỗi
-được phân loại theo bên phải xử lý: mobile, backend, mạng hay môi trường.
-
-| Tài liệu | Nội dung |
-|---|---|
-| [Đo hiệu năng app](docs/guides/measure-performance.md) | Chuẩn bị, chạy, đọc kết quả, lỗi thường gặp |
-| [Chuẩn và ngưỡng](docs/performance/standards.md) | Từng mốc, nguồn gốc và ý nghĩa |
-| [Từ AC tới kịch bản](docs/performance/ac-to-scenario.md) | Ngưỡng mặc định theo loại thao tác |
-| [PERFORMANCE.md](PERFORMANCE.md) | Hợp đồng kỹ thuật của runner |
-
-## Tạo app và feature mới
-
-- [Tạo app từ base này](docs/guides/create-app-from-base.md)
-- [Thêm feature theo Clean Architecture](docs/guides/add-feature.md); bắt đầu
-  bằng `derry scaffold -- <feature> --apply`
-- [Chọn Cubit hay BLoC](docs/guides/choose-cubit-or-bloc.md)
-- [Thêm môi trường](docs/guides/add-environment.md)
-- [Trạng thái modernization](docs/modernization-status.md)
-
-Khi fork, đổi package và application identifier, URL môi trường, file Firebase,
-branding và signing. Các màn đăng nhập, đăng ký, splash là ví dụ và có thể thay.
-Khi thay luồng đăng nhập, cập nhật
-`integration_test/performance/support/perf_app_adapter.dart` để kịch bản đo
-hiệu năng vẫn chạy.
+| Đem base vào dự án thật, việc còn mở | [Sổ tay dự án thật](docs/guides/start-real-project.md) |
+| Làm việc với AI | [Bộ công cụ AI](docs/guides/ai-toolbox.md) · [AGENTS.md](AGENTS.md) |
+| Thêm feature bằng tay | [Thêm feature](docs/guides/add-feature.md) |
+| State, DI, networking, UI | [Kiến trúc](docs/architecture/README.md) |
+| Widget | [Dùng sli_common](docs/guides/use-sli-common.md) |
+| Đo hiệu năng | [Đo hiệu năng app](docs/guides/measure-performance.md) · [chuẩn và ngưỡng](docs/performance/standards.md) · [PERFORMANCE.md](PERFORMANCE.md) |
+| Build, phát hành | [Derry và build](docs/guides/use-derry-and-build.md) |
+| Báo lỗi, analytics | [Version Health](docs/guides/enable-version-health.md) |
+| Mọi thứ còn lại | [Mục lục tài liệu](docs/README.md) |

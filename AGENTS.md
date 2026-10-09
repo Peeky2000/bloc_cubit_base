@@ -20,8 +20,7 @@
 | Performance tester | `@.agents/agents/perf-tester.md` |
 | Performance engineer | `@.agents/agents/perf-engineer.md` |
 
-`coder` và `flutter-engineer` đã được thay bằng `flutter-dev`. Vòng giao việc
-giữa dev và tester nằm trong
+Vòng giao việc giữa dev và tester nằm trong
 [docs/agents/delivery-loop.md](docs/agents/delivery-loop.md).
 
 Toàn bộ lệnh, agent và skill được tổng hợp trong

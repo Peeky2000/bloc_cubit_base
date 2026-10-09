@@ -8,6 +8,18 @@ trail thật sự cải thiện correctness.
 
 Cả hai style đều là first-class và dùng use case inject qua constructor.
 
+| Tín hiệu | Cubit | BLoC |
+|---|:-:|:-:|
+| Method cho button/form, async flow tuyến tính | ✓ | |
+| Một vài command từ một màn hình, CRUD đơn giản | ✓ | |
+| Named event từ nhiều nguồn | | ✓ |
+| Debounce, restartable, droppable, sequential | | ✓ |
+| Cần audit hoặc replay theo tên event | | ✓ |
+
+Không chọn BLoC chỉ vì trông "enterprise" hơn, và không ép Cubit khi event đồng
+thời buộc phải dùng flag mong manh. Ghi lý do trong `tech.md` khi lựa chọn
+không hiển nhiên.
+
 ## Hình dạng state
 
 - Giữ `BaseAppState<Failure> + Equatable + copyWith`; dùng `Object` khi feature

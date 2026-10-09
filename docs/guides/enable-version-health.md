@@ -3,8 +3,7 @@
 Hướng dẫn này dành cho app fork từ base, khi app đã có Firebase project riêng.
 Base chỉ cung cấp một lớp trung gian, gọi là seam. Base không cài Firebase
 Analytics, Crashlytics, Performance hay Remote Config. Lý do nằm ở
-[ADR 0006](../adr/0006-ui-toolkit-now-defer-product-capabilities.md) và
-[brainstorm Version Health](../brainstorm/2026-10-06-version-health-firebase-observability.md).
+[ADR 0006](../adr/0006-ui-toolkit-now-defer-product-capabilities.md).
 
 ## Seam làm gì
 

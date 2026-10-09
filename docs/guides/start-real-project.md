@@ -62,10 +62,9 @@ derry quality
 Những việc này cố ý chưa làm trong base vì cần tài liệu, server hoặc thiết bị
 thật. Làm chúng ở tuần đầu của dự án thật, rồi đánh dấu ở đây.
 
-- [ ] **Chạy thử vòng agent dev và agent test với tài liệu thật.** Đây là bước
-  T7 trong [plan agent](../plan/2026-10-07-flutter-dev-and-test-agents.md).
-  Chọn một tính năng nhỏ, chạy `/tech-design` rồi `/build-feature`. Ghi lại
-  chỗ agent làm tốt, chỗ sai, và sửa hướng dẫn trong `.agents/agents/` hoặc
+- [ ] **Chạy thử vòng agent dev và agent test với tài liệu thật.** Chọn một
+  tính năng nhỏ, chạy `/tech-design` rồi `/build-feature`. Ghi lại chỗ agent
+  làm tốt, chỗ sai, và sửa hướng dẫn trong `.agents/agents/` hoặc
   `.agents/skills/tech-design/` cho khớp.
 - [ ] **Đo hiệu năng lần đầu trên máy thật.** Cần đủ bốn điều kiện:
   - ổ đĩa trống ít nhất 10 GB để build Android;
@@ -100,8 +99,7 @@ Không chặn dự án thật nhưng nên xử lý khi có thời gian.
   [tạo app từ base](create-app-from-base.md). 2026-10-08.
 - [x] **Migrate widget trùng với `sli_common`.** Sáu widget giống hệt chuyển
   sang `sli_common`, hai widget không còn ai dùng đã xoá, `InkWellButton` khác
-  layout nên giữ thành `AppInkWellButton`. Xem
-  [widget family matrix](../plan/2026-10-01-widget-family-migration-matrix.md). 2026-10-08.
+  layout nên giữ thành `AppInkWellButton`. 2026-10-08.
 - [x] **Gỡ branding mẫu trong code.** `DeliveryGoButton` thành
   `AppPrimaryButton`, chữ hiển thị trung tính, log route không còn tên mẫu.
   Bundle id, tên app native và file Firebase cố ý giữ lại vì `derry new` hoặc

@@ -1,6 +1,6 @@
 # Làm việc với The Forge và Designer
 
-Base này là bên **dev Flutter** trong hệ sinh thái The Forge. Bức tranh chung và cách bắt đầu dự án: [the-forge/START-HERE.md](https://github.com/Peeky2000/the-forge/blob/init/START-HERE.md).
+Base này là bên **dev Flutter** trong hệ sinh thái The Forge. Bức tranh chung và cách bắt đầu dự án: [the-forge README (mục Hệ sinh thái)](https://github.com/Peeky2000/the-forge/blob/init/README.md).
 
 | Việc | Ở đâu |
 |---|---|

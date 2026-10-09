@@ -196,6 +196,21 @@ class OrderResponseModel {}
     expect(rules('lib/core/OrderList.dart', ''), ['file-name']);
   });
 
+  test('UI code takes spacing and radius from tokens', () {
+    const path = 'lib/presentation/order/view/order_widget.dart';
+    expect(rules(path, 'const EdgeInsets.all(12)'), ['ui-tokens']);
+    expect(rules(path, 'EdgeInsets.symmetric(horizontal: 16.w)'), [
+      'ui-tokens',
+    ]);
+    expect(rules(path, 'SizedBox(height: 32.h)'), ['ui-tokens']);
+    expect(rules(path, 'BorderRadius.circular(8.0)'), ['ui-tokens']);
+    expect(rules(path, 'EdgeInsets.all(SliSpacing.lg)'), isEmpty);
+    expect(rules(path, 'SizedBox(height: SliSpacing.xxl)'), isEmpty);
+    expect(rules(path, 'BorderRadius.circular(SliRadii.md)'), isEmpty);
+    expect(rules(path, 'SizedBox(width: 44.w, height: 20.w)'), isEmpty);
+    expect(rules('lib/core/a.dart', 'EdgeInsets.all(12)'), isEmpty);
+  });
+
   test('the baseline only hides the listed rule for the listed file', () {
     final files = [
       const SourceFile('lib/core/a.dart', "print('x');"),

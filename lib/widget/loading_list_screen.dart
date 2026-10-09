@@ -1,3 +1,4 @@
+import 'package:sli_common/sli_common.dart' show SliSpacing, SliRadii;
 import 'dart:io';
 
 import 'package:equatable/equatable.dart';
@@ -149,10 +150,10 @@ class LoadingListScreen<
                         ),
                       ),
                       Container(
-                        padding: const EdgeInsets.all(12),
+                        padding: const EdgeInsets.all(SliSpacing.md),
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(8.0),
+                          borderRadius: BorderRadius.circular(SliRadii.md),
                         ),
                         child: const CupertinoActivityIndicator(radius: 14),
                       ),

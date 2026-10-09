@@ -1,4 +1,4 @@
-import 'package:sli_common/sli_common.dart' show CommonTextField;
+import 'package:sli_common/sli_common.dart' show CommonTextField, SliSpacing;
 import 'package:bloc_cubit_base/core/app/app.dart';
 import 'package:bloc_cubit_base/core/common/route.dart';
 import 'package:bloc_cubit_base/core/routing/routing.dart';
@@ -69,7 +69,7 @@ class _SignInScreenState extends State<SignInScreen> with AfterLayoutMixin {
         InkWell(
           onTap: () => _signInCubit?.onChangeRememberLogin(),
           child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.0.h),
+            padding: EdgeInsets.symmetric(vertical: SliSpacing.sm),
             child: Text(
               context.l10n.rememberSignIn,
               style: App.appStyle?.medium14?.copyWith(
@@ -96,7 +96,7 @@ class _SignInScreenState extends State<SignInScreen> with AfterLayoutMixin {
 
   Widget _buildContent() {
     return Padding(
-      padding: EdgeInsets.all(32.w),
+      padding: EdgeInsets.all(SliSpacing.xxl),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -107,7 +107,10 @@ class _SignInScreenState extends State<SignInScreen> with AfterLayoutMixin {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(top: 16.h, bottom: 32.h),
+            padding: EdgeInsets.only(
+              top: SliSpacing.lg,
+              bottom: SliSpacing.xxl,
+            ),
             child: Text(
               context.l10n.welcomeTitle,
               style: App.appStyle?.medium14?.copyWith(
@@ -126,7 +129,7 @@ class _SignInScreenState extends State<SignInScreen> with AfterLayoutMixin {
               );
             },
           ),
-          SizedBox(height: 16.h),
+          SizedBox(height: SliSpacing.lg),
           BlocBuilder<SignInCubit, SignInState>(
             builder: (context, state) {
               return CommonTextField(
@@ -152,9 +155,9 @@ class _SignInScreenState extends State<SignInScreen> with AfterLayoutMixin {
               );
             },
           ),
-          SizedBox(height: 32.h),
+          SizedBox(height: SliSpacing.xxl),
           _buildOption(),
-          SizedBox(height: 32.h),
+          SizedBox(height: SliSpacing.xxl),
           AppPrimaryButton(
             title: context.l10n.signInNowPerWord,
             onTap: () {
@@ -163,7 +166,7 @@ class _SignInScreenState extends State<SignInScreen> with AfterLayoutMixin {
               _signInCubit?.onTapSignIn(username: username, pass: pass);
             },
           ),
-          SizedBox(height: 32.h),
+          SizedBox(height: SliSpacing.xxl),
           Text.rich(
             TextSpan(
               children: [

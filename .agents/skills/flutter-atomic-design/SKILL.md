@@ -27,8 +27,10 @@ folder hierarchy.
 
 ## Decision order
 
-1. Search app-memory and the public `sli_common` exports.
-2. Compose an existing `Sli*` component with app tokens/theme.
+1. Scan what already exists: app-memory, the public `sli_common` exports,
+   `lib/widget/` and sibling features.
+2. Reuse or compose what fits. If nothing fits, write a new widget in the app;
+   do not force a component out of `sli_common`.
 3. Extend `sli_common` only when the abstraction is genuinely cross-product.
 4. Keep a widget in the feature when its semantics are product-specific.
 
@@ -40,6 +42,9 @@ folder hierarchy.
   feature Cubit/BLoC.
 - Use semantic roles, design tokens, minimum touch targets, and loading/disabled
   behavior. User-facing text comes from app l10n.
+- Padding, spacers and corner radius use `SliSpacing` / `SliRadii` without
+  `.w/.h/.r` scaling. The convention rule `ui-tokens` fails on number literals.
+  Component sizes (icon, image, field height) may stay numeric.
 - A shared-package change requires its own tests/analyze and a submodule pointer
   update in the base.
 

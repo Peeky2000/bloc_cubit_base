@@ -60,8 +60,13 @@ python3 .agents/skills/app-memory/scripts/mem_search.py "auth"
 - Không sửa `lib/di/injection.config.dart`; chạy `derry gen`.
 - Cubit là mặc định. Chỉ chọn BLoC khi named event, event transformer, hoặc
   concurrency semantic mang lại giá trị cụ thể.
-- Tái sử dụng `sli_common` trước khi thêm reusable widget trong app. Import API
-  ổn định của nó; không rải direct `shadcn_flutter` import khắp app.
+- Trước khi viết widget, quét `sli_common`, `lib/widget/` và feature lân cận
+  xem có gì dùng lại được. Có thì dùng, không có thì viết mới trong app; không
+  bắt buộc mọi thứ phải lấy từ `sli_common`. Không rải direct `shadcn_flutter`
+  import khắp app.
+- Khoảng cách và bo góc dùng `SliSpacing`/`SliRadii`, không ghi số và không
+  co giãn bằng `.w/.h/.r`. Chữ hiển thị lấy từ l10n. Luật `ui-tokens` kiểm
+  tra tự động.
 - Chạy `derry quality` và báo debt có sẵn tách biệt với regression mới.
 - Tạo feature mới bằng `dart run tool/scaffold/feature.dart <feature> --apply`
   thay vì tự viết khung. Convention được kiểm tra tự động bởi

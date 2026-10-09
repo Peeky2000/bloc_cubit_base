@@ -30,8 +30,10 @@ to `docs/reviews/YYYY-MM-DD-hh-mm-ss-{topic}.md`.
    revision-filtered and handled by Screen rather than state manager.
 5. Data sources are transport/storage only; tokens and diagnostics are secure;
    inspector cannot run in production.
-6. UI reuses `sli_common`, respects l10n/accessibility/theme, and avoids direct
-   Shadcn coupling outside the toolkit.
+6. UI reuses an existing widget when one fits (`sli_common`, `lib/widget/`,
+   sibling features), uses `SliSpacing`/`SliRadii` for spacing and radius,
+   respects l10n/accessibility/theme, and avoids direct Shadcn coupling
+   outside the toolkit.
 7. Routes, ARB, generated files, app-memory, architecture docs, and migration
    notes are current.
 8. Run `derry quality` and affected package/submodule gates. Compare against the

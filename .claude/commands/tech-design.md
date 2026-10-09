@@ -11,8 +11,9 @@ Use the `tech-design` skill (`.agents/skills/tech-design/SKILL.md`).
 1. Give every requirement an id and keep its wording. Do not change business
    behavior; list ambiguities as business questions.
 2. Search past decisions with `python3 tool/decisions/decisions.py search` for
-   each technical topic, and reuse code found through app-memory and
-   `sli_common`.
+   each technical topic, and reuse code found through app-memory,
+   `sli_common`, `lib/widget/` and sibling features. Mark a widget as new
+   when nothing fits.
 3. Write `docs/specs/<id>-<feature>/tech.md` from the template, filling every
    section with exact paths, class and field names, state, effects, API,
    storage, UI components, l10n keys, tests and performance targets.

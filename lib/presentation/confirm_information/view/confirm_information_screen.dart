@@ -1,3 +1,4 @@
+import 'package:sli_common/sli_common.dart' show SliSpacing, SliRadii;
 import 'package:bloc_cubit_base/core/app/app.dart';
 import 'package:bloc_cubit_base/core/common/route.dart';
 import 'package:bloc_cubit_base/core/error/exception.dart';
@@ -69,11 +70,11 @@ class _ConfirmInformationScreenState extends State<ConfirmInformationScreen>
   Widget _buildBody() {
     return SingleChildScrollView(
       physics: const ClampingScrollPhysics(),
-      padding: EdgeInsets.symmetric(horizontal: 32.w),
+      padding: EdgeInsets.symmetric(horizontal: SliSpacing.xxl),
       child: Column(
         children: [
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 64.h),
+            padding: EdgeInsets.symmetric(vertical: SliSpacing.xxxl),
             child: Assets.images.imgLock.image(),
           ),
           BlocBuilder<ConfirmInformationCubit, ConfirmInformationState>(
@@ -87,7 +88,7 @@ class _ConfirmInformationScreenState extends State<ConfirmInformationScreen>
               );
             },
           ),
-          SizedBox(height: 32.h),
+          SizedBox(height: SliSpacing.xxl),
           PinCodeTextField(
             appContext: context,
             length: 6,
@@ -97,7 +98,7 @@ class _ConfirmInformationScreenState extends State<ConfirmInformationScreen>
               inactiveColor: App.appColor?.borderColor,
               activeFillColor: App.appColor?.primaryColor,
               activeColor: App.appColor?.primaryColor,
-              borderRadius: BorderRadius.circular(5.0.r),
+              borderRadius: BorderRadius.circular(SliRadii.sm),
               fieldHeight: 32.w,
               fieldWidth: 32.w,
             ),
@@ -110,7 +111,10 @@ class _ConfirmInformationScreenState extends State<ConfirmInformationScreen>
             onCompleted: (value) => _confirmInformationCubit?.verifyOtp(value),
           ),
           Padding(
-            padding: EdgeInsets.only(top: 16.h, bottom: 32.h),
+            padding: EdgeInsets.only(
+              top: SliSpacing.lg,
+              bottom: SliSpacing.xxl,
+            ),
             child:
                 BlocBuilder<ConfirmInformationCubit, ConfirmInformationState>(
                   builder: (context, state) {

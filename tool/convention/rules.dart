@@ -34,6 +34,13 @@ typedef Baseline = Set<String>;
 
 final _snake = RegExp(r'^[a-z][a-z0-9_]*$');
 
+/// A number literal inside padding, a spacer or a corner radius.
+final _rawSpacing = RegExp(
+  r'(EdgeInsets\.(all|symmetric|only|fromLTRB)\([^)]*\b\d'
+  r'|SizedBox\(\s*(height|width):\s*[\d.]+(\.[whr])?\s*,?\s*\)'
+  r'|Radius\.circular\(\s*\d)',
+);
+
 String _pascal(String snake) => snake
     .split('_')
     .where((p) => p.isNotEmpty)
@@ -243,6 +250,18 @@ List<Violation> checkFile(SourceFile f) {
       if (!_declares(text, screen)) add('screen', 'declare class $screen');
       if (!RegExp('Widget\\s+$builder\\(').hasMatch(text)) {
         add('screen', 'expose Widget $builder() for the route table');
+      }
+    }
+  }
+
+  // Spacing and corner radius in UI code come from SliSpacing / SliRadii.
+  if (s.length > 2 && (s[1] == 'presentation' || s[1] == 'widget')) {
+    for (final line in text.split('\n')) {
+      final code = line.trimLeft();
+      if (code.startsWith('//')) continue;
+      if (_rawSpacing.hasMatch(code)) {
+        add('ui-tokens', 'use SliSpacing/SliRadii instead of a number: $code');
+        break;
       }
     }
   }

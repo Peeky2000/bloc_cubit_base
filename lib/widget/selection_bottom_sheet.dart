@@ -77,7 +77,7 @@ class _SelectionBottomSheetState extends State<SelectionBottomSheet> {
                 ),
                 selectedTileColor: Colors.white,
                 activeColor: App.appColor?.primaryColor,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 0.0),
+                contentPadding: EdgeInsets.zero,
                 controlAffinity: ListTileControlAffinity.leading,
               ),
             ),
@@ -130,7 +130,10 @@ class _MultiSelectionBottomSheetState extends State<MultiSelectionBottomSheet> {
   Widget buildItem(int index) {
     bool isSelected = indexSelected.contains(index);
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
+      padding: EdgeInsets.symmetric(
+        vertical: sli.SliSpacing.sm,
+        horizontal: sli.SliSpacing.lg,
+      ),
       child: InkWell(
         onTap: () {
           setState(() {
@@ -146,7 +149,7 @@ class _MultiSelectionBottomSheetState extends State<MultiSelectionBottomSheet> {
               width: 16.w,
               height: 16.w,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4.r),
+                borderRadius: BorderRadius.circular(sli.SliRadii.sm),
                 border: Border.all(
                   color: App.appColor!.borderColor!,
                   width: 1.0,
@@ -162,7 +165,7 @@ class _MultiSelectionBottomSheetState extends State<MultiSelectionBottomSheet> {
             ),
             Flexible(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                padding: EdgeInsets.symmetric(horizontal: sli.SliSpacing.lg),
                 child: Text(
                   listShow[index].title,
                   style: App.appStyle?.medium14?.copyWith(
@@ -212,7 +215,7 @@ class _SelectionSheetFrame extends StatelessWidget {
     showDivider: false,
     titleTextAlign: TextAlign.start,
     titleStyle: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
-    headerPadding: EdgeInsets.all(16.w),
+    headerPadding: EdgeInsets.all(sli.SliSpacing.lg),
     height: isIntrinsicHeight ? null : (height ?? 400.h),
     maxHeight: isIntrinsicHeight ? (height ?? 400.h) : null,
     safeAreaBottom: false,

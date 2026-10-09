@@ -1,3 +1,4 @@
+import 'package:sli_common/sli_common.dart' show SliSpacing;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:bloc_cubit_base/core/app/app.dart';
@@ -34,12 +35,12 @@ class AppPrimaryButton extends StatelessWidget {
 
   Widget _buildLabel() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 30.w),
+      padding: EdgeInsets.symmetric(horizontal: SliSpacing.xxl),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const SizedBox(width: 24),
-          SizedBox(width: 8.w),
+          const SizedBox(width: SliSpacing.xl),
+          SizedBox(width: SliSpacing.sm),
           Expanded(
             child: Text(
               title ?? '',
@@ -51,7 +52,7 @@ class AppPrimaryButton extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(width: 8.w),
+          SizedBox(width: SliSpacing.sm),
           icon!,
         ],
       ),

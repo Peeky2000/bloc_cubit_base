@@ -1,3 +1,4 @@
+import 'package:sli_common/sli_common.dart' show SliSpacing, SliRadii;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -60,10 +61,10 @@ class LoadingScreen<
                           ),
                         ),
                         Container(
-                          padding: const EdgeInsets.all(12),
+                          padding: const EdgeInsets.all(SliSpacing.md),
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(8.0),
+                            borderRadius: BorderRadius.circular(SliRadii.md),
                           ),
                           child: const CupertinoActivityIndicator(radius: 14),
                         ),

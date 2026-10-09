@@ -1,3 +1,4 @@
+import 'package:sli_common/sli_common.dart' show SliSpacing;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -81,7 +82,9 @@ class AppInkWellButton extends StatelessWidget {
           child: Center(
             child: isWrapContentChild
                 ? Padding(
-                    padding: padding ?? EdgeInsets.symmetric(horizontal: 16.w),
+                    padding:
+                        padding ??
+                        EdgeInsets.symmetric(horizontal: SliSpacing.lg),
                     child: child,
                   )
                 : child,

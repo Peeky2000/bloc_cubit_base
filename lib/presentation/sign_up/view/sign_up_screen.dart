@@ -1,5 +1,5 @@
 import 'package:sli_common/sli_common.dart'
-    show CommonDropDown, CommonTextField;
+    show CommonDropDown, CommonTextField, SliSpacing;
 import 'package:bloc_cubit_base/core/app/app.dart';
 import 'package:bloc_cubit_base/core/common/route.dart';
 import 'package:bloc_cubit_base/domain/entities/common/app_enums.dart';
@@ -166,7 +166,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
 
   Widget _buildSignUpPage() {
     return Padding(
-      padding: EdgeInsets.all(32.w),
+      padding: EdgeInsets.all(SliSpacing.xxl),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -177,7 +177,10 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(top: 16.h, bottom: 32.h),
+            padding: EdgeInsets.only(
+              top: SliSpacing.lg,
+              bottom: SliSpacing.xxl,
+            ),
             child: Text(
               context.l10n.welcomeTitle,
               style: App.appStyle?.medium14?.copyWith(
@@ -196,7 +199,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
               );
             },
           ),
-          SizedBox(height: 16.h),
+          SizedBox(height: SliSpacing.lg),
           BlocBuilder<SignUpCubit, SignUpState>(
             builder: (context, state) {
               return CommonTextField(
@@ -208,7 +211,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
               );
             },
           ),
-          SizedBox(height: 16.h),
+          SizedBox(height: SliSpacing.lg),
           BlocBuilder<SignUpCubit, SignUpState>(
             builder: (context, state) {
               return CommonTextField(
@@ -234,7 +237,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
               );
             },
           ),
-          SizedBox(height: 32.h),
+          SizedBox(height: SliSpacing.xxl),
           AppPrimaryButton(
             title: context.l10n.signUpNowPerWord,
             onTap: () {
@@ -244,7 +247,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
               _signUpCubit?.onTapSignUp(phone: phone, email: email, pass: pass);
             },
           ),
-          SizedBox(height: 32.h),
+          SizedBox(height: SliSpacing.xxl),
           Text.rich(
             TextSpan(
               children: [
@@ -319,7 +322,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
     return Stack(
       children: [
         Padding(
-          padding: EdgeInsets.all(32.0.w),
+          padding: EdgeInsets.all(SliSpacing.xxl),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -330,7 +333,10 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 16.h, bottom: 32.h),
+                padding: EdgeInsets.only(
+                  top: SliSpacing.lg,
+                  bottom: SliSpacing.xxl,
+                ),
                 child: Text(
                   context.l10n.brandTagline,
                   style: App.appStyle?.medium14?.copyWith(
@@ -351,7 +357,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
                   );
                 },
               ),
-              SizedBox(height: 16.h),
+              SizedBox(height: SliSpacing.lg),
               BlocBuilder<SignUpCubit, SignUpState>(
                 builder: (context, state) {
                   List<String> names = [];
@@ -375,7 +381,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
                   );
                 },
               ),
-              SizedBox(height: 16.h),
+              SizedBox(height: SliSpacing.lg),
               BlocBuilder<SignUpCubit, SignUpState>(
                 builder: (context, state) {
                   String? title = itemsScaleLevel
@@ -394,7 +400,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
                   );
                 },
               ),
-              SizedBox(height: 32.h),
+              SizedBox(height: SliSpacing.xxl),
               Text.rich(
                 TextSpan(
                   children: [
@@ -424,7 +430,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 32.h),
+              SizedBox(height: SliSpacing.xxl),
               AppPrimaryButton(
                 title: context.l10n.confirmInfo,
                 onTap: () {
@@ -438,7 +444,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterLayoutMixin {
         Align(
           alignment: Alignment.topLeft,
           child: Padding(
-            padding: EdgeInsets.only(top: 24.h, left: 12.w),
+            padding: EdgeInsets.only(top: SliSpacing.xl, left: SliSpacing.md),
             child: BackButton(onPressed: () => _signUpCubit?.previousPage()),
           ),
         ),

@@ -1,3 +1,4 @@
+import 'package:sli_common/sli_common.dart' show SliSpacing;
 import 'package:bloc_cubit_base/core/app/app.dart';
 import 'package:bloc_cubit_base/generated/assets.gen.dart';
 import 'package:flutter/material.dart';
@@ -19,14 +20,14 @@ class SuccessScreen extends StatelessWidget {
         children: [
           const SizedBox(width: double.infinity),
           icon ?? Assets.images.imgLogoSmall.image(width: 196.w),
-          SizedBox(height: 32.h),
+          SizedBox(height: SliSpacing.xxl),
           Text(
             title ?? '',
             style: App.appStyle?.bold20?.copyWith(
               color: App.appColor?.textColorButton,
             ),
           ),
-          SizedBox(height: 16.h),
+          SizedBox(height: SliSpacing.lg),
           Text(
             subtitle ?? '',
             style: App.appStyle?.medium14?.copyWith(

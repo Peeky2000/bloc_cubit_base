@@ -1,4 +1,5 @@
-import 'package:sli_common/sli_common.dart' show CommonTextField, DialogUtil;
+import 'package:sli_common/sli_common.dart'
+    show CommonTextField, DialogUtil, SliRadii, SliSpacing;
 import 'package:bloc_cubit_base/core/app/app.dart';
 import 'package:bloc_cubit_base/core/common/route.dart';
 import 'package:bloc_cubit_base/core/error/exception.dart';
@@ -74,11 +75,11 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
           centerTitle: true,
         ),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 32.w),
+          padding: EdgeInsets.symmetric(horizontal: SliSpacing.xxl),
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 64.h),
+                padding: EdgeInsets.symmetric(vertical: SliSpacing.xxxl),
                 child: Assets.images.imgLock.image(),
               ),
               Text(
@@ -87,7 +88,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
                   color: App.appColor?.textColor,
                 ),
               ),
-              SizedBox(height: 32.h),
+              SizedBox(height: SliSpacing.xxl),
               BlocBuilder<ResetPasswordCubit, ResetPasswordState>(
                 builder: (context, state) {
                   return CommonTextField(
@@ -100,7 +101,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
                   );
                 },
               ),
-              SizedBox(height: 32.h),
+              SizedBox(height: SliSpacing.xxl),
               AppPrimaryButton(
                 title: context.l10n.sendRequestSignIn,
                 onTap: () {
@@ -132,11 +133,11 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
           centerTitle: true,
         ),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 32.w),
+          padding: EdgeInsets.symmetric(horizontal: SliSpacing.xxl),
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 64.h),
+                padding: EdgeInsets.symmetric(vertical: SliSpacing.xxxl),
                 child: Assets.images.imgLock.image(),
               ),
               BlocBuilder<ResetPasswordCubit, ResetPasswordState>(
@@ -152,7 +153,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
                   );
                 },
               ),
-              SizedBox(height: 32.h),
+              SizedBox(height: SliSpacing.xxl),
               PinCodeTextField(
                 appContext: context,
                 length: 6,
@@ -162,7 +163,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
                   inactiveColor: App.appColor?.borderColor,
                   activeFillColor: App.appColor?.primaryColor,
                   activeColor: App.appColor?.primaryColor,
-                  borderRadius: BorderRadius.circular(5.0.r),
+                  borderRadius: BorderRadius.circular(SliRadii.sm),
                   fieldHeight: 32.w,
                   fieldWidth: 32.w,
                 ),
@@ -176,7 +177,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
                     _resetPasswordCubit?.onCompleteOTP(value),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 16.h, bottom: 32.h),
+                padding: EdgeInsets.only(
+                  top: SliSpacing.lg,
+                  bottom: SliSpacing.xxl,
+                ),
                 child: BlocBuilder<ResetPasswordCubit, ResetPasswordState>(
                   builder: (context, state) {
                     return state.isVerifying
@@ -245,11 +249,11 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
           centerTitle: true,
         ),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 32.w),
+          padding: EdgeInsets.symmetric(horizontal: SliSpacing.xxl),
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 64.h),
+                padding: EdgeInsets.symmetric(vertical: SliSpacing.xxxl),
                 child: Assets.images.imgLock.image(),
               ),
               Text(
@@ -258,7 +262,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
                   color: App.appColor?.textColor,
                 ),
               ),
-              SizedBox(height: 32.h),
+              SizedBox(height: SliSpacing.xxl),
               BlocBuilder<ResetPasswordCubit, ResetPasswordState>(
                 builder: (context, state) {
                   return CommonTextField(
@@ -280,7 +284,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
                   );
                 },
               ),
-              SizedBox(height: 32.h),
+              SizedBox(height: SliSpacing.xxl),
               BlocBuilder<ResetPasswordCubit, ResetPasswordState>(
                 builder: (context, state) {
                   return CommonTextField(
@@ -302,7 +306,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
                   );
                 },
               ),
-              SizedBox(height: 32.h),
+              SizedBox(height: SliSpacing.xxl),
               AppPrimaryButton(
                 title: context.l10n.confirmPassword,
                 onTap: () {

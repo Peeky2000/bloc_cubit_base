@@ -111,8 +111,7 @@ Gọi bằng cách nhắc tên file trong câu yêu cầu, ví dụ
 | [perf-tester](../../.agents/agents/perf-tester.md) | Đo hiệu năng, tìm nguyên nhân, kiểm tra lại sau khi sửa |
 | [perf-engineer](../../.agents/agents/perf-engineer.md) | Sửa lỗi hiệu năng theo phiếu bàn giao |
 
-`coder` và `flutter-engineer` đã được gộp thành `flutter-dev`; hai file cũ chỉ
-còn chuyển hướng. Vòng giữa dev và tester nằm trong
+Vòng giữa dev và tester nằm trong
 [delivery-loop.md](../agents/delivery-loop.md).
 
 ### Agent dev giữ convention bằng cách nào
@@ -178,8 +177,11 @@ bản cài đặt mẫu có test của hai tài liệu đó.
 | `mobile-platform-lifecycle` | Background, foreground, platform channel | |
 | `mobile-release-readiness` | "chuẩn bị phát hành" | |
 
-Chi tiết nên chọn skill nào cho việc gì nằm ở
-[chọn skill Flutter/mobile](mobile-engineering-skills.md).
+Không cần nạp hết: skill tầng lo **cách viết** từng tầng, skill chất lượng lo
+**cách đánh giá**. Ví dụ "review diff refresh token, kiểm tra 401 đồng thời"
+dùng `flutter-code-review` + `mobile-security-privacy` + `flutter-testing`.
+Chỉ nhờ review thì agent không tự sửa code; kết luận hiệu năng không có số đo
+phải ghi là giả thuyết.
 
 ## Skill bên ngoài repo
 

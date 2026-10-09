@@ -1,165 +1,56 @@
-# Mục Lục Tài Liệu — Bắt Đầu Tại Đây
+# Mục lục tài liệu
 
-Đây là cửa vào trung tâm cho toàn bộ tài liệu của `bloc_cubit_base`. Người mới
-không cần đọc tất cả ngay; hãy chọn đúng mục tiêu trong bảng dưới đây rồi đi theo
-đường dẫn được đề xuất.
+Đọc [README gốc](../README.md) trước. Trang này chỉ là bản đồ: mỗi thư mục
+làm gì và tài liệu nào trả lời câu hỏi nào.
 
-## Tôi muốn làm gì?
+## Theo việc cần làm
 
-| Mục tiêu | Đọc theo thứ tự |
+| Tôi muốn | Đọc |
 |---|---|
-| Bắt đầu làm quen với base | [README gốc](../README.md) → [điều kiện dự án](prerequisites.md) → [tổng quan kiến trúc](architecture/README.md) → [trạng thái hiện tại](modernization-status.md) |
-| Cài project và chạy lần đầu | [Điều kiện dự án](prerequisites.md) → [Derry/build/Fastlane](guides/use-derry-and-build.md) |
-| Đem base vào dự án thật | [Sổ tay dự án thật](guides/start-real-project.md) → [bộ công cụ AI](guides/ai-toolbox.md) |
-| Tạo app mới từ base | [Tạo app từ base](guides/create-app-from-base.md) → [trạng thái hiện tại](modernization-status.md) |
-| Thêm feature mới | [Thêm feature](guides/add-feature.md) → [quy tắc dependency](architecture/dependency-rules.md) → [chọn Cubit/BLoC](guides/choose-cubit-or-bloc.md) |
-| Thêm hoặc sửa DI | [Kiến trúc DI](architecture/dependency-injection.md) → [ADR Injectable](adr/0001-get-it-injectable.md) |
-| Làm Cubit/BLoC hoặc state | [Quản lý state](architecture/state-management.md) → [chọn Cubit/BLoC](guides/choose-cubit-or-bloc.md) → [xử lý UI effect](guides/handle-ui-effects.md) |
-| Làm API, Dio hoặc token | [Networking](architecture/networking.md) → [quy tắc dependency](architecture/dependency-rules.md) |
-| Làm widget/design system | [UI toolkit](architecture/ui-toolkit.md) → [dùng sli_common](guides/use-sli-common.md) |
-| Thêm môi trường/flavor | [Environment và bootstrap](architecture/environment-bootstrap.md) → [thêm môi trường](guides/add-environment.md) |
-| Build APK/AAB/IPA | [Derry/build/Fastlane](guides/use-derry-and-build.md) |
-| Đo hiệu năng app | [Đo hiệu năng app](guides/measure-performance.md) → [chuẩn và ngưỡng](performance/standards.md) → [từ AC tới kịch bản](performance/ac-to-scenario.md) → [hợp đồng benchmark](../PERFORMANCE.md) → [quy trình agent](performance/agent-loop.md) |
-| Phân phối Firebase hoặc Store | [Derry/build/Fastlane](guides/use-derry-and-build.md) → [Android Fastlane](../android/fastlane/README.md) / [iOS Fastlane](../ios/fastlane/README.md) |
-| Xem vì sao chọn công nghệ hiện tại | [Danh sách ADR](adr/README.md) |
-| Xem việc đã làm và việc còn lại | [Việc còn mở](guides/start-real-project.md#5-việc-còn-mở-trong-base) → [Trạng thái modernization](modernization-status.md) → [roadmap](plan/2026-08-26-base-modernization.md) |
-| Xem bằng chứng review/quality gate | [Review full analyzer](reviews/2026-10-01-sli-common-full-analyzer-review.md) → [review skill](reviews/2026-10-01-mobile-skills-review.md) |
-| Làm việc cùng AI agent | [Bộ công cụ AI](guides/ai-toolbox.md) → [Quy trình AI](../ai-process.md) → [AGENTS.md](../AGENTS.md) → [chọn skill Flutter/mobile](guides/mobile-engineering-skills.md) |
+| Cài máy và chạy lần đầu | [Điều kiện dự án](prerequisites.md) → [Derry và build](guides/use-derry-and-build.md) |
+| Đem base vào dự án thật | [Sổ tay dự án thật](guides/start-real-project.md) |
+| Tạo app mới từ base | [Tạo app từ base](guides/create-app-from-base.md) |
+| Thêm tính năng | [Thêm feature](guides/add-feature.md) → [quy tắc dependency](architecture/dependency-rules.md) |
+| Làm Cubit/BLoC, state, điều hướng một lần | [Quản lý state](architecture/state-management.md) → [UI effect](guides/handle-ui-effects.md) |
+| Thêm hoặc sửa DI | [Dependency injection](architecture/dependency-injection.md) |
+| Gọi API, token, refresh 401 | [Networking](architecture/networking.md) |
+| Làm widget | [UI toolkit](architecture/ui-toolkit.md) → [dùng sli_common](guides/use-sli-common.md) |
+| Thêm môi trường hoặc flavor | [Environment và bootstrap](architecture/environment-bootstrap.md#thêm-một-môi-trường) |
+| Build, phân phối Firebase, lên Store | [Derry và build](guides/use-derry-and-build.md) |
+| Đo hiệu năng | [Đo hiệu năng app](guides/measure-performance.md) → [chuẩn và ngưỡng](performance/standards.md) → [từ AC tới kịch bản](performance/ac-to-scenario.md) |
+| Bật báo lỗi, analytics, feature flag | [Version Health](guides/enable-version-health.md) |
+| Làm việc với AI agent | [Bộ công cụ AI](guides/ai-toolbox.md) → [AGENTS.md](../AGENTS.md) → [quy trình AI](../ai-process.md) |
+| Biết vì sao chọn công nghệ này | [ADR](adr/README.md) và [sổ quyết định](decisions/README.md) |
 
-## Lộ trình onboarding khuyến nghị
+## Các thư mục
 
-Người mới vào project nên hoàn thành theo thứ tự:
-
-1. Đọc [README gốc](../README.md) để hiểu mục tiêu và stack của base.
-2. Đọc [điều kiện dự án](prerequisites.md) và cài đúng Flutter/Derry/submodule.
-3. Chạy `derry bootstrap`, sau đó chạy `derry quality` để xác nhận máy local.
-4. Đọc [tổng quan kiến trúc](architecture/README.md) và
-   [quy tắc dependency](architecture/dependency-rules.md).
-5. Đọc [trạng thái modernization](modernization-status.md) để không nhầm phần
-   foundation đã hoàn tất với legacy debt đang chờ xử lý.
-6. Chọn guide đúng với task chuẩn bị làm.
-
-## Vòng đời tài liệu
-
-```text
-Brainstorm / Spec
-        ↓
-Quyết định được duyệt / ADR
-        ↓
-Implementation plan / Checklist
-        ↓
-Code + tests + quality gates
-        ↓
-Review
-        ↓
-Modernization status + Changelog
-```
-
-| Loại tài liệu | Trả lời câu hỏi | Vị trí |
+| Thư mục | Chứa gì | Ai viết |
 |---|---|---|
-| Brainstorm | Vấn đề là gì, có những phương án và rủi ro nào? | [`docs/brainstorm/`](brainstorm/) |
-| Spec | Feature phải làm gì và contract là gì? | [`docs/specs/`](specs/) |
-| ADR | Vì sao team chấp nhận một quyết định kiến trúc? | [`docs/adr/`](adr/) |
-| Architecture | Kiến trúc và convention hiện hành là gì? | [`docs/architecture/`](architecture/) |
-| Plan | Triển khai theo thứ tự nào, file nào và verify ra sao? | [`docs/plan/`](plan/) |
-| Guide | Thực hiện một công việc cụ thể như thế nào? | [`docs/guides/`](guides/) |
-| Review | Code hiện tại đúng/sai ở đâu và đã verify gì? | [`docs/reviews/`](reviews/) |
-| Status | Foundation nào đã xong, debt nào còn lại? | [modernization-status.md](modernization-status.md) |
-| Changelog | Release hoặc đợt thay đổi đã mang lại điều gì? | [CHANGELOG.md](../CHANGELOG.md) |
+| [`architecture/`](architecture/README.md) | Kiến trúc và convention hiện hành | Cập nhật cùng code |
+| [`adr/`](adr/README.md) | Quyết định kiến trúc ảnh hưởng cả base. Đã accepted thì không sửa, chỉ thay bằng ADR mới | PM duyệt |
+| [`decisions/`](decisions/README.md) | Quyết định kỹ thuật cấp tính năng (D-NNNN) và [thuật ngữ](decisions/glossary.md). Tra bằng `derry decision search` | Agent đề xuất, PM duyệt |
+| [`guides/`](guides/) | Cách làm một việc cụ thể | |
+| [`performance/`](performance/) | Chuẩn đo, ngưỡng và vòng agent hiệu năng | |
+| [`agents/`](agents/delivery-loop.md) | Vòng giao việc giữa agent dev và agent test | |
+| `specs/` | Mỗi tính năng một thư mục `NNN-<tên>/` gồm `tech.md`, checklist | `/tech-design` sinh ra |
+| `handoffs/` | Phiếu giao việc giữa dev và tester | Agent |
+| `reviews/` | Báo cáo review, audit bảo mật, eval. Tên có ngày giờ | Agent reviewer |
+| `brainstorm/`, `plan/` | Phân tích phương án và kế hoạch triển khai khi cần. Tên có ngày | Skill `brainstorm`, `plan-writer` |
 
-## Source of truth và thứ tự ưu tiên
+Các thư mục `specs/`, `handoffs/`, `brainstorm/`, `plan/` để trống trong base;
+dự án thật sẽ lấp dần. Tài liệu lịch sử của đợt hiện đại hoá base đã được dọn,
+xem lại trong git history nếu cần.
 
-Khi hai tài liệu có vẻ mâu thuẫn, dùng thứ tự sau:
+## Khi hai tài liệu mâu thuẫn
 
-1. Architecture hiện hành và ADR đã được chấp nhận.
-2. `prerequisites.md` cùng quality gate chạy được trong repository.
-3. Guide triển khai hiện hành.
-4. Plan và modernization status.
-5. Review tại thời điểm cụ thể.
-6. Brainstorm — chỉ là phân tích đầu vào, không tự động trở thành quyết định.
+Ưu tiên theo thứ tự: architecture và ADR, rồi quality gate chạy được, rồi
+guide, rồi review, cuối cùng là brainstorm. Nếu code khác architecture, xác
+định đó là nợ cũ hay tài liệu đã cũ, rồi sửa cả hai trong cùng một thay đổi.
 
-Nếu code khác architecture/ADR, không mặc định coi code là chuẩn. Hãy xác định
-đó là legacy debt hay tài liệu đã lỗi thời, sau đó cập nhật code và tài liệu
-trong cùng thay đổi.
+## Quy tắc giữ tài liệu gọn
 
-## Mục lục kiến trúc
-
-| Chủ đề | Tài liệu |
-|---|---|
-| Tổng quan và dependency flow | [architecture/README.md](architecture/README.md) |
-| Quy tắc import/layer | [dependency-rules.md](architecture/dependency-rules.md) |
-| GetIt + Injectable | [dependency-injection.md](architecture/dependency-injection.md) |
-| Cubit/BLoC và state contract | [state-management.md](architecture/state-management.md) |
-| Flavor, config và bootstrap | [environment-bootstrap.md](architecture/environment-bootstrap.md) |
-| Dio, token, refresh 401 và inspector | [networking.md](architecture/networking.md) |
-| `sli_common`, Shadcn và ownership UI | [ui-toolkit.md](architecture/ui-toolkit.md) |
-| GraphQL/FCM/deep link và phần tùy chọn | [optional-capabilities.md](architecture/optional-capabilities.md) |
-
-## Mục lục hướng dẫn
-
-| Công việc | Tài liệu |
-|---|---|
-| Tạo application từ base | [create-app-from-base.md](guides/create-app-from-base.md) |
-| Thêm feature Clean Architecture | [add-feature.md](guides/add-feature.md) |
-| Chọn Cubit hay BLoC | [choose-cubit-or-bloc.md](guides/choose-cubit-or-bloc.md) |
-| Xử lý navigation/dialog/error từ state manager | [handle-ui-effects.md](guides/handle-ui-effects.md) |
-| Thêm environment/flavor | [add-environment.md](guides/add-environment.md) |
-| Dùng UI toolkit cá nhân | [use-sli-common.md](guides/use-sli-common.md) |
-| Tra hình/API/maturity của component | [`sli_common` catalog](../lib/modules/sli_common/docs/catalog/README.md) |
-| Dùng Derry, build và delivery | [use-derry-and-build.md](guides/use-derry-and-build.md) |
-| Chọn skill review/performance/testing/mobile | [mobile-engineering-skills.md](guides/mobile-engineering-skills.md) |
-
-## Mục lục quyết định kiến trúc
-
-| Quyết định | ADR |
-|---|---|
-| DI dùng GetIt + Injectable | [ADR-0001](adr/0001-get-it-injectable.md) |
-| Cubit mặc định, BLoC vẫn được hỗ trợ | [ADR-0002](adr/0002-cubit-default-bloc-supported.md) |
-| State dùng Equatable + copyWith | [ADR-0003](adr/0003-equatable-state.md) |
-| REST mặc định, GraphQL tùy chọn | [ADR-0004](adr/0004-rest-default.md) |
-| Giữ SLIRouting/AppPage | [ADR-0005](adr/0005-keep-sli-routing.md) |
-| Xây UI toolkit trước, capability sản phẩm thêm sau | [ADR-0006](adr/0006-ui-toolkit-now-defer-product-capabilities.md) |
-| Dart Base CLI phía sau Derry facade | [ADR-0007](adr/0007-dart-base-cli-behind-derry.md) |
-| Skill tập trung Flutter/mobile, không adopt VIPER | [ADR-0008](adr/0008-mobile-engineering-skills-no-viper.md) |
-| Typed UI effect tại presentation boundary | [ADR-0009](adr/0009-typed-ui-effects-at-presentation-boundary.md) |
-| Firebase Phone Auth sau domain port | [ADR-0010](adr/0010-platform-auth-behind-domain-port.md) |
-
-## Truy vết modernization hiện tại
-
-| Artifact | Vai trò |
-|---|---|
-| [Baseline review](reviews/2026-08-26-base-modernization-baseline.md) | Trạng thái trước modernization |
-| [Roadmap modernization](plan/2026-08-26-base-modernization.md) | Checklist tổng và Definition of Done |
-| [Review modernization mới nhất](reviews/2026-08-27-base-modernization-review.md) | Evidence, quality gate và follow-up đã xác minh |
-| [Review catalog + Base CLI](reviews/2026-08-28-component-catalog-base-cli-review.md) | Evidence inventory, safety gates và create smoke test |
-| [Review session + network](reviews/2026-09-28-session-network-review.md) | Evidence concurrent 401, typed expiry, lifecycle, offline và 44-test quality gate |
-| [Review pure Cubit + UI effect](reviews/2026-09-28-pure-cubit-ui-effects-review.md) | Evidence tách UI coupling, typed validation/effect, OTP lifecycle và 54-test quality gate |
-| [Review state + DI completion](reviews/2026-09-30-state-di-completion-review.md) | Evidence typed failure, Cubit/BLoC lifecycle và resettable DI graph |
-| [Review Shadcn + BottomSheet](reviews/2026-09-30-shadcn-bottom-sheet-review.md) | Evidence facade accessibility/light-dark và migration family BottomSheet |
-| [Review full analyzer `sli_common`](reviews/2026-10-01-sli-common-full-analyzer-review.md) | Evidence 241 finding về 0 và gate toàn package trong Derry/CI |
-| [Review Flutter/mobile skills](reviews/2026-10-01-mobile-skills-review.md) | Evidence skill đã tạo, route vào agent và giới hạn eval hiện tại |
-| [Review ExpandedWidget migration](reviews/2026-10-01-expanded-widget-migration-review.md) | Evidence parity hai trục, app adapter và caller migration |
-| [Review Fastlane neutralization](reviews/2026-10-01-fastlane-neutralization-review.md) | Evidence bỏ artifact/key path sample và release config bắt buộc |
-| [Review phone verification boundary](reviews/2026-10-01-phone-verification-boundary-review.md) | Evidence Firebase adapter rời domain, DI và tests |
-| [Trạng thái modernization](modernization-status.md) | Bản tóm tắt sống về phần đã xong/chưa xong |
-| [Brainstorm Derry/build](brainstorm/2026-08-27-derry-build-automation.md) | Lý do tách build, distribute và release |
-| [Brainstorm component catalog](brainstorm/2026-08-28-ui-component-catalog-and-migration.md) | Inventory baseline và lý do phải catalog trước khi migrate widget |
-| [Brainstorm Flutter/mobile skills](brainstorm/2026-09-28-flutter-mobile-engineering-skills.md) | Phạm vi skill convention, review, performance, testing và mobile quality |
-| [Plan catalog + Base CLI](plan/2026-08-28-component-catalog-and-base-cli.md) | Checklist triển khai đã duyệt cho toolbox docs và create/rename workflow |
-| [Widget family migration matrix](plan/2026-10-01-widget-family-migration-matrix.md) | Khác biệt 10 widget trùng, caller và gate trước từng migration |
-
-## Quy tắc duy trì mục lục
-
-- Tài liệu mới phải được link từ file mục lục này hoặc từ một index con.
-- Thay đổi kiến trúc phải cập nhật architecture, ADR liên quan, guide và status
-  trong cùng pull request/commit.
-- Brainstorm, plan và review phải có ngày trong tên file để truy vết theo thời
-  gian.
-- Review phải ghi rõ command đã chạy, kết quả thật và debt còn lại.
-- Không đánh dấu roadmap hoàn tất chỉ vì code compile; Definition of Done và
-  quality gate tương ứng phải pass.
-- Khi một tài liệu bị thay thế, ghi link tới tài liệu mới thay vì để hai source
-  of truth cạnh tranh nhau.
-
-Quy trình đầy đủ dành cho AI và contributor nằm tại
-[ai-process.md](../ai-process.md).
+- Tài liệu mới phải được link từ trang này hoặc từ một index con.
+- Một chủ đề chỉ có một nơi là nguồn chính. Khi thay tài liệu, xoá bản cũ và
+  sửa link, không để hai bản song song.
+- Đổi kiến trúc thì cập nhật architecture, ADR, guide liên quan trong cùng PR.
+- Việc còn mở chỉ ghi ở [sổ tay dự án thật](guides/start-real-project.md#5-việc-còn-mở-trong-base).

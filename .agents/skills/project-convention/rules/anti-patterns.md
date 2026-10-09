@@ -45,7 +45,12 @@ injectable generate the graph.
 
 ## UI ownership mistakes
 
-- Duplicating a reusable component already present in `sli_common`.
+- Writing a widget without first checking `sli_common`, `lib/widget/` and
+  sibling features for one that already fits. Writing a new app widget when
+  nothing fits is fine; `sli_common` is the first place to look, not a
+  requirement.
+- Number literals for padding, spacers or corner radius in UI code, or scaling
+  them with `.w/.h/.r`. Use `SliSpacing` and `SliRadii` (rule `ui-tokens`).
 - Importing `shadcn_flutter` directly throughout product screens instead of the
   stable `Sli*` facade.
 - Putting product-specific behavior into the shared toolkit.

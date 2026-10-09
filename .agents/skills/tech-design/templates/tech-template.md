@@ -97,7 +97,10 @@ sealed class <Feature>Effect {}
 
 ## 10. Giao diện
 
-| Thành phần | Dùng `Sli*` nào hoặc widget nào | Key l10n |
+Ghi widget có sẵn được dùng lại (`sli_common`, `lib/widget/`, feature khác),
+hoặc "mới" nếu phải viết. Khoảng cách và bo góc dùng `SliSpacing`/`SliRadii`.
+
+| Thành phần | Widget dùng lại hoặc mới | Key l10n |
 |---|---|---|
 
 ## 11. Điều hướng

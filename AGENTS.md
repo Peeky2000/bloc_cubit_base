@@ -67,3 +67,5 @@ python3 .agents/skills/app-memory/scripts/mem_search.py "auth"
   thay vì tự viết khung. Convention được kiểm tra tự động bởi
   `test/convention/convention_test.dart`; không thêm dòng vào
   `tool/convention/baseline.txt`.
+
+Làm việc trong hệ The Forge (Designer giao kit/thiết kế): đọc [docs/guides/forge-design.md](docs/guides/forge-design.md).

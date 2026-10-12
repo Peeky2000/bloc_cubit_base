@@ -73,4 +73,6 @@ python3 .agents/skills/app-memory/scripts/mem_search.py "auth"
   `test/convention/convention_test.dart`; không thêm dòng vào
   `tool/convention/baseline.txt`.
 
-Làm việc trong hệ The Forge (Designer giao kit/thiết kế): đọc [docs/guides/forge-design.md](docs/guides/forge-design.md).
+Làm việc trong hệ The Forge: đọc [docs/guides/forge-design.md](docs/guides/forge-design.md).
+Forge đọc [forge-base.json](forge-base.json) để theo luật của base; đổi luật làm
+thay đổi cách viết code thì tăng `rulesVersion` trong file đó.

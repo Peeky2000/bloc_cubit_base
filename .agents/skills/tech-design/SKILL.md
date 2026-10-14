@@ -30,23 +30,44 @@ and do not guess.
    image, realtime, permission...). Reuse every accepted decision. If the
    design must differ, propose a new decision that supersedes the old one;
    never silently diverge.
-3. **Search reusable code**: app-memory
+3. **Design package from The Forge.** When the task carries
+   `Design: <job>/D6@<rev>`, the approved design lives in
+   `docs/specs/<request-id>/design/<rev>/` and is read-only input, like the
+   product document:
+   - `spec/screens.json`: each `components[].ref` (`<kit>/<item>`) maps to the
+     widget generated for that kit in `sli_common`
+     (`lib/src/kit/<kit_snake>/v<version_snake>/`); never draw a new widget for
+     a kit item. `states` (default, loading, empty, error, disabled) become
+     Cubit states, with `reference/*.png` as the visual target per state.
+     `dataBindings[].source` (`DATA-*`) maps to an entity and repository.
+     `actions[].uiTransition` is the UI state change; `effectRef` (`BEH-*`)
+     points to the business behavior in the Forge request
+     (`forge/design/<job>/requests/<rev>/request.json` → `behaviors[]`):
+     optimistic or wait, success and failure states come from there, not from
+     you or the designer. A side-effect action without `effectRef` is a
+     business question (section 17), not a guess.
+   - `semantics[]` gives labels and roles; `navigation[]` gives routes.
+   - `assets/` are staged, not in the app yet: list the ones you will promote
+     in section 10 (see `build-feature`).
+   Fill the "Design mapping" table of the template. Without a D6 reference
+   there is no approved design: ask for it or for `Design: không — <lý do>`.
+4. **Search reusable code**: app-memory
    (`python3 .agents/skills/app-memory/scripts/mem_search.py "<topic>"`),
    `sli_common` catalog, sibling features. Prefer reuse over new code.
-4. **Write `docs/specs/<id>-<feature>/tech.md`** from
+5. **Write `docs/specs/<id>-<feature>/tech.md`** from
    [templates/tech-template.md](templates/tech-template.md). Fill every
    section; write "Không áp dụng" with a reason instead of deleting one.
    Names follow `project-convention/rules/naming.md` and paths follow
    `project-convention/references/canonical-paths.md`; the scaffold command in
    the design must produce exactly those paths.
-5. **Trace**: every requirement maps to at least one design element and one
+6. **Trace**: every requirement maps to at least one design element and one
    test, and every design element maps back to a requirement or a decision.
    Anything without a requirement is scope creep: remove it.
-6. **Record new decisions** with
+7. **Record new decisions** with
    `python3 tool/decisions/decisions.py new "<title>" --scope feature`
    (or `--scope project` for cross-feature rules, which becomes an ADR) and
    link them in the design. Status starts as `proposed`.
-7. **Ask the PM to review** `tech.md` and the proposed decisions. Code starts
+8. **Ask the PM to review** `tech.md` and the proposed decisions. Code starts
    only after `Trạng thái: Approved`. On approval, set each linked decision to
    `accepted` and rebuild the index with
    `python3 tool/decisions/decisions.py index`.

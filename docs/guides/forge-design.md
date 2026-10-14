@@ -8,9 +8,9 @@ Thiết kế luồng: `the-forge/forge-src/plans/2026-10-12-base-contract-va-luo
 
 | Repo | Việc |
 |---|---|
-| `the-forge-design` | Chỉ thiết kế: hướng, token, danh sách component, ảnh thiết kế, prototype |
-| `the-forge` | Đặt hàng thiết kế, gen code component theo luật base, trang duyệt, giữ chữ ký duyệt |
-| Base này | Giữ luật, gate, skill gen component; nhận kit đã duyệt vào `sli_common` |
+| `the-forge-design` | Chỉ thiết kế: hướng, token, danh sách component, ảnh thiết kế, prototype, `spec/screens.json`. **Không viết code** |
+| `the-forge` | Đặt hàng thiết kế, viết nghiệp vụ (`behaviors[]`), gen code component theo luật base, trang duyệt, giữ chữ ký duyệt |
+| Base này | Giữ luật, gate, skill. Agent trong app (theo luật này) là **tác giả duy nhất** của code trong `lib/`: kit vào `sli_common`, màn tính năng vào feature |
 
 Không dùng Forge vẫn code được: luật, gate, scaffold, skill gen component đều nằm
 trong base.
@@ -46,6 +46,28 @@ Mỗi kit một thư mục theo version:
 | Code | `sli_common/lib/src/kit/<tên_snake>/v<version_snake>/` |
 | Ảnh golden | `sli_common/test/goldens/kit/<tên>/<version>/` |
 | Biên nhận | `KIT-RECEIPT.json` trong thư mục code |
+
+## Luồng tính năng (contract 0.2)
+
+Giống team bình thường: Designer vẽ, Forge (PO) quyết nghiệp vụ, agent dev viết code.
+
+1. **Trước tiên phải có kit đã hiện thực.** Forge từ chối tạo job tính năng khi kit
+   chưa được gen trong `sli_common`, chưa duyệt code, hoặc app chưa nâng submodule tới
+   commit đó (mã lỗi báo đúng bước còn thiếu).
+2. Designer giao gói thiết kế, không có file Dart. Forge cất ở
+   `docs/specs/<request-id>/design/<rev>/`: `spec/screens.json`, ảnh `reference/`
+   cho từng trạng thái, `assets/` (chưa vào app), prototype HTML.
+3. Bạn bấm thử prototype và duyệt (D4). Forge đóng handoff (D6). Task trong ROADMAP
+   ghi `Design: <job>/D6@<rev>`; chưa có D6 thì chưa code.
+4. `/tech-design` đọc `screens.json`: component → widget kit trong `sli_common`,
+   trạng thái → state của Cubit, `dataBindings` → entity, `effectRef` → behavior của
+   Forge (lưu ngay hay chờ server, lỗi thì làm gì). Bảng "Design mapping" trong `tech.md`.
+5. `/build-feature` code theo luật base, đưa asset cần dùng vào `assets/` và ghi
+   `ASSET-PROMOTION.json`. `./scripts/quality.sh` kiểm hash nguồn và đích.
+6. Golden và ảnh màn chạy trên simulator được gửi cho Designer review (D7).
+
+Token: tính năng không đổi token. Cần màu hay khoảng cách mới thì mở design-system job,
+ra kit version mới.
 
 ## Ảnh golden chỉ vẽ và so trên Linux
 

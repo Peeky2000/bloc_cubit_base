@@ -103,6 +103,17 @@ hoặc "mới" nếu phải viết. Khoảng cách và bo góc dùng `SliSpacing
 | Thành phần | Widget dùng lại hoặc mới | Key l10n |
 |---|---|---|
 
+### Design mapping (khi task có `Design: <job>/D6@<rev>`)
+
+Nguồn: `docs/specs/<request-id>/design/<rev>/spec/screens.json`. Mỗi dòng một
+phần tử của spec; không có dòng nào thì ghi "Không áp dụng — <lý do>".
+
+| Screen / component (spec) | Kit ref → widget `sli_common` | State → Cubit state | Data (`DATA-*`) → entity | Action → event, `effectRef` (`BEH-*`) | Semantics |
+|---|---|---|---|---|---|
+
+Asset promote: `assets/<đường trong design>` → `assets/<đường trong app>`, ghi
+vào `ASSET-PROMOTION.json` (xem `build-feature`).
+
 ## 11. Điều hướng
 
 | Route | Path | Tham số | Đi từ đâu |

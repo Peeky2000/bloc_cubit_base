@@ -9,5 +9,6 @@ cd "$project_root"
 ./scripts/check_architecture.sh
 python3 -I tool/decisions/test_decisions.py
 python3 tool/decisions/decisions.py check
+python3 -I tool/design/check_asset_promotion.py
 ./scripts/flutterw.sh test
 ./scripts/quality_sli_common.sh

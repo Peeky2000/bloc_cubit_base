@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "name": "bloc_cubit_base",
   "platform": "flutter",
   "rulesVersion": "1.0.0",
@@ -17,6 +17,16 @@
     "app": "./scripts/quality.sh",
     "componentLibrary": "./scripts/quality_sli_common.sh"
   },
+  "commands": {
+    "check": "./scripts/quality.sh",
+    "test": "./scripts/flutterw.sh test",
+    "doctor": "dart run tool/base_cli.dart doctor",
+    "dev": "./scripts/flutterw.sh run"
+  },
+  "sourceRoots": [
+    "lib/"
+  ],
+  "skillsRoot": ".agents/skills",
   "components": {
     "skill": ".agents/skills/sli-kit-from-spec/SKILL.md",
     "libraryRoot": "lib/modules/sli_common",
@@ -26,5 +36,8 @@
     "goldenPlatform": "linux",
     "receipt": "lib/modules/sli_common/lib/src/kit/{kit_snake}/v{version_snake}/KIT-RECEIPT.json"
   },
-  "featureFlow": ["/tech-design", "/build-feature"]
+  "featureFlow": [
+    "/tech-design",
+    "/build-feature"
+  ]
 }

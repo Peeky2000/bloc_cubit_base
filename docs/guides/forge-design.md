@@ -21,6 +21,10 @@ trong base.
 
 - luật nằm ở đâu, và `rulesVersion` hiện tại;
 - lệnh tạo app (`derry new`) và lệnh gate;
+- `commands` (schemaVersion 2): lệnh `check`, `test`, `doctor`, `dev`. Lúc gắn Forge vào
+  app, Forge nối các lệnh này vào `make check/test/doctor/dev`, không cần sửa tay Makefile;
+- `sourceRoots`: thư mục code production (`lib/`); `skillsRoot`: nơi để skill của base,
+  để `scripts/forge doctor` biết skill nào đã có;
 - skill gen component, chỗ cất kit, chỗ cất ảnh golden, cách vẽ ảnh golden.
 
 Có file này thì Forge không dùng luật Flutter riêng của nó (`stack-flutter`) mà

@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/widgets.dart';
 import 'package:bloc_cubit_base/core/observability/analytics_tracker.dart';
 import 'package:bloc_cubit_base/core/observability/diagnostics.dart';

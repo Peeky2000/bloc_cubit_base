@@ -2,10 +2,10 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:bloc_cubit_base/core/routing/default_transitions.dart';
 import 'package:bloc_cubit_base/core/routing/routing.dart';
 import 'package:bloc_cubit_base/core/routing/sli_page_route.dart';

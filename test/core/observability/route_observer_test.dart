@@ -1,6 +1,6 @@
 import 'package:bloc_cubit_base/core/observability/observability.dart';
 import 'package:bloc_cubit_base/core/routing/route_observer.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'fakes.dart';

@@ -1,7 +1,7 @@
 // ignore_for_file: deprecated_member_use_from_same_package
 
 import 'package:bloc_cubit_base/core/widget/expanded_widget.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sli_common/sli_common.dart' as sli;
 

@@ -24,7 +24,7 @@ import 'package:bloc_cubit_base/data/model/response/base_list_response_model.dar
 import 'package:bloc_cubit_base/domain/entities/response/base_list_response.dart';
 import 'package:bloc_cubit_base/l10n/l10n.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sli_common/sli_common.dart';

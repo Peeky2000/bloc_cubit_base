@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:bloc_cubit_base/core/routing/default_transitions.dart';
 import 'package:bloc_cubit_base/core/routing/sli_transaction_mixin.dart';
 

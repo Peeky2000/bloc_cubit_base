@@ -80,7 +80,7 @@ class FirebasePhoneVerificationRepo implements PhoneVerificationRepo {
           smsCode: otp,
         ),
       );
-      return credential.user?.getIdToken();
+      return await credential.user?.getIdToken();
     } on FirebaseAuthException catch (error) {
       throw PhoneVerificationFailure(error.code);
     } catch (_) {

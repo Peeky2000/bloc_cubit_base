@@ -31,3 +31,6 @@ linter:
 analyzer:
   exclude:
     - lib/modules
+    - build/**
+    - android/**
+    - ios/**

@@ -218,7 +218,7 @@ final class ${F}ShowErrorEffect extends ${F}Effect {
 import 'package:$p/di/injection.dart';
 import 'package:$p/presentation/$f/$kind/${f}_$kind.dart';
 import 'package:$p/presentation/global_handler.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// Route builder: the only place this feature resolves from the DI graph.

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:bloc_cubit_base/core/session/session_event.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:bloc_cubit_base/domain/entities/common/app_enums.dart';
 import 'package:bloc_cubit_base/domain/use_case/app_use_case.dart';
 import 'package:injectable/injectable.dart';

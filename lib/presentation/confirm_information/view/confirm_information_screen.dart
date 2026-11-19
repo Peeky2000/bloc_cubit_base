@@ -1,4 +1,4 @@
-import 'package:sli_common/sli_common.dart' show SliSpacing, SliRadii;
+import 'package:sli_common/sli_common.dart' show SliSpacing;
 import 'package:bloc_cubit_base/core/app/app.dart';
 import 'package:bloc_cubit_base/core/common/route.dart';
 import 'package:bloc_cubit_base/core/error/exception.dart';
@@ -8,15 +8,14 @@ import 'package:bloc_cubit_base/l10n/l10n.dart';
 import 'package:bloc_cubit_base/widget/loading_screen.dart';
 import 'package:bloc_cubit_base/core/extension/int_extension.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bloc_cubit_base/core/mixin/after_layout.dart';
 import 'package:bloc_cubit_base/di/injection.dart';
 import 'package:bloc_cubit_base/presentation/confirm_information/cubit/confirm_information_cubit.dart';
 import 'package:bloc_cubit_base/presentation/global_handler.dart';
 import 'package:bloc_cubit_base/widget/success_screen.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:bloc_cubit_base/widget/app_otp_field.dart';
 
 Widget confirmInformationScreenBuilder() =>
     BlocProvider<ConfirmInformationCubit>(
@@ -89,25 +88,7 @@ class _ConfirmInformationScreenState extends State<ConfirmInformationScreen>
             },
           ),
           SizedBox(height: SliSpacing.xxl),
-          PinCodeTextField(
-            appContext: context,
-            length: 6,
-            pinTheme: PinTheme(
-              shape: PinCodeFieldShape.box,
-              selectedColor: App.appColor?.primaryColor,
-              inactiveColor: App.appColor?.borderColor,
-              activeFillColor: App.appColor?.primaryColor,
-              activeColor: App.appColor?.primaryColor,
-              borderRadius: BorderRadius.circular(SliRadii.sm),
-              fieldHeight: 32.w,
-              fieldWidth: 32.w,
-            ),
-            textStyle: App.appStyle?.semiBold18,
-            cursorHeight: 16.w,
-            animationType: AnimationType.scale,
-            keyboardType: TextInputType.number,
-            autoDisposeControllers: false,
-            onChanged: (String value) {},
+          AppOtpField(
             onCompleted: (value) => _confirmInformationCubit?.verifyOtp(value),
           ),
           Padding(

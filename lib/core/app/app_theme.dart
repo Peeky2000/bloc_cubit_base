@@ -1,6 +1,6 @@
 import 'package:bloc_cubit_base/core/app/app.dart';
 import 'package:bloc_cubit_base/generated/fonts.gen.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:sli_common/sli_common.dart' show SliColors;
 
 class AppTheme {

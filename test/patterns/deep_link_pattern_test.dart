@@ -18,7 +18,7 @@ import 'package:bloc_cubit_base/core/common/enum.dart';
 import 'package:bloc_cubit_base/core/routing/route_observer.dart';
 import 'package:bloc_cubit_base/core/routing/routing.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 

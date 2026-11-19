@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:sli_common/sli_common.dart' as sli;
 
 @Deprecated('Use ExpandedWidget from package:sli_common/sli_common.dart.')

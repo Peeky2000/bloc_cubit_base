@@ -1,6 +1,6 @@
 import 'package:sli_common/sli_common.dart' show SliSpacing, SliRadii;
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bloc_cubit_base/core/base_component/base_app_state.dart';
 import 'package:bloc_cubit_base/core/common/enum.dart';

@@ -1,5 +1,5 @@
 import 'package:sli_common/sli_common.dart'
-    show CommonTextField, DialogUtil, SliRadii, SliSpacing;
+    show CommonTextField, DialogUtil, SliSpacing;
 import 'package:bloc_cubit_base/core/app/app.dart';
 import 'package:bloc_cubit_base/core/common/route.dart';
 import 'package:bloc_cubit_base/core/error/exception.dart';
@@ -11,14 +11,13 @@ import 'package:bloc_cubit_base/widget/app_primary_button.dart';
 import 'package:bloc_cubit_base/widget/loading_screen.dart';
 import 'package:bloc_cubit_base/core/extension/int_extension.dart';
 import 'package:flutter/gestures.dart';
-import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:flutter/material.dart';
+import 'package:bloc_cubit_base/widget/app_otp_field.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bloc_cubit_base/core/mixin/after_layout.dart';
 import 'package:bloc_cubit_base/di/injection.dart';
 import 'package:bloc_cubit_base/presentation/reset_password/cubit/reset_password_cubit.dart';
 import 'package:bloc_cubit_base/presentation/global_handler.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 Widget resetPasswordScreenBuilder() => BlocProvider<ResetPasswordCubit>(
   create: (_) => Injector.getIt.get<ResetPasswordCubit>(),
@@ -154,25 +153,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
                 },
               ),
               SizedBox(height: SliSpacing.xxl),
-              PinCodeTextField(
-                appContext: context,
-                length: 6,
-                pinTheme: PinTheme(
-                  shape: PinCodeFieldShape.box,
-                  selectedColor: App.appColor?.primaryColor,
-                  inactiveColor: App.appColor?.borderColor,
-                  activeFillColor: App.appColor?.primaryColor,
-                  activeColor: App.appColor?.primaryColor,
-                  borderRadius: BorderRadius.circular(SliRadii.sm),
-                  fieldHeight: 32.w,
-                  fieldWidth: 32.w,
-                ),
-                textStyle: App.appStyle?.semiBold18,
-                cursorHeight: 16.w,
-                animationType: AnimationType.scale,
-                keyboardType: TextInputType.number,
-                autoDisposeControllers: false,
-                onChanged: (String value) {},
+              AppOtpField(
                 onCompleted: (value) =>
                     _resetPasswordCubit?.onCompleteOTP(value),
               ),

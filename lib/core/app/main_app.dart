@@ -1,9 +1,8 @@
 import 'dart:async';
 
 import 'package:bloc_cubit_base/core/common/constant.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:bloc_cubit_base/core/app/app.dart';
 import 'package:bloc_cubit_base/core/app/app_controller.dart';
@@ -224,12 +223,19 @@ class _MainAppState extends State<MainApp> {
                 return MaterialApp(
                   builder: (context, widget) {
                     _initDefault();
-                    return SliShadcnScope(
-                      child: MediaQuery(
-                        data: MediaQuery.of(
-                          context,
-                        ).copyWith(textScaler: const TextScaler.linear(1)),
-                        child: widget!,
+                    // Packages still on package:flutter/material.dart (alice,
+                    // shadcn_flutter, another_flushbar, pin_code_fields 8) read
+                    // the legacy Theme and MaterialLocalizations; the bridge
+                    // provides both. Remove it once they move to material_ui.
+                    // ignore: deprecated_member_use
+                    return MaterialUiCompatibilityBridge(
+                      child: SliShadcnScope(
+                        child: MediaQuery(
+                          data: MediaQuery.of(
+                            context,
+                          ).copyWith(textScaler: const TextScaler.linear(1)),
+                          child: widget!,
+                        ),
                       ),
                     );
                   },
@@ -252,8 +258,8 @@ class _MainAppState extends State<MainApp> {
                     AppLocalizations.delegate,
                     // Labels used by shared sli_common widgets such as DialogUtil.
                     sli_l10n.AppLocalizations.delegate,
-                    GlobalMaterialLocalizations.delegate,
-                    GlobalCupertinoLocalizations.delegate,
+                    // Material, Cupertino and Widgets labels (material_ui).
+                    ...GlobalMaterialLocalizations.delegates,
                   ],
                   supportedLocales: AppLocalizations.supportedLocales,
                 );

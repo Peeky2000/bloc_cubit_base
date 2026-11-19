@@ -2,3 +2,7 @@ arb-dir: lib/l10n/arb
 template-arb-file: app_en.arb
 output-localization-file: app_localizations.dart
 nullable-getter: false
+# Flutter 3.50 gen-l10n still imports the deprecated flutter_localizations
+# delegates; apps register GlobalMaterialLocalizations.delegates from
+# material_ui instead. Drop this header once gen-l10n emits material_ui.
+header: "// ignore_for_file: deprecated_member_use"

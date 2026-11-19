@@ -1,6 +1,5 @@
 import 'package:bloc_cubit_base/l10n/arb/app_localizations.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sli_common/l10n/arb/app_localizations.dart' as sli_l10n;
 import 'package:sli_common/sli_common.dart' show DialogUtil;
@@ -16,9 +15,7 @@ void main() {
         localizationsDelegates: const [
           AppLocalizations.delegate,
           sli_l10n.AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
+          ...GlobalMaterialLocalizations.delegates,
         ],
         supportedLocales: AppLocalizations.supportedLocales,
         home: const Scaffold(body: SizedBox.shrink()),

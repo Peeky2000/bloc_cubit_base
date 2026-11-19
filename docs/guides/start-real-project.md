@@ -74,9 +74,10 @@ thật. Làm chúng ở tuần đầu của dự án thật, rồi đánh dấu 
 
   Sau đó chạy `/perf-check`, duyệt mốc bằng `derry perf approve`. Chi tiết ở
   [đo hiệu năng app](measure-performance.md).
-- [ ] **Build Android đầy đủ lần đầu** sau đợt nâng Gradle, AGP, Kotlin và
-  minSdk 24. Thử đăng nhập có và không có ghi nhớ, gửi OTP, đăng xuất, hết
-  phiên trên máy thật.
+- [ ] **Chạy thử trên máy thật sau đợt nâng Flutter 3.50** (AGP 9, Gradle 9,
+  Kotlin 2.4, iOS 15, `material_ui`). Build debug Android và iOS simulator đã
+  qua; còn thử đăng nhập có và không có ghi nhớ, gửi OTP, đăng xuất, hết
+  phiên, mở Alice bằng lắc máy, dialog và flushbar của `sli_common`.
 
 ## 5. Việc còn mở trong base
 
@@ -125,7 +126,8 @@ Không chặn dự án thật nhưng nên xử lý khi có thời gian.
   từng quyết định:
   - phân trang: thay `LoadingListScreen` và gỡ `pull_to_refresh`;
   - upload: thêm `ApiHandler.upload`, sửa ánh xạ lỗi ngoại tuyến;
-  - push: nâng `firebase_core` 4, `firebase_auth` 6, iOS tối thiểu 15;
+  - push: nâng `firebase_core` 4, `firebase_auth` 6 (iOS 15 đã có từ đợt
+    Flutter 3.50);
   - realtime: backend cần endpoint cấp vé và mã đóng kết nối;
   - deep link: cần host thật, Apple Team ID, SHA-256 chứng chỉ ký Play;
   - cache: thêm `UserCacheCleaner` vào `SessionRepoImpl.end()`;

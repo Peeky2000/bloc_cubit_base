@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "name": "bloc_cubit_base",
   "platform": "flutter",
-  "rulesVersion": "1.0.0",
+  "rulesVersion": "1.1.0",
   "repository": "https://github.com/Peeky2000/bloc_cubit_base.git",
   "rules": [
     "AGENTS.md",

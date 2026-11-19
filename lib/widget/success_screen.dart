@@ -1,7 +1,7 @@
 import 'package:sli_common/sli_common.dart' show SliSpacing;
 import 'package:bloc_cubit_base/core/app/app.dart';
 import 'package:bloc_cubit_base/generated/assets.gen.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SuccessScreen extends StatelessWidget {

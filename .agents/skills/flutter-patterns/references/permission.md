@@ -30,8 +30,8 @@ on resume.
 Package: `permission_handler: ^12.0.3` (publisher baseflow.com), the version
 `sli_common` already resolves, so adding it changes no native build.
 `^13.0.2` (Android plugin 14.1.0) fixes `status` on Android but needs
-`compileSdk 37` (Flutter 3.44 defaults to 36) and AGP 9; move to it with
-`sli_common`. The adapter is written for both.
+`compileSdk 37` (Flutter 3.50 defaults to 36; AGP 9 is already in place);
+move to it with `sli_common`. The adapter is written for both.
 
 `sli_common`'s `PermissionUtil` stays for legacy screens: it needs a
 `BuildContext`, shows toasts and dialogs itself and asks without a

@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Nâng lên Flutter 3.50.0 (Dart 3.14): Android lên AGP 9.3.1, Gradle 9.5.0,
+  Kotlin 2.4.20, bỏ tự áp Kotlin plugin, bật lại `resValues`; iOS tối thiểu
+  15.0, vẫn dùng CocoaPods; `injectable` 3.
+- Chuyển app và `sli_common` sang `material_ui`/`cupertino_ui`; delegate
+  l10n lấy từ `GlobalMaterialLocalizations.delegates`; `MainApp` bọc
+  `MaterialUiCompatibilityBridge` cho package còn dùng Material cũ; ô OTP gộp
+  thành `AppOtpField`. `rulesVersion` 1.1.0.
 - Thêm bộ đo hiệu năng trên máy thật với dữ liệu thật: mở app, độ mượt, bộ
   nhớ, mạng, chẩn đoán widget chậm, chấm ba mức theo chuẩn, ngưỡng theo lượng
   dữ liệu và phân loại request lỗi theo bên phải xử lý.

@@ -1,5 +1,5 @@
 import 'package:sli_common/sli_common.dart' show SliSpacing;
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// Container-based tap target behind `AppPrimaryButton`. It keeps the

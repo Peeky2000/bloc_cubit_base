@@ -27,7 +27,7 @@ thích, mở cài đặt và tiếp tục, và kiểm tra lại khi app quay l�
 
 - Phiên bản: `^12.0.3` trùng bản `sli_common` đang dùng nên không đổi build
   native. Lên `^13.0.2` (sửa `status` trên Android) cùng `sli_common`, khi
-  app đặt `compileSdk 37` (Flutter 3.44 mặc định 36).
+  app đặt `compileSdk 37` (Flutter 3.50 mặc định 36).
 - `AppPermission{camera, location, notifications}`;
   `PermissionAccess{granted, limited, denied, permanentlyDenied, restricted}`;
   `PermissionDecision{proceed, showRationale, declined, openSettings,

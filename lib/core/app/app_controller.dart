@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:injectable/injectable.dart';
 import 'package:bloc_cubit_base/core/routing/routing.dart';
 

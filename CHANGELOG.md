@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Nâng `firebase_core` lên 5 và `firebase_auth` lên 7 (Firebase BoM 5.0.0).
+  API Dart dùng trong base không đổi; Android cần minSdk 24 (đã có).
 - Nâng Flutter lên 3.50.1 (bản vá lỗi của 3.50; không đổi API).
 - Nâng `connectivity_plus` lên 7 (chỉ đổi yêu cầu build Android: AGP
   8.12.1+, Gradle 8.13+, Kotlin 2.2+; repo đã đáp ứng).

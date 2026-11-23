@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Nâng `pin_code_fields` lên 10 (`MaterialPinField`, chạy trên
+  `material_ui`); `AppOtpField` bỏ lớp bọc `Material` cũ.
 - Nâng lên Flutter 3.50.0 (Dart 3.14): Android lên AGP 9.3.1, Gradle 9.5.0,
   Kotlin 2.4.20, bỏ tự áp Kotlin plugin, bật lại `resValues`; iOS tối thiểu
   15.0, vẫn dùng CocoaPods; `injectable` 3.

@@ -3,9 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 
-/// pin_code_fields 8 is still on package:flutter/material.dart. Inside a
-/// material_ui app it threw "No Material widget found" until AppOtpField gave
-/// it a legacy Material ancestor.
+/// pin_code_fields 10 is built on material_ui, so AppOtpField renders inside
+/// the same app shell as MainApp without a legacy Material ancestor.
 void main() {
   testWidgets('OTP field renders and completes inside a material_ui app', (
     tester,

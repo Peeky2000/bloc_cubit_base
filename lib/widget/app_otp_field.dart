@@ -1,9 +1,3 @@
-// pin_code_fields 8 builds on package:flutter/material.dart; its TextFormField
-// needs a legacy Material ancestor, which a material_ui Scaffold does not
-// provide. Replace with pin_code_fields 10 (MaterialPinField) and drop the
-// legacy import when the OTP screens are reworked.
-// ignore: deprecated_member_use
-import 'package:flutter/material.dart' as legacy show Material, MaterialType;
 import 'package:bloc_cubit_base/core/app/app.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:material_ui/material_ui.dart';
@@ -19,29 +13,21 @@ class AppOtpField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return legacy.Material(
-      type: legacy.MaterialType.transparency,
-      child: PinCodeTextField(
-        appContext: context,
-        length: 6,
-        pinTheme: PinTheme(
-          shape: PinCodeFieldShape.box,
-          selectedColor: App.appColor?.primaryColor,
-          inactiveColor: App.appColor?.borderColor,
-          activeFillColor: App.appColor?.primaryColor,
-          activeColor: App.appColor?.primaryColor,
-          borderRadius: BorderRadius.circular(SliRadii.sm),
-          fieldHeight: 32.w,
-          fieldWidth: 32.w,
-        ),
+    return MaterialPinField(
+      length: 6,
+      keyboardType: TextInputType.number,
+      theme: MaterialPinTheme(
+        shape: MaterialPinShape.outlined,
+        cellSize: Size(32.w, 32.w),
+        borderRadius: BorderRadius.circular(SliRadii.sm),
+        borderColor: App.appColor?.borderColor,
+        focusedBorderColor: App.appColor?.primaryColor,
+        filledBorderColor: App.appColor?.primaryColor,
+        cursorColor: App.appColor?.primaryColor,
         textStyle: App.appStyle?.semiBold18,
-        cursorHeight: 16.w,
-        animationType: AnimationType.scale,
-        keyboardType: TextInputType.number,
-        autoDisposeControllers: false,
-        onChanged: (String value) {},
-        onCompleted: onCompleted,
+        entryAnimation: MaterialPinAnimation.scale,
       ),
+      onCompleted: onCompleted,
     );
   }
 }

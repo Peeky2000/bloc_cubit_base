@@ -28,8 +28,8 @@ core/*             →  NEVER presentation, data, domain
   `material_ui` (Material, Cupertino and Widgets in one list).
 - A pub package still on the old libraries keeps working under the
   `MaterialUiCompatibilityBridge` in `MainApp`. If it also needs a legacy
-  `Material` ancestor (pin_code_fields 8), wrap it once in `lib/widget/` with a
-  `legacy`-prefixed import, as `AppOtpField` does; never in a screen.
+  `Material` ancestor, wrap it once in `lib/widget/` with a `legacy`-prefixed
+  import; never in a screen.
 
 ## Examples
 

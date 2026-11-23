@@ -52,7 +52,7 @@ dependencies:
   firebase_auth: ^5.3.1
   connectivity_plus: ^6.1.0
   flutter_native_splash: ^2.3.1
-  pin_code_fields: ^8.0.1
+  pin_code_fields: ^10.1.2
   flutter_localizations:
     sdk: flutter
   another_flushbar: ^1.12.30

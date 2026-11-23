@@ -4,7 +4,7 @@ Cập nhật file này mỗi khi base được fork hoặc package nền tảng 
 
 ## Toolchain
 
-- Flutter: 3.50.0, pin bằng `.fvmrc` (khuyến nghị dùng FVM, không bắt buộc).
+- Flutter: 3.50.1, pin bằng `.fvmrc` (khuyến nghị dùng FVM, không bắt buộc).
 - Dart SDK: `^3.10.0` (Flutter 3.50 đi kèm Dart 3.14).
 - Thư viện giao diện: `material_ui` và `cupertino_ui`; `material.dart`,
   `cupertino.dart` và `flutter_localizations` đã deprecated.

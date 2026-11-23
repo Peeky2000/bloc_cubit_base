@@ -22,7 +22,7 @@ listener maps to `SLIRouting`.
 Package: `app_links: ^7.2.2` (publisher cow-level.ovh). 7.2.2 replays every
 link received before the first listen and no longer resends the launch link
 when the Android activity is rebuilt; 7.1+ needs Flutter ≥ 3.44 (we use
-3.50.0). Android `compileSdk 36`, `minSdk 24` (Flutter defaults).
+3.50.1). Android `compileSdk 36`, `minSdk 24` (Flutter defaults).
 
 ## Files to create
 

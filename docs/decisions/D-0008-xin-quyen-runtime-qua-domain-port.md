@@ -1,12 +1,12 @@
 # D-0008: Xin quyền runtime qua domain port
 
-- Trạng thái: accepted
+- Trạng thái: superseded
 - Ngày: 2026-10-08
 - Phạm vi: feature
 - Tags: permission,privacy
 - Tính năng: 
 - Thay thế:
-- Bị thay bởi:
+- Bị thay bởi: D-0009
 
 ## Bối cảnh
 

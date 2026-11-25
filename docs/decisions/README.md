@@ -24,7 +24,7 @@ hưởng toàn dự án là ADR trong `docs/adr/`. Cách viết và vòng đời
 | [D-0005](D-0005-cap-nhat-realtime-qua-stream.md) | Cập nhật realtime qua Stream | accepted | feature | realtime, websocket, polling, stream | 2026-10-08 |
 | [D-0006](D-0006-deep-link-qua-domain-port.md) | Deep link qua domain port | accepted | feature | deeplink, routing, security | 2026-10-08 |
 | [D-0007](D-0007-push-notification-qua-domain-port.md) | Push notification qua domain port | accepted | feature | push, notification | 2026-10-08 |
-| [D-0008](D-0008-xin-quyen-runtime-qua-domain-port.md) | Xin quyền runtime qua domain port | accepted | feature | permission, privacy | 2026-10-08 |
+| [D-0009](D-0009-bat-quyen-ios-qua-swift-package-manager.md) | Bật quyền iOS qua Swift Package Manager | accepted | feature | permission, privacy, ios, spm | 2026-11-25 |
 | [ADR-0001](../adr/0001-get-it-injectable.md) | Dùng GetIt với Injectable | accepted | project |  | 2026-08-26 |
 | [ADR-0002](../adr/0002-cubit-default-bloc-supported.md) | Dùng Cubit Mặc Định và Hỗ Trợ BLoC | accepted | project |  | 2026-08-26 |
 | [ADR-0003](../adr/0003-equatable-state.md) | Giữ State Ứng Dụng Bằng Equatable | accepted | project |  | 2026-08-26 |
@@ -39,13 +39,13 @@ hưởng toàn dự án là ADR trong `docs/adr/`. Cách viết và vòng đời
 
 ## Đang chờ duyệt
 
-| Mã | Quyết định | Trạng thái | Phạm vi | Tags | Ngày |
-|---|---|---|---|---|---|
-| [D-0009](D-0009-bat-quyen-ios-qua-swift-package-manager.md) | Bật quyền iOS qua Swift Package Manager | proposed | feature | permission, privacy, ios, spm | 2026-11-25 |
+Chưa có.
 
 ## Đã thay thế hoặc bị từ chối
 
-Chưa có.
+| Mã | Quyết định | Trạng thái | Phạm vi | Tags | Ngày |
+|---|---|---|---|---|---|
+| [D-0008](D-0008-xin-quyen-runtime-qua-domain-port.md) | Xin quyền runtime qua domain port | superseded | feature | permission, privacy | 2026-10-08 |
 
 ## Theo chủ đề
 
@@ -57,19 +57,21 @@ Chưa có.
 - **getit**: ADR-0011
 - **image**: D-0004
 - **injector**: ADR-0011
+- **ios**: D-0009
 - **list**: D-0001
 - **load-more**: D-0001
 - **notification**: D-0007
 - **offline**: D-0003
 - **pagination**: D-0001
-- **permission**: D-0008
+- **permission**: D-0009
 - **polling**: D-0005
-- **privacy**: D-0008
+- **privacy**: D-0009
 - **progress**: D-0004
 - **push**: D-0007
 - **realtime**: D-0005
 - **routing**: D-0006
 - **security**: D-0006
+- **spm**: D-0009
 - **stream**: D-0005
 - **upload**: D-0004
 - **validation**: D-0002

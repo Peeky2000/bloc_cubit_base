@@ -1,6 +1,6 @@
 # D-0009: Bật quyền iOS qua Swift Package Manager
 
-- Trạng thái: proposed
+- Trạng thái: accepted
 - Ngày: 2026-11-25
 - Phạm vi: feature
 - Tags: permission,privacy,ios,spm
@@ -73,5 +73,10 @@ không dùng macro Podfile, không đặt biến môi trường `PERMISSION_*`.
 - Chưa có test tự động kiểm quyền bị compile out. Kiểm bằng tay trên máy thật
   khi tính năng đầu tiên cần quyền được làm: dialog hệ thống phải hiện ở lần
   xin đầu.
-- Khi duyệt: đổi D-0008 sang `superseded` với `Bị thay bởi: D-0009`, trỏ
-  `permission.md` và `permission_pattern_test.dart` sang D-0009.
+- D-0008 chuyển `superseded`; `permission.md`, `SKILL.md` của
+  `flutter-patterns` và `permission_pattern_test.dart` trỏ sang D-0009.
+
+## Duyệt
+
+PM chấp nhận ngày 2026-11-25. Phần port, luồng xin quyền, phiên bản và quyền
+Android vẫn theo D-0008; chỉ phần bật quyền iOS theo quyết định này.

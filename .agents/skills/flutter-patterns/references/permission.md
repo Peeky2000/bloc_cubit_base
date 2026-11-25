@@ -1,7 +1,9 @@
 # Runtime permissions
 
-Decision: [D-0008](../../../../docs/decisions/D-0008-xin-quyen-runtime-qua-domain-port.md)
-(proposed). Reference code: `test/patterns/permission_pattern_test.dart`.
+Decision: [D-0009](../../../../docs/decisions/D-0009-bat-quyen-ios-qua-swift-package-manager.md)
+(iOS native setup), which keeps the port and flow of
+[D-0008](../../../../docs/decisions/D-0008-xin-quyen-runtime-qua-domain-port.md).
+Reference code: `test/patterns/permission_pattern_test.dart`.
 
 ## When to use
 

@@ -44,7 +44,7 @@ python3 tool/decisions/decisions.py search "<concern>"
 | Realtime: WebSocket with ticket auth, full-jitter backoff, pause in background | [references/realtime.md](references/realtime.md) | `test/patterns/realtime_pattern_test.dart` | D-0005 |
 | Deep links: verified App Links/Universal Links, allow-listed routes | [references/deep_link.md](references/deep_link.md) | `test/patterns/deep_link_pattern_test.dart` | D-0006 |
 | Push notifications | [references/push_notification.md](references/push_notification.md) | `test/patterns/push_notification_pattern_test.dart` | D-0007 |
-| Runtime permissions | [references/permission.md](references/permission.md) | `test/patterns/permission_pattern_test.dart` | D-0008 |
+| Runtime permissions | [references/permission.md](references/permission.md) | `test/patterns/permission_pattern_test.dart` | D-0009 (keeps D-0008) |
 
 Decision files: `docs/decisions/D-000N-*.md`.
 

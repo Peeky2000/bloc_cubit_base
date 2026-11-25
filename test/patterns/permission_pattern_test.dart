@@ -1,7 +1,9 @@
 // Reference implementation: runtime permissions.
 //
 // Pattern: .agents/skills/flutter-patterns/references/permission.md
-// Decision: docs/decisions/D-0008-xin-quyen-runtime-qua-domain-port.md
+// Decision: docs/decisions/D-0009-bat-quyen-ios-qua-swift-package-manager.md
+// (iOS native setup), which keeps the port and flow of
+// docs/decisions/D-0008-xin-quyen-runtime-qua-domain-port.md
 //
 // `permission_handler` is only a transitive dependency (through sli_common),
 // and `PermissionUtil` in sli_common shows toasts and dialogs itself, which a

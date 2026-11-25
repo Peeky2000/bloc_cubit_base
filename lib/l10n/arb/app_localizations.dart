@@ -171,12 +171,6 @@ abstract class AppLocalizations {
   /// **'Confirm'**
   String get confirm;
 
-  /// No description provided for @releaseToLoadMore.
-  ///
-  /// In en, this message translates to:
-  /// **'Release to load more'**
-  String get releaseToLoadMore;
-
   /// No description provided for @loadFail.
   ///
   /// In en, this message translates to:
@@ -195,239 +189,17 @@ abstract class AppLocalizations {
   /// **'No more data'**
   String get noMoreData;
 
-  /// No description provided for @pullUpLoadMore.
-  ///
-  /// In en, this message translates to:
-  /// **'Pull up to load more'**
-  String get pullUpLoadMore;
-
-  /// No description provided for @refreshCompleted.
-  ///
-  /// In en, this message translates to:
-  /// **'Refresh completed'**
-  String get refreshCompleted;
-
-  /// No description provided for @refreshingText.
-  ///
-  /// In en, this message translates to:
-  /// **'Refreshing...'**
-  String get refreshingText;
-
-  /// No description provided for @refreshFailedText.
-  ///
-  /// In en, this message translates to:
-  /// **'Refresh failed'**
-  String get refreshFailedText;
-
-  /// No description provided for @idleRefreshText.
-  ///
-  /// In en, this message translates to:
-  /// **'Pull down Refresh'**
-  String get idleRefreshText;
-
-  /// No description provided for @canRefreshText.
-  ///
-  /// In en, this message translates to:
-  /// **'Release to refresh'**
-  String get canRefreshText;
-
-  /// No description provided for @canTwoLevelText.
-  ///
-  /// In en, this message translates to:
-  /// **'Release to enter secondfloor'**
-  String get canTwoLevelText;
-
-  /// No description provided for @login.
-  ///
-  /// In en, this message translates to:
-  /// **'Đăng nhập'**
-  String get login;
-
-  /// No description provided for @username.
-  ///
-  /// In en, this message translates to:
-  /// **'Username'**
-  String get username;
-
   /// No description provided for @password.
   ///
   /// In en, this message translates to:
   /// **'Mật khẩu'**
   String get password;
 
-  /// No description provided for @summary.
-  ///
-  /// In en, this message translates to:
-  /// **'Tổng quan'**
-  String get summary;
-
-  /// No description provided for @request.
-  ///
-  /// In en, this message translates to:
-  /// **'Yêu cầu'**
-  String get request;
-
-  /// No description provided for @signUp.
-  ///
-  /// In en, this message translates to:
-  /// **'Đăng ký'**
-  String get signUp;
-
-  /// No description provided for @forgotPassword.
-  ///
-  /// In en, this message translates to:
-  /// **'Quên mật khẩu'**
-  String get forgotPassword;
-
   /// No description provided for @email.
   ///
   /// In en, this message translates to:
   /// **'Email'**
   String get email;
-
-  /// No description provided for @verify.
-  ///
-  /// In en, this message translates to:
-  /// **'Xác thực'**
-  String get verify;
-
-  /// No description provided for @resendCode.
-  ///
-  /// In en, this message translates to:
-  /// **'Gửi lại mã xác thực'**
-  String get resendCode;
-
-  /// No description provided for @emailIsRequired.
-  ///
-  /// In en, this message translates to:
-  /// **'Email không được để trống'**
-  String get emailIsRequired;
-
-  /// No description provided for @scaleL1.
-  ///
-  /// In en, this message translates to:
-  /// **'Không có nhu cầu thường xuyên'**
-  String get scaleL1;
-
-  /// No description provided for @scaleL2.
-  ///
-  /// In en, this message translates to:
-  /// **'Dưới 150 đơn hàng/tháng'**
-  String get scaleL2;
-
-  /// No description provided for @scaleL3.
-  ///
-  /// In en, this message translates to:
-  /// **'Từ 150 tới dưới 900 đơn hàng/tháng'**
-  String get scaleL3;
-
-  /// No description provided for @scaleL4.
-  ///
-  /// In en, this message translates to:
-  /// **'Từ 900 đơn hàng/tháng đến dưới 3,000 đơn hàng/tháng'**
-  String get scaleL4;
-
-  /// No description provided for @scaleL5.
-  ///
-  /// In en, this message translates to:
-  /// **'Từ 3,000 đơn hàng/tháng đến dưới 6,000 đơn hàng/tháng'**
-  String get scaleL5;
-
-  /// No description provided for @scaleL6.
-  ///
-  /// In en, this message translates to:
-  /// **'Từ 6,000 đơn hàng/tháng'**
-  String get scaleL6;
-
-  /// No description provided for @fashion.
-  ///
-  /// In en, this message translates to:
-  /// **'Thời trang'**
-  String get fashion;
-
-  /// No description provided for @cosmetics.
-  ///
-  /// In en, this message translates to:
-  /// **'Mỹ phẩm'**
-  String get cosmetics;
-
-  /// No description provided for @motherAndBaby.
-  ///
-  /// In en, this message translates to:
-  /// **'Mẹ và bé'**
-  String get motherAndBaby;
-
-  /// No description provided for @computers.
-  ///
-  /// In en, this message translates to:
-  /// **'Máy tính, laptop'**
-  String get computers;
-
-  /// No description provided for @fragileGoods.
-  ///
-  /// In en, this message translates to:
-  /// **'Hàng hóa dễ vỡ'**
-  String get fragileGoods;
-
-  /// No description provided for @householdElectrical.
-  ///
-  /// In en, this message translates to:
-  /// **'Tivi và thiết bị điện gia dụng'**
-  String get householdElectrical;
-
-  /// No description provided for @houseware.
-  ///
-  /// In en, this message translates to:
-  /// **'Đồ gia dụng'**
-  String get houseware;
-
-  /// No description provided for @motorcycles.
-  ///
-  /// In en, this message translates to:
-  /// **'Xe máy và phương tiện giao thông'**
-  String get motorcycles;
-
-  /// No description provided for @drums.
-  ///
-  /// In en, this message translates to:
-  /// **'Cây trống và vật tư nông nghiệp'**
-  String get drums;
-
-  /// No description provided for @food.
-  ///
-  /// In en, this message translates to:
-  /// **'Thực phẩm, nông sản chế biến và đóng gói'**
-  String get food;
-
-  /// No description provided for @sports.
-  ///
-  /// In en, this message translates to:
-  /// **'Dụng cụ và phụ kiện thể thao, dã ngoại'**
-  String get sports;
-
-  /// No description provided for @jewelry.
-  ///
-  /// In en, this message translates to:
-  /// **'Trang sức và phụ kiện thời trang'**
-  String get jewelry;
-
-  /// No description provided for @consumables.
-  ///
-  /// In en, this message translates to:
-  /// **'Hàng tiêu dùng và tạp hóa'**
-  String get consumables;
-
-  /// No description provided for @books.
-  ///
-  /// In en, this message translates to:
-  /// **'Sách và văn phòng phẩm'**
-  String get books;
-
-  /// No description provided for @other.
-  ///
-  /// In en, this message translates to:
-  /// **'Khác'**
-  String get other;
 
   /// No description provided for @welcomeTitle.
   ///
@@ -441,96 +213,6 @@ abstract class AppLocalizations {
   /// **'Số điện thoại'**
   String get phoneNumber;
 
-  /// No description provided for @signUpNow.
-  ///
-  /// In en, this message translates to:
-  /// **'Đăng ký ngay'**
-  String get signUpNow;
-
-  /// No description provided for @alreadyAcc.
-  ///
-  /// In en, this message translates to:
-  /// **'Đã có tài khoản?'**
-  String get alreadyAcc;
-
-  /// No description provided for @signInNow.
-  ///
-  /// In en, this message translates to:
-  /// **'Đăng nhập ngay'**
-  String get signInNow;
-
-  /// No description provided for @shippingScale.
-  ///
-  /// In en, this message translates to:
-  /// **'Quy mô vận chuyển'**
-  String get shippingScale;
-
-  /// No description provided for @industry.
-  ///
-  /// In en, this message translates to:
-  /// **'Ngành hàng'**
-  String get industry;
-
-  /// No description provided for @shopInfo.
-  ///
-  /// In en, this message translates to:
-  /// **'Thông tin cửa hàng'**
-  String get shopInfo;
-
-  /// No description provided for @brandTagline.
-  ///
-  /// In en, this message translates to:
-  /// **'Always by your side'**
-  String get brandTagline;
-
-  /// No description provided for @shopName.
-  ///
-  /// In en, this message translates to:
-  /// **'Tên cửa hàng'**
-  String get shopName;
-
-  /// No description provided for @tos1.
-  ///
-  /// In en, this message translates to:
-  /// **'Bằng việc nhấn “Xác nhận thông tin”, bạn đồng ý với'**
-  String get tos1;
-
-  /// No description provided for @tos2.
-  ///
-  /// In en, this message translates to:
-  /// **'Điều khoản dịch vụ'**
-  String get tos2;
-
-  /// No description provided for @tos3.
-  ///
-  /// In en, this message translates to:
-  /// **'Quy định Riêng tư cá nhân'**
-  String get tos3;
-
-  /// No description provided for @tos4.
-  ///
-  /// In en, this message translates to:
-  /// **'của chúng tôi'**
-  String get tos4;
-
-  /// No description provided for @confirmInfo.
-  ///
-  /// In en, this message translates to:
-  /// **'Xác nhận thông tin'**
-  String get confirmInfo;
-
-  /// No description provided for @and.
-  ///
-  /// In en, this message translates to:
-  /// **'và'**
-  String get and;
-
-  /// No description provided for @signUpNowPerWord.
-  ///
-  /// In en, this message translates to:
-  /// **'Đăng Ký Ngay'**
-  String get signUpNowPerWord;
-
   /// No description provided for @signIn.
   ///
   /// In en, this message translates to:
@@ -543,12 +225,6 @@ abstract class AppLocalizations {
   /// **'Ghi nhớ đăng nhập'**
   String get rememberSignIn;
 
-  /// No description provided for @notReadyAcc.
-  ///
-  /// In en, this message translates to:
-  /// **'Chưa có tài khoản'**
-  String get notReadyAcc;
-
   /// No description provided for @signInNowPerWord.
   ///
   /// In en, this message translates to:
@@ -560,90 +236,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Đăng xuất'**
   String get logout;
-
-  /// No description provided for @pleaseTypePhoneNumber.
-  ///
-  /// In en, this message translates to:
-  /// **'Vui lòng nhập số điện thoại của bạn'**
-  String get pleaseTypePhoneNumber;
-
-  /// No description provided for @sendRequestSignIn.
-  ///
-  /// In en, this message translates to:
-  /// **'Gửi Yêu Cầu Đăng Nhập'**
-  String get sendRequestSignIn;
-
-  /// No description provided for @confirmAccount.
-  ///
-  /// In en, this message translates to:
-  /// **'Xác nhận tài khoản'**
-  String get confirmAccount;
-
-  /// No description provided for @confirmOTP.
-  ///
-  /// In en, this message translates to:
-  /// **'Vui lòng xác nhập mã xác thực được gửi về số điện thoại {phone_number} của bạn'**
-  String confirmOTP(Object phone_number);
-
-  /// No description provided for @resendOTPAfter.
-  ///
-  /// In en, this message translates to:
-  /// **'Gửi lại OTP sau {time}'**
-  String resendOTPAfter(Object time);
-
-  /// No description provided for @verifying.
-  ///
-  /// In en, this message translates to:
-  /// **'Đang kiểm tra'**
-  String get verifying;
-
-  /// No description provided for @dontReceivedOTP.
-  ///
-  /// In en, this message translates to:
-  /// **'Không nhận được mã OTP'**
-  String get dontReceivedOTP;
-
-  /// No description provided for @resendOTP.
-  ///
-  /// In en, this message translates to:
-  /// **'Gửi lại mã'**
-  String get resendOTP;
-
-  /// No description provided for @enterNewPass.
-  ///
-  /// In en, this message translates to:
-  /// **'Nhập mật khẩu mới'**
-  String get enterNewPass;
-
-  /// No description provided for @newPassword.
-  ///
-  /// In en, this message translates to:
-  /// **'Mật khẩu mới'**
-  String get newPassword;
-
-  /// No description provided for @retypePassword.
-  ///
-  /// In en, this message translates to:
-  /// **'Nhập lại mật khẩu'**
-  String get retypePassword;
-
-  /// No description provided for @confirmPassword.
-  ///
-  /// In en, this message translates to:
-  /// **'Xác Nhận Mật Khẩu'**
-  String get confirmPassword;
-
-  /// No description provided for @phoneIsRequired.
-  ///
-  /// In en, this message translates to:
-  /// **'Số điện thoại là bắt buộc'**
-  String get phoneIsRequired;
-
-  /// No description provided for @phoneIsInvalid.
-  ///
-  /// In en, this message translates to:
-  /// **'Số điện thoại không hợp lệ'**
-  String get phoneIsInvalid;
 
   /// No description provided for @passIsRequired.
   ///
@@ -675,53 +267,11 @@ abstract class AppLocalizations {
   /// **'Email/Số điện thoại không hợp lệ'**
   String get emailPhoneIsInvalid;
 
-  /// No description provided for @emailIsInvalid.
-  ///
-  /// In en, this message translates to:
-  /// **'Email không hợp lệ'**
-  String get emailIsInvalid;
-
   /// No description provided for @shopNameIsRequired.
   ///
   /// In en, this message translates to:
   /// **'Tên cửa hàng không được bỏ trống'**
   String get shopNameIsRequired;
-
-  /// No description provided for @industryIsRequired.
-  ///
-  /// In en, this message translates to:
-  /// **'Ngành hàng không được bỏ trống'**
-  String get industryIsRequired;
-
-  /// No description provided for @scaleLevelIsRequired.
-  ///
-  /// In en, this message translates to:
-  /// **'Quy mô vận chuyển không được bỏ trống'**
-  String get scaleLevelIsRequired;
-
-  /// No description provided for @noteSignupSuccess.
-  ///
-  /// In en, this message translates to:
-  /// **'Your account is ready'**
-  String get noteSignupSuccess;
-
-  /// No description provided for @verifyPhoneSuccess.
-  ///
-  /// In en, this message translates to:
-  /// **'Xác thực số điện thoại thành công'**
-  String get verifyPhoneSuccess;
-
-  /// No description provided for @resetPassSuccess.
-  ///
-  /// In en, this message translates to:
-  /// **'Cập nhật mật khẩu thành công.\nVui lòng đăng nhập lại'**
-  String get resetPassSuccess;
-
-  /// No description provided for @failOTP.
-  ///
-  /// In en, this message translates to:
-  /// **'Mã OTP không hợp lệ.\nVui lòng thử lại.'**
-  String get failOTP;
 }
 
 class _AppLocalizationsDelegate

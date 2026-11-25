@@ -9,7 +9,6 @@ import 'package:dio/dio.dart';
 
 final List<String> _skipRefreshPaths = [
   UrlEndPoint.auth.login,
-  UrlEndPoint.auth.signUp,
   UrlEndPoint.auth.refreshToken,
 ];
 

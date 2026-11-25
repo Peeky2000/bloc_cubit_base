@@ -15,19 +15,6 @@
   },
   {
     "type": "bloc",
-    "name": "SignUpCubit",
-    "description": "UI-free registration flow with typed validation and SignUpEffect intents",
-    "location": "lib/presentation/sign_up/cubit/sign_up_cubit.dart",
-    "keywords": [
-      "sign-up",
-      "register",
-      "cubit",
-      "ui-effect",
-      "validation"
-    ]
-  },
-  {
-    "type": "bloc",
     "name": "SplashCubit",
     "description": "UI-free startup orchestration; emits typed SplashEffect navigation and retry intents",
     "location": "lib/presentation/splash/cubit/splash_cubit.dart",
@@ -49,37 +36,5 @@
       "global",
       "cubit"
     ]
-  },
-  {
-    "type": "bloc",
-    "name": "ResetPasswordCubit",
-    "description": "UI-free phone OTP and reset-password flow with typed validation, timer lifecycle, and retryable UI effects",
-    "location": "lib/presentation/reset_password/cubit/reset_password_cubit.dart",
-    "keywords": [
-      "auth",
-      "otp",
-      "password",
-      "cubit",
-      "ui-effect",
-      "timer"
-    ],
-    "bloc_type": "cubit",
-    "feature": "reset-password"
-  },
-  {
-    "type": "bloc",
-    "name": "ConfirmInformationCubit",
-    "description": "UI-free phone verification flow with safe OTP timer and typed verification/error effects",
-    "location": "lib/presentation/confirm_information/cubit/confirm_information_cubit.dart",
-    "keywords": [
-      "auth",
-      "otp",
-      "verification",
-      "cubit",
-      "ui-effect",
-      "timer"
-    ],
-    "bloc_type": "cubit",
-    "feature": "confirm-information"
   }
 ]

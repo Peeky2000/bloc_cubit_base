@@ -77,8 +77,8 @@ thật. Làm chúng ở tuần đầu của dự án thật, rồi đánh dấu 
 - [ ] **Chạy thử trên máy thật sau đợt nâng Flutter 3.50** (AGP 9, Gradle 9,
   Kotlin 2.4, iOS 15, `material_ui`, Swift Package Manager). Build debug
   Android và cả ba flavor iOS trên simulator đã qua, app dev mở được tới màn
-  đăng nhập; còn thử đăng nhập có và không có ghi nhớ, gửi OTP, đăng xuất,
-  hết phiên, mở Alice bằng lắc máy, dialog, flushbar và toast của
+  đăng nhập; còn thử đăng nhập có và không có ghi nhớ, đăng xuất, hết phiên,
+  mở Alice bằng lắc máy, dialog, flushbar và toast của
   `sli_common`, và một lần `build_store` của fastlane (không còn bước
   CocoaPods). Khi đó gỡ luôn `gem 'cocoapods'` trong `ios/fastlane/Pluginfile`
   rồi `bundle install` trong `ios/` và `ios/fastlane/` bằng đúng bản Bundler
@@ -127,12 +127,15 @@ Không chặn dự án thật nhưng nên xử lý khi có thời gian.
 - [x] **Gỡ quyền đọc ảnh và video do `open_filex` (qua `alice`) tự thêm** vào
   AndroidManifest; Google Play từ chối các quyền này với app chỉ chọn ảnh.
   2026-10-08.
+- [x] **Tinh gọn base theo ADR-0012.** Bỏ màn mẫu (đăng ký, quên mật khẩu,
+  OTP Firebase), `LoadingListScreen`, model shop/role/profile, font và chuỗi
+  l10n thừa; `sli_common` còn 20 export và có `SliIcons`. `test/patterns/` giữ
+  làm bộ kiểm định. 2026-11-25.
 - [ ] **Việc phải làm khi áp dụng mẫu lần đầu,** đã ghi trong mục "Duyệt" của
   từng quyết định:
-  - phân trang: thay `LoadingListScreen` và gỡ `pull_to_refresh`;
   - upload: thêm `ApiHandler.upload`, sửa ánh xạ lỗi ngoại tuyến;
-  - push: thêm `firebase_messaging` khớp `firebase_core` 5 (core, auth,
-    iOS 15 và SPM đã xong);
+  - push: thêm `firebase_messaging ^17.1.0` (khớp `firebase_core` 5; iOS 15
+    và SPM đã xong);
   - realtime: backend cần endpoint cấp vé và mã đóng kết nối;
   - deep link: cần host thật, Apple Team ID, SHA-256 chứng chỉ ký Play;
   - cache: thêm `UserCacheCleaner` vào `SessionRepoImpl.end()`;

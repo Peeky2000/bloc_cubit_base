@@ -392,8 +392,8 @@ class OrderListCubit extends BaseCubit<OrderListState> {
 // ---------------------------------------------------------------------------
 // lib/widget/paginated_list_view.dart  (shared; add once)
 // Flutter widgets only: RefreshIndicator.adaptive for pull-to-refresh and
-// scroll notifications for load more. Replaces LoadingListScreen and
-// pull_to_refresh for new lists.
+// scroll notifications for load more. The base no longer ships
+// LoadingListScreen or pull_to_refresh.
 // ---------------------------------------------------------------------------
 
 /// Renders a paged list from a Cubit's state. Holds no paging state itself:

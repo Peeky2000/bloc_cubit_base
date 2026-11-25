@@ -45,6 +45,8 @@ folder hierarchy.
 - Padding, spacers and corner radius use `SliSpacing` / `SliRadii` without
   `.w/.h/.r` scaling. The convention rule `ui-tokens` fails on number literals.
   Component sizes (icon, image, field height) may stay numeric.
+- Icons come from `SliIcons` (Lucide). No Material `Icons.*` or Cupertino
+  icons in app UI; a missing glyph is added to `SliIcons` in `sli_common`.
 - A shared-package change requires its own tests/analyze and a submodule pointer
   update in the base.
 

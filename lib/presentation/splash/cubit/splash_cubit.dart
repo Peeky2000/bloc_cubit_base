@@ -2,7 +2,6 @@ import 'package:bloc_cubit_base/core/base_component/base_app_state.dart';
 import 'package:bloc_cubit_base/core/base_component/base_cubit.dart';
 import 'package:bloc_cubit_base/core/base_component/ui_effect.dart';
 import 'package:bloc_cubit_base/core/common/enum.dart';
-import 'package:bloc_cubit_base/domain/repositories/phone_verification_repo.dart';
 import 'package:bloc_cubit_base/domain/use_case/auth_use_case.dart';
 import 'package:injectable/injectable.dart';
 
@@ -18,57 +17,17 @@ class SplashCubit extends BaseCubit<SplashState> {
   @override
   Future<void> load() async {
     final isAppLogin = _authUseCase.isAppLogin();
-    final account = _authUseCase.accountLocal;
-    final isPhoneVerified = account.isPhoneVerified == true;
     await Future<void>.delayed(const Duration(milliseconds: 1400));
     if (isClosed) {
       return;
     }
 
-    emit(
-      state.copyWith(
-        isLogin: isAppLogin,
-        isPhoneVerified: isPhoneVerified,
-        phone: account.phone,
-      ),
+    emit(state.copyWith(isLogin: isAppLogin));
+    _emitEffect(
+      isAppLogin
+          ? const SplashNavigateHomeEffect()
+          : const SplashNavigateSignInEffect(),
     );
-    if (!isAppLogin) {
-      _emitEffect(const SplashNavigateSignInEffect());
-      return;
-    }
-    if (isPhoneVerified) {
-      _emitEffect(const SplashNavigateHomeEffect());
-      return;
-    }
-    await sendCodeVerify();
-  }
-
-  Future<void> sendCodeVerify() async {
-    final phone = state.phone;
-    if (phone == null || phone.isEmpty) {
-      _emitEffect(const SplashNavigateSignInEffect());
-      return;
-    }
-
-    emit(state.copyWith(loading: LoadingStatus.loading));
-    try {
-      final outcome = await _authUseCase.sendCodeVerify(phone: phone);
-      if (isClosed || outcome == PhoneVerificationOutcome.superseded) {
-        return;
-      }
-      emit(state.copyWith(loading: LoadingStatus.complete));
-      _emitEffect(SplashNavigatePhoneVerificationEffect(phone: phone));
-    } catch (error) {
-      _handleSendCodeError(error);
-    }
-  }
-
-  void _handleSendCodeError(Object error) {
-    if (isClosed) {
-      return;
-    }
-    emit(state.copyWith(loading: LoadingStatus.error, error: error));
-    _emitEffect(SplashShowErrorEffect(error: error));
   }
 
   void _emitEffect(SplashEffect effect) {

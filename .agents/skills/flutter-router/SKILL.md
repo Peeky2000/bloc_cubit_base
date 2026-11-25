@@ -28,8 +28,8 @@ description: >
 
 ```dart
 SLIRouting.toNamed(
-  AppPage.confirmInfo,
-  arguments: {'phone': phone, 'page_success': AppPage.home},
+  AppPage.orderDetail,
+  arguments: {'orderId': order.id},
 );
 ```
 

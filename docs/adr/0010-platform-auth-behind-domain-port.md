@@ -1,7 +1,8 @@
 # ADR 0010: Firebase Phone Auth Nằm Sau Domain Port
 
-- Trạng thái: Accepted
+- Trạng thái: superseded
 - Ngày: 2026-10-01
+- Bị thay bởi: ADR-0012
 
 ## Bối cảnh
 

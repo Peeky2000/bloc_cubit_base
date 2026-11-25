@@ -221,7 +221,6 @@ void main() {
 
       final requests = <Future<Response<dynamic>>>[
         harness.dio.get<dynamic>('${UrlEndPoint.auth.login}?next=home'),
-        harness.dio.get<dynamic>(UrlEndPoint.auth.signUp),
         harness.dio.get<dynamic>(UrlEndPoint.auth.refreshToken),
         harness.dio.get<dynamic>(
           '/protected',

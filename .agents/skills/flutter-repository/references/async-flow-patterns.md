@@ -52,12 +52,10 @@ Future<void> upload(FileRef file) async {
 }
 ```
 
-## Current implementation to copy
+## Benchmark
 
-| Concern | File |
+| Concern | Where |
 |---|---|
-| Outcome port | `lib/domain/repositories/phone_verification_repo.dart` |
-| SDK adapter with generation counter and Completer | `lib/data/repositories/firebase_phone_verification_repo.dart` |
+| Outcome port, SDK adapter, supersede and cancel | `test/patterns/image_upload_pattern_test.dart` (`MediaPickerRepo`, `ImagePickerMediaRepo`, `ImageUploadRepo`) |
 | Single domain normalizer | `AuthUseCase.normalizePhone` in `lib/domain/use_case/auth_use_case.dart` |
-| Adapter tests that play the SDK callbacks | `test/data/repositories/firebase_phone_verification_repo_test.dart` |
-| Cubit tests for outcome, failure, superseded, close | `test/presentation/confirm_information_cubit_test.dart` |
+| Cubit tests for outcome, failure, superseded, close | same file, `ProfilePhotoCubit` tests |

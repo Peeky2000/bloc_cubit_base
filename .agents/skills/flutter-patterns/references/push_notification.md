@@ -18,20 +18,17 @@ permission, token, token refreshes and one `Stream<PushEvent>`;
 `PushCubit` turns foreground messages into a banner effect and taps into
 links that go through the deep link parser.
 
-## Packages (one upgrade)
+## Packages
 
 | Package | Constraint | Why |
 |---|---|---|
-| `firebase_messaging` | `^16.7.0` | UIScene support (16.1.0; this app already uses `FlutterSceneDelegate`), `configureNotificationCenterDelegate()`, Android `deniedPermanently` (16.7.0) |
-| `firebase_core` | `^3.6.0` → `^4.15.0` | 16.7.0 needs `^4.14.0`. With core 3.6.0 only `firebase_messaging` 15.1.3 resolves (15.2.10 needs core 3.15.2); 15.x has no UIScene support |
-| `firebase_auth` | `^5.3.1` → `^6.7.0` | must move with core 4; `lib/` analyzes clean against it |
-| `flutter_local_notifications` | `^19.5.0` (direct) | channel creation and `cancelAll()`; `alice ^1.0.0` pins `^19.4.0`, 22.x waits for an alice upgrade |
+| `firebase_messaging` | `^17.1.0` | Resolves with the app's `firebase_core ^5.2.0`; UIScene support, `configureNotificationCenterDelegate()`, Android `deniedPermanently` |
+| `flutter_local_notifications` | latest that resolves (direct) | channel creation and `cancelAll()`; `alice ^1.0.0` pins `^19.4.0`, newer majors wait for an alice upgrade |
 
-The app is already on `firebase_core` 5 / `firebase_auth` 7, iOS 15.0 and
-Swift Package Manager (Firebase Apple SDK 13, pinned in
-`ios/Runner.xcworkspace/xcshareddata/swiftpm/Package.resolved`), so the rows
-above only need `firebase_messaging` and `flutter_local_notifications` added
-at versions that resolve against core 5.
+The app is already on `firebase_core` 5, iOS 15.0 and Swift Package Manager
+(Firebase Apple SDK 13, pinned in
+`ios/Runner.xcworkspace/xcshareddata/swiftpm/Package.resolved`). Check the
+exact version with `flutter pub add firebase_messaging` before writing code.
 
 ## Files to create
 

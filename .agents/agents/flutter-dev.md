@@ -85,16 +85,16 @@ existing code base. Convention is not a suggestion: it is checked by
    `docs/agents/delivery-loop.md`) and send it to `flutter-tester`. Never mark
    your own work as verified.
 
-## Reference files to copy
+## Reference files
 
-| Concern | Copy from |
+| Concern | Follow |
 |---|---|
-| Cubit, state, typed effects, retry action | `lib/presentation/sign_in/cubit/` |
+| Cubit, state, typed effects | `lib/presentation/sign_in/cubit/` |
 | Screen with builder, BlocListener for effects | `lib/presentation/sign_in/view/sign_in_screen.dart` |
 | Remote data source with `ApiHandler` parser | `lib/data/datasource/remote/auth_remote_data_source.dart` |
 | Repository bound by interface | `lib/data/repositories/auth_repo_impl.dart` |
 | Persisted data with one lifecycle owner | `lib/data/repositories/session_repo_impl.dart` and `flutter-datasource/references/storage-patterns.md` |
-| SDK wrapped as one outcome | `lib/data/repositories/firebase_phone_verification_repo.dart` and `flutter-repository/references/async-flow-patterns.md` |
+| SDK wrapped as one outcome | `test/patterns/image_upload_pattern_test.dart` and `flutter-repository/references/async-flow-patterns.md` |
 | Use case registration | `lib/di/register_module.dart` |
 | Cubit tests | `test/presentation/sign_in_cubit_test.dart` |
 

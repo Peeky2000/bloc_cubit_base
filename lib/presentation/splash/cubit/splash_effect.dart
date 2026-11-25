@@ -11,15 +11,3 @@ final class SplashNavigateSignInEffect extends SplashEffect {
 final class SplashNavigateHomeEffect extends SplashEffect {
   const SplashNavigateHomeEffect();
 }
-
-final class SplashNavigatePhoneVerificationEffect extends SplashEffect {
-  const SplashNavigatePhoneVerificationEffect({required this.phone});
-
-  final String phone;
-}
-
-final class SplashShowErrorEffect extends SplashEffect {
-  const SplashShowErrorEffect({required this.error});
-
-  final Object error;
-}

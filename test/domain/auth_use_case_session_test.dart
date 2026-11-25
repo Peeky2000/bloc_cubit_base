@@ -1,9 +1,7 @@
 import 'package:bloc_cubit_base/domain/entities/auth/login.dart';
 import 'package:bloc_cubit_base/domain/entities/auth/token_wrapper.dart';
 import 'package:bloc_cubit_base/domain/entities/profile/account.dart';
-import 'package:bloc_cubit_base/domain/entities/profile/update_account.dart';
 import 'package:bloc_cubit_base/domain/repositories/auth_repo.dart';
-import 'package:bloc_cubit_base/domain/repositories/phone_verification_repo.dart';
 import 'package:bloc_cubit_base/domain/repositories/session_repo.dart';
 import 'package:bloc_cubit_base/domain/use_case/auth_use_case.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -24,7 +22,7 @@ void main() {
   setUp(() {
     authRepo = _MockAuthRepo();
     session = _MockSessionRepo();
-    useCase = AuthUseCase(authRepo, session, _MockPhoneRepo());
+    useCase = AuthUseCase(authRepo, session);
     when(() => login.token).thenReturn(token);
     when(() => login.account).thenReturn(account);
     when(
@@ -35,7 +33,6 @@ void main() {
       ),
     ).thenAnswer((_) async {});
     when(() => session.end()).thenAnswer((_) async {});
-    when(() => session.updateAccount(any())).thenAnswer((_) async {});
   });
 
   void stubLogin(Login? result) => when(
@@ -99,18 +96,6 @@ void main() {
     verify(() => session.end()).called(1);
   });
 
-  test('a verified phone updates the cached account', () async {
-    final update = _MockUpdateAccount();
-    when(() => update.account).thenReturn(account);
-    when(
-      () => authRepo.verifyPhone(idToken: any(named: 'idToken')),
-    ).thenAnswer((_) async => update);
-
-    await useCase.verifyPhone(idToken: 'id-token');
-
-    verify(() => session.updateAccount(account)).called(1);
-  });
-
   test('sign-in state and account come from the session', () {
     when(() => session.isSignedIn).thenReturn(true);
     when(() => session.account).thenReturn(account);
@@ -130,12 +115,8 @@ class _MockAuthRepo extends Mock implements AuthRepo {}
 
 class _MockSessionRepo extends Mock implements SessionRepo {}
 
-class _MockPhoneRepo extends Mock implements PhoneVerificationRepo {}
-
 class _MockLogin extends Mock implements Login {}
 
 class _MockToken extends Mock implements TokenWrapper {}
 
 class _MockAccount extends Mock implements Account {}
-
-class _MockUpdateAccount extends Mock implements UpdateAccount {}

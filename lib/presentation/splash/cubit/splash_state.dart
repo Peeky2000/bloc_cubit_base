@@ -5,14 +5,10 @@ class SplashState extends BaseAppState<Object> {
     required super.loading,
     super.error,
     this.isLogin,
-    this.isPhoneVerified = false,
-    this.phone,
     this.effect,
   });
 
   final bool? isLogin;
-  final bool isPhoneVerified;
-  final String? phone;
   final UiEffect<SplashEffect>? effect;
 
   factory SplashState.initial() {
@@ -23,27 +19,16 @@ class SplashState extends BaseAppState<Object> {
     LoadingStatus? loading,
     Object? error,
     bool? isLogin,
-    bool? isPhoneVerified,
-    String? phone,
     UiEffect<SplashEffect>? effect,
   }) {
     return SplashState(
       loading: loading ?? this.loading,
       error: error,
       isLogin: isLogin ?? this.isLogin,
-      isPhoneVerified: isPhoneVerified ?? this.isPhoneVerified,
-      phone: phone ?? this.phone,
       effect: effect ?? this.effect,
     );
   }
 
   @override
-  List<Object?> get props => [
-    loading,
-    error,
-    isLogin,
-    isPhoneVerified,
-    phone,
-    effect,
-  ];
+  List<Object?> get props => [loading, error, isLogin, effect];
 }

@@ -44,8 +44,7 @@ dụng, còn data source sở hữu việc parse response.
 
 GraphQL là năng lực tùy chọn và không thêm cho tới khi sản phẩm cần.
 
-Firebase Phone Auth của sample đi qua domain-owned `PhoneVerificationRepo`.
-`FirebasePhoneVerificationRepo` ở data layer giữ SDK callback/verification ID,
-map SDK exception thành `PhoneVerificationFailure` và bỏ qua callback của lần
-request cũ. Domain UseCase không import Firebase SDK; việc tách Firebase Auth
-thành optional product capability vẫn là quyết định riêng của Phase 8.
+SDK bên thứ ba (đăng nhập, thanh toán, chọn ảnh…) đi qua một port do domain sở
+hữu, adapter ở data layer giữ callback của SDK, map exception thành failure có
+kiểu và bỏ qua kết quả của request cũ. Domain UseCase không import SDK. Mẫu đối
+chiếu: `test/patterns/image_upload_pattern_test.dart`.

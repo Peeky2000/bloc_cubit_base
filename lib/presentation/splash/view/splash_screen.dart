@@ -1,7 +1,6 @@
 import 'package:bloc_cubit_base/core/app/app.dart';
 import 'package:bloc_cubit_base/core/common/route.dart';
 import 'package:bloc_cubit_base/core/routing/routing.dart';
-import 'package:bloc_cubit_base/presentation/global_handler.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -45,17 +44,6 @@ class _SplashScreenState extends State<SplashScreen> with AfterLayoutMixin {
               SLIRouting.offAllNamed(AppPage.signIn);
             case SplashNavigateHomeEffect():
               SLIRouting.offAllNamed(AppPage.home);
-            case SplashNavigatePhoneVerificationEffect(:final phone):
-              SLIRouting.offAllNamed(
-                AppPage.confirmInfo,
-                arguments: {'phone': phone, 'page_success': AppPage.home},
-              );
-            case SplashShowErrorEffect(:final error):
-              handleErrorResponse(
-                context,
-                error,
-                onRetry: () => _splashCubit!.sendCodeVerify(),
-              );
             case null:
               break;
           }

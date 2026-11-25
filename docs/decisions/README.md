@@ -34,8 +34,8 @@ hưởng toàn dự án là ADR trong `docs/adr/`. Cách viết và vòng đời
 | [ADR-0007](../adr/0007-dart-base-cli-behind-derry.md) | Dart Base CLI Phía Sau Derry Facade | accepted | project |  | 2026-08-28 |
 | [ADR-0008](../adr/0008-mobile-engineering-skills-no-viper.md) | Skill Tập Trung Flutter/Mobile, Không Adopt VIPER | accepted | project |  | 2026-09-28 |
 | [ADR-0009](../adr/0009-typed-ui-effects-at-presentation-boundary.md) | Typed UI Effect Tại Presentation Boundary | accepted | project |  | 2026-09-28 |
-| [ADR-0010](../adr/0010-platform-auth-behind-domain-port.md) | Firebase Phone Auth Nằm Sau Domain Port | accepted | project |  | 2026-10-01 |
 | [ADR-0011](../adr/0011-giu-injector-lam-diem-truy-cap-di-tai-composition-root.md) | Giữ Injector làm điểm truy cập DI tại composition root | accepted | project | di, injector, getit, composition-root | 2026-10-08 |
+| [ADR-0012](../adr/0012-base-chi-giu-luat-va-bo-kiem-dinh-khong-giu-man-mau.md) | Base chỉ giữ luật và bộ kiểm định, không giữ màn mẫu | accepted | project | base, ai, template, auth | 2026-11-25 |
 
 ## Đang chờ duyệt
 
@@ -46,9 +46,13 @@ Chưa có.
 | Mã | Quyết định | Trạng thái | Phạm vi | Tags | Ngày |
 |---|---|---|---|---|---|
 | [D-0008](D-0008-xin-quyen-runtime-qua-domain-port.md) | Xin quyền runtime qua domain port | superseded | feature | permission, privacy | 2026-10-08 |
+| [ADR-0010](../adr/0010-platform-auth-behind-domain-port.md) | Firebase Phone Auth Nằm Sau Domain Port | superseded | project |  | 2026-10-01 |
 
 ## Theo chủ đề
 
+- **ai**: ADR-0012
+- **auth**: ADR-0012
+- **base**: ADR-0012
 - **cache**: D-0003
 - **composition-root**: ADR-0011
 - **deeplink**: D-0006
@@ -73,6 +77,7 @@ Chưa có.
 - **security**: D-0006
 - **spm**: D-0009
 - **stream**: D-0005
+- **template**: ADR-0012
 - **upload**: D-0004
 - **validation**: D-0002
 - **websocket**: D-0005

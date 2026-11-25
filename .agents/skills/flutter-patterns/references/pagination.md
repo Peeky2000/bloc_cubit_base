@@ -18,7 +18,7 @@ into a domain `PageResult`, driven by a Cubit, and rendered with Flutter's own
 widgets: `RefreshIndicator.adaptive` + `ListView.builder` + scroll
 notifications in one shared `PaginatedListView`. No paging package.
 
-- `pull_to_refresh` (used by `LoadingListScreen`) is not used for new lists:
+- `pull_to_refresh` (removed from the base with `LoadingListScreen`) is not used:
   last release 2.0.0 on 2021-05-07, no commit since, unverified uploader.
 - Page paging duplicates or skips rows when the server inserts between
   requests; cursor/keyset paging does not (AIP-158). Our backend sends

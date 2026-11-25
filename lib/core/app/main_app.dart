@@ -26,8 +26,8 @@ import 'package:sli_common/sli_common.dart'
         CommonTextFieldStyle,
         DialogUtil,
         MoneyWidget,
-        SliShadcnScope,
-        TitleWidget;
+        SliIcons,
+        SliShadcnScope;
 
 Widget buildMainApp() => MainApp(
   appCubit: Injector.getIt.get<AppCubit>(),
@@ -105,12 +105,6 @@ class _MainAppState extends State<MainApp> {
     DialogUtil.cancelStyle = App.appStyle?.medium16?.copyWith(
       color: Colors.black,
     );
-    TitleWidget.defaultTitleStyle = App.appStyle?.medium24?.copyWith(
-      color: App.appColor?.textColor,
-    );
-    TitleWidget.defaultValueStyle = App.appStyle?.medium14?.copyWith(
-      color: App.appColor?.secondary1,
-    );
     MoneyWidget.unitDefault = ' đ';
 
     CommonTextField.commonTextFieldStyle = CommonTextFieldStyle(
@@ -179,7 +173,7 @@ class _MainAppState extends State<MainApp> {
           : context.l10n.noInternetShort,
       backgroundColor: isConnected ? null : Colors.redAccent,
       iconFlushBar: Icon(
-        isConnected ? Icons.wifi_rounded : Icons.wifi_off_rounded,
+        isConnected ? SliIcons.online : SliIcons.offline,
         color: Colors.white,
       ),
     );
@@ -224,7 +218,7 @@ class _MainAppState extends State<MainApp> {
                   builder: (context, widget) {
                     _initDefault();
                     // Packages still on package:flutter/material.dart (alice,
-                    // shadcn_flutter, another_flushbar, pin_code_fields 8) read
+                    // shadcn_flutter, and another_flushbar via sli_common) read
                     // the legacy Theme and MaterialLocalizations; the bridge
                     // provides both. Remove it once they move to material_ui.
                     // ignore: deprecated_member_use
@@ -282,7 +276,7 @@ class _MainAppState extends State<MainApp> {
         routeContext,
         routeContext.l10n.sessionExpired,
         backgroundColor: Colors.redAccent,
-        iconFlushBar: const Icon(Icons.lock_clock, color: Colors.white),
+        iconFlushBar: const Icon(SliIcons.lock, color: Colors.white),
       );
     });
   }

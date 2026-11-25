@@ -1,4 +1,5 @@
-import 'package:sli_common/sli_common.dart' show CommonTextField, SliSpacing;
+import 'package:sli_common/sli_common.dart'
+    show CommonTextField, SliIcons, SliSpacing;
 import 'package:bloc_cubit_base/core/app/app.dart';
 import 'package:bloc_cubit_base/core/common/route.dart';
 import 'package:bloc_cubit_base/core/routing/routing.dart';
@@ -7,7 +8,6 @@ import 'package:bloc_cubit_base/generated/assets.gen.dart';
 import 'package:bloc_cubit_base/l10n/l10n.dart';
 import 'package:bloc_cubit_base/widget/app_primary_button.dart';
 import 'package:bloc_cubit_base/widget/loading_screen.dart';
-import 'package:flutter/gestures.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bloc_cubit_base/core/mixin/after_layout.dart';
@@ -78,18 +78,6 @@ class _SignInScreenState extends State<SignInScreen> with AfterLayoutMixin {
             ),
           ),
         ),
-        const Spacer(),
-        GestureDetector(
-          behavior: HitTestBehavior.translucent,
-          onTap: () => _signInCubit?.onTapForgotPassword(),
-          child: Text(
-            context.l10n.forgotPassword,
-            style: App.appStyle?.medium14?.copyWith(
-              color: App.appColor?.textColor,
-              decoration: TextDecoration.underline,
-            ),
-          ),
-        ),
       ],
     );
   }
@@ -146,9 +134,7 @@ class _SignInScreenState extends State<SignInScreen> with AfterLayoutMixin {
                 suffix: GestureDetector(
                   onTap: () => _signInCubit?.onChangeShowPass(),
                   child: Icon(
-                    state.showPass == true
-                        ? Icons.visibility_outlined
-                        : Icons.visibility_off_outlined,
+                    state.showPass == true ? SliIcons.visible : SliIcons.hidden,
                     color: App.appColor?.iconColor,
                   ),
                 ),
@@ -166,30 +152,6 @@ class _SignInScreenState extends State<SignInScreen> with AfterLayoutMixin {
               _signInCubit?.onTapSignIn(username: username, pass: pass);
             },
           ),
-          SizedBox(height: SliSpacing.xxl),
-          Text.rich(
-            TextSpan(
-              children: [
-                TextSpan(
-                  text: '${context.l10n.notReadyAcc}. ',
-                  style: App.appStyle?.medium14?.copyWith(
-                    color: App.appColor?.textColor,
-                  ),
-                ),
-                TextSpan(
-                  text: context.l10n.signUpNow,
-                  style: App.appStyle?.medium14?.copyWith(
-                    color: App.appColor?.textColorPrimary,
-                    decoration: TextDecoration.underline,
-                  ),
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () {
-                      SLIRouting.offAllNamed(AppPage.signUp);
-                    },
-                ),
-              ],
-            ),
-          ),
         ],
       ),
     );
@@ -204,25 +166,14 @@ class _SignInScreenState extends State<SignInScreen> with AfterLayoutMixin {
         switch (effect) {
           case SignInNavigateHomeEffect():
             SLIRouting.offAllNamed(AppPage.home);
-          case SignInNavigateForgotPasswordEffect():
-            SLIRouting.toNamed(AppPage.resetPassword);
-          case SignInNavigatePhoneVerificationEffect(:final phone):
-            SLIRouting.offAllNamed(
-              AppPage.confirmInfo,
-              arguments: {'phone': phone, 'page_success': AppPage.home},
-            );
-          case SignInShowErrorEffect(:final error, :final retryAction):
+          case SignInShowErrorEffect(:final error):
             handleErrorResponse(
               context,
               error,
-              onRetry: () => switch (retryAction) {
-                SignInRetryAction.signIn => _signInCubit!.onTapSignIn(
-                  username: _usernameTextController.text.trim(),
-                  pass: _passTextController.text.trim(),
-                ),
-                SignInRetryAction.sendVerificationCode =>
-                  _signInCubit!.sendCodeVerify(),
-              },
+              onRetry: () => _signInCubit!.onTapSignIn(
+                username: _usernameTextController.text.trim(),
+                pass: _passTextController.text.trim(),
+              ),
             );
           case null:
             break;

@@ -5,7 +5,6 @@ import 'package:bloc_cubit_base/core/common/constant.dart';
 import 'package:bloc_cubit_base/core/common/enum.dart';
 import 'package:bloc_cubit_base/core/validation/auth_validation_error.dart';
 import 'package:bloc_cubit_base/domain/entities/auth/login.dart';
-import 'package:bloc_cubit_base/domain/repositories/phone_verification_repo.dart';
 import 'package:bloc_cubit_base/domain/use_case/auth_use_case.dart';
 import 'package:injectable/injectable.dart';
 
@@ -17,7 +16,6 @@ class SignInCubit extends BaseCubit<SignInState> {
   SignInCubit(this._authUseCase) : super(SignInState.initial());
 
   final AuthUseCase _authUseCase;
-  String _usernameFormat = '';
 
   void onChangeRememberLogin() {
     emit(state.copyWith(isRememberLogin: !state.isRememberLogin));
@@ -69,9 +67,8 @@ class SignInCubit extends BaseCubit<SignInState> {
   Future<void> _signIn({required String username, required String pass}) async {
     try {
       emit(state.copyWith(loading: LoadingStatus.loading));
-      _usernameFormat = AuthUseCase.normalizePhone(username);
       final Login? loginInfo = await _authUseCase.login(
-        phone: _usernameFormat,
+        phone: username,
         password: pass,
         isRememberLogin: state.isRememberLogin,
       );
@@ -79,12 +76,7 @@ class SignInCubit extends BaseCubit<SignInState> {
         return;
       }
       emit(state.copyWith(loading: LoadingStatus.complete));
-      if (loginInfo == null) {
-        return;
-      }
-      if (loginInfo.account?.isPhoneVerified == false) {
-        await sendCodeVerify();
-      } else {
+      if (loginInfo != null) {
         _emitEffect(const SignInNavigateHomeEffect());
       }
     } catch (error) {
@@ -92,44 +84,8 @@ class SignInCubit extends BaseCubit<SignInState> {
         return;
       }
       emit(state.copyWith(loading: LoadingStatus.error, error: error));
-      _emitEffect(
-        SignInShowErrorEffect(
-          error: error,
-          retryAction: SignInRetryAction.signIn,
-        ),
-      );
+      _emitEffect(SignInShowErrorEffect(error: error));
     }
-  }
-
-  Future<void> sendCodeVerify() async {
-    try {
-      final outcome = await _authUseCase.sendCodeVerify(phone: _usernameFormat);
-      if (isClosed || outcome == PhoneVerificationOutcome.superseded) {
-        return;
-      }
-      _emitEffect(
-        SignInNavigatePhoneVerificationEffect(phone: _usernameFormat),
-      );
-    } catch (error) {
-      _handleSendCodeError(error);
-    }
-  }
-
-  void _handleSendCodeError(Object error) {
-    if (isClosed) {
-      return;
-    }
-    emit(state.copyWith(error: error));
-    _emitEffect(
-      SignInShowErrorEffect(
-        error: error,
-        retryAction: SignInRetryAction.sendVerificationCode,
-      ),
-    );
-  }
-
-  void onTapForgotPassword() {
-    _emitEffect(const SignInNavigateForgotPasswordEffect());
   }
 
   void _emitEffect(SignInEffect effect) {

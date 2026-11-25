@@ -10,7 +10,6 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 
-import 'package:firebase_auth/firebase_auth.dart' as _i59;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' as _i558;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
@@ -31,21 +30,14 @@ import '../data/datasource/remote/api_client.dart' as _i44;
 import '../data/datasource/remote/auth_remote_data_source.dart' as _i519;
 import '../data/repositories/app_repo_impl.dart' as _i482;
 import '../data/repositories/auth_repo_impl.dart' as _i743;
-import '../data/repositories/firebase_phone_verification_repo.dart' as _i51;
 import '../data/repositories/session_repo_impl.dart' as _i804;
 import '../domain/repositories/app_repo.dart' as _i546;
 import '../domain/repositories/auth_repo.dart' as _i218;
-import '../domain/repositories/phone_verification_repo.dart' as _i168;
 import '../domain/repositories/session_repo.dart' as _i260;
 import '../domain/use_case/app_use_case.dart' as _i1036;
 import '../domain/use_case/auth_use_case.dart' as _i358;
-import '../presentation/confirm_information/cubit/confirm_information_cubit.dart'
-    as _i453;
 import '../presentation/home_page/cubit/home_page_cubit.dart' as _i927;
-import '../presentation/reset_password/cubit/reset_password_cubit.dart'
-    as _i955;
 import '../presentation/sign_in/cubit/sign_in_cubit.dart' as _i805;
-import '../presentation/sign_up/cubit/sign_up_cubit.dart' as _i800;
 import '../presentation/splash/cubit/splash_cubit.dart' as _i565;
 import 'register_module.dart' as _i291;
 
@@ -61,7 +53,6 @@ extension GetItInjectableX on _i174.GetIt {
       () => registerModule.preferences,
       preResolve: true,
     );
-    gh.factory<_i59.FirebaseAuth>(() => registerModule.firebaseAuth);
     gh.factory<_i558.FlutterSecureStorage>(() => registerModule.secureStorage);
     gh.factory<_i927.HomePageCubit>(() => _i927.HomePageCubit());
     gh.singleton<_i77.AppController>(() => _i77.AppController());
@@ -86,9 +77,6 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i641.AppLocalDataSource>(
       () => _i641.AppLocalDataSource(gh<_i460.SharedPreferences>()),
-    );
-    gh.lazySingleton<_i168.PhoneVerificationRepo>(
-      () => _i51.FirebasePhoneVerificationRepo(gh<_i59.FirebaseAuth>()),
     );
     gh.lazySingleton<_i546.AppRepo>(
       () => _i482.AppRepoImpl(gh<_i641.AppLocalDataSource>()),
@@ -153,20 +141,10 @@ extension GetItInjectableX on _i174.GetIt {
       () => registerModule.authUseCase(
         gh<_i218.AuthRepo>(),
         gh<_i260.SessionRepo>(),
-        gh<_i168.PhoneVerificationRepo>(),
       ),
-    );
-    gh.factory<_i453.ConfirmInformationCubit>(
-      () => _i453.ConfirmInformationCubit(gh<_i358.AuthUseCase>()),
-    );
-    gh.factory<_i955.ResetPasswordCubit>(
-      () => _i955.ResetPasswordCubit(gh<_i358.AuthUseCase>()),
     );
     gh.factory<_i805.SignInCubit>(
       () => _i805.SignInCubit(gh<_i358.AuthUseCase>()),
-    );
-    gh.factory<_i800.SignUpCubit>(
-      () => _i800.SignUpCubit(gh<_i358.AuthUseCase>()),
     );
     gh.factory<_i565.SplashCubit>(
       () => _i565.SplashCubit(gh<_i358.AuthUseCase>()),

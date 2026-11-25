@@ -128,7 +128,7 @@ fvm flutter pub add firebase_analytics firebase_crashlytics firebase_performance
 Base đang dùng `firebase_core ^3.6.0`. Với ràng buộc này, pub chọn
 `firebase_core 3.15.x`, `firebase_analytics 11.x`, `firebase_crashlytics 4.x`,
 `firebase_performance 0.10.x` và `firebase_remote_config 5.x`. Muốn lên major
-mới thì nâng cả `firebase_core` và `firebase_auth` cùng lúc.
+mới thì nâng `firebase_core` cùng mọi gói Firebase khác app đang dùng.
 
 ### 3. Chạy `flutterfire configure` cho từng flavor
 

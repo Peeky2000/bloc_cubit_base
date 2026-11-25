@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- Tinh gọn base theo ADR-0012: base giữ luật, hạ tầng và bộ kiểm định, không
+  giữ màn mẫu để chép. Luồng mẫu còn splash → sign_in → home. Bỏ đăng ký, quên
+  mật khẩu, xác minh số điện thoại (OTP Firebase, `firebase_auth`,
+  `pin_code_fields`, `AppOtpField`), `LoadingListScreen` + `pull_to_refresh`,
+  model shop/role/profile, `SuccessScreen`, `SelectionBottomSheet`, 14/18 file
+  font Montserrat, 4 ảnh và 75 chuỗi l10n không dùng. ADR-0010 thành
+  superseded.
+- `test/patterns/` là bộ kiểm định: skill `flutter-patterns` sinh code từ
+  reference, không chép file test.
+- Icon dùng `SliIcons` (Lucide) từ `sli_common`; `sli_common` còn 20 export.
+  `rulesVersion` 1.2.0.
 - iOS chuyển sang Swift Package Manager, bỏ hẳn CocoaPods (`Podfile`,
   `Podfile.lock`, `pod install` trong fastlane). Firebase Apple SDK lên 13.
   `sli_common` nâng `fluttertoast` 10 và `device_info_plus` 12; app ghi đè

@@ -35,7 +35,7 @@ python3 tool/decisions/decisions.py search "<concern>"
 
 ## Patterns
 
-| Pattern | Reference | Reference code and tests | Decision |
+| Pattern | Rule | Benchmark test | Decision |
 |---|---|---|---|
 | Pagination: `RefreshIndicator` + `PaginatedListView`, page numbers, retry button | [references/pagination.md](references/pagination.md) | `test/patterns/pagination_pattern_test.dart` | D-0001 |
 | Forms and validation | [references/form_validation.md](references/form_validation.md) | `test/patterns/form_validation_pattern_test.dart` | D-0002 |
@@ -50,16 +50,19 @@ Decision files: `docs/decisions/D-000N-*.md`.
 
 ## How to use a pattern
 
-1. Read the reference and its test file. The test file holds every class of
-   the pattern, one section per real file, with the target path in the
-   section header.
-2. Copy each section into its path, rename the example entity (`Order`,
-   `ShopForm`, `Dashboard`...) to the feature's words from the glossary, and
-   uncomment the DI annotation.
-3. Copy the tests into `test/presentation/<feature>_cubit_test.dart` and
-   the data-layer tests next to their sources; keep every case in the
-   reference's checklist.
-4. Patterns that need a plugin not yet in `pubspec.yaml` define the domain
+1. Read the reference: it is the rule (files, class shapes, field names,
+   statuses, effects, error/offline handling, test checklist).
+2. Generate the feature from the reference and the spec, in the feature's
+   own words from the glossary. Do not copy a whole test file and rename it.
+3. Write the feature's tests from the reference's checklist into
+   `test/presentation/<feature>_cubit_test.dart` and next to the data
+   sources.
+4. The test file under `test/patterns/` is the benchmark, not a template:
+   it compiles every class of the pattern and pins the expected behaviour.
+   When the generated code disagrees with it, the benchmark wins; when the
+   rule should change, change the reference, the benchmark and the decision
+   together.
+5. Patterns that need a plugin not yet in `pubspec.yaml` define the domain
    port and fake now; the feature that first needs it adds the plugin, the
    adapter from the reference (already analyzed against the real package) and
    the native setup listed there. Plugins and versions:
@@ -69,9 +72,9 @@ Decision files: `docs/decisions/D-000N-*.md`.
    | Image upload | `image_picker ^1.2.4`, `flutter_image_compress ^2.5.1` |
    | Realtime | `web_socket_channel ^3.0.3` |
    | Deep links | `app_links ^7.2.2` |
-   | Push | `firebase_messaging ^16.7.0` (needs `firebase_core ^4.15.0`, iOS 15), `flutter_local_notifications ^19.5.0` |
+   | Push | `firebase_messaging ^17.1.0` (resolves with `firebase_core ^5.2.0`), `flutter_local_notifications` |
    | Permissions | `permission_handler ^12.0.3` |
-   | Large offline cache | `drift >=2.34.4 <2.35.0`, `drift_flutter ^0.3.1` (drift 2.35 needs injectable 3) |
+   | Large offline cache | `drift`, `drift_flutter` (latest; the app is on injectable 3) |
 
 ## Shared rules
 

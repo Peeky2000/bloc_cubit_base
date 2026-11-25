@@ -9,6 +9,11 @@ Cập nhật file này mỗi khi base được fork hoặc package nền tảng 
 - Thư viện giao diện: `material_ui` và `cupertino_ui`; `material.dart`,
   `cupertino.dart` và `flutter_localizations` đã deprecated.
 - Android: AGP 9.3.1, Gradle 9.5.0, Kotlin 2.4.20, Java 17. iOS tối thiểu 15.0.
+- iOS: plugin qua Swift Package Manager, không còn CocoaPods hay `Podfile`.
+  Phiên bản SDK native (Firebase Apple SDK 13…) ghim trong
+  `ios/Runner.xcworkspace/xcshareddata/swiftpm/Package.resolved`; commit file
+  này cùng `pubspec.lock`. Mỗi scheme `dev`/`staging`/`prod` có pre-action
+  `Run Prepare Flutter Framework Script`; scheme mới phải thêm tay.
 - Derry: `dart pub global activate derry`.
 - Git submodules: bắt buộc cho `lib/modules/sli_common`.
 - Platforms: Android và iOS.

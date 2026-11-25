@@ -27,9 +27,11 @@ links that go through the deep link parser.
 | `firebase_auth` | `^5.3.1` → `^6.7.0` | must move with core 4; `lib/` analyzes clean against it |
 | `flutter_local_notifications` | `^19.5.0` (direct) | channel creation and `cancelAll()`; `alice ^1.0.0` pins `^19.4.0`, 22.x waits for an alice upgrade |
 
-Core 4 needs iOS 15.0 (`ios/Podfile` `platform :ios, '15.0'`, then
-`pod install`), Firebase iOS SDK 12 and Android BoM 34. Upgrade in its own
-commit first.
+The app is already on `firebase_core` 5 / `firebase_auth` 7, iOS 15.0 and
+Swift Package Manager (Firebase Apple SDK 13, pinned in
+`ios/Runner.xcworkspace/xcshareddata/swiftpm/Package.resolved`), so the rows
+above only need `firebase_messaging` and `flutter_local_notifications` added
+at versions that resolve against core 5.
 
 ## Files to create
 

@@ -50,23 +50,23 @@ rationale, so a Cubit cannot use or test it.
 
 ## Native setup (declare only what is used)
 
-| `AppPermission` | Android `<uses-permission>` | iOS `Info.plist` | Podfile macro |
+| `AppPermission` | Android `<uses-permission>` | iOS `Info.plist` | iOS macro (compiled in by) |
 |---|---|---|---|
-| `camera` | `android.permission.CAMERA` | `NSCameraUsageDescription` | `PERMISSION_CAMERA=1` |
-| `location` | `ACCESS_COARSE_LOCATION` + `ACCESS_FINE_LOCATION` | `NSLocationWhenInUseUsageDescription` | `PERMISSION_LOCATION_WHENINUSE=1` |
-| `notifications` | `POST_NOTIFICATIONS` (Android 13+) | none (`UNUserNotificationCenter`) | `PERMISSION_NOTIFICATIONS=1` |
+| `camera` | `android.permission.CAMERA` | `NSCameraUsageDescription` | `PERMISSION_CAMERA` (the plist key) |
+| `location` | `ACCESS_COARSE_LOCATION` + `ACCESS_FINE_LOCATION` | `NSLocationWhenInUseUsageDescription` | `PERMISSION_LOCATION_WHENINUSE` (the plist key) |
+| `notifications` | `POST_NOTIFICATIONS` (Android 13+) | none (`UNUserNotificationCenter`) | `PERMISSION_NOTIFICATIONS` (on by default) |
 
-iOS uses CocoaPods here (`enable-swift-package-manager: false`). In
-`ios/Podfile` `post_install`, enable only the macros above. A permission
-without its macro is compiled out: `status` says `denied`, `request`
-`permanentlyDenied`, no dialog ever shows.
+iOS builds with Swift Package Manager (no Podfile since Flutter 3.50).
+`permission_handler_apple`'s `Package.swift` compiles a permission in when
+its usage-description key is in `ios/Runner/Info.plist`; notifications are on
+by default. A permission whose key is missing is compiled out: `status` says
+`denied`, `request` `permanentlyDenied`, no dialog ever shows. After adding or
+removing a key, clear DerivedData once so Xcode re-reads the manifest.
 
-```ruby
-config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= [
-  '$(inherited)',
-  'PERMISSION_CAMERA=1',  # one line per permission actually used
-]
-```
+All three flavors share `ios/Runner/Info.plist`, so they get the same
+permissions. If one flavor must ask for fewer, add `permission_handler.yaml`
+and run `dart run permission_handler_apple:select <flavor>` before each build
+(see the package's 9.6.0 changelog); not needed while flavors match.
 
 Usage strings are full, specific sentences from the l10n owner ("The app
 uses the camera to scan your receipt."). Without the key iOS crashes on

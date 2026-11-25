@@ -11,21 +11,6 @@ rootProject.layout.buildDirectory.value(newBuildDir)
 subprojects {
     project.layout.buildDirectory.value(newBuildDir.dir(project.name))
 }
-// Một số plugin cũ (fluttertoast 8.x trong sli_common) tự ghim compileSdk 33,
-// trong khi thư viện AndroidX chúng kéo theo cần 34+. Nâng compileSdk của các
-// plugin thấp hơn app lên bằng app. Bỏ khối này khi sli_common lên fluttertoast
-// bản mới và build vẫn qua.
-subprojects { subproject ->
-    if (subproject.name == 'app') return
-    subproject.afterEvaluate {
-        if (!subproject.plugins.hasPlugin('com.android.library')) return
-        def appCompileSdk = rootProject.project(':app').android.compileSdk
-        def pluginCompileSdk = subproject.android.compileSdk
-        if (appCompileSdk != null && (pluginCompileSdk == null || pluginCompileSdk < appCompileSdk)) {
-            subproject.android.compileSdk = appCompileSdk
-        }
-    }
-}
 subprojects {
     project.evaluationDependsOn(':app')
 }

@@ -52,7 +52,8 @@ Tài liệu nghiệp vụ ──▶ /tech-design ──▶ tech.md ──▶ PM 
 ## Cài đặt lần đầu
 
 Cần Flutter theo `.fvmrc` (khuyên dùng [FVM](https://fvm.app)), Java 17+ cho
-Android, CocoaPods cho iOS. Chi tiết: [điều kiện dự án](docs/prerequisites.md).
+Android, Xcode cho iOS (plugin qua Swift Package Manager, không cần CocoaPods).
+Chi tiết: [điều kiện dự án](docs/prerequisites.md).
 
 ```bash
 git clone --recurse-submodules https://github.com/Peeky2000/bloc_cubit_base.git

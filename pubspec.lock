@@ -373,10 +373,10 @@ packages:
     dependency: transitive
     description:
       name: device_info_plus
-      sha256: a7fd703482b391a87d60b6061d04dfdeab07826b96f9abd8f5ed98068acc0074
+      sha256: b4fed1b2835da9d670d7bed7db79ae2a94b0f5ad6312268158a9b5479abbacdd
       url: "https://pub.dev"
     source: hosted
-    version: "10.1.2"
+    version: "12.4.0"
   device_info_plus_platform_interface:
     dependency: transitive
     description:
@@ -702,10 +702,10 @@ packages:
     dependency: transitive
     description:
       name: fluttertoast
-      sha256: "90778fe0497fe3a09166e8cf2e0867310ff434b794526589e77ec03cf08ba8e8"
+      sha256: af237c0801b908200f5069835009fb4b95e548e1878b2202ab5627c9555a39af
       url: "https://pub.dev"
     source: hosted
-    version: "8.2.14"
+    version: "10.0.3"
   frontend_server_client:
     dependency: transitive
     description:
@@ -1069,13 +1069,13 @@ packages:
     source: hosted
     version: "2.1.5"
   open_filex:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: open_filex
-      sha256: "9976da61b6a72302cf3b1efbce259200cd40232643a467aac7370addf94d6900"
+      sha256: "0c3fe80e73f0b3200fef6e175b83dae9790dd23c9cdbb6d15f46e2ff10ae84ad"
       url: "https://pub.dev"
     source: hosted
-    version: "4.7.0"
+    version: "5.0.0"
   package_config:
     dependency: transitive
     description:
@@ -1884,10 +1884,10 @@ packages:
     dependency: transitive
     description:
       name: win32_registry
-      sha256: "21ec76dfc731550fd3e2ce7a33a9ea90b828fdf19a5c3bcf556fa992cfa99852"
+      sha256: "6f1b564492d0147b330dd794fee8f512cec4977957f310f9951b5f9d83618dae"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.5"
+    version: "2.1.0"
   xdg_directories:
     dependency: transitive
     description:

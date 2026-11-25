@@ -75,9 +75,14 @@ thật. Làm chúng ở tuần đầu của dự án thật, rồi đánh dấu 
   Sau đó chạy `/perf-check`, duyệt mốc bằng `derry perf approve`. Chi tiết ở
   [đo hiệu năng app](measure-performance.md).
 - [ ] **Chạy thử trên máy thật sau đợt nâng Flutter 3.50** (AGP 9, Gradle 9,
-  Kotlin 2.4, iOS 15, `material_ui`). Build debug Android và iOS simulator đã
-  qua; còn thử đăng nhập có và không có ghi nhớ, gửi OTP, đăng xuất, hết
-  phiên, mở Alice bằng lắc máy, dialog và flushbar của `sli_common`.
+  Kotlin 2.4, iOS 15, `material_ui`, Swift Package Manager). Build debug
+  Android và cả ba flavor iOS trên simulator đã qua, app dev mở được tới màn
+  đăng nhập; còn thử đăng nhập có và không có ghi nhớ, gửi OTP, đăng xuất,
+  hết phiên, mở Alice bằng lắc máy, dialog, flushbar và toast của
+  `sli_common`, và một lần `build_store` của fastlane (không còn bước
+  CocoaPods). Khi đó gỡ luôn `gem 'cocoapods'` trong `ios/fastlane/Pluginfile`
+  rồi `bundle install` trong `ios/` và `ios/fastlane/` bằng đúng bản Bundler
+  ghi trong `Gemfile.lock`, để khoá gem được sinh lại thay vì sửa tay.
 
 ## 5. Việc còn mở trong base
 
@@ -126,8 +131,8 @@ Không chặn dự án thật nhưng nên xử lý khi có thời gian.
   từng quyết định:
   - phân trang: thay `LoadingListScreen` và gỡ `pull_to_refresh`;
   - upload: thêm `ApiHandler.upload`, sửa ánh xạ lỗi ngoại tuyến;
-  - push: nâng `firebase_core` 4, `firebase_auth` 6 (iOS 15 đã có từ đợt
-    Flutter 3.50);
+  - push: thêm `firebase_messaging` khớp `firebase_core` 5 (core, auth,
+    iOS 15 và SPM đã xong);
   - realtime: backend cần endpoint cấp vé và mã đóng kết nối;
   - deep link: cần host thật, Apple Team ID, SHA-256 chứng chỉ ký Play;
   - cache: thêm `UserCacheCleaner` vào `SessionRepoImpl.end()`;

@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- iOS chuyển sang Swift Package Manager, bỏ hẳn CocoaPods (`Podfile`,
+  `Podfile.lock`, `pod install` trong fastlane). Firebase Apple SDK lên 13.
+  `sli_common` nâng `fluttertoast` 10 và `device_info_plus` 12; app ghi đè
+  `open_filex` 5 (qua `alice`) vì bản 4 chưa hỗ trợ SPM. Bỏ khối nâng
+  compileSdk cho plugin cũ trong `android/build.gradle` vì `fluttertoast` 10
+  đã dùng compileSdk 36.
 - Nâng `firebase_core` lên 5 và `firebase_auth` lên 7 (Firebase BoM 5.0.0).
   API Dart dùng trong base không đổi; Android cần minSdk 24 (đã có).
 - Nâng Flutter lên 3.50.1 (bản vá lỗi của 3.50; không đổi API).

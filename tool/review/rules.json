@@ -30,7 +30,7 @@
       "reason": "lockfile; review pubspec.yaml"
     },
     {
-      "glob": "ios/Podfile.lock",
+      "glob": "ios/**/swiftpm/Package.resolved",
       "reason": "lockfile"
     },
     {

@@ -8,14 +8,14 @@ plugins {
 
 android {
     namespace "com.giaohang247"
-    compileSdk flutter.compileSdkVersion
+    // permission_handler 13 (via sli_common) compiles against API 37; Flutter
+    // 3.50 defaults to 36. Drop back to flutter.compileSdkVersion once it is 37.
+    compileSdk 37
     ndkVersion flutter.ndkVersion
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
-        // flutter_local_notifications (via alice) uses java.time APIs.
-        coreLibraryDesugaringEnabled true
     }
 
     // AGP 9 turns resValues off by default; the flavors below set app_name with it.
@@ -80,8 +80,4 @@ kotlin {
 
 flutter {
     source '../..'
-}
-
-dependencies {
-    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:2.1.4"
 }

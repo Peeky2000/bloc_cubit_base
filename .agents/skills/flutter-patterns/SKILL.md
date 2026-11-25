@@ -73,7 +73,7 @@ Decision files: `docs/decisions/D-000N-*.md`.
    | Realtime | `web_socket_channel ^3.0.3` |
    | Deep links | `app_links ^7.2.2` |
    | Push | `firebase_messaging ^17.1.0` (resolves with `firebase_core ^5.2.0`), `flutter_local_notifications` |
-   | Permissions | `permission_handler ^12.0.3` |
+   | Permissions | `permission_handler ^13.0.2` |
    | Large offline cache | `drift`, `drift_flutter` (latest; the app is on injectable 3) |
 
 ## Shared rules

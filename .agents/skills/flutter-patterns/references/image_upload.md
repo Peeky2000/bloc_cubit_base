@@ -40,10 +40,10 @@ Resolved against the app's graph on 3.44.5. Not `image_picker`'s
   `com.google.android.gms.metadata.ModuleDependencies` service
   (`photopicker_activity:0:required`) for the backported Photo Picker. Do not
   declare `CAMERA` unless another feature needs it (then it must be granted).
-- Play policy forbids `READ_MEDIA_IMAGES`/`_VIDEO` for one-time uploads, but
-  `alice` → `open_filex` 4.7.0 merges them (and `READ_MEDIA_AUDIO`), and
-  `sli_common` → `photo_manager` merges `READ_EXTERNAL_STORAGE`. Remove them
-  in `AndroidManifest.xml` with
+- Play policy forbids `READ_MEDIA_IMAGES`/`_VIDEO` for one-time uploads. No
+  current dependency merges them (alice 1's `open_filex` and `sli_common`'s
+  old `photo_manager` did), and `AndroidManifest.xml` keeps a guard that
+  strips them with
   `<uses-permission android:name="android.permission.READ_MEDIA_IMAGES" tools:node="remove"/>`
   (same for `_VIDEO`, `_AUDIO`; needs `xmlns:tools`).
 

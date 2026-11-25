@@ -66,7 +66,7 @@ abstract class PermissionRepo {
 }
 
 // Adapter sketch: lib/data/repositories/permission_handler_repo.dart
-// Needs `permission_handler: ^12.0.3` as a direct dependency (D-0008).
+// Needs `permission_handler: ^13.0.2` as a direct dependency (D-0008).
 // Verified with `flutter analyze` against 12.0.3 and 13.0.2.
 //
 //   @LazySingleton(as: PermissionRepo)

@@ -29,11 +29,10 @@ A domain port `PermissionRepo` returns one `PermissionAccess` per call
 Cubit emits typed effects for rationale, settings and proceed, and re-checks
 on resume.
 
-Package: `permission_handler: ^12.0.3` (publisher baseflow.com), the version
-`sli_common` already resolves, so adding it changes no native build.
-`^13.0.2` (Android plugin 14.1.0) fixes `status` on Android but needs
-`compileSdk 37` (Flutter 3.50 defaults to 36; AGP 9 is already in place);
-move to it with `sli_common`. The adapter is written for both.
+Package: `permission_handler: ^13.0.2` (publisher baseflow.com), the version
+`sli_common` already resolves, so adding it changes no native build. 13.x
+(Android plugin 14) fixes `status` on Android and needs `compileSdk 37`,
+which the app sets. The adapter also compiles against 12.0.3.
 
 `sli_common`'s `PermissionUtil` stays for legacy screens: it needs a
 `BuildContext`, shows toasts and dialogs itself and asks without a

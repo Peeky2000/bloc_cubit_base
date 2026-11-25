@@ -35,7 +35,7 @@ dependencies:
 
   bloc: ^9.2.1
   flutter_bloc: ^9.1.1
-  equatable: ^2.1.0
+  equatable: ^3.0.0
   get_it: ^9.2.1
   injectable: ^3.0.0
   intl: ^0.20.2
@@ -51,17 +51,12 @@ dependencies:
     sdk: flutter
   sli_common:
     path: lib/modules/sli_common
-  alice: ^1.0.0
+  alice: ^2.0.0
   flutter_secure_storage: ^10.3.1
 
   material_ui: ^1.11.1
   cupertino_ui: ^1.1.7
 
-dependency_overrides:
-  # alice 1.0.0 pins open_filex ^4.6.0, which has no Package.swift. 5.0.0 adds
-  # Swift Package Manager support with the same Dart API (only the iOS minimum
-  # rises to 13, below ours). Drop this when alice moves past open_filex 4.
-  open_filex: ^5.0.0
 
 dev_dependencies:
   json_serializable: ^6.7.1

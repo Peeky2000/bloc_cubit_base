@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Nâng `alice` lên 2 (thông báo hệ thống tách khỏi gói, chụp request có sẵn
+  redaction): import gộp về `package:alice/alice.dart`, bỏ `showNotification`.
+  Kéo theo `equatable` 3, `open_file` thay `open_filex` (bỏ override),
+  `share_plus` 13, `package_info_plus` 10, `sensors_plus` 7 và
+  `permission_handler` 13 trong `sli_common`. Android đặt `compileSdk 37`;
+  bỏ core library desugaring vì không còn `flutter_local_notifications`.
 - Tinh gọn base theo ADR-0012: base giữ luật, hạ tầng và bộ kiểm định, không
   giữ màn mẫu để chép. Luồng mẫu còn splash → sign_in → home. Bỏ đăng ký, quên
   mật khẩu, xác minh số điện thoại (OTP Firebase, `firebase_auth`,

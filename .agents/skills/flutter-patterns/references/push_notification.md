@@ -23,7 +23,7 @@ links that go through the deep link parser.
 | Package | Constraint | Why |
 |---|---|---|
 | `firebase_messaging` | `^17.1.0` | Resolves with the app's `firebase_core ^5.2.0`; UIScene support, `configureNotificationCenterDelegate()`, Android `deniedPermanently` |
-| `flutter_local_notifications` | latest that resolves (direct) | channel creation and `cancelAll()`; `alice ^1.0.0` pins `^19.4.0`, newer majors wait for an alice upgrade |
+| `flutter_local_notifications` | latest (direct) | channel creation and `cancelAll()`. Needs core library desugaring in `android/app/build.gradle` (`coreLibraryDesugaringEnabled true` + `desugar_jdk_libs`); the base no longer sets it |
 
 The app is already on `firebase_core` 5, iOS 15.0 and Swift Package Manager
 (Firebase Apple SDK 13, pinned in
@@ -52,8 +52,8 @@ exact version with `flutter pub add firebase_messaging` before writing code.
   `...default_notification_icon` → `@drawable/ic_notification` (white
   silhouette on transparent), `...default_notification_color` →
   `@color/notification`. `POST_NOTIFICATIONS`, `WAKE_LOCK` and the FCM
-  service merge from the plugin manifest; `minSdk 24`, `compileSdk 36`,
-  desugaring already set.
+  service merge from the plugin manifest; `minSdk 24`, `compileSdk 37` (set),
+  add desugaring with `flutter_local_notifications`.
 - iOS Xcode Signing & Capabilities: Push Notifications (`aps-environment`
   in `Runner.entitlements`, already `development`; distribution signing sets
   `production`) and Background Modes → Background fetch + Remote

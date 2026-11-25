@@ -39,7 +39,9 @@ hưởng toàn dự án là ADR trong `docs/adr/`. Cách viết và vòng đời
 
 ## Đang chờ duyệt
 
-Chưa có.
+| Mã | Quyết định | Trạng thái | Phạm vi | Tags | Ngày |
+|---|---|---|---|---|---|
+| [D-0009](D-0009-bat-quyen-ios-qua-swift-package-manager.md) | Bật quyền iOS qua Swift Package Manager | proposed | feature | permission, privacy, ios, spm | 2026-11-25 |
 
 ## Đã thay thế hoặc bị từ chối
 

@@ -2,11 +2,6 @@
 
 ## Unreleased
 
-- Màn danh sách thông báo (`lib/presentation/notification_list/`) sinh từ
-  spec `docs/specs/002-notifications/`: gọi `GET /notifications` theo trang
-  20 dòng, kéo làm mới, tải thêm, lỗi trang sau giữ list và cho Thử lại, mở
-  từ Tài khoản. Theo D-0001 nên đưa vào app hai mảnh dùng chung từ bộ kiểm
-  định: `PageResult` (domain) và `PaginatedListView` (`lib/widget/`).
 - Sửa network inspector: request có query số (`page=1`) bị Alice làm hỏng
   với lỗi `type 'int' is not a subtype of type 'Iterable<dynamic>'` ở mọi
   bản không phải prod; giờ đổi giá trị query sang chuỗi trước khi ghi lại.

@@ -6,11 +6,9 @@ import 'package:bloc_cubit_base/core/routing/routing.dart';
 import 'package:bloc_cubit_base/data/datasource/local/token_provider.dart';
 import 'package:bloc_cubit_base/data/datasource/local/session_expiry_coordinator.dart';
 import 'package:bloc_cubit_base/data/datasource/remote/api_client.dart';
-import 'package:bloc_cubit_base/domain/repositories/app_notification_repo.dart';
 import 'package:bloc_cubit_base/domain/repositories/app_repo.dart';
 import 'package:bloc_cubit_base/domain/repositories/auth_repo.dart';
 import 'package:bloc_cubit_base/domain/repositories/session_repo.dart';
-import 'package:bloc_cubit_base/domain/use_case/app_notification_use_case.dart';
 import 'package:bloc_cubit_base/domain/use_case/app_use_case.dart';
 import 'package:bloc_cubit_base/domain/use_case/auth_use_case.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -37,10 +35,6 @@ abstract class RegisterModule {
   @lazySingleton
   AuthUseCase authUseCase(AuthRepo authRepo, SessionRepo sessionRepo) =>
       AuthUseCase(authRepo, sessionRepo);
-
-  @lazySingleton
-  AppNotificationUseCase appNotificationUseCase(AppNotificationRepo repo) =>
-      AppNotificationUseCase(repo);
 
   FlutterSecureStorage get secureStorage => const FlutterSecureStorage();
 

@@ -110,13 +110,4 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get logoutConfirm => 'Bạn có chắc muốn đăng xuất?';
-
-  @override
-  String get notificationTitle => 'Thông báo';
-
-  @override
-  String get notificationEmpty => 'Chưa có thông báo';
-
-  @override
-  String get notificationUnread => 'Chưa đọc';
 }

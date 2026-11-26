@@ -296,24 +296,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Do you want to sign out?'**
   String get logoutConfirm;
-
-  /// No description provided for @notificationTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Notifications'**
-  String get notificationTitle;
-
-  /// No description provided for @notificationEmpty.
-  ///
-  /// In en, this message translates to:
-  /// **'No notifications yet'**
-  String get notificationEmpty;
-
-  /// No description provided for @notificationUnread.
-  ///
-  /// In en, this message translates to:
-  /// **'Unread'**
-  String get notificationUnread;
 }
 
 class _AppLocalizationsDelegate

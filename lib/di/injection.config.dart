@@ -27,23 +27,16 @@ import '../data/datasource/local/session_expiry_coordinator.dart' as _i55;
 import '../data/datasource/local/token_provider.dart' as _i508;
 import '../data/datasource/local/user_local_data_source.dart' as _i278;
 import '../data/datasource/remote/api_client.dart' as _i44;
-import '../data/datasource/remote/app_notification_remote_data_source.dart'
-    as _i527;
 import '../data/datasource/remote/auth_remote_data_source.dart' as _i519;
-import '../data/repositories/app_notification_repo_impl.dart' as _i531;
 import '../data/repositories/app_repo_impl.dart' as _i482;
 import '../data/repositories/auth_repo_impl.dart' as _i743;
 import '../data/repositories/session_repo_impl.dart' as _i804;
-import '../domain/repositories/app_notification_repo.dart' as _i702;
 import '../domain/repositories/app_repo.dart' as _i546;
 import '../domain/repositories/auth_repo.dart' as _i218;
 import '../domain/repositories/session_repo.dart' as _i260;
-import '../domain/use_case/app_notification_use_case.dart' as _i740;
 import '../domain/use_case/app_use_case.dart' as _i1036;
 import '../domain/use_case/auth_use_case.dart' as _i358;
 import '../presentation/account/cubit/account_cubit.dart' as _i173;
-import '../presentation/notification_list/cubit/notification_list_cubit.dart'
-    as _i747;
 import '../presentation/sign_in/cubit/sign_in_cubit.dart' as _i805;
 import '../presentation/splash/cubit/splash_cubit.dart' as _i565;
 import 'register_module.dart' as _i291;
@@ -140,21 +133,8 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i519.AuthRemoteDataSource>(
       () => _i519.AuthRemoteDataSourceImpl(gh<_i44.ApiHandler>()),
     );
-    gh.lazySingleton<_i527.AppNotificationRemoteDataSource>(
-      () => _i527.AppNotificationRemoteDataSourceImpl(gh<_i44.ApiHandler>()),
-    );
-    gh.lazySingleton<_i702.AppNotificationRepo>(
-      () => _i531.AppNotificationRepoImpl(
-        gh<_i527.AppNotificationRemoteDataSource>(),
-      ),
-    );
     gh.lazySingleton<_i218.AuthRepo>(
       () => _i743.AuthRepoImpl(gh<_i519.AuthRemoteDataSource>()),
-    );
-    gh.lazySingleton<_i740.AppNotificationUseCase>(
-      () => registerModule.appNotificationUseCase(
-        gh<_i702.AppNotificationRepo>(),
-      ),
     );
     gh.lazySingleton<_i358.AuthUseCase>(
       () => registerModule.authUseCase(
@@ -170,9 +150,6 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i565.SplashCubit>(
       () => _i565.SplashCubit(gh<_i358.AuthUseCase>()),
-    );
-    gh.factory<_i747.NotificationListCubit>(
-      () => _i747.NotificationListCubit(gh<_i740.AppNotificationUseCase>()),
     );
     return this;
   }

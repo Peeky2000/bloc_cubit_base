@@ -34,38 +34,5 @@
       "logout",
       "expiry"
     ]
-  },
-  {
-    "type": "entity",
-    "name": "PageResult",
-    "description": "Một trang kết quả (items, page, hasMore); PageResult.fromResponse suy ra hasMore từ BaseListResponse theo D-0001",
-    "location": "lib/domain/entities/common/page_result.dart",
-    "keywords": [
-      "pagination",
-      "page"
-    ],
-    "fields": [
-      "items",
-      "page",
-      "hasMore"
-    ],
-    "scope": "shared"
-  },
-  {
-    "type": "entity",
-    "name": "AppNotification",
-    "description": "Thông báo trong app: id, title, body, createdAt, isRead",
-    "location": "lib/domain/entities/app_notification/app_notification.dart",
-    "keywords": [
-      "notification"
-    ],
-    "fields": [
-      "id",
-      "title",
-      "body",
-      "createdAt",
-      "isRead"
-    ],
-    "scope": "notification_list"
   }
 ]

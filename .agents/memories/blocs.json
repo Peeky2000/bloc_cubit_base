@@ -36,5 +36,19 @@
       "global",
       "cubit"
     ]
+  },
+  {
+    "type": "bloc",
+    "name": "AccountCubit",
+    "description": "Reads the session account and signs out; emits AccountConfirmLogoutEffect, AccountNavigateSignInEffect, AccountShowErrorEffect",
+    "location": "lib/presentation/account/cubit/account_cubit.dart",
+    "keywords": [
+      "account",
+      "profile",
+      "logout",
+      "sign-out",
+      "cubit",
+      "ui-effect"
+    ]
   }
 ]

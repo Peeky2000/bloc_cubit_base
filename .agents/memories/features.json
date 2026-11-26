@@ -19,5 +19,17 @@
       "splash",
       "startup"
     ]
+  },
+  {
+    "type": "feature",
+    "name": "account",
+    "description": "Signed-in account screen: shows email, phone, role and signs out with confirmation (spec 001-account)",
+    "location": "lib/presentation/account/",
+    "keywords": [
+      "account",
+      "profile",
+      "logout",
+      "sign-out"
+    ]
   }
 ]

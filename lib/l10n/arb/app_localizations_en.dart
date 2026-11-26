@@ -98,4 +98,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shopNameIsRequired => 'Tên cửa hàng không được bỏ trống';
+
+  @override
+  String get accountTitle => 'Account';
+
+  @override
+  String get accountRole => 'Role';
+
+  @override
+  String get accountEmptyValue => 'Not set';
+
+  @override
+  String get logoutConfirm => 'Do you want to sign out?';
 }

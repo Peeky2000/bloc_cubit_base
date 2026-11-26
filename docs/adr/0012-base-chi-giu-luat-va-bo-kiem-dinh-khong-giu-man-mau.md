@@ -59,3 +59,10 @@ mẫu để chép.
   `pin_code_fields`, `AppOtpField`, `LoadingListScreen`, `pull_to_refresh`,
   model shop/role/profile, 14 file font, 75 chuỗi l10n. Lấy lại từ commit
   trước ADR này nếu cần.
+
+## Cập nhật 2026-11-26
+
+Màn home trống được thay bằng màn Tài khoản (hiện tài khoản, đăng xuất), sinh
+từ `docs/specs/001-account/` qua `tech.md` và `derry scaffold`. Luồng mẫu giờ
+là splash → đăng nhập → Tài khoản → đăng xuất; nó vừa chạy thử hạ tầng vừa là
+ví dụ đối chiếu cho luồng spec → code. Quyết định của ADR này giữ nguyên.

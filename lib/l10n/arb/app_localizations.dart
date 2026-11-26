@@ -272,6 +272,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tên cửa hàng không được bỏ trống'**
   String get shopNameIsRequired;
+
+  /// No description provided for @accountTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get accountTitle;
+
+  /// No description provided for @accountRole.
+  ///
+  /// In en, this message translates to:
+  /// **'Role'**
+  String get accountRole;
+
+  /// No description provided for @accountEmptyValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Not set'**
+  String get accountEmptyValue;
+
+  /// No description provided for @logoutConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to sign out?'**
+  String get logoutConfirm;
 }
 
 class _AppLocalizationsDelegate

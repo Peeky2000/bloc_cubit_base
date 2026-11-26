@@ -1,4 +1,3 @@
-import 'package:bloc_cubit_base/presentation/home_page/view/home_page_screen.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
@@ -11,9 +10,11 @@ void main() {
   // Example only. It pumps the screen directly, so it skips bootstrap, DI,
   // theme and localization. A product scenario should start the real app
   // through `bootstrap` with deterministic test data.
-  testWidgets('template home first render example', (tester) async {
+  testWidgets('first render example', (tester) async {
     await measureScenario(tester, binding, () async {
-      await tester.pumpWidget(const MaterialApp(home: HomePageScreen()));
+      await tester.pumpWidget(
+        const MaterialApp(home: Scaffold(body: Center(child: Text('Hello')))),
+      );
       await tester.pumpAndSettle();
     });
   });

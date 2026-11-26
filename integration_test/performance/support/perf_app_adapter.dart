@@ -1,4 +1,4 @@
-import 'package:bloc_cubit_base/presentation/home_page/view/home_page_screen.dart';
+import 'package:bloc_cubit_base/presentation/account/view/account_screen.dart';
 import 'package:bloc_cubit_base/presentation/sign_in/view/sign_in_screen.dart';
 import 'package:bloc_cubit_base/widget/app_primary_button.dart';
 import 'package:material_ui/material_ui.dart' show TextField;
@@ -30,7 +30,7 @@ class _SampleAuthAdapter implements PerfAppAdapter {
   bool isSignInScreen(Widget widget) => widget is SignInScreen;
 
   @override
-  bool isHomeScreen(Widget widget) => widget is HomePageScreen;
+  bool isHomeScreen(Widget widget) => widget is AccountScreen;
 
   @override
   Future<void> signIn(

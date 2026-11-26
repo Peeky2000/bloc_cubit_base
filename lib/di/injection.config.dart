@@ -36,7 +36,7 @@ import '../domain/repositories/auth_repo.dart' as _i218;
 import '../domain/repositories/session_repo.dart' as _i260;
 import '../domain/use_case/app_use_case.dart' as _i1036;
 import '../domain/use_case/auth_use_case.dart' as _i358;
-import '../presentation/home_page/cubit/home_page_cubit.dart' as _i927;
+import '../presentation/account/cubit/account_cubit.dart' as _i173;
 import '../presentation/sign_in/cubit/sign_in_cubit.dart' as _i805;
 import '../presentation/splash/cubit/splash_cubit.dart' as _i565;
 import 'register_module.dart' as _i291;
@@ -54,7 +54,6 @@ extension GetItInjectableX on _i174.GetIt {
       preResolve: true,
     );
     gh.factory<_i558.FlutterSecureStorage>(() => registerModule.secureStorage);
-    gh.factory<_i927.HomePageCubit>(() => _i927.HomePageCubit());
     gh.singleton<_i77.AppController>(() => _i77.AppController());
     gh.singleton<_i924.SessionEventController>(
       () => _i924.SessionEventController(),
@@ -142,6 +141,9 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i218.AuthRepo>(),
         gh<_i260.SessionRepo>(),
       ),
+    );
+    gh.factory<_i173.AccountCubit>(
+      () => _i173.AccountCubit(gh<_i358.AuthUseCase>()),
     );
     gh.factory<_i805.SignInCubit>(
       () => _i805.SignInCubit(gh<_i358.AuthUseCase>()),

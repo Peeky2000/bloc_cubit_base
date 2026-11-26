@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Luồng mẫu thành splash → đăng nhập → Tài khoản → đăng xuất: màn Tài khoản
+  (`lib/presentation/account/`) thay màn home trống, sinh từ spec
+  `docs/specs/001-account/` bằng `derry scaffold` để làm mẫu đối chiếu cho
+  luồng spec → tech.md → code; có 9 test (Cubit và widget).
 - Nâng ràng buộc Dart SDK lên `^3.14.0` bằng `dart migrate`; dùng tham số
   khởi tạo private có tên của Dart 3.13 (`this._debug` mà người gọi vẫn truyền
   `debug:`) ở các lớp observability, network inspector, route observer và

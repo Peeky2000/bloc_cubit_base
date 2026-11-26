@@ -28,5 +28,9 @@
   "confirmPassIsNotMath": "Mật khẩu không trùng khớp",
   "emailPhoneIsRequired": "Email/Số điện thoại là bắt buộc",
   "emailPhoneIsInvalid": "Email/Số điện thoại không hợp lệ",
-  "shopNameIsRequired": "Tên cửa hàng không được bỏ trống"
+  "shopNameIsRequired": "Tên cửa hàng không được bỏ trống",
+  "accountTitle": "Tài khoản",
+  "accountRole": "Vai trò",
+  "accountEmptyValue": "Chưa có",
+  "logoutConfirm": "Bạn có chắc muốn đăng xuất?"
 }

@@ -1,4 +1,4 @@
-# Bắt đầu từ đây
+# Hướng dẫn đọc base
 
 Thư mục này dành cho người: đọc từ trên xuống là biết base có gì, chạy thế
 nào, làm tính năng ra sao và dùng công cụ nào. Mỗi trang ngắn, chỉ nêu cái cần
@@ -14,6 +14,9 @@ biết rồi trỏ sang tài liệu chi tiết.
 | 6 | [Lệnh và công cụ](06-lenh-va-cong-cu.md) | `derry`, build, phát hành, đo hiệu năng |
 | 7 | [Dự án thật và việc còn mở](07-du-an-that.md) | Tạo app mới từ base, việc phải làm, việc còn tồn |
 
-Phần còn lại của `docs/` là tài liệu chi tiết và bằng chứng (ADR, quyết định,
-kiến trúc từng mảng); agent đọc chúng theo đường dẫn nên giữ nguyên chỗ cũ.
-Mục lục đầy đủ: [docs/README.md](../README.md).
+Hai loại tài liệu trong repo:
+
+- `guide/` (thư mục này): cho người đọc để hiểu và dùng base.
+- `docs/`: tài liệu làm việc của dự án và agent (kiến trúc chi tiết, ADR, sổ
+  quyết định, spec, báo cáo). Agent và test đọc chúng theo đường dẫn, nên
+  chúng ở yên chỗ cũ. Mục lục: [docs/README.md](../docs/README.md).

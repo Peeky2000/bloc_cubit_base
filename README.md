@@ -13,7 +13,7 @@ Tài liệu nghiệp vụ ──▶ /tech-design ──▶ tech.md ──▶ PM 
            code đúng convention + test + agent test kiểm tra độc lập ◀┘
 ```
 
-**Mới vào? Đọc [docs/start-here/](docs/start-here/README.md)**: 7 trang ngắn,
+**Mới vào? Đọc [guide/](guide/README.md)**: 7 trang ngắn,
 đọc từ trên xuống là biết base có gì, chạy thế nào, làm tính năng ra sao và
 dùng công cụ nào. Mọi tài liệu chi tiết khác có trong [mục lục](docs/README.md).
 
@@ -91,7 +91,7 @@ vẫn giữ `sli_common` là submodule. Sau đó, trong app mới:
 |---|---|---|
 | 1 | Đổi địa chỉ server | `lib/core/app/app_config.dart` hoặc `--dart-define=API_BASE_URL=...` |
 | 2 | Firebase, signing, icon, splash | [Tạo app từ base](docs/guides/create-app-from-base.md), mục 5 |
-| 3 | Thay luồng mẫu (splash → đăng nhập → home) bằng luồng thật | Sửa luôn `integration_test/performance/support/perf_app_adapter.dart` |
+| 3 | Thay luồng mẫu (splash → đăng nhập → tài khoản) bằng luồng thật | Sửa luôn `integration_test/performance/support/perf_app_adapter.dart` |
 | 4 | Làm các việc để dành cho tuần đầu | [Sổ tay dự án thật](docs/guides/start-real-project.md#4-việc-để-dành-tới-dự-án-thật) |
 
 Sổ tay dự án thật là nơi duy nhất ghi việc còn mở. Xong việc nào thì đánh dấu

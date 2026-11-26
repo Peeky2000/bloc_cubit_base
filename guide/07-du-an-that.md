@@ -22,14 +22,14 @@ App mới có một commit đầu sạch, đã đổi package, bundle id, tên a
 | # | Việc | Ở đâu |
 |---|---|---|
 | 1 | Đổi địa chỉ server | `lib/core/app/app_config.dart` hoặc `--dart-define=API_BASE_URL=...` |
-| 2 | Firebase của app (3 flavor), signing, icon, splash | [Tạo app từ base](../guides/create-app-from-base.md) |
+| 2 | Firebase của app (3 flavor), signing, icon, splash | [Tạo app từ base](../docs/guides/create-app-from-base.md) |
 | 3 | Thay luồng đăng nhập mẫu bằng luồng thật | Sửa luôn `integration_test/performance/support/perf_app_adapter.dart` |
-| 4 | Chạy thử trên máy thật, chạy `build_store` của fastlane một lần | [Sổ tay dự án thật](../guides/start-real-project.md) |
+| 4 | Chạy thử trên máy thật, chạy `build_store` của fastlane một lần | [Sổ tay dự án thật](../docs/guides/start-real-project.md) |
 
 ## Việc còn mở trong base
 
-Chỉ ghi ở một nơi: [sổ tay dự án thật, mục 5](../guides/start-real-project.md#5-việc-còn-mở-trong-base).
+Chỉ ghi ở một nơi: [sổ tay dự án thật, mục 5](../docs/guides/start-real-project.md#5-việc-còn-mở-trong-base).
 Xong việc nào thì đánh dấu và ghi commit ở đó. Lịch sử thay đổi:
-[CHANGELOG](../../CHANGELOG.md).
+[CHANGELOG](../CHANGELOG.md).
 
 Quay lại: [mục lục Bắt đầu từ đây](README.md).

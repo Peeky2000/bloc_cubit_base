@@ -33,12 +33,12 @@ Khung sinh ra đã qua test convention. Viết tiếp theo thứ tự tầng r�
 Phân trang, form và validate, cache offline, upload ảnh, realtime, deep link,
 push, xin quyền: agent đọc luật trong skill `flutter-patterns` và sinh code;
 `test/patterns/<mẫu>_pattern_test.dart` là chuẩn để so. Quyết định gốc:
-D-0001 tới D-0009 trong [sổ quyết định](../decisions/README.md).
+D-0001 tới D-0009 trong [sổ quyết định](../docs/decisions/README.md).
 
 ## Đọc thêm
 
-[Thêm feature](../guides/add-feature.md) ·
-[vòng dev–tester](../agents/delivery-loop.md) ·
-[quy trình AI](../../ai-process.md).
+[Thêm feature](../docs/guides/add-feature.md) ·
+[vòng dev–tester](../docs/agents/delivery-loop.md) ·
+[quy trình AI](../ai-process.md).
 
 Tiếp: [Agent, skill và luật](05-agent-skill-luat.md).

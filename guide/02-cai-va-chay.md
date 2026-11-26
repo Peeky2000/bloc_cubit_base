@@ -44,7 +44,7 @@ Cấu hình qua `--dart-define`, không dùng file `.env`: `API_BASE_URL`,
 | iOS lỗi package | Mở `ios/Runner.xcworkspace` một lần để Xcode tải Swift package, hoặc `flutter clean` rồi build lại |
 | Lần build Android đầu rất lâu | Bình thường: Gradle 9.5 tải khoảng 1 GB một lần |
 
-Chi tiết: [điều kiện dự án](../prerequisites.md) ·
-[Derry và build](../guides/use-derry-and-build.md).
+Chi tiết: [điều kiện dự án](../docs/prerequisites.md) ·
+[Derry và build](../docs/guides/use-derry-and-build.md).
 
 Tiếp: [Kiến trúc](03-kien-truc.md).

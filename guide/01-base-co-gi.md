@@ -9,7 +9,7 @@ không chép từ màn mẫu.
 | Phần | Nội dung | Ở đâu |
 |---|---|---|
 | Hạ tầng app | Bootstrap 4 môi trường (local, dev, staging, prod), DI `get_it + injectable`, Dio qua `ApiHandler` với refresh token, phiên đăng nhập, routing `SLIRouting`, l10n | `lib/core/`, `lib/di/`, `lib/data/` |
-| Luồng mẫu | splash → đăng nhập → home, đủ để chạy thử hạ tầng | `lib/presentation/` |
+| Luồng mẫu | splash → đăng nhập → Tài khoản → đăng xuất, đủ để chạy thử hạ tầng. Màn Tài khoản được sinh từ spec `docs/specs/001-account/`, xem như ví dụ spec → code | `lib/presentation/` |
 | UI toolkit | Submodule `sli_common`: token khoảng cách/bo góc, theme, `SliButton`, `SliSurface`, bottom sheet, `SliIcons` (Lucide), vài widget form | `lib/modules/sli_common/` |
 | Luật code | Kiến trúc, ADR, sổ quyết định, convention kiểm tra tự động | `docs/architecture/`, `docs/adr/`, `docs/decisions/`, `test/convention/` |
 | AI | 6 agent, 26 skill, 6 lệnh `/` cho Claude Code | `.agents/`, `.claude/commands/` |
@@ -29,6 +29,6 @@ không chép từ màn mẫu.
 
 Flutter 3.50.1 (Dart 3.14, SDK `^3.14.0`), `material_ui`, Android AGP 9 /
 Gradle 9.5 / Kotlin 2.4 / `compileSdk 37`, iOS 15 qua Swift Package Manager.
-Chi tiết: [điều kiện dự án](../prerequisites.md).
+Chi tiết: [điều kiện dự án](../docs/prerequisites.md).
 
 Tiếp: [Cài và chạy](02-cai-va-chay.md).

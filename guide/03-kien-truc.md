@@ -42,11 +42,11 @@ lib/
 
 | Chủ đề | Tài liệu |
 |---|---|
-| Luật dependency đầy đủ | [dependency-rules](../architecture/dependency-rules.md) |
-| State, Cubit hay BLoC | [state-management](../architecture/state-management.md) · [UI effect](../guides/handle-ui-effects.md) |
-| DI | [dependency-injection](../architecture/dependency-injection.md) |
-| Gọi API, token, refresh | [networking](../architecture/networking.md) |
-| Widget và `sli_common` | [ui-toolkit](../architecture/ui-toolkit.md) · [dùng sli_common](../guides/use-sli-common.md) |
-| Vì sao chọn vậy | [ADR](../adr/README.md) · [sổ quyết định](../decisions/README.md) |
+| Luật dependency đầy đủ | [dependency-rules](../docs/architecture/dependency-rules.md) |
+| State, Cubit hay BLoC | [state-management](../docs/architecture/state-management.md) · [UI effect](../docs/guides/handle-ui-effects.md) |
+| DI | [dependency-injection](../docs/architecture/dependency-injection.md) |
+| Gọi API, token, refresh | [networking](../docs/architecture/networking.md) |
+| Widget và `sli_common` | [ui-toolkit](../docs/architecture/ui-toolkit.md) · [dùng sli_common](../docs/guides/use-sli-common.md) |
+| Vì sao chọn vậy | [ADR](../docs/adr/README.md) · [sổ quyết định](../docs/decisions/README.md) |
 
 Tiếp: [Làm một tính năng](04-lam-mot-tinh-nang.md).

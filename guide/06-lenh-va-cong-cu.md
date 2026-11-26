@@ -24,7 +24,7 @@ Ba luồng tách riêng; luồng ra ngoài đều phải xác nhận.
 | Phân phối thử | `derry distribute android` / `ios` / `all` | Firebase App Distribution |
 | Lên Store | `derry release android` / `ios` (cần `--confirm-store`) | Google Play, TestFlight |
 
-Chi tiết và cách cấu hình signing: [Derry và build](../guides/use-derry-and-build.md).
+Chi tiết và cách cấu hình signing: [Derry và build](../docs/guides/use-derry-and-build.md).
 
 ## Đo hiệu năng
 
@@ -37,9 +37,9 @@ Chỉ chạy khi cần, trên máy thật với server thật:
 | `derry perf approve` | Đo lại và lưu làm mốc |
 
 Cần `PERF_USERNAME`, `PERF_PASSWORD` của tài khoản test. Chi tiết:
-[đo hiệu năng app](../guides/measure-performance.md) ·
-[chuẩn và ngưỡng](../performance/standards.md) ·
-[hợp đồng benchmark](../../PERFORMANCE.md).
+[đo hiệu năng app](../docs/guides/measure-performance.md) ·
+[chuẩn và ngưỡng](../docs/performance/standards.md) ·
+[hợp đồng benchmark](../PERFORMANCE.md).
 
 ## Công cụ khác
 
@@ -48,6 +48,6 @@ Cần `PERF_USERNAME`, `PERF_PASSWORD` của tài khoản test. Chi tiết:
 | `derry base doctor` | Kiểm tra identity, native project và `sli_common` của base |
 | `derry new -- ...` | Tạo app mới từ base (trang 7) |
 | `derry toolkit quality` | Gate riêng của `sli_common` |
-| Version Health | Bật báo lỗi, analytics, feature flag khi có Firebase: [hướng dẫn](../guides/enable-version-health.md) |
+| Version Health | Bật báo lỗi, analytics, feature flag khi có Firebase: [hướng dẫn](../docs/guides/enable-version-health.md) |
 
 Tiếp: [Dự án thật và việc còn mở](07-du-an-that.md).

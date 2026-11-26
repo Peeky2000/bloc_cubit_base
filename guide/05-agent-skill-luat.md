@@ -44,7 +44,7 @@ agent khác.
 
 ## Đọc thêm
 
-Danh sách đầy đủ kèm câu gọi mẫu: [bộ công cụ AI](../guides/ai-toolbox.md) ·
-[AGENTS.md](../../AGENTS.md) · [The Forge](../guides/forge-design.md).
+Danh sách đầy đủ kèm câu gọi mẫu: [bộ công cụ AI](../docs/guides/ai-toolbox.md) ·
+[AGENTS.md](../AGENTS.md) · [The Forge](../docs/guides/forge-design.md).
 
 Tiếp: [Lệnh và công cụ](06-lenh-va-cong-cu.md).

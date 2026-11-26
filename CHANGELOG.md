@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Nâng mọi package lên bản mới nhất resolve được: `flutter_secure_storage` 11
+  (app chỉ dùng mặc định AES-GCM của v10 nên token cũ vẫn đọc được),
+  `vm_service` 15, `bloc` 9.2.2, `flutter_bloc` 9.1.2, `bloc_test` 10.0.1,
+  `connectivity_plus` 7.3.2 và `pub upgrade` toàn bộ phụ thuộc gián tiếp.
+  `sli_common` lên `shadcn_flutter` 0.0.55 và `another_flushbar` 2.
+  `build_runner` giữ 2.16.1: 2.17.1 cần `build` 5 mà `injectable_generator`
+  3.1.3 (mới nhất) chưa hỗ trợ.
 - Nâng `alice` lên 2 (thông báo hệ thống tách khỏi gói, chụp request có sẵn
   redaction): import gộp về `package:alice/alice.dart`, bỏ `showNotification`.
   Kéo theo `equatable` 3, `open_file` thay `open_filex` (bỏ override),

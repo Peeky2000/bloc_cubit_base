@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Sửa network inspector: request có query số (`page=1`) bị Alice làm hỏng
+  với lỗi `type 'int' is not a subtype of type 'Iterable<dynamic>'` ở mọi
+  bản không phải prod; giờ đổi giá trị query sang chuỗi trước khi ghi lại.
 - Luồng mẫu thành splash → đăng nhập → Tài khoản → đăng xuất: màn Tài khoản
   (`lib/presentation/account/`) thay màn home trống, sinh từ spec
   `docs/specs/001-account/` bằng `derry scaffold` để làm mẫu đối chiếu cho

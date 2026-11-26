@@ -54,7 +54,11 @@ class _RedactedAliceInterceptor extends Interceptor {
       ..endpoint = uri.path.isEmpty ? '/' : uri.path
       ..server = uri.host
       ..client = 'Dio (redacted)'
-      ..uri = uri.replace(queryParameters: request.queryParameters).toString()
+      // Uri.replace only takes String or Iterable values; Dio allows ints
+      // (page=1), so stringify them or every paged request fails here.
+      ..uri = uri
+          .replace(queryParameters: _stringQuery(request.queryParameters))
+          .toString()
       ..secure = uri.scheme == 'https'
       ..request = request
       ..response = AliceHttpResponse();
@@ -105,4 +109,14 @@ class _RedactedAliceInterceptor extends Interceptor {
     }
     handler.next(error);
   }
+
+  static Map<String, dynamic> _stringQuery(Map<String, dynamic> query) => {
+    for (final entry in query.entries)
+      entry.key: switch (entry.value) {
+        final Iterable<Object?> values => [
+          for (final value in values) '$value',
+        ],
+        final value => '$value',
+      },
+  };
 }

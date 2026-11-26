@@ -74,10 +74,9 @@ final class LocalFeatureFlags implements FeatureFlags {
 final class FallbackFeatureFlags implements FeatureFlags {
   FallbackFeatureFlags(
     this._inner, {
-    Duration refreshTimeout = const Duration(seconds: 10),
-    DebugDiagnostics debug = const DebugDiagnostics(),
-  }) : _refreshTimeout = refreshTimeout,
-       _debug = debug;
+    this._refreshTimeout = const Duration(seconds: 10),
+    this._debug = const DebugDiagnostics(),
+  });
 
   final FeatureFlags _inner;
   final Duration _refreshTimeout;

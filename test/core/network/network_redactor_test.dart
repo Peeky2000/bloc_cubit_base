@@ -17,15 +17,13 @@ void main() {
   });
 
   test('redacts nested request and response values', () {
-    final result =
-        redactor.body({
-              'profile': {'email': 'person@example.com', 'name': 'Ada'},
-              'tokens': [
-                {'access_token': 'secret'},
-              ],
-              'password': 'password-123',
-            })
-            as Map<String, dynamic>;
+    final result = redactor.body({
+      'profile': {'email': 'person@example.com', 'name': 'Ada'},
+      'tokens': [
+        {'access_token': 'secret'},
+      ],
+      'password': 'password-123',
+    }) as Map<String, dynamic>;
 
     expect(result['password'], '<redacted>');
     expect((result['profile'] as Map)['email'], '<redacted>');

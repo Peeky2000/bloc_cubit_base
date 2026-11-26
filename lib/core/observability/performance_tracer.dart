@@ -29,11 +29,10 @@ abstract interface class TraceHandle {
 /// debug builds. Nothing is sent anywhere.
 final class LocalPerformanceTracer implements PerformanceTracer {
   LocalPerformanceTracer({
-    DiagnosticRedactor redactor = const DiagnosticRedactor(),
+    this._redactor = const DiagnosticRedactor(),
     DiagnosticLog log = logDiagnostic,
     bool debugLogging = kDebugMode,
-  }) : _redactor = redactor,
-       _debug = DebugDiagnostics(log: log, enabled: debugLogging);
+  }) : _debug = DebugDiagnostics(log: log, enabled: debugLogging);
 
   final DiagnosticRedactor _redactor;
   final DebugDiagnostics _debug;
@@ -84,10 +83,9 @@ final class _LocalTrace implements TraceHandle {
 final class SafePerformanceTracer implements PerformanceTracer {
   SafePerformanceTracer(
     this._inner, {
-    DiagnosticRedactor redactor = const DiagnosticRedactor(),
-    DebugDiagnostics debug = const DebugDiagnostics(),
-  }) : _redactor = redactor,
-       _debug = debug;
+    this._redactor = const DiagnosticRedactor(),
+    this._debug = const DebugDiagnostics(),
+  });
 
   static const maxAttributes = 5;
   static const maxAttributeValueLength = 100;

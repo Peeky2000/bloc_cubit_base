@@ -27,8 +27,7 @@ class SLIRouteObserver extends NavigatorObserver {
   final RoutingCache? _routeSend;
   final AnalyticsTracker? _analytics;
 
-  SLIRouteObserver(this._routeSend, {AnalyticsTracker? analytics})
-    : _analytics = analytics;
+  SLIRouteObserver(this._routeSend, {this._analytics});
 
   /// Reports the screen the user now sees. Only full pages count, so opening
   /// or closing a dialog or bottom sheet does not inflate screen views.

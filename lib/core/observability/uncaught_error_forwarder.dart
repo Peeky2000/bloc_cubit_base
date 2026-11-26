@@ -20,7 +20,7 @@ void _logUncaught(String message, {Object? error, StackTrace? stackTrace}) =>
 /// users. Flutter errors marked `silent` (such as image loading failures) are
 /// non-fatal.
 final class UncaughtErrorForwarder {
-  UncaughtErrorForwarder({DiagnosticLog log = _logUncaught}) : _log = log;
+  UncaughtErrorForwarder({this._log = _logUncaught});
 
   static const maxPending = 20;
 

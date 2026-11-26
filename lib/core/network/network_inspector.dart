@@ -9,9 +9,8 @@ class NetworkInspector {
   NetworkInspector({
     required bool enabled,
     required GlobalKey<NavigatorState> navigatorKey,
-    NetworkRedactor redactor = const NetworkRedactor(),
-  }) : _redactor = redactor,
-       _alice = enabled
+    this._redactor = const NetworkRedactor(),
+  }) : _alice = enabled
            ? Alice(
                configuration: AliceConfiguration(
                  navigatorKey: navigatorKey,

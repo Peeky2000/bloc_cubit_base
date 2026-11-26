@@ -225,9 +225,8 @@ class _MainAppState extends State<MainApp> {
                     return MaterialUiCompatibilityBridge(
                       child: SliShadcnScope(
                         child: MediaQuery(
-                          data: MediaQuery.of(
-                            context,
-                          ).copyWith(textScaler: const TextScaler.linear(1)),
+                          data: MediaQuery.of(context)
+                              .copyWith(textScaler: const TextScaler.linear(1)),
                           child: widget!,
                         ),
                       ),

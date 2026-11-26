@@ -19,8 +19,8 @@ class SessionInterceptor extends Interceptor {
     required this.baseUrl,
     required this.onSessionExpired,
     required this.tokenProvider,
-    required Dio sessionClient,
-  }) : _sessionClient = sessionClient;
+    required this._sessionClient,
+  });
 
   final TokenProvider tokenProvider;
 

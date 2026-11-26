@@ -47,9 +47,8 @@ void main() {
 
     await useCase.login(phone: '0912345678', password: 'pw');
 
-    verify(
-      () => session.start(token: token, account: account, persist: false),
-    ).called(1);
+    verify(() => session.start(token: token, account: account, persist: false))
+        .called(1);
   });
 
   test('a remembered login starts a persisted session', () async {
@@ -61,9 +60,8 @@ void main() {
       isRememberLogin: true,
     );
 
-    verify(
-      () => session.start(token: token, account: account, persist: true),
-    ).called(1);
+    verify(() => session.start(token: token, account: account, persist: true))
+        .called(1);
   });
 
   test('login normalizes a local phone number', () async {
@@ -71,9 +69,8 @@ void main() {
 
     await useCase.login(phone: '0912345678', password: 'pw');
 
-    verify(
-      () => authRepo.appLogin(phone: '+84912345678', password: 'pw'),
-    ).called(1);
+    verify(() => authRepo.appLogin(phone: '+84912345678', password: 'pw'))
+        .called(1);
   });
 
   test('a failed login leaves the session untouched', () async {

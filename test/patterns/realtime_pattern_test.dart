@@ -226,12 +226,10 @@ abstract class RealtimeSocketFactory {
 class WebSocketOrderRealtimeRepo implements OrderRealtimeRepo {
   WebSocketOrderRealtimeRepo(
     this._sockets, {
-    required Uri endpoint,
+    required this._endpoint,
     RealtimeBackoff? backoff,
-    Future<void> Function(Duration) wait = _sleep,
-  }) : _endpoint = endpoint,
-       _backoff = backoff ?? RealtimeBackoff(),
-       _wait = wait;
+    this._wait = _sleep,
+  }) : _backoff = backoff ?? RealtimeBackoff();
 
   static const int unauthorizedCloseCode = 4401;
   static const int notFoundCloseCode = 4404;

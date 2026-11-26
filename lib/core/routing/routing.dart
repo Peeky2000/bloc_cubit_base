@@ -62,9 +62,8 @@ class SLIRouting {
         theme: Theme.of(key.currentContext!),
         isScrollControlled: isScrollControlled,
 
-        barrierLabel: MaterialLocalizations.of(
-          key.currentContext!,
-        ).modalBarrierDismissLabel,
+        barrierLabel: MaterialLocalizations.of(key.currentContext!)
+            .modalBarrierDismissLabel,
 
         backgroundColor: backgroundColor ?? Colors.transparent,
         elevation: elevation,

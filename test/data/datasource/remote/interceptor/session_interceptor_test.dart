@@ -477,8 +477,9 @@ Future<Object> _capture<T>(Future<T> future) async {
   }
 }
 
-typedef _AdapterResponder =
-    FutureOr<ResponseBody> Function(RequestOptions options);
+typedef _AdapterResponder = FutureOr<ResponseBody> Function(
+  RequestOptions options,
+);
 
 class _MemoryAdapter implements HttpClientAdapter {
   _MemoryAdapter(this._responder);

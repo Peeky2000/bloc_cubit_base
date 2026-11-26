@@ -29,41 +29,38 @@ void main() {
     expect(report.lines, contains(contains('MainActivity path đang lệch')));
   });
 
-  test(
-    'rename command is dry-run by default and does not mutate files',
-    () async {
-      final pubspec = File('${fixture.path}/pubspec.yaml');
-      final before = pubspec.readAsStringSync();
-      final output = <String>[];
+  test('rename command is dry-run by default and does not mutate files', () async {
+    final pubspec = File('${fixture.path}/pubspec.yaml');
+    final before = pubspec.readAsStringSync();
+    final output = <String>[];
 
-      final code = await runBaseCli(
-        [
-          'rename',
-          '--root',
-          fixture.path,
-          '--display-name',
-          'Example',
-          'App',
-          '--package-name',
-          'example_app',
-          '--bundle-id',
-          'com.example.app',
-        ],
-        output: output.add,
-        errorOutput: output.add,
-      );
+    final code = await runBaseCli(
+      [
+        'rename',
+        '--root',
+        fixture.path,
+        '--display-name',
+        'Example',
+        'App',
+        '--package-name',
+        'example_app',
+        '--bundle-id',
+        'com.example.app',
+      ],
+      output: output.add,
+      errorOutput: output.add,
+    );
 
-      expect(code, 0);
-      expect(output.join('\n'), contains('DRY-RUN: chưa có file nào'));
-      expect(pubspec.readAsStringSync(), before);
-      expect(
-        File(
-          '${fixture.path}/android/app/src/main/kotlin/com/old/app/MainActivity.kt',
-        ).existsSync(),
-        isFalse,
-      );
-    },
-  );
+    expect(code, 0);
+    expect(output.join('\n'), contains('DRY-RUN: chưa có file nào'));
+    expect(pubspec.readAsStringSync(), before);
+    expect(
+      File(
+        '${fixture.path}/android/app/src/main/kotlin/com/old/app/MainActivity.kt',
+      ).existsSync(),
+      isFalse,
+    );
+  });
 
   test('apply updates Dart/native identity and moves MainActivity', () async {
     final engine = BaseCliEngine(fixture.path);
@@ -96,22 +93,19 @@ void main() {
       contains('package com.example.app'),
     );
     expect(
-      File(
-        '${fixture.path}/ios/Runner.xcodeproj/project.pbxproj',
-      ).readAsStringSync(),
+      File('${fixture.path}/ios/Runner.xcodeproj/project.pbxproj')
+          .readAsStringSync(),
       allOf(contains('com.example.app'), contains('Example App Dev')),
     );
     expect(
-      File(
-        '${fixture.path}/ios/Runner.xcodeproj/project.pbxproj',
-      ).readAsStringSync(),
+      File('${fixture.path}/ios/Runner.xcodeproj/project.pbxproj')
+          .readAsStringSync(),
       contains('APP_DISPLAY_NAME = "Example App";'),
       reason: 'PBX values containing spaces must always stay quoted.',
     );
     expect(
-      File(
-        '${fixture.path}/lib/modules/sli_common/pubspec.yaml',
-      ).readAsStringSync(),
+      File('${fixture.path}/lib/modules/sli_common/pubspec.yaml')
+          .readAsStringSync(),
       contains('package:old_app/'),
       reason: 'Git submodule content must never be rewritten by the app CLI.',
     );
@@ -581,9 +575,8 @@ Map<String, String> _repositorySnapshot(
   'status': _runGit(['status', '--porcelain'], root, environment),
   'config': File('$root/.git/config').readAsStringSync(),
   'submodule': _runGit(['submodule', 'status'], root, environment),
-  'submoduleConfig': File(
-    '$root/.git/modules/lib/modules/sli_common/config',
-  ).readAsStringSync(),
+  'submoduleConfig': File('$root/.git/modules/lib/modules/sli_common/config')
+      .readAsStringSync(),
 };
 
 void _writeFixture(String root) {

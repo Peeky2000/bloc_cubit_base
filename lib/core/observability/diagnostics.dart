@@ -5,8 +5,11 @@ import 'package:bloc_cubit_base/core/network/network_redactor.dart';
 import 'package:flutter/foundation.dart';
 
 /// Writes one diagnostic line. Injected so tests can capture output.
-typedef DiagnosticLog =
-    void Function(String message, {Object? error, StackTrace? stackTrace});
+typedef DiagnosticLog = void Function(
+  String message, {
+  Object? error,
+  StackTrace? stackTrace,
+});
 
 /// Default [DiagnosticLog]: the developer console, tagged `observability`.
 void logDiagnostic(String message, {Object? error, StackTrace? stackTrace}) =>
@@ -35,10 +38,9 @@ void fireAndForget(FutureOr<void> Function() action) {
 /// Logs only in debug builds and never lets a logging failure escape.
 final class DebugDiagnostics {
   const DebugDiagnostics({
-    DiagnosticLog log = logDiagnostic,
-    bool enabled = kDebugMode,
-  }) : _log = log,
-       _enabled = enabled;
+    this._log = logDiagnostic,
+    this._enabled = kDebugMode,
+  });
 
   final DiagnosticLog _log;
   final bool _enabled;
@@ -62,8 +64,7 @@ final class DebugDiagnostics {
 /// in exception messages: JWTs, URL query strings, e-mail addresses and long
 /// digit runs such as phone numbers.
 final class DiagnosticRedactor {
-  const DiagnosticRedactor({NetworkRedactor network = const NetworkRedactor()})
-    : _network = network;
+  const DiagnosticRedactor({this._network = const NetworkRedactor()});
 
   final NetworkRedactor _network;
 

@@ -162,9 +162,8 @@ Future<void> run(List<String> args) async {
       };
       final reportFile = File('${reportDir.path}/$stamp.json')
         ..writeAsStringSync(_pretty(report));
-      File(
-        '${reportDir.path}/$stamp.md',
-      ).writeAsStringSync(mask(targetMarkdown(report), _secrets));
+      File('${reportDir.path}/$stamp.md')
+          .writeAsStringSync(mask(targetMarkdown(report), _secrets));
       final summary = body['summary'];
       final history = {
         'timestamp': report['timestamp'],
@@ -417,9 +416,8 @@ Future<void> run(List<String> args) async {
     };
     final latestDir = Directory(latestRoot)..createSync(recursive: true);
     File('${latestDir.path}/summary.json').writeAsStringSync(_pretty(latest));
-    File(
-      '${latestDir.path}/summary.md',
-    ).writeAsStringSync(mask(summaryMarkdown(latest), _secrets));
+    File('${latestDir.path}/summary.md')
+        .writeAsStringSync(mask(summaryMarkdown(latest), _secrets));
     stdout.writeln('PERFORMANCE: ${overall.label}');
     stdout.writeln('Summary: ${latestDir.path}/summary.json');
     exitCode = overall.exitCode;

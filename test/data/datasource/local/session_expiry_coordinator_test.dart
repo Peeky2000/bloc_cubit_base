@@ -32,9 +32,8 @@ void main() {
   });
 
   test('publishes expiry even when secure cleanup reports an error', () async {
-    when(
-      () => session.end(),
-    ).thenThrow(StateError('secure storage unavailable'));
+    when(() => session.end())
+        .thenThrow(StateError('secure storage unavailable'));
     final event = sessionEvents.events.first;
 
     await expectLater(coordinator.expire(), throwsStateError);

@@ -91,9 +91,8 @@ List<Violation> checkFile(SourceFile f) {
       add('repo-name', 'domain repository files end with _repo.dart');
     } else {
       final cls = _pascal(f.stem);
-      if (!RegExp(
-        'abstract\\s+(interface\\s+)?class\\s+$cls\\b',
-      ).hasMatch(text)) {
+      if (!RegExp('abstract\\s+(interface\\s+)?class\\s+$cls\\b')
+          .hasMatch(text)) {
         add('repo-name', 'declare abstract class $cls');
       }
     }
@@ -128,9 +127,8 @@ List<Violation> checkFile(SourceFile f) {
   if (f.path.startsWith('lib/data/datasource/remote/') &&
       f.stem.endsWith('_remote_data_source')) {
     final iface = _pascal(f.stem);
-    if (!RegExp(
-      'abstract\\s+(interface\\s+)?class\\s+$iface\\b',
-    ).hasMatch(text)) {
+    if (!RegExp('abstract\\s+(interface\\s+)?class\\s+$iface\\b')
+        .hasMatch(text)) {
       add('data-source', 'declare abstract class $iface');
     }
     if (!text.contains('@LazySingleton(as: $iface)')) {
@@ -204,9 +202,8 @@ List<Violation> checkFile(SourceFile f) {
         if (!text.contains("part '${feature}_state.dart';")) {
           add('state-owner', "keep state in part '${feature}_state.dart'");
         }
-        if (RegExp(
-          r'Injector\.getIt|GetIt\.instance|\bgetIt\b',
-        ).hasMatch(text)) {
+        if (RegExp(r'Injector\.getIt|GetIt\.instance|\bgetIt\b')
+            .hasMatch(text)) {
           add('state-owner', 'inject dependencies through the constructor');
         }
       }

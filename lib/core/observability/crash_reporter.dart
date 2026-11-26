@@ -47,11 +47,10 @@ final class RedactedError implements Exception {
 /// debug builds, nothing at all otherwise.
 final class LocalCrashReporter implements CrashReporter {
   LocalCrashReporter({
-    DiagnosticRedactor redactor = const DiagnosticRedactor(),
+    this._redactor = const DiagnosticRedactor(),
     DiagnosticLog log = logDiagnostic,
     bool debugLogging = kDebugMode,
-  }) : _redactor = redactor,
-       _debug = DebugDiagnostics(log: log, enabled: debugLogging);
+  }) : _debug = DebugDiagnostics(log: log, enabled: debugLogging);
 
   final DiagnosticRedactor _redactor;
   final DebugDiagnostics _debug;
@@ -93,10 +92,9 @@ final class LocalCrashReporter implements CrashReporter {
 final class RedactingCrashReporter implements CrashReporter {
   RedactingCrashReporter(
     this._inner, {
-    DiagnosticRedactor redactor = const DiagnosticRedactor(),
-    DebugDiagnostics debug = const DebugDiagnostics(),
-  }) : _redactor = redactor,
-       _debug = debug;
+    this._redactor = const DiagnosticRedactor(),
+    this._debug = const DebugDiagnostics(),
+  });
 
   static final _hashedId = RegExp(r'^[A-Fa-f0-9]{16,128}$');
 

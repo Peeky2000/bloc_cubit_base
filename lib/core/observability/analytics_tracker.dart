@@ -18,11 +18,10 @@ abstract interface class AnalyticsTracker {
 /// debug builds, nothing at all otherwise.
 final class LocalAnalyticsTracker implements AnalyticsTracker {
   LocalAnalyticsTracker({
-    DiagnosticRedactor redactor = const DiagnosticRedactor(),
+    this._redactor = const DiagnosticRedactor(),
     DiagnosticLog log = logDiagnostic,
     bool debugLogging = kDebugMode,
-  }) : _redactor = redactor,
-       _debug = DebugDiagnostics(log: log, enabled: debugLogging);
+  }) : _debug = DebugDiagnostics(log: log, enabled: debugLogging);
 
   final DiagnosticRedactor _redactor;
   final DebugDiagnostics _debug;
@@ -56,10 +55,9 @@ final class LocalAnalyticsTracker implements AnalyticsTracker {
 final class SanitizingAnalyticsTracker implements AnalyticsTracker {
   SanitizingAnalyticsTracker(
     this._inner, {
-    DiagnosticRedactor redactor = const DiagnosticRedactor(),
-    DebugDiagnostics debug = const DebugDiagnostics(),
-  }) : _redactor = redactor,
-       _debug = debug;
+    this._redactor = const DiagnosticRedactor(),
+    this._debug = const DebugDiagnostics(),
+  });
 
   static const maxParams = 25;
   static const maxValueLength = 100;

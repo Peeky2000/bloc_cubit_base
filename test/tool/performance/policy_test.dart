@@ -4,8 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import '../../../tool/performance/policy.dart';
 
-Map<String, dynamic> _config() =>
-    jsonDecode('''
+Map<String, dynamic> _config() => jsonDecode('''
 {
   "startup": {
     "enabled": true,
@@ -37,8 +36,7 @@ Map<String, dynamic> _config() =>
     "max_network_failures": 0
   }
 }
-''')
-        as Map<String, dynamic>;
+''') as Map<String, dynamic>;
 
 Matcher _formatError(String message) => throwsA(
   isA<FormatException>().having((e) => e.message, 'message', message),

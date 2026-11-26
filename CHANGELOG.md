@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Nâng ràng buộc Dart SDK lên `^3.14.0` bằng `dart migrate`; dùng tham số
+  khởi tạo private có tên của Dart 3.13 (`this._debug` mà người gọi vẫn truyền
+  `debug:`) ở các lớp observability, network inspector, route observer và
+  session interceptor; format lại theo formatter 3.14.
 - Nâng mọi package lên bản mới nhất resolve được: `flutter_secure_storage` 11
   (app chỉ dùng mặc định AES-GCM của v10 nên token cũ vẫn đọc được),
   `vm_service` 15, `bloc` 9.2.2, `flutter_bloc` 9.1.2, `bloc_test` 10.0.1,

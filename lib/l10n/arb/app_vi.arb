@@ -32,5 +32,8 @@
   "accountTitle": "Tài khoản",
   "accountRole": "Vai trò",
   "accountEmptyValue": "Chưa có",
-  "logoutConfirm": "Bạn có chắc muốn đăng xuất?"
+  "logoutConfirm": "Bạn có chắc muốn đăng xuất?",
+  "notificationTitle": "Thông báo",
+  "notificationEmpty": "Chưa có thông báo",
+  "notificationUnread": "Chưa đọc"
 }

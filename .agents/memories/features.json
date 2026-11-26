@@ -31,5 +31,17 @@
       "logout",
       "sign-out"
     ]
+  },
+  {
+    "type": "feature",
+    "name": "notification_list",
+    "description": "Danh sách thông báo có phân trang (spec 002): mở từ Tài khoản, kéo làm mới, tải thêm, lỗi trang sau giữ list",
+    "location": "lib/presentation/notification_list/",
+    "keywords": [
+      "notification",
+      "thong-bao",
+      "pagination",
+      "list"
+    ]
   }
 ]

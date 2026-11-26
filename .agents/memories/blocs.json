@@ -50,5 +50,17 @@
       "cubit",
       "ui-effect"
     ]
+  },
+  {
+    "type": "bloc",
+    "name": "NotificationListCubit",
+    "description": "Cubit phân trang theo D-0001: load/refresh/loadMore/retryLoadMore, generation counter, khử trùng id; refresh lỗi khi đã có list thì bắn NotificationListShowErrorEffect",
+    "location": "lib/presentation/notification_list/cubit/notification_list_cubit.dart",
+    "keywords": [
+      "notification",
+      "pagination"
+    ],
+    "bloc_type": "cubit",
+    "feature": "notification_list"
   }
 ]

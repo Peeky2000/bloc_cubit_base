@@ -4,7 +4,12 @@
     "name": "LoginResponseModel",
     "description": "Login API response, implements Login entity",
     "location": "lib/data/model/response/auth/login_response_model.dart",
-    "keywords": ["login", "auth", "response", "json"],
+    "keywords": [
+      "login",
+      "auth",
+      "response",
+      "json"
+    ],
     "model_type": "class"
   },
   {
@@ -12,7 +17,22 @@
     "name": "BaseResponseModel",
     "description": "Standard API wrapper with data field",
     "location": "lib/data/model/response/base_response_model.dart",
-    "keywords": ["base", "response", "api"],
+    "keywords": [
+      "base",
+      "response",
+      "api"
+    ],
+    "model_type": "class"
+  },
+  {
+    "type": "model",
+    "name": "AppNotificationResponseModel",
+    "description": "JSON thông báo; body mặc định rỗng, isRead mặc định false, createdAt ISO-8601",
+    "location": "lib/data/model/response/app_notification/app_notification_response_model.dart",
+    "keywords": [
+      "notification",
+      "json"
+    ],
     "model_type": "class"
   }
 ]

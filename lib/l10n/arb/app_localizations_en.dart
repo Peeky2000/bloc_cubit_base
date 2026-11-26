@@ -110,4 +110,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get logoutConfirm => 'Do you want to sign out?';
+
+  @override
+  String get notificationTitle => 'Notifications';
+
+  @override
+  String get notificationEmpty => 'No notifications yet';
+
+  @override
+  String get notificationUnread => 'Unread';
 }

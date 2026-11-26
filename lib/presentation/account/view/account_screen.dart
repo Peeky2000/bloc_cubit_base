@@ -71,6 +71,26 @@ class AccountScreen extends StatelessWidget {
                 ],
               ),
             ),
+            SizedBox(height: SliSpacing.lg),
+            // Spec 002 AC1: plain navigation, no business rule, so the screen
+            // routes directly.
+            SliSurface(
+              padding: EdgeInsets.zero,
+              // ListTile paints its ink on the nearest Material; the surface's
+              // background would hide it otherwise.
+              child: Material(
+                type: MaterialType.transparency,
+                child: ListTile(
+                  leading: Icon(
+                    SliIcons.notification,
+                    color: App.appColor?.iconColor,
+                  ),
+                  title: Text(context.l10n.notificationTitle),
+                  trailing: const Icon(SliIcons.chevronRight),
+                  onTap: () => SLIRouting.toNamed(AppPage.notificationList),
+                ),
+              ),
+            ),
             SizedBox(height: SliSpacing.xxl),
             AppPrimaryButton(
               title: context.l10n.logout,

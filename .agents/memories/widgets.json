@@ -65,5 +65,31 @@
     ],
     "group": "display",
     "scope": "shared"
+  },
+  {
+    "type": "widget",
+    "name": "PaginatedListView",
+    "description": "List phân trang dùng chung: loading, lỗi lần đầu + Thử lại, rỗng, kéo làm mới, tải thêm gần cuối, footer lỗi trang sau + Thử lại, Đã hết",
+    "location": "lib/widget/paginated_list_view.dart",
+    "keywords": [
+      "list",
+      "pagination",
+      "load-more",
+      "refresh"
+    ],
+    "props": [
+      "items",
+      "status",
+      "hasMore",
+      "error",
+      "onRetry",
+      "onRefresh",
+      "onLoadMore",
+      "onRetryLoadMore",
+      "empty",
+      "itemBuilder",
+      "refreshKey"
+    ],
+    "scope": "shared"
   }
 ]

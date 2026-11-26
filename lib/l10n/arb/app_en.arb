@@ -32,5 +32,8 @@
   "accountTitle": "Account",
   "accountRole": "Role",
   "accountEmptyValue": "Not set",
-  "logoutConfirm": "Do you want to sign out?"
+  "logoutConfirm": "Do you want to sign out?",
+  "notificationTitle": "Notifications",
+  "notificationEmpty": "No notifications yet",
+  "notificationUnread": "Unread"
 }

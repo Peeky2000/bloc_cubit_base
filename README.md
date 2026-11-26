@@ -13,9 +13,9 @@ Tài liệu nghiệp vụ ──▶ /tech-design ──▶ tech.md ──▶ PM 
            code đúng convention + test + agent test kiểm tra độc lập ◀┘
 ```
 
-**Đọc theo thứ tự:** README này → [sổ tay dự án thật](docs/guides/start-real-project.md)
-→ [bộ công cụ AI](docs/guides/ai-toolbox.md). Mọi tài liệu khác có trong
-[mục lục](docs/README.md).
+**Mới vào? Đọc [docs/start-here/](docs/start-here/README.md)**: 7 trang ngắn,
+đọc từ trên xuống là biết base có gì, chạy thế nào, làm tính năng ra sao và
+dùng công cụ nào. Mọi tài liệu chi tiết khác có trong [mục lục](docs/README.md).
 
 ---
 
@@ -41,13 +41,13 @@ Tài liệu nghiệp vụ ──▶ /tech-design ──▶ tech.md ──▶ PM 
 | Môi trường | local, dev, staging, prod; một hàm `bootstrap()` duy nhất |
 | Networking | Dio qua `ApiHandler`, refresh token chạy một lần cho nhiều request 401, ẩn token trong log |
 | Phiên đăng nhập | `SessionRepo` giữ token và tài khoản; đăng xuất xoá cả hai |
-| UI toolkit | Submodule [`sli_common`](lib/modules/sli_common) với các widget `Sli*` |
-| Mẫu kỹ thuật | Phân trang, form, cache offline, upload, realtime, deep link, push, xin quyền; có code mẫu và test |
+| UI toolkit | Submodule [`sli_common`](lib/modules/sli_common): token, theme, widget `Sli*`, icon `SliIcons` |
+| Mẫu kỹ thuật | Phân trang, form, cache offline, upload, realtime, deep link, push, xin quyền; luật trong skill, test trong `test/patterns/` làm chuẩn so |
 | Sổ quyết định | Mọi lựa chọn kỹ thuật được ghi lại để các tính năng làm giống nhau |
 | Đo hiệu năng | Mở app, độ mượt, bộ nhớ, mạng; đo trên máy thật với server thật |
 | Theo dõi phiên bản | Khung báo lỗi, analytics, feature flag; mặc định tắt, bật khi có Firebase |
 | Build và phát hành | Derry, Fastlane, Firebase App Distribution |
-| AI | 6 agent, 25 skill, 6 lệnh `/` trong Claude Code |
+| AI | 6 agent, 26 skill, 6 lệnh `/` trong Claude Code |
 
 ## Cài đặt lần đầu
 
@@ -91,7 +91,7 @@ vẫn giữ `sli_common` là submodule. Sau đó, trong app mới:
 |---|---|---|
 | 1 | Đổi địa chỉ server | `lib/core/app/app_config.dart` hoặc `--dart-define=API_BASE_URL=...` |
 | 2 | Firebase, signing, icon, splash | [Tạo app từ base](docs/guides/create-app-from-base.md), mục 5 |
-| 3 | Giữ hay bỏ các màn mẫu (đăng nhập, đăng ký, splash, OTP) | Bỏ đăng nhập thì sửa `integration_test/performance/support/perf_app_adapter.dart` |
+| 3 | Thay luồng mẫu (splash → đăng nhập → home) bằng luồng thật | Sửa luôn `integration_test/performance/support/perf_app_adapter.dart` |
 | 4 | Làm các việc để dành cho tuần đầu | [Sổ tay dự án thật](docs/guides/start-real-project.md#4-việc-để-dành-tới-dự-án-thật) |
 
 Sổ tay dự án thật là nơi duy nhất ghi việc còn mở. Xong việc nào thì đánh dấu

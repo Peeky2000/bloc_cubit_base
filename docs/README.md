@@ -1,7 +1,8 @@
 # Mục lục tài liệu
 
-Đọc [README gốc](../README.md) trước. Trang này chỉ là bản đồ: mỗi thư mục
-làm gì và tài liệu nào trả lời câu hỏi nào.
+Người mới: đọc [Bắt đầu từ đây](start-here/README.md) trước, 7 trang ngắn theo
+thứ tự. Trang này là bản đồ đầy đủ: mỗi thư mục làm gì và tài liệu nào trả lời
+câu hỏi nào.
 
 ## Theo việc cần làm
 
@@ -26,6 +27,7 @@ làm gì và tài liệu nào trả lời câu hỏi nào.
 
 | Thư mục | Chứa gì | Ai viết |
 |---|---|---|
+| [`start-here/`](start-here/README.md) | Tài liệu đọc trước cho người: base có gì, chạy, kiến trúc, làm tính năng, AI, lệnh, dự án thật | Cập nhật khi base đổi |
 | [`architecture/`](architecture/README.md) | Kiến trúc và convention hiện hành | Cập nhật cùng code |
 | [`adr/`](adr/README.md) | Quyết định kiến trúc ảnh hưởng cả base. Đã accepted thì không sửa, chỉ thay bằng ADR mới | PM duyệt |
 | [`decisions/`](decisions/README.md) | Quyết định kỹ thuật cấp tính năng (D-NNNN) và [thuật ngữ](decisions/glossary.md). Tra bằng `derry decision search` | Agent đề xuất, PM duyệt |

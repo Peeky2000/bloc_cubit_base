@@ -15,6 +15,16 @@ Creates a feature that follows the repository conventions.
   --help             show this message
 ''';
 
+/// The app's own package name, so generated imports follow `derry rename`.
+String _packageName() {
+  final match = RegExp(
+    r'^name:\s*(\S+)',
+    multiLine: true,
+  ).firstMatch(File('pubspec.yaml').readAsStringSync());
+  if (match == null) throw const FormatException('pubspec.yaml has no name:');
+  return match.group(1)!;
+}
+
 Future<void> main(List<String> args) async {
   if (args.isEmpty || args.contains('--help')) {
     stdout.write(_usage);
@@ -50,7 +60,7 @@ Future<void> main(List<String> args) async {
       withData: data,
       domain: domain,
     );
-    final files = scaffoldFeature(options);
+    final files = scaffoldFeature(options, package: _packageName());
     final existing = files.keys.where((p) => File(p).existsSync()).toList();
     if (existing.isNotEmpty) {
       stderr.writeln('Refusing to overwrite:\n  ${existing.join('\n  ')}');

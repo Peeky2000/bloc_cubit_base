@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Sửa `derry scaffold`: file khung sinh ra import theo tên package trong
+  `pubspec.yaml` thay vì luôn là `bloc_cubit_base`, nên app tạo bằng `derry new`
+  hay `derry rename` có khung chạy được ngay, không phải sửa import bằng tay.
 - Sửa network inspector: request có query số (`page=1`) bị Alice làm hỏng
   với lỗi `type 'int' is not a subtype of type 'Iterable<dynamic>'` ở mọi
   bản không phải prod; giờ đổi giá trị query sang chuỗi trước khi ghi lại.
